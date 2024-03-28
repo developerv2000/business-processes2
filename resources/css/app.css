@@ -1,3 +1,234 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+@import '../plugins/normalize.css';
+
+@import 'form.css';
+
+:root {
+    --text-color: #344050;
+    --main-color: #2C7BE5;
+    --main-color-lighter: #96BDF2;
+    --secondary-color: #F5803E;
+    --danger-color: #E63757;
+    --success-color: #00D27A;
+
+    --theme-background-color: white;
+    --theme-border-radius: 6px;
+    --theme-box-shadow: 0 0 12px 0px #2c7be521;
+    --theme-transition: 0.3s;
+}
+
+body {
+    font-size: 16px;
+    line-height: 1.5;
+    font-family: 'Fira Sans', sans-serif;
+    color: var(--text-color);
+    background-color: #EDF2F9;
+}
+
+
+/* ------------ Default styles ------------ */
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+p {
+    margin: 0 0 1em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0 0 0.5rem;
+    line-height: 1.2;
+}
+
+button {
+    cursor: pointer;
+}
+
+img {
+    max-width: 100%;
+}
+
+picture {
+    display: flex;
+}
+
+a {
+    color: inherit;
+}
+
+/* ------------ /end Default styles ------------ */
+
+
+/* ------------ Scrollbars ------------ */
+body::-webkit-scrollbar,
+.thin-scrollbar::-webkit-scrollbar {
+    width: 7px;
+    height: 10px;
+}
+
+body::-webkit-scrollbar-track,
+.thin-scrollbar::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+}
+
+body::-webkit-scrollbar-thumb,
+.thin-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #ABABAB;
+    outline: 1px solid #ABABAB;
+}
+
+/* ------------ /end Scrollbars ------------ */
+
+
+/* ------------ Main mutators ------------ */
+.capitalized {
+    text-transform: capitalize;
+}
+
+.unselectable {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* ------------ /end Main mutators ------------ */
+
+
+/* ------------ Main theme ------------ */
+.main-title {
+    color: var(--secondary-color);
+    font-size: 16px;
+}
+
+.styled-box {
+    background-color: var(--theme-background-color);
+    border-radius: var(--theme-border-radius);
+    box-shadow: var(--theme-box-shadow)
+}
+
+/* ------------ /end Main theme ------------ */
+
+
+/* ------------ Buttons ------------ */
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 48px;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    transition: var(--theme-transition);
+}
+
+.button__icon {
+    font-size: 22px;
+}
+
+.button__text {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.button__text:empty {
+    display: none;
+}
+
+.button:disabled {
+    cursor: not-allowed;
+}
+
+.button--main {
+    background-color: var(--main-color);
+}
+
+.button--main:hover {
+    background-color: #2362b7;
+}
+
+.button--cancel {
+    background-color: #748194;
+}
+
+.button--cancel:hover {
+    background-color: #636e7e;
+}
+
+.button--danger {
+    background-color: var(--danger-color);
+}
+
+.button--danger:hover {
+    background-color: #c42f4a;
+}
+
+.button--success {
+    background-color: var(--success-color);
+}
+
+.button--success:hover {
+    background-color: #05b96d;
+}
+
+.button--transparent {
+    background-color: transparent;
+    color: var(--text-color);
+    padding: 0;
+}
+/* ------------ /end Buttons ------------ */
+
+
+/* ------------ Authentication pages ------------ */
+/* Login Page */
+.login-page .main {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-box {
+    min-width: 520px;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-box__logo {
+    margin: auto;
+}
+
+.auth-box__logo .logo__image {
+    width: 180px;
+    display: flex;
+}
+
+.auth-box__title {
+    margin: 24px 0;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* ------------ /END Authentication pages ------------ */

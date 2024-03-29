@@ -1,0 +1,21 @@
+/* Basic component styles */
+
+/* ------------ Dropdown ------------ */
+.dropdown {
+    position: relative;
+    z-index: 2;
+}
+
+.dropdown__content {
+    position: absolute;
+    z-index: 1;
+    margin-top: 8px;
+    background-color: white;
+    transition: 0.3s;
+}
+
+.dropdown:not(.dropdown--active) .dropdown__content {
+    display: none;
+}
+
+/* ------------ /end Dropdown ------------ */

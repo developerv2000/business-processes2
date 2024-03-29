@@ -7,14 +7,18 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" type="image/x-icon" href="{{ asset('img/main/favicon.png') }}">
-    
+
     <title>{{ __('Business processes') }}</title>
 
     @vite('resources/css/app.css')
 </head>
 
-<body class="body {{ $bodyClass }}">
-    <div class="body__inner">
+<body class="body {{ $page }}">
+    <div @class([
+        'body__inner',
+        'body__inner--shrinked' => request()->user()->settings['shrinkBodyWidth'],
+    ])>
+
         @include('layouts.header')
 
         <div class="main-wrapper">

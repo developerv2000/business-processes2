@@ -18,8 +18,13 @@
     --theme-box-shadow: 0 0 12px 0px #2c7be521;
     --theme-transition: 0.3s;
 
+    --material-symbols-filled: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+    --material-symbols-lighter: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48;
+
     --shrinked-body-width: 1680px;
     --header-height: 48px;
+    --leftbar-width: 140px;
+    --pre-content-height: 50px;
 }
 
 body {
@@ -131,21 +136,6 @@ body::-webkit-scrollbar-thumb,
 /* ------------ /END Main theme ------------ */
 
 
-/* ------------ /END Main layouts ------------ */
-.body__inner {
-    max-width: 100%;
-    margin: auto;
-    padding: 0 40px;
-    transition: var(--theme-transition);
-}
-
-.body__inner--shrinked {
-    max-width: var(--shrinked-body-width);
-}
-
-/* ------------ /END Main layouts ------------ */
-
-
 /* ------------ Buttons ------------ */
 .button {
     display: flex;
@@ -215,6 +205,7 @@ body::-webkit-scrollbar-thumb,
     padding: 0;
 }
 
+/* Locales button */
 .locales-button {
     width: 100%;
     justify-content: flex-start;
@@ -228,6 +219,26 @@ body::-webkit-scrollbar-thumb,
 
 .locales-button:hover {
     background-color: #f2f6fb;
+}
+
+/* Action button */
+.button--action {
+    padding: 4px 12px;
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid #cdcdcd;
+}
+
+.button--action .button__text {
+    font-size: 14px;
+}
+
+.button--action:hover {
+    box-shadow: 0px 0px 12px 1px #00000026;
+}
+
+.button--action .button__icon {
+    font-size: 18px;
 }
 
 /* ------------ /END Buttons ------------ */
@@ -265,6 +276,31 @@ body::-webkit-scrollbar-thumb,
 }
 
 /* ------------ /END Authentication pages ------------ */
+
+
+/* ------------ Main layouts ------------ */
+.body__inner {
+    max-width: 100%;
+    margin: auto;
+    padding: 0 40px;
+    transition: var(--theme-transition);
+}
+
+.body__inner--shrinked {
+    max-width: var(--shrinked-body-width);
+}
+
+.main-wrapper {
+    position: relative;
+    display: flex;
+    gap: 20px;
+}
+
+.main {
+    margin-left: calc(var(--leftbar-width) + 20px);
+    flex-grow: 1;
+}
+/* ------------ /END Main layouts ------------ */
 
 
 /* ------------ Header ------------ */
@@ -319,6 +355,22 @@ body::-webkit-scrollbar-thumb,
 /* ------------ /END Header ------------ */
 
 
+/* ------------ Leftbar ------------ */
+.leftbar {
+    width: var(--leftbar-width);
+    position: fixed;
+    overflow-y: auto;
+    max-height: 100%;
+    /* For overflow-y visible */
+    padding-bottom: calc(var(--header-height) + 12px);
+}
+
+.leftbar::-webkit-scrollbar {
+    display: none;
+}
+/* ------------ /END Leftbar ------------ */
+
+
 /* ------------ Navbar ------------ */
 .navbar {
     display: flex;
@@ -341,12 +393,12 @@ body::-webkit-scrollbar-thumb,
     margin-top: 0;
 }
 
-.navbar-title-text {
+.navbar-title__text {
     font-size: 13px;
     font-weight: 600;
 }
 
-.navbar-title-stroke {
+.navbar-title__stroke {
     flex-grow: 1;
     border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -386,6 +438,73 @@ body::-webkit-scrollbar-thumb,
 }
 
 /* ------------ /END Navbar ------------ */
+
+
+/* ------------ Pre content ------------ */
+.pre-content {
+    height: var(--pre-content-height);
+    display: flex;
+    align-items: center;
+    padding: 8px 20px;
+}
+
+.pre-content__fullscreen {
+    transform: translateX(-4px);
+    margin-right: 18px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.pre-content__actions {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+/* ------------ /END Pre content ------------ */
+
+
+/* ------------ Breadcrumbs ------------ */
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    list-style: none;
+}
+
+.breadcrumbs__item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.breadcrumbs__item::before {
+    content: '\e5df';
+    color: #b0bbc9;
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+.breadcrumbs__item:first-child:before {
+    content: none;
+}
+
+/* ------------ /END Breadcrumbs ------------ */
 
 
 /* ------------ Different ------------ */

@@ -18,9 +18,6 @@
     <main class="main">
         @yield('main')
     </main>
-
-    {{-- Scripts --}}
-    @vite('resources/js/app.js')
 </body>
 
 </html>

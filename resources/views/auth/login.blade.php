@@ -8,14 +8,8 @@
         <form class="form login-form" action="/login" method="POST">
             @csrf
 
-            <x-form.groups.validateable label="{{ __('Email address') }}" error-name="email" required="true">
-                <x-form.default-elements.input name="email" type="email" autofocus required />
-            </x-form.groups.validateable>
-
-            <x-form.groups.validateable label="{{ __('Password') }}" error-name="password" required="true">
-                <x-form.default-elements.input name="password" type="password" autocomplete="current-password" minlength="4" required />
-            </x-form.groups.validateable>
-
+            <x-form.elements.input label="{{ __('Email address') }}" name="email" type="email" autofocus required />
+            <x-form.elements.input label="{{ __('Password') }}" name="password" type="password" autocomplete="current-password" minlength="4" required />
             <x-different.button>{{ __('Log in') }}</x-different.button>
         </form>
     </div>

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Support\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,6 +15,10 @@ class User extends Authenticatable
 
     const DEFAULT_LOCALE_NAME = 'ru';
     const DEFAULT_SHRINK_BODY_WIDTH = false;
+
+    const PHOTO_PATH = 'img/users';
+    const PHOTO_WIDTH = 400;
+    const PHOTO_HEIGHT = 400;
 
     /**
      * The attributes that are mass assignable.
@@ -152,5 +158,24 @@ class User extends Authenticatable
         $settings[$key] = $value;
 
         $this->update(['settings' => $settings]);
+    }
+
+    public function updateFromRequest($request): void
+    {
+        $this->update($request->validated());
+        $this->uploadPhoto($request);
+    }
+
+    private function uploadPhoto($request)
+    {
+        if (!$request->hasFile('photo')) return;
+
+        Helper::uploadModelFile($this, 'photo', Helper::generateSlug($this->name), public_path(self::PHOTO_PATH));
+        Helper::resizeImage($this->getPhotoPath(), self::PHOTO_WIDTH, self::PHOTO_HEIGHT);
+    }
+
+    private function getPhotoPath()
+    {
+        return public_path(self::PHOTO_PATH . '/' . $this->photo);
     }
 }

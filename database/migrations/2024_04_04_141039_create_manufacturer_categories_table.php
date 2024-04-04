@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('factories', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('manufacturer_categories', function (Blueprint $table) {
+            $table->unsignedSmallInteger('id')->autoIncrement();
+            $table->string('name')->unique();
         });
     }
 
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('factories');
+        Schema::dropIfExists('manufacturer_categories');
     }
 };

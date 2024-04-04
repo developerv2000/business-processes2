@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\FactoryController;
+use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
@@ -13,7 +14,7 @@ Route::controller(AuthenticatedSessionController::class)->group(function () {
 });
 
 Route::middleware('auth', 'auth.session')->group(function () {
-    Route::get('/', [FactoryController::class, 'index'])->name('factories.index'); // home
+    Route::get('/', [ManufacturerController::class, 'index'])->name('manufacturers.index'); // home
 
     Route::controller(ProfileController::class)->name('profile.')->group(function () {
         Route::get('profile', 'edit')->name('edit');
@@ -26,7 +27,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::patch('body-width', 'updateBodyWidth')->name('update-body-width');
     });
 
-    Route::prefix('factories')->controller(FactoryController::class)->name('factories.')->group(function () {
+    Route::prefix('manufacturers')->controller(ManufacturerController::class)->name('manufacturers.')->group(function () {
         Route::get('/create', 'create')->name('create');
         Route::get('/{item}', 'edit')->name('edit');
         Route::get('/trash', 'trash')->name('trash');

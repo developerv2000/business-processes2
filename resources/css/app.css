@@ -571,7 +571,7 @@ body::-webkit-scrollbar-thumb,
 
 
 /* ------------ Profile page ------------ */
-.update-password-form {
+.profile-edit .update-password-form {
     margin-top: 40px;
 }
 /* ------------ /END Profile page ------------ */

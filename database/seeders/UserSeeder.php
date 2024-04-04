@@ -16,9 +16,9 @@ class UserSeeder extends Seeder
     {
         $name = ['Firdavs Kilichbekov', 'Nuruloev Olimjon', 'Shahriyor Pirov', 'Alim Munavarov', 'Jahongir Nemonov', 'Muzaffar Behruz', 'Darya Rassulova', 'Irini Kouimtzidou', 'Fariz Mirzoev', 'Firdavs Sirojov', 'Khudoydod Sharipov', 'Farrukh Kayumov', 'Nuridinov Bobur'];
 
-        $email = ['firdavs.kilichbekov@evolet.co.uk', 'olimjon.nuruloev@evolet.co.uk', 'shahriyor_p@evolet.co.uk', 'alim.munavarov@evolet.co.uk', ' bdm3@evolet.co.uk', 'behruz.muzaffar@outlook.com', 'bdm1@evolet.co.uk', 'irini@evolet.co.uk', 'farizmirzo@evolet.co.uk', 'firdavs.sirojov@evolet.co.uk', 'khudoydod.sharipov@evolet.co.uk', 'farrukh.kayumov@evolet.co.uk', 'admin@mail.ru'];
+        $email = ['firdavs.kilichbekov@evolet.co.uk', 'olimjon.nuruloev@evolet.co.uk', 'shahriyor_p@evolet.co.uk', 'alim.munavarov@evolet.co.uk', ' bdm3@evolet.co.uk', 'behruz.muzaffar@outlook.com', 'bdm1@evolet.co.uk', 'irini@evolet.co.uk', 'farizmirzo@evolet.co.uk', 'firdavs.sirojov@evolet.co.uk', 'khudoydod.sharipov@evolet.co.uk', 'farrukh.kayumov@evolet.co.uk', 'developer@mail.com'];
 
-        $photo = ['firdavs-kilichbekov.png', 'nuruloev-olimjon.png', 'shahriyor-pirov.png', 'alim-munavarov.png', 'jahongir-nemonov.png', 'muzaffar-behruz.png', 'darya-rassulova.png', 'irini-kouimtzidou.png', 'fariz-mirzoev.png', 'firdavs-sirojov.png', 'khudoydod-sharipov.png', 'farrukh-kayumov.png', 'irini-kouimtzidou.png'];
+        $photo = ['firdavs-kilichbekov.png', 'nuruloev-olimjon.png', 'shahriyor-pirov.png', 'alim-munavarov.png', 'jahongir-nemonov.png', 'muzaffar-behruz.png', 'darya-rassulova.png', 'irini-kouimtzidou.png', 'fariz-mirzoev.png', 'firdavs-sirojov.png', 'khudoydod-sharipov.png', 'farrukh-kayumov.png', 'developer.jpg'];
 
         $adminID = Role::where('name', Role::ADMIN_NAME)->first()->id;
         $moderatorID = Role::where('name', Role::MODERATOR_NAME)->first()->id;

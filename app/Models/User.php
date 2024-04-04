@@ -8,6 +8,7 @@ use App\Support\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -64,6 +65,17 @@ class User extends Authenticatable
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    // ********** Additional attributes **********
+    public function getPhotoPathAttribute()
+    {
+        return public_path(User::PHOTO_PATH . '/' . $this->photo);
+    }
+
+    public function getPhotoAssetsPathAttribute()
+    {
+        return asset(User::PHOTO_PATH . '/' . $this->photo);
     }
 
     // ********** Roles Check **********
@@ -166,16 +178,20 @@ class User extends Authenticatable
         $this->uploadPhoto($request);
     }
 
+    public function updatePassword($request)
+    {
+        $this->update([
+            'password' => bcrypt($request->new_password),
+        ]);
+
+        Auth::logoutOtherDevices($request->new_password);
+    }
+
     private function uploadPhoto($request)
     {
         if (!$request->hasFile('photo')) return;
 
         Helper::uploadModelFile($this, 'photo', Helper::generateSlug($this->name), public_path(self::PHOTO_PATH));
-        Helper::resizeImage($this->getPhotoPath(), self::PHOTO_WIDTH, self::PHOTO_HEIGHT);
-    }
-
-    private function getPhotoPath()
-    {
-        return public_path(self::PHOTO_PATH . '/' . $this->photo);
+        Helper::resizeImage($this->photo_path, self::PHOTO_WIDTH, self::PHOTO_HEIGHT);
     }
 }

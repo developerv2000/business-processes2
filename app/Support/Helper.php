@@ -13,6 +13,39 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class Helper
 {
+    /**
+     * Used while generating orderBy links
+     */
+    public static function addReversedSortingUrlToRequest($request)
+    {
+        $request->merge([
+            'reversedSortingUrl' => self::setupReversedSortingUrl($request)
+        ]);
+    }
+
+    /**
+     * Reverses the sorting type in the URL query parameters.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return string The modified URL with reversed sorting parameters
+     */
+    public static function setupReversedSortingUrl($request)
+    {
+        // Get the existing query parameters from the request
+        $queryParams = $request->query();
+
+        // Remove the 'orderBy' key if it exists
+        self::deleteArrayKeyIfExists($queryParams, 'orderBy');
+
+        // Reverse the 'orderType' (from 'asc' to 'desc' or vice versa)
+        $queryParams['orderType'] = $request->orderType == 'asc' ? 'desc' : 'asc';
+
+        // Build the modified URL with the updated query parameters
+        $reversedSortUrl = $request->url() . '?' . http_build_query($queryParams);
+
+        return $reversedSortUrl;
+    }
+
     public static function generateSlug($string)
     {
         $string = self::transliterateIntoLatin($string);
@@ -124,6 +157,13 @@ class Helper
 
         // Return the new filename with a unique name to avoid duplication.
         return $filename;
+    }
+
+    public static function deleteArrayKeyIfExists(&$array, $key)
+    {
+        if (array_key_exists($key, $array)) {
+            unset($array[$key]);
+        }
     }
 
     /**

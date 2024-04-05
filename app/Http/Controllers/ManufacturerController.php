@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Manufacturer;
 use App\Http\Requests\StoreManufacturerRequest;
 use App\Http\Requests\UpdateManufacturerRequest;
+use App\Support\Helper;
 use Illuminate\Http\Request;
 
 class ManufacturerController extends Controller
@@ -14,7 +15,13 @@ class ManufacturerController extends Controller
      */
     public function index(Request $request)
     {
-        return view('factories.index');
+        // Add additional parameters to the requests query
+        Manufacturer::addQueryParamsToRequest($request);
+        Helper::addReversedSortingUrlToRequest($request);
+
+        $items = Manufacturer::getItemsFinalized($request);
+
+        return view('factories.index', compact('items'));
     }
 
     /**

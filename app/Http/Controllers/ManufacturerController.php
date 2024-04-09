@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Manufacturer;
 use App\Http\Requests\StoreManufacturerRequest;
 use App\Http\Requests\UpdateManufacturerRequest;
+use App\Models\User;
 use App\Support\Helper;
+use App\Support\Traits\MultipleDestroyable;
+use App\Support\Traits\MultipleRestoreable;
 use Illuminate\Http\Request;
 
 class ManufacturerController extends Controller
 {
+    use MultipleDestroyable;
+    use MultipleRestoreable;
+
+    public $model = Manufacturer::class; // used in destroy/restore traits
+
     /**
      * Display a listing of the resource.
      */
@@ -20,8 +28,10 @@ class ManufacturerController extends Controller
         Helper::addReversedSortingUrlToRequest($request);
 
         $items = Manufacturer::getItemsFinalized($request);
+        $allTableColumns = $request->user()->collectAllTableColumns('epp_table_columns');
+        $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('factories.index', compact('items'));
+        return view('manufacturers.index', compact('request', 'items', 'allTableColumns', 'visibleTableColumns'));
     }
 
     /**
@@ -60,14 +70,6 @@ class ManufacturerController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateManufacturerRequest $request, Manufacturer $manufacturer)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Manufacturer $manufacturer)
     {
         //
     }

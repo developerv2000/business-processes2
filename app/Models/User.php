@@ -8,6 +8,7 @@ use App\Support\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
@@ -61,13 +62,21 @@ class User extends Authenticatable
         'roles'
     ];
 
-    // ********** Relations **********
+    /*
+    |--------------------------------------------------------------------------
+    | Relations
+    |--------------------------------------------------------------------------
+    */
     public function roles()
     {
         return $this->belongsToMany(Role::class);
     }
 
-    // ********** Additional attributes **********
+    /*
+    |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
     public function getPhotoPathAttribute()
     {
         return public_path(User::PHOTO_PATH . '/' . $this->photo);
@@ -78,7 +87,12 @@ class User extends Authenticatable
         return asset(User::PHOTO_PATH . '/' . $this->photo);
     }
 
-    // ********** Roles Check **********
+    /*
+    |--------------------------------------------------------------------------
+    | Roles Check
+    |--------------------------------------------------------------------------
+    */
+
     /**
      * Robots can`t login
      */
@@ -122,7 +136,11 @@ class User extends Authenticatable
         });
     }
 
-    // ********** Scopes **********
+    /*
+    |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
     public function scopeOnlyBdms()
     {
         return $this->whereRelation('roles', 'name', Role::BDM_NAME);
@@ -133,13 +151,40 @@ class User extends Authenticatable
         return $this->whereRelation('roles', 'name', Role::ANALYST_NAME);
     }
 
-    // ********** Miscellaneous **********
+    /*
+    |--------------------------------------------------------------------------
+    | Miscellaneous
+    |--------------------------------------------------------------------------
+    */
+    public function updateFromRequest($request): void
+    {
+        $this->update($request->validated());
+        $this->uploadPhoto($request);
+    }
+
+    public function updatePassword($request): void
+    {
+        $this->update([
+            'password' => bcrypt($request->new_password),
+        ]);
+
+        Auth::logoutOtherDevices($request->new_password);
+    }
+
+    private function uploadPhoto($request): void
+    {
+        if (!$request->hasFile('photo')) return;
+
+        Helper::uploadModelFile($this, 'photo', Helper::generateSlug($this->name), public_path(self::PHOTO_PATH));
+        Helper::resizeImage($this->photo_path, self::PHOTO_WIDTH, self::PHOTO_HEIGHT);
+    }
+
     /**
      * Used after creating & updating users by admin
      *
      * Empty settings is used for Robots
      */
-    public function loadDefaultSettings()
+    public function loadDefaultSettings(): void
     {
         // Refresh user because roles may have been updated
         $this->refresh();
@@ -150,9 +195,11 @@ class User extends Authenticatable
         }
 
         $settings = [
-            'shrinkBodyWidth' => User::DEFAULT_SHRINK_BODY_WIDTH,
+            'shrink_body_width' => User::DEFAULT_SHRINK_BODY_WIDTH,
             'locale' => User::DEFAULT_LOCALE_NAME,
         ];
+
+        $settings['epp_table_columns'] = $this->getDefaultEppTableColumns();
 
         $this->update(['settings' => $settings]);
     }
@@ -172,26 +219,44 @@ class User extends Authenticatable
         $this->update(['settings' => $settings]);
     }
 
-    public function updateFromRequest($request): void
+    public function collectAllTableColumns($key): Collection
     {
-        $this->update($request->validated());
-        $this->uploadPhoto($request);
+        return collect($this->settings[$key])->sortBy('order');
     }
 
-    public function updatePassword($request)
+    public static function filterOnlyVisibleColumns($columns): array
     {
-        $this->update([
-            'password' => bcrypt($request->new_password),
-        ]);
-
-        Auth::logoutOtherDevices($request->new_password);
+        return $columns->where('visible', 1)->sortBy('order')->values()->all();
     }
 
-    private function uploadPhoto($request)
+    private function getDefaultEppTableColumns(): array
     {
-        if (!$request->hasFile('photo')) return;
+        $order = 1;
 
-        Helper::uploadModelFile($this, 'photo', Helper::generateSlug($this->name), public_path(self::PHOTO_PATH));
-        Helper::resizeImage($this->photo_path, self::PHOTO_WIDTH, self::PHOTO_HEIGHT);
+        return [
+            ['name' => 'Edit', 'order' => $order++, 'width' => 44, 'visible' => 1],
+            ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 144, 'visible' => 1],
+            ['name' => 'IVP', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Category', 'order' => $order++, 'width' => 104, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'Important', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Product category', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
+            ['name' => 'Black list', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Presence', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Website', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'About company', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Relationship', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Meetings', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
+        ];
     }
 }

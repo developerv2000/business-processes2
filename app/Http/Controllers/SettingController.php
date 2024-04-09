@@ -15,8 +15,8 @@ class SettingController extends Controller
 
     public function updateBodyWidth(Request $request)
     {
-        $reversed = !$request->user()->settings['shrinkBodyWidth'];
-        $request->user()->updateSetting('shrinkBodyWidth', $reversed);
+        $reversed = !$request->user()->settings['shrink_body_width'];
+        $request->user()->updateSetting('shrink_body_width', $reversed);
 
         return true;
     }

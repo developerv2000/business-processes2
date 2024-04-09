@@ -16,7 +16,7 @@
 <body class="body {{ $page }}">
     <div @class([
         'body__inner',
-        'body__inner--shrinked' => request()->user()->settings['shrinkBodyWidth'],
+        'body__inner--shrinked' => request()->user()->settings['shrink_body_width'],
     ])>
 
         @include('layouts.header')

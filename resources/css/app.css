@@ -298,9 +298,17 @@ body::-webkit-scrollbar-thumb,
     gap: 20px;
 }
 
+.main-wrapper.fullscreen {
+    background-color: #EDF2F9;
+}
+
 .main {
     margin-left: calc(var(--leftbar-width) + 20px);
     flex-grow: 1;
+}
+
+.main-wrapper.fullscreen .main {
+    margin-left: 0;
 }
 /* ------------ /END Main layouts ------------ */
 
@@ -368,6 +376,10 @@ body::-webkit-scrollbar-thumb,
 }
 
 .leftbar::-webkit-scrollbar {
+    display: none;
+}
+
+.main-wrapper.fullscreen .leftbar {
     display: none;
 }
 /* ------------ /END Leftbar ------------ */

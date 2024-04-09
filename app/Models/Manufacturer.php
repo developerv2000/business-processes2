@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Support\Traits\AddParamsToRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Manufacturer extends Model
 {
-    use HasFactory, AddParamsToRequest;
+    use HasFactory;
+    use SoftDeletes;
+    use AddParamsToRequest;
 
     const DEFAULT_ORDER_BY = 'created_at';
     const DEFAULT_ORDER_TYPE = 'desc';

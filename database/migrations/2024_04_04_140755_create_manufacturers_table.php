@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('relationship', 6000)->nullable();
             $table->boolean('is_active');
             $table->boolean('is_important')->default(0);
+            $table->unsignedMediumInteger('usage_count')->default(0);
             $table->unsignedSmallInteger('bdm_user_id');
             $table->unsignedSmallInteger('analyst_user_id');
             $table->unsignedSmallInteger('country_id');

@@ -14,6 +14,12 @@
     "Full screen mode": "Полноэкранный режим",
     "Edit": "Редактировать",
     "Update": "Обновить",
+    "Filtered items": "Отфильтрованных элементов",
+    "New": "Новый",
+    "Trash": "Корзина",
+    "Columns": "Столбцы",
+    "Delete": "Удалить",
+    "Export": "Экспорт",
 
     "Personal data": "Личные данные",
     "Name": "Имя",
@@ -23,9 +29,10 @@
     "Current password": "Текущий пароль",
     "New password": "Новый пароль",
 
-
-
-
+    "Setup columns": "Настроить столбцы",
+    "Visible": "Видимость",
+    "Width in pixels": "Ширина в пикселях",
+    "Drag and drop columns for sorting!": "Перетаскивайте столбцы для сортировки!",
 
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

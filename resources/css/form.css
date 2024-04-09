@@ -76,6 +76,16 @@
     color: var(--danger-color);
 }
 
+/* Horizontal Form Group */
+.form-group--horizontal {
+    align-self: flex-start;
+}
+
+.form-group--horizontal .label {
+    flex-direction: row;
+    gap: 32px;
+}
+
 /* Input & Textarea */
 .input,
 .textarea {
@@ -128,4 +138,28 @@
 .input[type="file"]::-webkit-file-upload-button,
 .input[type="file"]::file-selector-button {
     display: none;
+}
+
+/* Switch */
+.switch {
+    width: 2em;
+    height: 1em;
+    font-size: 20px;
+    border: 1px solid #b6c1d2;
+    border-radius: 2em;
+    background-image: url(/img/main/switch.svg);
+    background-position: left center;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: contain;
+    appearance: none;
+    transition: background-position .15s ease-in-out;
+    print-color-adjust: exact;
+}
+
+.switch:checked {
+    border-color: var(--main-color);
+    background-image: url(/img/main/switch-checked.svg);
+    background-position: right center;
+    background-color: var(--main-color);
 }

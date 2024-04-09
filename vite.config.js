@@ -11,10 +11,10 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    // publicDir: 'public',
-    // base: '/',
-    // build: {
-    //     assetsDir: '',
-    //     copyPublicDir: false,
-    // },
+    publicDir: 'public',
+    base: '/',
+    build: {
+        assetsDir: '',
+        copyPublicDir: false,
+    },
 });

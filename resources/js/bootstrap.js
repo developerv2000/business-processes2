@@ -1,5 +1,10 @@
+import '../plugins/jquery/jquery-3.6.4.min.js'
+import '../plugins/jquery/jquery-ui.min.js' // used in jq sortable & jq nested sortable
 import axios from 'axios';
 
+const spinner = document.querySelector('.spinner');
+
+// Setup axios
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -18,6 +23,15 @@ function hideModal(modal) {
 
 function hideAllActiveModals() {
     document.querySelectorAll('.modal--visible').forEach(hideModal);
+}
+
+// Spinner helpers
+export function showSpinner() {
+    spinner.classList.add('spinner--visible');
+}
+
+export function hideSpinner() {
+    spinner.classList.remove('spinner--visible');
 }
 
 // FullSreen helpers
@@ -50,8 +64,19 @@ const toggleFullscreenClass = (target) => {
     }
 };
 
+// Other functions
+function debounce(callback, timeoutDelay = 500) {
+    let timeoutId;
+
+    return (...rest) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+    };
+}
+
 function setupComponents() {
     // ********** Dropdown **********
+
     // Event listener for dropdown buttons
     document.querySelectorAll('.dropdown__button').forEach((button) => {
         button.addEventListener('click', (evt) => {
@@ -96,4 +121,7 @@ function setupComponents() {
             toggleFullscreenClass(fullscreenTarget);
         });
     });
+
+    // ********** Sortable columns **********
+    $('.sortable-columns').sortable();
 }

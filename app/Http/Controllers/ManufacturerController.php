@@ -18,9 +18,6 @@ class ManufacturerController extends Controller
 
     public $model = Manufacturer::class; // used in destroy/restore traits
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         // Add additional parameters to the requests query

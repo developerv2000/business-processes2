@@ -588,3 +588,73 @@ body::-webkit-scrollbar-thumb,
     margin-top: 40px;
 }
 /* ------------ /END Profile page ------------ */
+
+
+/* ------------ Sortable columns ------------ */
+.sortable-columns {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sortable-columns__item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: #F9FAFD;
+    padding: 12px;
+    border-radius: var(--theme-border-radius);
+    cursor: grab;
+}
+
+.sortable-columns__title {
+    margin: 0;
+    font-size: 15px;
+    color: var(--success-color);
+}
+
+.sortable-columns .form-group--horizontal .label {
+    align-items: center;
+}
+
+.sortable-columns__width {
+    margin: 8px 0;
+    height: 3px;
+    background-color: var(--secondary-color);
+}
+
+/* ------------ /END Sortable columns ------------ */
+
+
+/* ------------ Spinner ------------ */
+.spinner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    transition: 0.3s;
+    opacity: 0;
+    z-index: 10;
+}
+
+.spinner__inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #00000063;
+}
+
+.spinner__img {
+    width: 60px;
+}
+
+.spinner--visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ------------ /end Spinner ------------ */

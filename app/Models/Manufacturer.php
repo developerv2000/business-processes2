@@ -17,6 +17,20 @@ class Manufacturer extends Model
     const DEFAULT_ORDER_TYPE = 'desc';
     const DEFAULT_PAGINATION_LIMIT = 50;
 
+    protected $guarded = ['id'];
+
+    protected $with = [
+        'bdm:id,name,photo',
+        'analyst:id,name,photo',
+        'country',
+        'category',
+        'presences',
+        'blacklists',
+        'productClasses',
+        'zones',
+        'lastComment',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Relations

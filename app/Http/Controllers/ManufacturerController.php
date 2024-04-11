@@ -25,7 +25,7 @@ class ManufacturerController extends Controller
         Helper::addReversedSortingUrlToRequest($request);
 
         $items = Manufacturer::getItemsFinalized($request);
-        $allTableColumns = $request->user()->collectAllTableColumns('epp_table_columns');
+        $allTableColumns = $request->user()->collectAllTableColumns('manufacturers_table_columns');
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
         return view('manufacturers.index', compact('request', 'items', 'allTableColumns', 'visibleTableColumns'));

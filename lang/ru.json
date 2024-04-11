@@ -34,5 +34,37 @@
     "Width in pixels": "Ширина в пикселях",
     "Drag and drop columns for sorting!": "Перетаскивайте столбцы для сортировки!",
 
+    "products": "продукта",
+    "Active": "Активный",
+    "Stoped": "Остановлено",
+    "Important": "Важный",
+    "View": "Перейти",
+    "Date of creation": "Дата создания",
+    "Update date": "Дата обновления",
+    "ID": "Нвои",
+
+    "Comment": "Комментарий",
+    "Comments": "Комм Ан*",
+    "Last comment": "Последний комментарий",
+    "Comments date": "Дата комм",
+    "All comments": "Все комментарии",
+    "Add new comment": "Добавить новый комментарий",
+
+    "Analyst": "Аналитик",
+    "BDM": "БДМ",
+    "Country": "Страна",
+    "Manufacturer": "Производитель",
+    "Category": "Категория",
+    "Status": "Статус",
+    "Product category": "Класс Пд",
+    "Zones": "Зоны",
+    "Black list": "Чёрный список",
+    "Presence": "Присутствие",
+    "Website": "Сайт",
+    "About company": "О компании",
+    "Relationship": "Отношения",
+    "Stop/pause": "Стоп/пауза",
+
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

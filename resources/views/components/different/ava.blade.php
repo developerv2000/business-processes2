@@ -1,6 +1,6 @@
-@props(['image', 'text' => null, 'desc' => null])
+@props(['image', 'text' => null])
 
-<div class="ava {{ $attributes['class'] }}">
+<div {{ $attributes->merge(['class' => 'ava']) }}>
     <img class="ava__image" src="{{ $image }}">
 
     @if ($text)

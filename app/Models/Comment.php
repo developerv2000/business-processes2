@@ -12,6 +12,13 @@ class Comment extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
 
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+        ];
+    }
+
     public function commentable()
     {
         return $this->morphTo();

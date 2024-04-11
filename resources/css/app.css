@@ -25,6 +25,8 @@
     --header-height: 48px;
     --leftbar-width: 140px;
     --pre-content-height: 50px;
+    --table-pagination-height: 40px;
+    --thead-height: 46px;
 }
 
 body {
@@ -242,6 +244,20 @@ body::-webkit-scrollbar-thumb,
     font-size: 18px;
 }
 
+/* Arrowed link */
+.arrowed-link {
+    display: inline-flex;
+}
+
+.arrowed-link .button__icon {
+    font-size: 20px;
+    color: var(--success-color);
+}
+
+.arrowed-link .button__text {
+    font-size: 14px;
+    font-weight: 400;
+}
 /* ------------ /END Buttons ------------ */
 
 
@@ -305,6 +321,7 @@ body::-webkit-scrollbar-thumb,
 .main {
     margin-left: calc(var(--leftbar-width) + 20px);
     flex-grow: 1;
+    overflow: auto;
 }
 
 .main-wrapper.fullscreen .main {
@@ -658,3 +675,232 @@ body::-webkit-scrollbar-thumb,
 }
 
 /* ------------ /end Spinner ------------ */
+
+
+/* ------------ Pagination ------------ */
+.pagination {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pagination__item {
+    background: white;
+    border-radius: 4px;
+    transition: var(--theme-transition);
+}
+
+.pagination__link {
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    text-decoration: none;
+    line-height: 1;
+    color: var(--text-color);
+    border: 1px solid #0000001f;
+    transition: var(--theme-transition);
+}
+
+.pagination__link:hover {
+    border-color: var(--main-color);
+}
+
+.pagination__item--disabled .pagination__link:hover {
+    border-color: #0000001f;
+}
+
+.pagination__link--active {
+    color: #fff;
+    background-color: var(--main-color);
+}
+
+.pagination__link span {
+    color: #a7a7a7de;
+}
+
+.pagination__dots {
+    display: flex;
+    align-items: flex-end;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 0 4px;
+}
+
+/* ------------ /end Pagination ------------ */
+
+
+/* ------------ Table ------------ */
+.table-wrapper + .pagination {
+    height: var(--table-pagination-height);
+}
+
+.table-wrapper {
+    max-height: calc(100vh - var(--header-height) - var(--pre-content-height) - var(--table-pagination-height));
+    overflow: auto;
+}
+
+.table {
+    table-layout: fixed;
+    width: 100%;
+    caption-side: bottom;
+    border-collapse: collapse;
+}
+
+.table thead {
+    position: sticky;
+    top: 0;
+    height: var(--thead-height);
+    vertical-align: top;
+    text-align: left;
+    font-size: 14px;
+    color: #4d5969;
+    background-color: #F9FAFD;
+}
+
+.table th {
+    vertical-align: middle;
+    padding: 10px 8px;
+    font-weight: 400;
+    word-break: break-word;
+}
+
+.table thead a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+}
+
+.table thead a.active {
+    font-weight: 500;
+    color: #232e3c;
+}
+
+.table thead .material-symbols-outlined {
+    font-size: 14px;
+}
+
+.table tr {
+    border-bottom: 1px solid rgb(237, 242, 249);
+    transition: var(--theme-transition);
+}
+
+.table tr:hover {
+    background-color: #F9FAFD;
+}
+
+.table tbody {
+    font-size: 14px;
+    vertical-align: top;
+}
+
+.table td {
+    padding: 8px;
+    word-break: break-word;
+}
+
+.table tr th:first-child,
+.table tr td:first-child {
+    padding-left: 20px;
+}
+
+.table tr th:last-child,
+.table tr td:last-child {
+    padding-right: 20px;
+}
+
+.th__select-all {
+    display: block;
+    transform: translate(-4px);
+    font-size: 22px !important;
+    font-variation-settings: var(--material-symbols-lighter);
+    cursor: pointer;
+}
+
+.th__edit {
+    display: block;
+    font-size: 22px !important;
+}
+
+.td__edit {
+    margin-top: 4px;
+}
+
+.td__edit .button__icon {
+    color: var(--main-color);
+    font-size: 22px;
+}
+
+.td__limited-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.td__link {
+    color: var(--main-color);
+    text-decoration: none;
+}
+
+.td__link:hover {
+    text-decoration: underline;
+}
+/* ------------ /END Table ------------ */
+
+
+/* ------------ Badge ------------ */
+.badge {
+    border-radius: 4px;
+    display: inline-flex;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 4px 8px;
+}
+
+.badge--yellow {
+    color: #66662c;
+    background-color: #FFFFCC;
+}
+
+.badge--pink {
+    color: rgb(147, 35, 56);
+    background-color: rgb(250, 215, 221);
+}
+
+.badge--orange {
+    background-color: rgb(253, 230, 216);
+    color: rgb(157, 82, 40);
+}
+
+.badge--blue {
+    color: rgb(25, 120, 162);
+    background-color: rgb(212, 242, 255);
+}
+
+.badge--red {
+    background-color: rgb(230, 55, 87);
+    color: rgb(255 212 220);
+}
+
+.badge--grey {
+    color: rgb(125, 137, 155);
+    background-color: rgb(227, 230, 234);
+}
+
+.badge--green {
+    color: rgb(0, 134, 78);
+    background-color: rgb(204, 246, 228);
+}
+
+/* ------------ /end Badge ------------ */

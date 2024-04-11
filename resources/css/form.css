@@ -163,3 +163,29 @@
     background-position: right center;
     background-color: var(--main-color);
 }
+
+/* Checkbox */
+.checkbox {
+    width: 1em;
+    height: 1em;
+    margin-top: 0.25em;
+    font-size: 16px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: 1px solid #b6c1d2;
+    border-radius: 0.25em;
+    appearance: none;
+    print-color-adjust: exact;
+}
+
+.checkbox:checked {
+    background-color: var(--main-color);
+    border-color: var(--main-color);
+    background-image: url(/img/main/checkbox-checked.svg);
+}
+
+.checkbox:focus {
+    box-shadow: 0 0 0 0.25rem rgba(44, 123, 229, .25);
+}

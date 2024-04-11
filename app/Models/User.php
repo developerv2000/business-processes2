@@ -199,7 +199,7 @@ class User extends Authenticatable
             'locale' => User::DEFAULT_LOCALE_NAME,
         ];
 
-        $settings['epp_table_columns'] = $this->getDefaultEppTableColumns();
+        $settings['manufacturers_table_columns'] = $this->getDefaultManufacturersTableColumns();
 
         $this->update(['settings' => $settings]);
     }
@@ -229,12 +229,12 @@ class User extends Authenticatable
         return $columns->where('visible', 1)->sortBy('order')->values()->all();
     }
 
-    private function getDefaultEppTableColumns(): array
+    private function getDefaultManufacturersTableColumns(): array
     {
         $order = 1;
 
         return [
-            ['name' => 'Edit', 'order' => $order++, 'width' => 44, 'visible' => 1],
+            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 144, 'visible' => 1],
@@ -246,11 +246,11 @@ class User extends Authenticatable
             ['name' => 'Product category', 'order' => $order++, 'width' => 126, 'visible' => 1],
             ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
             ['name' => 'Black list', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Presence', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Presence', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Website', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'About company', 'order' => $order++, 'width' => 240, 'visible' => 1],
-            ['name' => 'Relationship', 'order' => $order++, 'width' => 240, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Relationship', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 104, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],

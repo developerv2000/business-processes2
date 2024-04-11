@@ -26,8 +26,9 @@
 
             <main class="main">
                 @yield('main')
-                <x-different.spinner />
             </main>
+
+            <x-different.spinner />
 
             @hasSection('rightbar')
                 @yield('rightbar')

@@ -1,7 +1,7 @@
 @extends('layouts.app', ['page' => 'manufacturers-index'])
 
 @section('main')
-    <div class="main-conent-box styled-box">
+    <div class="main__conent-box styled-box">
         <div class="pre-content">
             @include('layouts.breadcrumbs', [
                 'crumbs' => [__('Filtered items') . ' - ' . $items->total()],
@@ -21,8 +21,10 @@
                 @endunless
             </div>
         </div>
+
+        @include('tables.default-template', ['tableName' => 'manufacturers'])
     </div>
 
     <x-modals.multiple-delete action="{{ route('manufacturers.destroy') }}" force-delete="0" />
-    <x-modals.edit-table-columns action="{{ route('settings.update-table-columns') }}" table="epp" :columns="$allTableColumns" />
+    <x-modals.edit-table-columns action="{{ route('settings.update-table-columns') }}" table="manufacturers" :columns="$allTableColumns" />
 @endsection

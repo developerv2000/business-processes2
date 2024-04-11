@@ -23,7 +23,7 @@ function setupDifferentEventActions() {
             });
     });
 
-    // ********** Table columns edit width trackbar **********
+    // ********** Table columns edit form width trackbar **********
     // Increase & decrase trackbar width
     document.querySelectorAll('.sortable-columns__width-input').forEach(trackbar => {
         trackbar.addEventListener('input', (evt) => {
@@ -32,6 +32,27 @@ function setupDifferentEventActions() {
             widthDiv.style.width = evt.target.value + 'px';
         });
     });
+
+    // ********** Table Select all toggler **********
+    document.querySelector('.th__select-all')?.addEventListener('click', () => {
+        let checkboxes = document.querySelectorAll('.td__checkbox');
+        let checkedAll = document.querySelector('.td__checkbox:not(:checked)') ? false : true;
+
+        // toggle checkbox statements
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = !checkedAll;
+        });
+    });
+
+    // ********** Tables limited text overflow toggler **********
+    document.querySelector('.table')?.addEventListener('click', (evt) => {
+        const target = evt.target;
+
+        if (target.dataset.onClick == 'toggle-text-limit') {
+            target.classList.toggle('td__limited-text');
+        }
+    });
+
 }
 
 function setupDifferentFormSubmits() {

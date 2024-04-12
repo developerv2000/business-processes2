@@ -27,6 +27,7 @@
     --pre-content-height: 50px;
     --table-pagination-height: 40px;
     --thead-height: 46px;
+    --rightbar-width: 200px;
 }
 
 body {
@@ -856,6 +857,49 @@ body::-webkit-scrollbar-thumb,
     text-decoration: underline;
 }
 /* ------------ /END Table ------------ */
+
+
+/* ------------ Rightbar ------------ */
+.rightbar {
+    width: var(--rightbar-width);
+    min-width: var(--rightbar-width);
+    max-height: calc(100vh - var(--header-height));
+    overflow-y: auto;
+}
+
+/* Filter */
+.filter__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: #F9FAFD;
+}
+
+.filter__title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.filter__reset {
+    display: flex;
+    text-decoration: none;
+}
+
+.filter-form {
+    position: relative;
+    padding: 20px;
+}
+
+.fiter-form__submit {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+/* ------------ /END Rightbar ------------ */
 
 
 /* ------------ Badge ------------ */

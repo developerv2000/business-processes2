@@ -28,3 +28,7 @@
     <x-modals.multiple-delete action="{{ route('manufacturers.destroy') }}" force-delete="0" />
     <x-modals.edit-table-columns action="{{ route('settings.update-table-columns') }}" table="manufacturers" :columns="$allTableColumns" />
 @endsection
+
+@section('rightbar')
+    @include('filters.manufacturers')
+@endsection

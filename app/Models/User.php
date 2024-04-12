@@ -250,7 +250,7 @@ class User extends Authenticatable
             ['name' => 'Website', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'About company', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Relationship', 'order' => $order++, 'width' => 200, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 104, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 106, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],

@@ -88,7 +88,7 @@
     @break
 
     @case('Comments')
-        <x-different.arrowed-link href="#">{{ __('View') }}</x-different.arrowed-link>
+        <x-different.arrowed-link href="#">{{ __('Comments') }}</x-different.arrowed-link>
     @break
 
     @case('Last comment')

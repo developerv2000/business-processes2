@@ -28,11 +28,11 @@
                 @yield('main')
             </main>
 
-            <x-different.spinner />
-
             @hasSection('rightbar')
                 @yield('rightbar')
             @endif
+
+            <x-different.spinner />
         </div>
     </div>
 

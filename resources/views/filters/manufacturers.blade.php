@@ -1,5 +1,11 @@
 @extends('filters.template')
 
 @section('elements')
-    <x-forms.inputs.request-based-input name="koko" label="Proverka" />
+    <x-forms.id-based-single-select.request-based-select
+        name="analyst_user_id"
+        label="Analyst"
+        :options="$analystUsers"
+        option-caption-attribute="name"
+    />
 @endsection
+

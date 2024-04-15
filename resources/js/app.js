@@ -1,15 +1,14 @@
-import './bootstrap';
 import { hideSpinner, showSpinner } from './bootstrap';
 
 const UPDATE_BODY_WIDTH_SETTINGS_URL = '/body-width';
 const bodyInner = document.querySelector('.body__inner');
 
 window.addEventListener('load', () => {
-    setupDifferentEventActions();
-    setupDifferentFormSubmits();
+    bootstrapComponents();
+    bootstrapForms();
 });
 
-function setupDifferentEventActions() {
+function bootstrapComponents() {
     // ********** Leftbar Toggler **********
     // Toggle leftbar visibility
     document.querySelector('.leftbar-toggler').addEventListener('click', () => {
@@ -18,7 +17,6 @@ function setupDifferentEventActions() {
                 bodyInner.classList.toggle('body__inner--shrinked');
             })
             .catch(error => {
-                // Handle error
                 console.error('Error:', error);
             });
     });
@@ -53,9 +51,11 @@ function setupDifferentEventActions() {
         }
     });
 
+    // ********** Sortable columns **********
+    $('.sortable-columns').sortable();
 }
 
-function setupDifferentFormSubmits() {
+function bootstrapForms() {
     // ********** Table columns edit form **********
     document.querySelector('.table-columns-edit-form')?.addEventListener('submit', (evt) => {
         evt.preventDefault();

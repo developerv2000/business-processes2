@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +24,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Manufacturers
+        View::composer(['filters.manufacturers', 'manufacturers.create', 'manufacturers.edit'], function ($view) {
+            $view->with([
+                'analystUsers' => User::getAnalystsMinified(),
+                // 'manufacturers' => Manufacturer::getAllMinifed(),
+                // 'categories' => ManufacturerCategory::getAll(),
+                // 'bdmUsers' => User::getBdmsMinifed(),
+                // 'countries' => Country::getAll(),
+                // 'zones' => Zone::getAll(),
+                // 'productCategories' => ProductCategory::getAll(),
+                // 'blacklists' => Blacklist::getAll(),
+                // 'statusOptions' => Manufacturer::getStatusOptions(),
+            ]);
+        });
     }
 }

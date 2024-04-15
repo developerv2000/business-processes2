@@ -1,15 +1,16 @@
-import '../plugins/jquery/jquery-3.6.4.min.js'
+import '../plugins/jquery/jquery-3.6.4.min.js';
 import '../plugins/jquery/jquery-ui.min.js' // used in jq sortable & jq nested sortable
-import axios from 'axios';
+import '../plugins/nested-sortable/jquery-nested-sortable.js'
+import '../plugins/selectize/selectize.min.js'
+import '../plugins/axios.min.js'
 
-const spinner = document.querySelector('.spinner');
-
-// Setup axios
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+const spinner = document.querySelector('.spinner');
+
 window.addEventListener('load', () => {
-    setupComponents();
+    bootstrapDefaultComponents();
 });
 
 // Modal helpers
@@ -74,9 +75,8 @@ function debounce(callback, timeoutDelay = 500) {
     };
 }
 
-function setupComponents() {
+function bootstrapDefaultComponents() {
     // ********** Dropdown **********
-
     // Event listener for dropdown buttons
     document.querySelectorAll('.dropdown__button').forEach((button) => {
         button.addEventListener('click', (evt) => {
@@ -122,6 +122,34 @@ function setupComponents() {
         });
     });
 
-    // ********** Sortable columns **********
-    $('.sortable-columns').sortable();
+    // ********** Selectize **********
+    // singular Selectize
+    $('.singular-selectize:not(.selectize--manually-initializable)').selectize({
+        plugins: ["auto_position"],
+    });
+
+    // singular Linked Selectize
+    $('.linked-selectize').selectize({
+        plugins: ["auto_position"],
+        onChange(value) {
+            window.location = value;
+        }
+    });
+
+    // multiple Selectize
+    $('.multiple-selectize:not(.selectize--manually-initializable)').selectize({
+        plugins: ["auto_position"],
+    });
+
+    // multiple Selectize taggable
+    $('.multiple-selectize--taggable').selectize({
+        plugins: ["auto_position"],
+        create: function (input, callback) {
+            callback({
+                value: input,
+                text: input
+            });
+        },
+        createOnBlur: true,
+    });
 }

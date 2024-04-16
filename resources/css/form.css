@@ -193,7 +193,7 @@
 /* Selectize */
 .selectize-input {
     border: var(--input-border);
-    box-shadow: var(--input-box-shadow)
+    box-shadow: none;
 }
 
 .singular-selectize--highlight .selectize-input,

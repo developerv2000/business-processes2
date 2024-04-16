@@ -15,4 +15,9 @@ class ProductClass extends Model
     {
         return $this->belongsToMany(Manufacturer::class);
     }
+
+    public static function getAll()
+    {
+        return self::orderBy('name')->get();
+    }
 }

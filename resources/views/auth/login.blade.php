@@ -8,8 +8,8 @@
         <form class="form login-form" action="/login" method="POST">
             @csrf
 
-            <x-forms.inputs.default-input label="{{ __('Email address') }}" name="email" type="email" autofocus required />
-            <x-forms.inputs.default-input label="{{ __('Password') }}" name="password" type="password" autocomplete="current-password" minlength="4" required />
+            <x-forms.input.default-input label="{{ __('Email address') }}" name="email" type="email" autofocus required />
+            <x-forms.input.default-input label="{{ __('Password') }}" name="password" type="password" autocomplete="current-password" minlength="4" required />
             <x-different.button>{{ __('Log in') }}</x-different.button>
         </form>
     </div>

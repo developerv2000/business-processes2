@@ -2,8 +2,6 @@
     'name', // The name of the input field.
     'label', // The label text for the input field.
     'options', // Select options.
-    'optionCaptionAttribute' => 'name', // Attribute of options to display as captions.
-    'instance', // The model instance for pre-selecting an option.
     'required' => $attributes->has('required'), // Indicates whether the input field is required.
     'errorName' => null, // Case bagged error names is used.
 ])
@@ -11,7 +9,7 @@
 <x-forms.form-group label="{{ __($label) }}" error-name="{{ $errorName ?: $name }}" :required="$required">
     <select
         name="{{ $name }}"
-        {{ $attributes->merge(['class' => 'singular-selectize']) }}
+        {{ $attributes->merge(['class' => request()->input($name) ? 'singular-selectize singular-selectize--highlight' : 'singular-selectize']) }}
         @if($required) required @endif
     >
         @unless ($required)
@@ -19,12 +17,7 @@
         @endunless
 
         @foreach ($options as $option)
-            <option
-                value="{{ $option->id }}"
-                @selected($option->id == $instance->{$name})
-            >
-                {{ $option->{$optionCaptionAttribute} }}
-            </option>
+            <option value="{{ $option }}" @selected($option == request()->input($name))>{{ $option }}</option>
         @endforeach
     </select>
 </x-forms.form-group>

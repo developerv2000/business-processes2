@@ -15,4 +15,9 @@ class Country extends Model
     {
         return $this->hasMany(Manufacturer::class);
     }
+
+    public static function getAll()
+    {
+        return self::orderBy('name')->get();
+    }
 }

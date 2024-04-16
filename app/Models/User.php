@@ -161,6 +161,11 @@ class User extends Authenticatable
         return self::onlyAnalysts()->select('id', 'name')->withOnly([])->get();
     }
 
+    public static function getBdmsMinifed()
+    {
+        return self::onlyBdms()->select('id', 'name')->withOnly([])->get();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Miscellaneous

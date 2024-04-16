@@ -149,4 +149,16 @@ class Manufacturer extends Model
 
         return $items;
     }
+
+    public static function getAllMinifed()
+    {
+        return self::select('id', 'name')->withOnly([])->get();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Miscellaneous
+    |--------------------------------------------------------------------------
+    */
+    
 }

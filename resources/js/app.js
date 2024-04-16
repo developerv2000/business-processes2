@@ -84,4 +84,45 @@ function bootstrapForms() {
         column.visible = item.querySelector('.switch').checked ? 1 : 0;
         return column;
     }
+
+    // ********** Filter Form **********
+    const filterForm = document.querySelector('.filter-form');
+
+    if (filterForm) {
+        // Remove unnecessary fields before submit
+        filterForm.addEventListener('submit', (evt) => {
+            // Remove empty input fields
+            evt.target.querySelectorAll('input').forEach((input) => {
+                if (!input.value) {
+                    input.remove();
+                }
+            });
+
+            // Remove empty select fields
+            evt.target.querySelectorAll('.singular-selectize').forEach((select) => {
+                if (!select.value) {
+                    select.remove();
+                }
+            });
+        });
+
+        // Move active filters to the top
+        // Multiple selects
+        filterForm.querySelectorAll('div.multiple-selectize--highlight').forEach((select) => {
+            const formGroup = select.closest('.form-group');
+            filterForm.insertBefore(formGroup, filterForm.firstChild);
+        });
+
+        // Single selects
+        filterForm.querySelectorAll('div.singular-selectize--highlight').forEach((select) => {
+            const formGroup = select.closest('.form-group');
+            filterForm.insertBefore(formGroup, filterForm.firstChild);
+        });
+
+        // Inputs
+        filterForm.querySelectorAll('.input--highlight').forEach((input) => {
+            const formGroup = input.closest('.form-group');
+            filterForm.insertBefore(formGroup, filterForm.firstChild);
+        });
+    }
 }

@@ -2,7 +2,7 @@
     'name', // The name of the input field.
     'label', // The label text for the input field.
     'options', // Select options.
-    'optionCaptionAttribute', // Attribute of options to display as captions.
+    'optionCaptionAttribute' => 'name', // Attribute of options to display as captions.
     'required' => $attributes->has('required'), // Indicates whether the input field is required.
     'errorName' => null, // Case bagged error names is used.
 ])
@@ -11,9 +11,7 @@
     <select
         name="{{ $name }}"
         {{ $attributes->merge(['class' => 'singular-selectize']) }}
-        @if($required) required
-        @else placeholder="{{ __('Not selected') }}"
-        @endif
+        @if($required) required @endif
     >
         @unless ($required)
             <option></option> {{-- Add an empty option for placeholder. --}}

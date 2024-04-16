@@ -15,4 +15,9 @@ class ManufacturerCategory extends Model
     {
         return $this->hasMany(Manufacturer::class, 'category_id');
     }
+
+    public static function getAll()
+    {
+        return self::orderBy('name')->get();
+    }
 }

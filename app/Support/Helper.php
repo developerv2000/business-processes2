@@ -3,7 +3,7 @@
 /**
  * Custom Helper class
  *
- * @author Bobur Nuridinov <bobnuridinov@gmail.com>
+ * @author Bobur Nuridinov <developerv2000@gmail.com>
  */
 
 namespace App\Support;
@@ -13,6 +13,8 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class Helper
 {
+    const DEFAULT_MODEL_PAGINATION_LIMITS = [10, 20, 50, 80, 100, 200, 400]; // default pagination limits for models
+
     /**
      * Used while generating orderBy links
      */

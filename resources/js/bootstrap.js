@@ -1,13 +1,6 @@
-import '../plugins/jquery/jquery-3.6.4.min.js';
-import '../plugins/jquery/jquery-ui.min.js' // used in jq sortable & jq nested sortable
-import '../plugins/nested-sortable/jquery-nested-sortable.js'
-import '../plugins/selectize/selectize.min.js'
-import '../plugins/axios.min.js'
-
+import axios from "axios";
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
-const spinner = document.querySelector('.spinner');
 
 window.addEventListener('load', () => {
     bootstrapDefaultComponents();
@@ -27,6 +20,8 @@ function hideAllActiveModals() {
 }
 
 // Spinner helpers
+const spinner = document.querySelector('.spinner');
+
 export function showSpinner() {
     spinner.classList.add('spinner--visible');
 }
@@ -151,5 +146,24 @@ function bootstrapDefaultComponents() {
             });
         },
         createOnBlur: true,
+    });
+
+    // ********** Date range picker **********
+    $('.date-range-input').daterangepicker({
+        autoUpdateInput: false, // make it nullable
+        opens: 'left',
+        locale: {
+            format: 'DD/MM/YYYY'
+        },
+    });
+
+    // change value format
+    $('.date-range-input').on('apply.daterangepicker', function (ev, picker) {
+        $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+    });
+
+    // make it nullable
+    $('.date-range-input').on('cancel.daterangepicker', function (ev, picker) {
+        $(this).val('');
     });
 }

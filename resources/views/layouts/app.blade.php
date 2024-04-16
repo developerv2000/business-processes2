@@ -35,6 +35,31 @@
             <x-different.spinner />
         </div>
     </div>
+
+    {{-- JQuery --}}
+    <script src="{{ asset('plugins/jquery/jquery-3.6.4.min.js') }}"></script>
+
+    {{-- Selectize --}}
+    <script src="{{ asset('plugins/selectize/selectize.min.js') }}"></script>
+
+    {{-- Moment.js (required in Date range picker) --}}
+    <script src="{{ asset('plugins/moment.min.js') }}"></script>
+
+    {{-- JQuery Date range picker --}}
+    <script src="{{ asset('plugins/date-range-picker/daterangepicker.min.js') }}"></script>
+
+    {{-- Simditor v2.3.28 --}}
+    <script src="{{ asset('plugins/simditor/module.js') }}"></script>
+    <script src="{{ asset('plugins/simditor/hotkeys.js') }}"></script>
+    <script src="{{ asset('plugins/simditor/uploader.js') }}"></script>
+    <script src="{{ asset('plugins/simditor/simditor.js') }}"></script>
+
+    {{-- JQuery UI. (required in nested sortable)  --}}
+    <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+
+    {{-- JQuery Nested Sortable --}}
+    <script src="{{ asset('plugins/jq-nested-sortable/jq-nested-sortable.js') }}"></script>
+
     @vite('resources/js/app.js')
 </body>
 

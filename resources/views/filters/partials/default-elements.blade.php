@@ -8,10 +8,12 @@
     name="updated_at"
 />
 
-<x-forms.input.request-based-input
-    label="ID"
-    name="id"
-    type="number"
-/>
+@if ($includeIdInput)
+    <x-forms.input.request-based-input
+        label="ID"
+        name="id"
+        type="number"
+    />
+@endif
 
 @include('filters.partials.pagination-limit')

@@ -44,6 +44,25 @@
         :options="$productClasses"
     />
 
-    @include('filters.partials.default-elements')
+    <x-forms.id-based-multiple-select.request-based-select
+        label="Zones"
+        name="zones[]"
+        :options="$zones"
+    />
+
+    <x-forms.boolean-select.request-based-select
+        label="Important"
+        name="is_important"
+    />
+
+    <x-forms.id-based-multiple-select.request-based-select
+        label="Black list"
+        name="blacklists[]"
+        :options="$blacklists"
+    />
+
+    @include('filters.partials.default-elements', [
+        'includeIdInput' => false
+    ])
 @endsection
 

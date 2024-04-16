@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Helper;
 use App\Support\Traits\AddParamsToRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -105,12 +106,42 @@ class Manufacturer extends Model
         // If no query is provided, create a new query instance
         $query = $query ?: self::query();
 
-        // $query = self::filterItems($query);
+        $query = self::filterItems($request, $query);
 
         // Get the finalized items based on the specified finaly option
         $items = self::finalizeItems($request, $query, $finaly);
 
         return $items;
+    }
+
+    private static function filterItems($request, $query)
+    {
+        $whereEqualAttributes = [
+            'analyst_user_id',
+            'bdm_user_id',
+            'country_id',
+            'id',
+            'category_id',
+            'is_active',
+            'is_important',
+        ];
+
+        $dateRangeAttributes = [
+            'created_at',
+            'updated_at',
+        ];
+
+        $belongsToManyRelations = [
+            'productClasses',
+            'zones',
+            'blacklists',
+        ];
+
+        $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Helper::filterQueryDateRangeStatements($request, $query, $dateRangeAttributes);
+        $query = Helper::filterBelongsToManyRelations($request, $query, $belongsToManyRelations);
+
+        return $query;
     }
 
     /**
@@ -134,7 +165,7 @@ class Manufacturer extends Model
                 // Paginate the results
                 $items = $items
                     ->paginate($request->paginationLimit, ['*'], 'page', $request->page)
-                    ->appends($request->except('page'));
+                    ->appends($request->except(['page', 'reversedSortingUrl']));
                 break;
 
             case 'get':
@@ -160,5 +191,5 @@ class Manufacturer extends Model
     | Miscellaneous
     |--------------------------------------------------------------------------
     */
-    
+
 }

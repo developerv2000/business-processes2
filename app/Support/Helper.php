@@ -8,6 +8,7 @@
 
 namespace App\Support;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
 
@@ -202,5 +203,226 @@ class Helper
         $transilation = Str::ascii($transilation);
 
         return $transilation;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Query filtering
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Filter the Eloquent query with WHERE statements based on request attributes.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $attributes
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function filterQueryWhereEqualStatements($request, $query, $attributes)
+    {
+        foreach ($attributes as $attribute) {
+            // Skip to the next attribute if the attribute does not exists in the request
+            if (!$request->has($attribute)) {
+                continue;
+            }
+
+            // Add a WHERE clause to the query using the attribute and its value from the request
+            $query = $query->where($attribute, $request->{$attribute});
+        }
+
+        return $query;
+    }
+
+    /**
+     * Filter the Eloquent query with WHERE DATE statements based on request attributes.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $attributes
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function filterQueryDateStatements($request, $query, $attributes)
+    {
+        foreach ($attributes as $attribute) {
+            // Skip to the next attribute if the attribute does not exists in the request
+            if (!$request->has($attribute)) {
+                continue;
+            }
+
+            // Add a WHERE DATE clause to the query using the attribute and its value from the request
+            $query = $query->whereDate($attribute, $request->{$attribute});
+        }
+
+        return $query;
+    }
+
+    /**
+     * Filter the Eloquent query with WHERE LIKE statements based on request attributes.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $attributes
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function filterQueryLikeStatements($request, $query, $attributes)
+    {
+        foreach ($attributes as $attribute) {
+            // Skip to the next attribute if the attribute does not exists in the request
+            if (!$request->has($attribute)) {
+                continue;
+            }
+
+            // Add a WHERE LIKE clause to the query using the attribute and its value from the request
+            $query = $query->where($attribute, 'LIKE', '%' . $request->{$attribute} . '%');
+        }
+
+        return $query;
+    }
+
+    /**
+     * Filter the Eloquent query with WHERE DATE range statements based on request attributes.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $attributes
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function filterQueryDateRangeStatements($request, $query, $attributes)
+    {
+        foreach ($attributes as $attribute) {
+            // Skip to the next attribute if the attribute does not exists in the request
+            if (!$request->has($attribute)) {
+                continue;
+            }
+
+            $dates = $request->{$attribute};
+            // Split from & to dates
+            $splitted = explode(' - ', $dates);
+
+            // Ensure both dates are provided
+            if (count($splitted) !== 2) {
+                continue; // Skip to the next attribute if dates are invalid
+            }
+
+            // Parse the dates
+            $fromDate = Carbon::createFromFormat('d/m/Y', $splitted[0])->format('Y-m-d');
+            $toDate = Carbon::createFromFormat('d/m/Y', $splitted[1])->format('Y-m-d');
+
+            // Add WHERE DATE range clause to the query using the attribute and its value from the request
+            $query = $query
+                ->whereDate($attribute, '>=', $fromDate)
+                ->whereDate($attribute, '<', $toDate);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Filter the Eloquent query by BelongsToMany relations based on request attributes.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $relationNames
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function filterBelongsToManyRelations($request, $query, $relationNames)
+    {
+        // Loop through each relation name
+        foreach ($relationNames as $relationName) {
+            // Skip to the next attribute if the attribute does not exists in the request
+            if (!$request->has($relationName)) {
+                continue;
+            }
+
+            // Get the IDs from the request attribute
+            $IDs = $request->{$relationName};
+
+            // Add a WHERE clause to the query using whereHas and whereIn
+            $query = $query->whereHas($relationName, function ($q) use ($IDs) {
+                $q->whereIn('id', $IDs);
+            });
+        }
+
+        return $query;
+    }
+
+    /**
+     * Filter the Eloquent query by WHERE relation equal statements based on request attributes.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $relations
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function filterWhereRelationEqualStatements($request, $query, $relations)
+    {
+        foreach ($relations as $relation) {
+            // Skip to the next attribute if the request does not have the attribute for the relation
+            if (!$request->has($relation['attribute'])) {
+                continue;
+            }
+
+            // Add a WHERE clause to the query using whereHas and where
+            $query = $query->whereHas($relation['name'], function ($q) use ($request, $relation) {
+                $q->where($relation['attribute'], $request->{$relation['attribute']});
+            });
+        }
+
+        return $query;
+    }
+
+    /**
+     * Filter the Eloquent query by WHERE relation LIKE statements based on request attributes.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $relations
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function filterWhereRelationLikeStatements($request, $query, $relations)
+    {
+        foreach ($relations as $relation) {
+            // Skip to the next attribute if the request does not have the attribute for the relation
+            if (!$request->has($relation['attribute'])) {
+                continue;
+            }
+
+            // Add a WHERE LIKE clause to the query using whereHas and where
+            $query = $query->whereHas($relation['name'], function ($q) use ($request, $relation) {
+                $q->where($relation['attribute'], 'LIKE', '%' . $request->{$relation['attribute']} . '%');
+            });
+        }
+
+        return $query;
+    }
+
+    /**
+     * Filter the Eloquent query by WHERE relation equal statements, handling ambiguous situations.
+     *
+     * Example: while filtering process,
+     * both process and its manufacturer relation got id attributes,
+     * and we need to filter by manufacturers.id while filtering id can cause ambiguous where clause
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $relations
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function filterWhereRelationEqualAmbiguousStatements($request, $query, $relations)
+    {
+        foreach ($relations as $relation) {
+            // Skip to the next attribute if the request does not have the attribute for the relation
+            if (!$request->has($relation['attribute'])) {
+                continue;
+            }
+
+            // Add a WHERE clause to the query using whereHas and where
+            $query = $query->whereHas($relation['name'], function ($q) use ($request, $relation) {
+                $q->where($relation['ambiguousAttribute'], $request->{$relation['attribute']});
+            });
+        }
+
+        return $query;
     }
 }

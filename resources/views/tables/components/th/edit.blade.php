@@ -1,1 +1,4 @@
-<span title="{{ __('Edit') }}" class="th__edit material-symbols-outlined">ink_pen</span>
+@include('tables.components.th.iconed-title', [
+    'title' => 'Edit',
+    'icon' => 'ink_pen',
+])

@@ -1,5 +1,10 @@
 @include('tables.style-validations')
 
+@php
+    $tableHeaderColumnsPath = 'tables.header-columns.' . $tableName;
+    $tableBodyColumnsPath = 'tables.body-columns.' . $tableName;
+@endphp
+
 <div class="table-wrapper thin-scrollbar">
     <table class="table">
         {{-- Head start --}}
@@ -7,9 +12,17 @@
             <tr>
                 @include('tables.components.th.select-all')
 
+                <th width="130">
+                    @include('tables.components.th.static-sort-link', ['text' => 'Deletion date', 'orderBy' => 'deleted_at'])
+                </th>
+
+                <th width="44">
+                    @include('tables.components.th.iconed-title', ['title' => 'Restore', 'icon' => 'history'])
+                </th>
+
                 @foreach ($visibleTableColumns as $column)
                     <th width="{{ $column['width'] }}">
-                        @include('tables.header-columns.' . $tableName)
+                        @include($tableHeaderColumnsPath)
                     </th>
                 @endforeach
             </tr>
@@ -21,9 +34,13 @@
                 <tr>
                     @include('tables.components.td.checkbox')
 
+                    <td>{{ $item->deleted_at->isoformat('DD MMM Y') }}</td>
+
+                    @include('tables.components.td.restore-button')
+
                     @foreach ($visibleTableColumns as $column)
                         <td>
-                            @include('tables.body-columns.' . $tableName)
+                            @include($tableBodyColumnsPath)
                         </td>
                     @endforeach
                 </tr>

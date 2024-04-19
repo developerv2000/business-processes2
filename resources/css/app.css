@@ -829,18 +829,9 @@ body::-webkit-scrollbar-thumb,
     cursor: pointer;
 }
 
-.th__edit {
+.th__iconed-title {
     display: block;
     font-size: 22px !important;
-}
-
-.td__edit {
-    margin-top: 4px;
-}
-
-.td__edit .button__icon {
-    color: var(--main-color);
-    font-size: 22px;
 }
 
 .td__limited-text {
@@ -857,6 +848,16 @@ body::-webkit-scrollbar-thumb,
 
 .td__link:hover {
     text-decoration: underline;
+}
+
+.td__edit {
+    margin-top: 4px;
+    color: var(--main-color);
+}
+
+.td__restore-button {
+    margin-top: 4px;
+    color: var(--success-color);
 }
 /* ------------ /END Table ------------ */
 

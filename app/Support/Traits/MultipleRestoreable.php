@@ -17,8 +17,13 @@ trait MultipleRestoreable
         // Extract ids from request
         $ids = (array) $request->input('ids');
 
-        foreach ($ids as $id) {
-            $this->model::withTrashed()->find($id)->restore();
+        // Restore only soft deleted models
+        $models = $this->model::withTrashed()->whereIn('id', $ids)->get();
+
+        foreach ($models as $model) {
+            if ($model->trashed()) {
+                $model->restore();
+            }
         }
 
         return redirect()->back();

@@ -8,8 +8,8 @@
 
             <input type="hidden" name="force_delete" value="{{ $forceDelete }}">
 
-            <p>{{ __('Are you sure, you want to delete all selected items?') }}</p>
-            <p>{{ __('All elements associated with it will also be deleted!') }}</p>
+            <p>{{ __('Are you sure, you want to delete all selected items') }}?</p>
+            <p>{{ __('Also, all associated items will be deleted with it') }}!</p>
         </form>
     </x-slot:body>
 

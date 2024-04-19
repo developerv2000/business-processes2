@@ -3,7 +3,7 @@
         <div class="filter__header">
             <h3 class="filter__title">{{ __('Filter') }}</h3>
 
-            <a class="filter__reset" href="{{ url()->current() }}">
+            <a class="filter__reset" title="{{ __('Reset') }}" href="{{ url()->current() }}">
                 <span class="material-symbols-outlined">restart_alt</span>
             </a>
         </div>

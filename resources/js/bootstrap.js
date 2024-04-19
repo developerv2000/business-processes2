@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
 });
 
 // Modal helpers
-function showModal(modal) {
+export function showModal(modal) {
     modal.classList.add('modal--visible');
 }
 

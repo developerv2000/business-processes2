@@ -1,6 +1,6 @@
 @switch($column['name'])
     @case('Edit')
-        @include('tables.components.td.edit', ['href' => route('manufacturers.edit', $item->id)])
+        @include('tables.components.td.edit-button', ['href' => route('manufacturers.edit', $item->id)])
     @break
 
     @case('BDM')
@@ -114,5 +114,4 @@
     @case('ID')
         {{ $item->id }}
     @break
-
 @endswitch

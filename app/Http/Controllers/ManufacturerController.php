@@ -31,12 +31,25 @@ class ManufacturerController extends Controller
         return view('manufacturers.index', compact('request', 'items', 'allTableColumns', 'visibleTableColumns'));
     }
 
+    public function trash(Request $request)
+    {
+        // Add additional parameters to the requests query
+        Manufacturer::addQueryParamsToRequest($request);
+        Helper::addReversedSortingUrlToRequest($request);
+
+        $items = Manufacturer::getItemsFinalized($request, Manufacturer::onlyTrashed());
+        $allTableColumns = $request->user()->collectAllTableColumns('manufacturers_table_columns');
+        $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
+
+        return view('manufacturers.trash', compact('request', 'items', 'allTableColumns', 'visibleTableColumns'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        
     }
 
     /**

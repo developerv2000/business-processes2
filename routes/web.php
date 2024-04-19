@@ -29,12 +29,12 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     Route::prefix('manufacturers')->controller(ManufacturerController::class)->name('manufacturers.')->group(function () {
+        Route::get('/items/{item}', 'edit')->name('edit');
         Route::get('/create', 'create')->name('create');
-        Route::get('/{item}', 'edit')->name('edit');
         Route::get('/trash', 'trash')->name('trash');
 
         Route::post('/store', 'store')->name('store');
-        Route::patch('{item}', 'update')->name('update');
+        Route::patch('/update/{item}', 'update')->name('update');
         Route::delete('/destroy', 'destroy')->name('destroy');
         Route::patch('/restore', 'restore')->name('restore');
         Route::post('/export', 'export')->name('export');

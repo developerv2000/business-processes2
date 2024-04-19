@@ -9,7 +9,7 @@
     $hasError = $errorName && $errors->has($errorName);
 @endphp
 
-<div class="form-group {{ $hasError ? 'form-group--error' : '' }}">
+<div {{ $attributes->merge(['class' => 'form-group ' . ($hasError ? 'form-group--error' : '')]) }}>
     <label class="label">
        {{-- Display the label text --}}
         <p class="label__text">

@@ -8,7 +8,7 @@
     />
 
     <x-forms.id-based-single-select.request-based-select
-        label="Bdm"
+        label="BDM"
         name="bdm_user_id"
         :options="$bdmUsers"
     />

@@ -20,12 +20,20 @@ trait MultipleDestroyable
         // Force delete records
         if ($request->input('force_delete')) {
             foreach ($ids as $id) {
-                $this->model::withTrashed()->find($id)->forceDelete();
+                // Check if model exists before force deleting
+                $model = $this->model::withTrashed()->find($id);
+                if ($model) {
+                    $model->forceDelete();
+                }
             }
         } else {
             // Soft delete or trash records
             foreach ($ids as $id) {
-                $this->model::find($id)->delete();
+                // Check if model exists before soft deleting
+                $model = $this->model::find($id);
+                if ($model) {
+                    $model->delete();
+                }
             }
         }
 

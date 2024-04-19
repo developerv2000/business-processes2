@@ -1,5 +1,10 @@
 @include('tables.style-validations')
 
+@php
+    $tableHeaderColumnsPath = 'tables.header-columns.' . $tableName;
+    $tableBodyColumnsPath = 'tables.body-columns.' . $tableName;
+@endphp
+
 <div class="table-wrapper thin-scrollbar">
     <table class="table">
         {{-- Head start --}}
@@ -9,7 +14,7 @@
 
                 @foreach ($visibleTableColumns as $column)
                     <th width="{{ $column['width'] }}">
-                        @include('tables.header-columns.' . $tableName)
+                        @include($tableHeaderColumnsPath)
                     </th>
                 @endforeach
             </tr>
@@ -23,7 +28,7 @@
 
                     @foreach ($visibleTableColumns as $column)
                         <td>
-                            @include('tables.body-columns.' . $tableName)
+                            @include($tableBodyColumnsPath)
                         </td>
                     @endforeach
                 </tr>

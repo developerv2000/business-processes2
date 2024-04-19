@@ -1,7 +1,8 @@
-import { hideSpinner, showSpinner } from './bootstrap';
+import { hideSpinner, showSpinner, showModal } from './bootstrap';
 
 const UPDATE_BODY_WIDTH_SETTINGS_URL = '/body-width';
 const bodyInner = document.querySelector('.body__inner');
+const restoreModal = document.querySelector('.single-restore-modal');
 
 window.addEventListener('load', () => {
     bootstrapComponents();
@@ -123,6 +124,17 @@ function bootstrapForms() {
         filterForm.querySelectorAll('.input--highlight').forEach((input) => {
             const formGroup = input.closest('.form-group');
             filterForm.insertBefore(formGroup, filterForm.firstChild);
+        });
+
+        // ********** Restore form **********
+        document.querySelectorAll('[data-action="restore"]').forEach((btn) => {
+            btn.addEventListener('click', (evt) => {
+                const id = evt.currentTarget.dataset.targetId;
+                const inputField = restoreModal.querySelector('input[name="ids[]"]');
+                inputField.value = id;
+
+                showModal(restoreModal);
+            });
         });
     }
 }

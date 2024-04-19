@@ -1,4 +1,4 @@
-@props(['action'])
+@props(['action', 'itemId'])
 
 <x-modals.template class="single-restore-modal" title="{{ __('Restore item') }}">
     <x-slot:body>

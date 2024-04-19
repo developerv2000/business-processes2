@@ -6,7 +6,7 @@
 @endphp
 
 <div class="table-wrapper thin-scrollbar">
-    <table class="table">
+    <table class="table main-table">
         {{-- Head start --}}
         <thead>
             <tr>

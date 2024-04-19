@@ -29,6 +29,11 @@
     align-self: flex-start;
 }
 
+/* Used to hold appended checkbox inputs before submiting form by JS */
+.form__hidden-inputs-container {
+    display: none;
+}
+
 /* Label */
 .label {
     display: flex;

@@ -2,7 +2,6 @@ import { hideSpinner, showSpinner, showModal } from './bootstrap';
 
 const UPDATE_BODY_WIDTH_SETTINGS_URL = '/body-width';
 const bodyInner = document.querySelector('.body__inner');
-const restoreModal = document.querySelector('.single-restore-modal');
 
 window.addEventListener('load', () => {
     bootstrapComponents();
@@ -10,7 +9,7 @@ window.addEventListener('load', () => {
 });
 
 function bootstrapComponents() {
-    // ********** Leftbar Toggler **********
+    // ========== Leftbar Toggler ==========
     // Toggle leftbar visibility
     document.querySelector('.leftbar-toggler').addEventListener('click', () => {
         axios.patch(UPDATE_BODY_WIDTH_SETTINGS_URL)
@@ -22,7 +21,7 @@ function bootstrapComponents() {
             });
     });
 
-    // ********** Table columns edit form width trackbar **********
+    // ========== Table columns edit form width trackbar ==========
     // Increase & decrase trackbar width
     document.querySelectorAll('.sortable-columns__width-input').forEach(trackbar => {
         trackbar.addEventListener('input', (evt) => {
@@ -32,10 +31,10 @@ function bootstrapComponents() {
         });
     });
 
-    // ********** Table Select all toggler **********
+    // ========== Main Table Select all toggler ==========
     document.querySelector('.th__select-all')?.addEventListener('click', () => {
-        let checkboxes = document.querySelectorAll('.td__checkbox');
-        let checkedAll = document.querySelector('.td__checkbox:not(:checked)') ? false : true;
+        let checkboxes = document.querySelectorAll('.main-table .td__checkbox');
+        let checkedAll = document.querySelector('.main-table .td__checkbox:not(:checked)') ? false : true;
 
         // toggle checkbox statements
         checkboxes.forEach((checkbox) => {
@@ -43,8 +42,8 @@ function bootstrapComponents() {
         });
     });
 
-    // ********** Tables limited text overflow toggler **********
-    document.querySelector('.table')?.addEventListener('click', (evt) => {
+    // ========== Tables limited text overflow toggler ==========
+    document.querySelector('.main-table')?.addEventListener('click', (evt) => {
         const target = evt.target;
 
         if (target.dataset.onClick == 'toggle-text-limit') {
@@ -52,12 +51,12 @@ function bootstrapComponents() {
         }
     });
 
-    // ********** Sortable columns **********
+    // ========== Sortable columns ==========
     $('.sortable-columns').sortable();
 }
 
 function bootstrapForms() {
-    // ********** Table columns edit form **********
+    // ========== Table columns edit form ==========
     document.querySelector('.table-columns-edit-form')?.addEventListener('submit', (evt) => {
         evt.preventDefault();
         showSpinner();
@@ -86,7 +85,7 @@ function bootstrapForms() {
         return column;
     }
 
-    // ********** Filter Form **********
+    // ========== Filter Form ==========
     const filterForm = document.querySelector('.filter-form');
 
     if (filterForm) {
@@ -126,14 +125,28 @@ function bootstrapForms() {
             filterForm.insertBefore(formGroup, filterForm.firstChild);
         });
 
-        // ********** Restore form **********
-        document.querySelectorAll('[data-action="restore"]').forEach((btn) => {
-            btn.addEventListener('click', (evt) => {
-                const id = evt.currentTarget.dataset.targetId;
-                const inputField = restoreModal.querySelector('input[name="ids[]"]');
-                inputField.value = id;
+        // ========== Appending inputs before form submit ==========
+        /**
+         * Handles the form submission event by appending inputs to the form.
+         * Especially Used in multiple restore & delete table actions
+         */
 
-                showModal(restoreModal);
+        document.querySelectorAll('[data-before-submit="appends-inputs"]').forEach((form) => {
+            form.addEventListener('submit', (evt) => {
+                // Prevent default form submission
+                evt.preventDefault();
+
+                const targ = evt.target;
+                const inputs = document.querySelectorAll(targ.dataset.inputsSelector);
+
+                // Append each input to the form
+                const hiddenInputsContainer = targ.querySelector('.form__hidden-inputs-container');
+
+                inputs.forEach((input) => {
+                    hiddenInputsContainer.appendChild(input);
+                });
+
+                targ.submit();
             });
         });
     }

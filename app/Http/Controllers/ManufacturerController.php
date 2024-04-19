@@ -22,7 +22,6 @@ class ManufacturerController extends Controller
     {
         // Add additional parameters to the requests query
         Manufacturer::addQueryParamsToRequest($request);
-        Helper::addReversedSortingUrlToRequest($request);
 
         $items = Manufacturer::getItemsFinalized($request);
         $allTableColumns = $request->user()->collectAllTableColumns('manufacturers_table_columns');
@@ -35,7 +34,6 @@ class ManufacturerController extends Controller
     {
         // Add additional parameters to the requests query
         Manufacturer::addQueryParamsToRequest($request);
-        Helper::addReversedSortingUrlToRequest($request);
 
         $items = Manufacturer::getItemsFinalized($request, Manufacturer::onlyTrashed());
         $allTableColumns = $request->user()->collectAllTableColumns('manufacturers_table_columns');
@@ -49,7 +47,7 @@ class ManufacturerController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**

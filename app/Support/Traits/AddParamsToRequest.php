@@ -2,6 +2,7 @@
 
 namespace App\Support\Traits;
 
+use App\Support\Helper;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 trait AddParamsToRequest
@@ -16,5 +17,7 @@ trait AddParamsToRequest
             'paginationLimit' => $request->paginationLimit ?: $static::DEFAULT_PAGINATION_LIMIT,
             'page' => LengthAwarePaginator::resolveCurrentPage(), // used while paginating model items
         ]);
+
+        Helper::addReversedSortingUrlToRequest($request);
     }
 }

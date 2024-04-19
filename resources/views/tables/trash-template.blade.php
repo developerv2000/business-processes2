@@ -6,7 +6,7 @@
 @endphp
 
 <div class="table-wrapper thin-scrollbar">
-    <table class="table">
+    <table class="table main-table">
         {{-- Head start --}}
         <thead>
             <tr>
@@ -14,10 +14,6 @@
 
                 <th width="130">
                     @include('tables.components.th.static-sort-link', ['text' => 'Deletion date', 'orderBy' => 'deleted_at'])
-                </th>
-
-                <th width="44">
-                    @include('tables.components.th.iconed-title', ['title' => 'Restore', 'icon' => 'history'])
                 </th>
 
                 @foreach ($visibleTableColumns as $column)
@@ -35,8 +31,6 @@
                     @include('tables.components.td.checkbox')
 
                     <td>{{ $item->deleted_at->isoformat('DD MMM Y') }}</td>
-
-                    @include('tables.components.td.restore-button')
 
                     @foreach ($visibleTableColumns as $column)
                         <td>

@@ -751,14 +751,14 @@ body::-webkit-scrollbar-thumb,
     overflow: auto;
 }
 
-.table {
+.main-table {
     table-layout: fixed;
     width: 100%;
     caption-side: bottom;
     border-collapse: collapse;
 }
 
-.table thead {
+.main-table thead {
     position: sticky;
     top: 0;
     height: var(--thead-height);
@@ -769,55 +769,55 @@ body::-webkit-scrollbar-thumb,
     background-color: #F9FAFD;
 }
 
-.table th {
+.main-table th {
     vertical-align: middle;
     padding: 10px 8px;
     font-weight: 400;
     word-break: break-word;
 }
 
-.table thead a {
+.main-table thead a {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     text-decoration: none;
 }
 
-.table thead a.active {
+.main-table thead a.active {
     font-weight: 500;
     color: #232e3c;
 }
 
-.table thead .material-symbols-outlined {
+.main-table thead .material-symbols-outlined {
     font-size: 14px;
 }
 
-.table tr {
+.main-table tr {
     border-bottom: 1px solid rgb(237, 242, 249);
     transition: var(--theme-transition);
 }
 
-.table tr:hover {
+.main-table tr:hover {
     background-color: #F9FAFD;
 }
 
-.table tbody {
+.main-table tbody {
     font-size: 14px;
     vertical-align: top;
 }
 
-.table td {
+.main-table td {
     padding: 8px;
     word-break: break-word;
 }
 
-.table tr th:first-child,
-.table tr td:first-child {
+.main-table tr th:first-child,
+.main-table tr td:first-child {
     padding-left: 20px;
 }
 
-.table tr th:last-child,
-.table tr td:last-child {
+.main-table tr th:last-child,
+.main-table tr td:last-child {
     padding-right: 20px;
 }
 
@@ -855,10 +855,6 @@ body::-webkit-scrollbar-thumb,
     color: var(--main-color);
 }
 
-.td__restore-button {
-    margin-top: 4px;
-    color: var(--success-color);
-}
 /* ------------ /END Table ------------ */
 
 

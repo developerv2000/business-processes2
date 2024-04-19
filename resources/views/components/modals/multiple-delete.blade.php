@@ -2,7 +2,7 @@
 
 <x-modals.template class="multiple-delete-modal" title="{{ __('Delete items') }}">
     <x-slot:body>
-        <form class="multiple-delete-form" action="{{ $action }}" method="POST" id="multiple-delete-form">
+        <form class="multiple-delete-form" action="{{ $action }}" data-before-submit="appends-inputs" data-inputs-selector=".main-table .td__checkbox" method="POST" id="multiple-delete-form">
             @csrf
             @method('DELETE')
 
@@ -10,6 +10,9 @@
 
             <p>{{ __('Are you sure, you want to delete all selected items') }}?</p>
             <p>{{ __('Also, all associated items will be deleted with it') }}!</p>
+
+            {{-- Used to hold appended checkbox inputs before submiting form by JS --}}
+            <div class="form__hidden-inputs-container"></div>
         </form>
     </x-slot:body>
 

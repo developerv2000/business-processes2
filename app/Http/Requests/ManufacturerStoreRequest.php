@@ -2,16 +2,18 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Manufacturer;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreManufacturerRequest extends FormRequest
+class ManufacturerStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,7 @@ class StoreManufacturerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => [Rule::unique(Manufacturer::class)]
         ];
     }
 }

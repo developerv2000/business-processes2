@@ -261,6 +261,7 @@ body::-webkit-scrollbar-thumb,
     font-size: 14px;
     font-weight: 400;
 }
+
 /* ------------ /END Buttons ------------ */
 
 
@@ -330,6 +331,7 @@ body::-webkit-scrollbar-thumb,
 .main-wrapper.fullscreen .main {
     margin-left: 0;
 }
+
 /* ------------ /END Main layouts ------------ */
 
 
@@ -402,6 +404,7 @@ body::-webkit-scrollbar-thumb,
 .main-wrapper.fullscreen .leftbar {
     display: none;
 }
+
 /* ------------ /END Leftbar ------------ */
 
 
@@ -498,6 +501,7 @@ body::-webkit-scrollbar-thumb,
     gap: 8px;
     margin-left: auto;
 }
+
 /* ------------ /END Pre content ------------ */
 
 
@@ -559,6 +563,11 @@ body::-webkit-scrollbar-thumb,
     border-radius: 50%;
 }
 
+.create-form,
+.edit-form {
+    padding-bottom: 40px;
+}
+
 /* ------------ /END Different ------------ */
 
 
@@ -607,6 +616,7 @@ body::-webkit-scrollbar-thumb,
 .profile-edit .update-password-form {
     margin-top: 40px;
 }
+
 /* ------------ /END Profile page ------------ */
 
 
@@ -742,7 +752,7 @@ body::-webkit-scrollbar-thumb,
 
 
 /* ------------ Table ------------ */
-.table-wrapper + .pagination {
+.table-wrapper+.pagination {
     height: var(--table-pagination-height);
 }
 
@@ -898,6 +908,7 @@ body::-webkit-scrollbar-thumb,
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
 /* ------------ /END Rightbar ------------ */
 
 

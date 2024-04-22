@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use App\Support\Helper;
-use App\Support\Traits\AddParamsToRequest;
+use App\Support\Traits\Commentable;
+use App\Support\Traits\MergeParamsToRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +13,8 @@ class Manufacturer extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use AddParamsToRequest;
+    use MergeParamsToRequest;
+    use Commentable;
 
     const DEFAULT_ORDER_BY = 'created_at';
     const DEFAULT_ORDER_TYPE = 'desc';
@@ -75,16 +77,6 @@ class Manufacturer extends Model
     public function zones()
     {
         return $this->belongsToMany(Zone::class);
-    }
-
-    public function comments()
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
-
-    public function lastComment()
-    {
-        return $this->morphOne(Comment::class, 'commentable')->latestOfMany();
     }
 
     /*
@@ -188,8 +180,53 @@ class Manufacturer extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | Create and Update
+    |--------------------------------------------------------------------------
+    */
+
+    public static function createFromRequest($request)
+    {
+        $instance = self::create($request->all());
+
+        // BelongsToMany relations
+        $instance->zones()->attach($request->input('zones'));
+        $instance->productClasses()->attach($request->input('productClasses'));
+        $instance->blacklists()->attach($request->input('blacklists'));
+
+        // HasMany relations
+        $instance->storeComment($request->comment);
+        $instance->storePresences($request->presences);
+    }
+
+    private function storePresences($presences)
+    {
+        if (!$presences) return;
+
+        foreach ($presences as $name) {
+            $this->presences()->save(
+                new ManufacturerPresence(['name' => $name]),
+            );
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Miscellaneous
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Return an array of status options
+     *
+     * used on creating/updating of items as radiogroups
+     *
+     * @return array
+     */
+    public static function getStatusOptions()
+    {
+        return [
+            (object) ['caption' => trans('Active'), 'value' => 1],
+            (object) ['caption' => trans('Stop/pause'), 'value' => 0],
+        ];
+    }
 }

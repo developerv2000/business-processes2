@@ -24,6 +24,13 @@ class Comment extends Model
         return $this->morphTo();
     }
 
+    protected static function booted(): void
+    {
+        static::creating(function ($item) {
+            $item->created_at = $item->created_at ?: now();
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

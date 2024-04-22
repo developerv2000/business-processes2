@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ManufacturerStoreRequest;
+use App\Http\Requests\ManufacturerUpdateRequest;
 use App\Models\Manufacturer;
-use App\Http\Requests\StoreManufacturerRequest;
-use App\Http\Requests\UpdateManufacturerRequest;
 use App\Models\User;
-use App\Support\Helper;
 use App\Support\Traits\MultipleDestroyable;
 use App\Support\Traits\MultipleRestoreable;
 use Illuminate\Http\Request;
@@ -20,8 +19,8 @@ class ManufacturerController extends Controller
 
     public function index(Request $request)
     {
-        // Add additional parameters to the requests query
-        Manufacturer::addQueryParamsToRequest($request);
+        // Merge additional query parameters to the requests
+        Manufacturer::mergeQueryParamsToRequest($request);
 
         $items = Manufacturer::getItemsFinalized($request);
         $allTableColumns = $request->user()->collectAllTableColumns('manufacturers_table_columns');
@@ -32,8 +31,8 @@ class ManufacturerController extends Controller
 
     public function trash(Request $request)
     {
-        // Add additional parameters to the requests query
-        Manufacturer::addQueryParamsToRequest($request);
+        // Merge additional query parameters to the requests
+        Manufacturer::mergeQueryParamsToRequest($request);
 
         $items = Manufacturer::getItemsFinalized($request, Manufacturer::onlyTrashed());
         $allTableColumns = $request->user()->collectAllTableColumns('manufacturers_table_columns');
@@ -47,37 +46,31 @@ class ManufacturerController extends Controller
      */
     public function create()
     {
-
+        return view('manufacturers.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreManufacturerRequest $request)
+    public function store(ManufacturerStoreRequest $request)
     {
-        //
-    }
+        Manufacturer::createFromRequest($request);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Manufacturer $manufacturer)
-    {
-        //
+        return to_route('manufacturers.index');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Manufacturer $manufacturer)
+    public function edit(Manufacturer $instance)
     {
-        //
+        return view('manufacturers.edit', compact('instance'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateManufacturerRequest $request, Manufacturer $manufacturer)
+    public function update(ManufacturerUpdateRequest $request, Manufacturer $manufacturer)
     {
         //
     }

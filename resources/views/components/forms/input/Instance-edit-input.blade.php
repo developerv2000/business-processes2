@@ -6,11 +6,10 @@
     'errorName' => null, // Case bagged error names is used.
 ])
 
-<x-forms.form-group label="{{ __($label) }}" error-name="{{ $errorName ?: $name }}" :required="$required">
+<x-forms.groups.default-group label="{{ __($label) }}" error-name="{{ $errorName ?: $name }}" :required="$required">
     <input
         name="{{ $name }}"
         {{ $attributes->merge(['class' => 'input']) }}
-        @if($required) required @endif
-        value="{{ old($name, $instance->{$name}) }}"
-    >
-</x-forms.form-group>
+        @if ($required) required @endif
+        value="{{ old($name, $instance->{$name}) }}">
+</x-forms.groups.default-group>

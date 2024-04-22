@@ -8,7 +8,7 @@
     'errorName' => null, // Case bagged error names is used.
 ])
 
-<x-forms.form-group label="{{ __($label) }}" error-name="{{ $errorName ?: $name }}" :required="$required">
+<x-forms.groups.default-group label="{{ __($label) }}" error-name="{{ $errorName ?: $name }}" :required="$required">
     <select
         name="{{ $name }}"
         {{ $attributes->merge(['class' => 'singular-selectize']) }}
@@ -27,4 +27,4 @@
             </option>
         @endforeach
     </select>
-</x-forms.form-group>
+</x-forms.groups.default-group>

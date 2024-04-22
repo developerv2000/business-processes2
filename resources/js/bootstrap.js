@@ -124,7 +124,7 @@ function bootstrapDefaultComponents() {
     });
 
     // singular Linked Selectize
-    $('.linked-selectize').selectize({
+    $('.linked-selectize:not(.selectize--manually-initializable)').selectize({
         plugins: ["auto_position"],
         onChange(value) {
             window.location = value;
@@ -137,7 +137,7 @@ function bootstrapDefaultComponents() {
     });
 
     // multiple Selectize taggable
-    $('.multiple-selectize--taggable').selectize({
+    $('.multiple-taggable-selectize:not(.selectize--manually-initializable)').selectize({
         plugins: ["auto_position"],
         create: function (input, callback) {
             callback({

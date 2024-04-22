@@ -49,6 +49,8 @@ class AppServiceProvider extends ServiceProvider
                 'zones' => Zone::getAll(),
                 'productClasses' => ProductClass::getAll(),
                 'blacklists' => ManufacturerBlacklist::getAll(),
+                'statusOptions' => Manufacturer::getStatusOptions(),
+                'booleanOptions' => Helper::getBooleanOptionsArray(),
             ]);
         });
     }

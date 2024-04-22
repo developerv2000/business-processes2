@@ -10,6 +10,7 @@ class ManufacturerPresence extends Model
     use HasFactory;
 
     public $timestamps = false;
+    protected $guarded = ['id'];
 
     public function manufacturer()
     {

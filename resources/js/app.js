@@ -143,7 +143,11 @@ function bootstrapForms() {
                 const hiddenInputsContainer = targ.querySelector('.form__hidden-inputs-container');
 
                 inputs.forEach((input) => {
-                    hiddenInputsContainer.appendChild(input);
+                    // Clone the input element
+                    const inputCopy = input.cloneNode(true);
+                    // Append the copy to the hidden inputs container
+
+                    hiddenInputsContainer.appendChild(inputCopy);
                 });
 
                 targ.submit();

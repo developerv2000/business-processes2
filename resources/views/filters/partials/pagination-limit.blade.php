@@ -1,4 +1,4 @@
-<x-forms.form-group label="{{ __('Items per page') }}">
+<x-forms.groups.default-group label="{{ __('Items per page') }}">
     <select
         name="paginationLimit"
         class='singular-selectize'
@@ -7,4 +7,4 @@
             <option value="{{ $option }}" @selected($option == request()->input('paginationLimit'))>{{ $option }}</option>
         @endforeach
     </select>
-</x-forms.form-group>
+</x-forms.groups.default-group>

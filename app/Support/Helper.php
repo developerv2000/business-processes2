@@ -19,7 +19,7 @@ class Helper
     /**
      * Used while generating orderBy links
      */
-    public static function addReversedSortingUrlToRequest($request)
+    public static function mergeReversedSortingUrlToRequest($request)
     {
         $request->merge([
             'reversedSortingUrl' => self::setupReversedSortingUrl($request)
@@ -203,6 +203,19 @@ class Helper
         $transilation = Str::ascii($transilation);
 
         return $transilation;
+    }
+
+    /**
+     * Get an array of boolean options represented by StdClass objects.
+     *
+     * @return array
+     */
+    public static function getBooleanOptionsArray()
+    {
+        return [
+            (object) ['caption' => trans('Yes'), 'value' => 1],
+            (object) ['caption' => trans('No'), 'value' => 0],
+        ];
     }
 
     /*

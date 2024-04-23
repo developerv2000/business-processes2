@@ -4,21 +4,26 @@ namespace App\Models;
 
 use App\Support\Helper;
 use App\Support\Traits\Commentable;
-use App\Support\Traits\MergeParamsToRequest;
+use App\Support\Traits\MergesParamsToRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Manufacturer extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use MergeParamsToRequest;
+    use MergesParamsToRequest;
     use Commentable;
 
     const DEFAULT_ORDER_BY = 'created_at';
     const DEFAULT_ORDER_TYPE = 'desc';
     const DEFAULT_PAGINATION_LIMIT = 50;
+
+    const EXCEL_TEMPLATE_STORAGE_PATH = 'app/excel/templates/epp.xlsx';
+    const EXCEL_EXPORT_STORAGE_PATH = 'app/excel/exports/epp';
 
     protected $guarded = ['id'];
 
@@ -77,6 +82,73 @@ class Manufacturer extends Model
     public function zones()
     {
         return $this->belongsToMany(Zone::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Events
+    |--------------------------------------------------------------------------
+    */
+
+    protected static function booted(): void
+    {
+        static::saving(function ($instance) {
+            $instance->name = strtoupper($instance->name);
+        });
+
+        static::deleting(function ($instance) { // trashing
+            // foreach ($instance->meetings as $meeting) {
+            //     $meeting->delete();
+            // }
+
+            // foreach ($instance->generics as $generic) {
+            //     $generic->delete();
+            // }
+
+            // foreach ($instance->processes as $process) {
+            //     $process->delete();
+            // }
+        });
+
+        static::restored(function ($instance) {
+            // foreach ($instance->meetings()->onlyTrashed()->get() as $meeting) {
+            //     $meeting->restore();
+            // }
+
+            // foreach ($instance->generics()->onlyTrashed()->get() as $generic) {
+            //     $generic->restore();
+            // }
+
+            // foreach ($instance->processes()->onlyTrashed()->get() as $process) {
+            //     $process->restore();
+            // }
+        });
+
+        static::forceDeleting(function ($instance) {
+            $instance->zones()->detach();
+            $instance->productClasses()->detach();
+            $instance->blacklists()->detach();
+
+            foreach ($instance->comments as $comment) {
+                $comment->delete();
+            }
+
+            foreach ($instance->presences as $presence) {
+                $presence->delete();
+            }
+
+            // foreach ($instance->meetings()->withTrashed()->get() as $meeting) {
+            //     $meeting->forceDelete();
+            // }
+
+            // foreach ($instance->generics()->withTrashed()->get() as $generic) {
+            //     $generic->forceDelete();
+            // }
+
+            // foreach ($instance->processes()->withTrashed()->get() as $process) {
+            //     $process->forceDelete();
+            // }
+        });
     }
 
     /*
@@ -203,10 +275,41 @@ class Manufacturer extends Model
         if (!$presences) return;
 
         foreach ($presences as $name) {
-            $this->presences()->save(
-                new ManufacturerPresence(['name' => $name]),
-            );
+            $this->presences()->create(['name' => $name]);
         }
+    }
+
+    public function updateFromRequest($request)
+    {
+        $this->update($request->all());
+
+        // BelongsToMany relations
+        $this->zones()->sync($request->input('zones'));
+        $this->productClasses()->sync($request->input('productClasses'));
+        $this->blacklists()->sync($request->input('blacklists'));
+
+        // HasMany relations
+        $this->storeComment($request->comment);
+        $this->syncPresences($request->presences);
+    }
+
+    private function syncPresences($presences)
+    {
+        // Remove existing presences if $presences is empty
+        if (!$presences) {
+            $this->presences()->delete();
+            return;
+        }
+
+        // Add new presences
+        foreach ($presences as $name) {
+            if (!$this->presences->contains('name', $name)) {
+                $this->presences()->create(['name' => $name]);
+            }
+        }
+
+        // Delete removed presences
+        $this->presences()->whereNotIn('name', $presences)->delete();
     }
 
     /*
@@ -228,5 +331,48 @@ class Manufacturer extends Model
             (object) ['caption' => trans('Active'), 'value' => 1],
             (object) ['caption' => trans('Stop/pause'), 'value' => 0],
         ];
+    }
+
+    /**
+     * Export items to Excel file.
+     *
+     * This function exports the given items to an Excel file using a template.
+     * It saves the Excel file to storage and returns a download response.
+     *
+     * @param \Illuminate\Support\Collection $items The items to export.
+     * @return \Illuminate\Http\Response The download response.
+     */
+    public static function exportItemsAsExcel($items)
+    {
+        // Load the Excel template
+        $template = storage_path(self::EXCEL_TEMPLATE_STORAGE_PATH);
+        $spreadsheet = IOFactory::load($template);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Start adding items from first column and second row (A2)
+        $columnIndex = 1;
+        $row = 2;
+
+        // Chunk items to avoid memory issues and iterate over each chunk
+        $items->chunk(800, function ($itemsChunk) use (&$sheet, &$columnIndex, &$row) {
+            foreach ($itemsChunk as $instance) {
+                $columnIndex = 1;
+                $sheet->setCellValue([$columnIndex++, $row], $instance->name);
+                $sheet->setCellValue([$columnIndex++, $row], $instance->category->name);
+
+                // Increment row for next item
+                $row++;
+            }
+        });
+
+        // Save the Excel file
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = date('Y-m-d H-i-s') . '.xlsx';
+        $filename = Helper::escapeDuplicateFilename($filename, storage_path(self::EXCEL_EXPORT_STORAGE_PATH));
+        $filePath = storage_path(self::EXCEL_EXPORT_STORAGE_PATH  . '/' . $filename);
+        $writer->save($filePath);
+
+        // Return download response
+        return response()->download($filePath);
     }
 }

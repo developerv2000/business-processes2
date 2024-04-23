@@ -70,8 +70,20 @@ class ManufacturerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ManufacturerUpdateRequest $request, Manufacturer $manufacturer)
+    public function update(ManufacturerUpdateRequest $request, Manufacturer $instance)
     {
-        //
+        $instance->updateFromRequest($request);
+
+        return redirect($request->input('previous_url'));
+    }
+
+    public function export(Request $request)
+    {
+        // Merge export parameters into the request from requests previous url query.
+        Manufacturer::mergeExportParamsToRequest($request);
+
+        $items = Manufacturer::getItemsFinalized($request, finaly: 'query');
+
+        return Manufacturer::exportItemsAsExcel($items);
     }
 }

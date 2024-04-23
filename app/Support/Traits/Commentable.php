@@ -45,11 +45,9 @@ trait Commentable
             return;
         }
 
-        $this->comments()->save(
-            new Comment([
-                'body' => $comment,
-                'user_id' => request()->user()->id,
-            ])
-        );
+        $this->comments()->create([
+            'body' => $comment,
+            'user_id' => request()->user()->id,
+        ]);
     }
 }

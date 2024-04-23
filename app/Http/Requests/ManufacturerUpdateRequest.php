@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Manufacturer;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ManufacturerUpdateRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class ManufacturerUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +23,10 @@ class ManufacturerUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $instanceID = $this->route('instance')->id;
+
         return [
-            //
+            'name' => [Rule::unique(Manufacturer::class)->ignore($instanceID)]
         ];
     }
 }

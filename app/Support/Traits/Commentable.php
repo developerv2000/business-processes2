@@ -9,7 +9,7 @@ use App\Models\Comment;
  *
  * This trait provides functionality for associating comments with a model.
  *
- * @package App\Traits
+ * @package App\Support\Traits
  */
 trait Commentable
 {
@@ -39,7 +39,7 @@ trait Commentable
      * @param string|null $comment The comment body.
      * @return void
      */
-    private function storeComment($comment)
+    public function storeComment($comment)
     {
         if (!$comment) {
             return;

@@ -53,6 +53,23 @@ function bootstrapComponents() {
 
     // ========== Sortable columns ==========
     $('.sortable-columns').sortable();
+
+    // ========== Targeted modals ==========
+    document.querySelectorAll('[data-click-action="show-targeted-modal"]').forEach((button) => {
+        button.addEventListener('click', (evt) => {
+            // Find the modal element based on the provided selector
+            const modalSelector = evt.currentTarget.dataset.modalSelector;
+            const modal = document.querySelector(modalSelector);
+
+            // Find the input element inside the modal to update its value
+            const idInput = modal.querySelector('input[name="id"]');
+
+            // Update the input value with the target ID from the button
+            idInput.value = evt.currentTarget.dataset.targetId;
+
+            showModal(modal);
+        });
+    });
 }
 
 function bootstrapForms() {

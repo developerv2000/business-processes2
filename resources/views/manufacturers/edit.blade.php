@@ -111,6 +111,6 @@
                 :options="$blacklists" />
         </div>
 
-        @include('comments.partials.edit-form-fields')
+        @include('comments.model-form-partials.edit-form-fields')
     </x-forms.template.edit-template>
 @endsection

@@ -6,37 +6,37 @@ use App\Http\Requests\ManufacturerStoreRequest;
 use App\Http\Requests\ManufacturerUpdateRequest;
 use App\Models\Manufacturer;
 use App\Models\User;
-use App\Support\Traits\MultipleDestroyable;
-use App\Support\Traits\MultipleRestoreable;
+use App\Support\Traits\DestroysModelRecords;
+use App\Support\Traits\RestoresModelRecords;
 use Illuminate\Http\Request;
 
 class ManufacturerController extends Controller
 {
-    use MultipleDestroyable;
-    use MultipleRestoreable;
+    use DestroysModelRecords;
+    use RestoresModelRecords;
 
-    public $model = Manufacturer::class; // used in destroy/restore traits
+    public $model = Manufacturer::class; // used in multiple destroy/restore traits
 
     public function index(Request $request)
     {
         Manufacturer::mergeQueryingParamsToRequest($request);
-        $items = Manufacturer::getItemsFinalized($request, finaly: 'paginate');
+        $records = Manufacturer::getRecordsFinalized($request, finaly: 'paginate');
 
         $allTableColumns = $request->user()->collectAllTableColumns('manufacturers_table_columns');
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('manufacturers.index', compact('request', 'items', 'allTableColumns', 'visibleTableColumns'));
+        return view('manufacturers.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
     public function trash(Request $request)
     {
         Manufacturer::mergeQueryingParamsToRequest($request);
-        $items = Manufacturer::getItemsFinalized($request, Manufacturer::onlyTrashed(), finaly: 'paginate');
+        $records = Manufacturer::getRecordsFinalized($request, Manufacturer::onlyTrashed(), finaly: 'paginate');
 
         $allTableColumns = $request->user()->collectAllTableColumns('manufacturers_table_columns');
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('manufacturers.trash', compact('request', 'items', 'allTableColumns', 'visibleTableColumns'));
+        return view('manufacturers.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
     /**
@@ -78,8 +78,8 @@ class ManufacturerController extends Controller
     public function export(Request $request)
     {
         Manufacturer::mergeExportQueryingParamsToRequest($request);
-        $items = Manufacturer::getItemsFinalized($request, finaly: 'query');
+        $records = Manufacturer::getRecordsFinalized($request, finaly: 'query');
 
-        return Manufacturer::exportItemsAsExcel($items);
+        return Manufacturer::exportRecordsAsExcel($records);
     }
 }

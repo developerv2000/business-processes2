@@ -1,15 +1,17 @@
 @props(['action', 'forceDelete'])
 
-<x-modals.template class="multiple-delete-modal" title="{{ __('Delete items') }}">
+<x-modals.template class="multiple-delete-modal" title="{{ __('Delete records') }}">
     <x-slot:body>
         <form class="multiple-delete-form" action="{{ $action }}" data-before-submit="appends-inputs" data-inputs-selector=".main-table .td__checkbox" method="POST" id="multiple-delete-form">
             @csrf
             @method('DELETE')
 
-            <input type="hidden" name="force_delete" value="{{ $forceDelete }}">
+            @if ($forceDelete)
+                <input type="hidden" name="force_delete" value="1">
+            @endif
 
-            <p>{{ __('Are you sure, you want to delete all selected items') }}?</p>
-            <p>{{ __('Also, all associated items will be deleted with it') }}!</p>
+            <p>{{ __('Are you sure, you want to delete all selected records') }}?</p>
+            <p>{{ __('Also, all associated records will be deleted with it') }}!</p>
 
             {{-- Used to hold appended checkbox inputs before submiting form by JS --}}
             <div class="form__hidden-inputs-container"></div>

@@ -99,6 +99,6 @@
                 :options="$blacklists" />
         </div>
 
-        @include('comments.partials.create-form-fields')
+        @include('comments.model-form-partials.create-form-fields')
     </x-forms.template.create-template>
 @endsection

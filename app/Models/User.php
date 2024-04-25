@@ -82,7 +82,7 @@ class User extends Authenticatable
         return public_path(User::PHOTO_PATH . '/' . $this->photo);
     }
 
-    public function getPhotoAssetsPathAttribute()
+    public function getPhotoAssetPathAttribute()
     {
         return asset(User::PHOTO_PATH . '/' . $this->photo);
     }

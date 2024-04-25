@@ -1,13 +1,12 @@
 @props(['action'])
 
-<x-modals.template class="multiple-restore-modal" title="{{ __('Restore items') }}">
+<x-modals.template class="multiple-restore-modal" title="{{ __('Restore records') }}">
     <x-slot:body>
         <form class="multiple-restore-form" action="{{ $action }}" data-before-submit="appends-inputs" data-inputs-selector=".main-table .td__checkbox" method="POST" id="multiple-restore-form">
             @csrf
             @method('PATCH')
 
-            <input type="hidden" name="ids[]">
-            <p>{{ __('Restore items from trash') }}?</p>
+            <p>{{ __('Restore records from trash') }}?</p>
 
             {{-- Used to hold appended checkbox inputs before submiting form by JS --}}
             <div class="form__hidden-inputs-container"></div>

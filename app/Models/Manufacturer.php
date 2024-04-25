@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Support\Helper;
 use App\Support\Traits\Commentable;
-use App\Support\Traits\ExportsItems;
+use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +16,7 @@ class Manufacturer extends Model
     use SoftDeletes;
     use MergesParamsToRequest;
     use Commentable;
-    use ExportsItems;
+    use ExportsRecords;
 
     const DEFAULT_ORDER_BY = 'created_at';
     const DEFAULT_ORDER_TYPE = 'desc';
@@ -158,27 +158,27 @@ class Manufacturer extends Model
     */
 
     /**
-     * Get finalized items based on the request parameters.
+     * Get finalized records based on the request parameters.
      *
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Database\Query\Builder|null $query
      * @param string $finaly
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
      */
-    public static function getItemsFinalized($request, $query = null, $finaly = 'paginate')
+    public static function getRecordsFinalized($request, $query = null, $finaly = 'paginate')
     {
         // If no query is provided, create a new query instance
         $query = $query ?: self::query();
 
-        $query = self::filterItems($request, $query);
+        $query = self::filterRecords($request, $query);
 
-        // Get the finalized items based on the specified finaly option
-        $items = self::finalizeItems($request, $query, $finaly);
+        // Get the finalized records based on the specified finaly option
+        $records = self::finalizeRecords($request, $query, $finaly);
 
-        return $items;
+        return $records;
     }
 
-    private static function filterItems($request, $query)
+    private static function filterRecords($request, $query)
     {
         $whereEqualAttributes = [
             'analyst_user_id',
@@ -216,10 +216,10 @@ class Manufacturer extends Model
      * @param string $finaly
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
      */
-    public static function finalizeItems($request, $query, $finaly)
+    public static function finalizeRecords($request, $query, $finaly)
     {
         // Apply sorting based on request parameters
-        $items = $query
+        $records = $query
             ->orderBy($request->orderBy, $request->orderType)
             ->orderBy('id', $request->orderType);
 
@@ -227,14 +227,14 @@ class Manufacturer extends Model
         switch ($finaly) {
             case 'paginate':
                 // Paginate the results
-                $items = $items
+                $records = $records
                     ->paginate($request->paginationLimit, ['*'], 'page', $request->page)
                     ->appends($request->except(['page', 'reversedSortingUrl']));
                 break;
 
             case 'get':
-                // Retrieve all items without pagination
-                $items = $items->get();
+                // Retrieve all records without pagination
+                $records = $records->get();
                 break;
 
             case 'query':
@@ -242,7 +242,7 @@ class Manufacturer extends Model
                 break;
         }
 
-        return $items;
+        return $records;
     }
 
     public static function getAllMinifed()
@@ -321,7 +321,7 @@ class Manufacturer extends Model
     /**
      * Return an array of status options
      *
-     * used on creating/updating of items as radiogroups
+     * used on creating/updating of records as radiogroups
      *
      * @return array
      */

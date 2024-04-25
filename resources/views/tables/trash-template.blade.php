@@ -26,11 +26,11 @@
 
         {{-- Body Start --}}
         <tbody>
-            @foreach ($items as $item)
+            @foreach ($records as $instance)
                 <tr>
                     @include('tables.components.td.checkbox')
 
-                    <td>{{ $item->deleted_at->isoformat('DD MMM Y') }}</td>
+                    <td>{{ $instance->deleted_at->isoformat('DD MMM Y') }}</td>
 
                     @foreach ($visibleTableColumns as $column)
                         <td>
@@ -43,4 +43,4 @@
     </table>
 </div>
 
-{{ $items->links('layouts.pagination') }}
+{{ $records->links('layouts.pagination') }}

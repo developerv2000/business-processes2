@@ -5,18 +5,25 @@ namespace App\Support\Traits;
 use App\Support\Helper;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-trait ExportsItems
+/**
+ * Trait ExportsRecords
+ *
+ * This trait provides functionality to export model records to an Excel file.
+ *
+ * @package App\Support\Traits
+ */
+trait ExportsRecords
 {
     /**
-     * Export items to Excel file.
+     * Export model records to an Excel file.
      *
-     * This function exports the given items to an Excel file using a template.
+     * This function exports the given records to an Excel file using a template.
      * It saves the Excel file to storage and returns a download response.
      *
-     * @param \Illuminate\Support\Collection $items The items to export.
+     * @param \Illuminate\Support\Collection $records The records to export.
      * @return \Illuminate\Http\Response The download response.
      */
-    public static function exportItemsAsExcel($items)
+    public static function exportRecordsAsExcel($records)
     {
         $className = static::class;
 
@@ -25,13 +32,13 @@ trait ExportsItems
         $spreadsheet = IOFactory::load($template);
         $sheet = $spreadsheet->getActiveSheet();
 
-        // Start adding items from first column and second row (A2)
+        // Start adding records from first column and second row (A2)
         $columnIndex = 1;
         $row = 2;
 
-        // Chunk items to avoid memory issues and iterate over each chunk
-        $items->chunk(800, function ($itemsChunk) use (&$sheet, &$columnIndex, &$row) {
-            foreach ($itemsChunk as $instance) {
+        // Chunk records to avoid memory issues and iterate over each chunk
+        $records->chunk(800, function ($recordsChunk) use (&$sheet, &$columnIndex, &$row) {
+            foreach ($recordsChunk as $instance) {
                 $columnIndex = 1;
                 $columnValues = $instance->getExcelColumnValuesForExport();
 
@@ -39,7 +46,7 @@ trait ExportsItems
                     $sheet->setCellValue([$columnIndex++, $row], $value);
                 }
 
-                // Increment row for the next item
+                // Increment row for the next record
                 $row++;
             }
         });

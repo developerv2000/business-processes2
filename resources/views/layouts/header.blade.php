@@ -29,7 +29,7 @@
             {{-- Profile dropdown --}}
             <div class="dropdown profile-dropdown">
                 <div class="dropdown__button">
-                    <x-different.ava image="{{ request()->user()->photo_assets_path }}"></x-different.ava>
+                    <x-different.ava image="{{ request()->user()->photo_asset_path }}"></x-different.ava>
                 </div>
 
                 <div class="dropdown__content">

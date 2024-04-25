@@ -211,6 +211,10 @@ body::-webkit-scrollbar-thumb,
     padding: 0;
 }
 
+.button--rounded {
+    border-radius: 50%;
+}
+
 /* Locales button */
 .locales-button {
     width: 100%;
@@ -549,8 +553,7 @@ body::-webkit-scrollbar-thumb,
 /* ------------ /END Breadcrumbs ------------ */
 
 
-/* ------------ Different ------------ */
-/* Ava */
+/* ------------ Ava ------------ */
 .ava {
     display: flex;
     align-items: center;
@@ -563,6 +566,27 @@ body::-webkit-scrollbar-thumb,
     border-radius: 50%;
 }
 
+.ava__text {
+    display: flex;
+    flex-direction: column;
+}
+
+.ava__title:empty {
+    display: none;
+}
+
+.ava__description {
+    font-size: 15px;
+    color: #c5c5c5;
+}
+
+.ava__description:empty {
+    display: none;
+}
+/* ------------ /END Ava ------------ */
+
+
+/* ------------ Different ------------ */
 .create-form,
 .edit-form {
     padding-bottom: 40px;
@@ -958,3 +982,82 @@ body::-webkit-scrollbar-thumb,
 }
 
 /* ------------ /end Badge ------------ */
+
+
+/* ------------ Comment pages ------------ */
+.comments-index__box {
+    padding: 20px;
+}
+
+.comments-index__title {
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+/* Create form */
+.comments-create-form {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px 8px 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 40px;
+    background-color: #f9fafd;
+}
+
+.comments-create-form .ava__title {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.comments-create-form__input {
+    flex-grow: 1;
+    padding: 4px 16px;
+    font-size: 15px;
+    border: none;
+    background-color: transparent;
+    outline: none;
+}
+
+.comments-create-form__submit {
+    color: var(--main-color);
+    font-variation-settings: var(--material-symbols-filled);
+}
+
+/* List */
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    margin-top: 28px;
+}
+
+.comments-list__item {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.comments-list__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.comments-list__actions {
+    display: flex;
+    gap: 6px;
+}
+
+.comments-list__actions .button--rounded {
+    padding: 6px;
+}
+
+.comments-list__item-body {
+    padding-left: 48px;
+}
+
+.comments-list__ava .ava__name {
+    font-size: 15px;
+    font-weight: 600;
+}
+/* ------------ /end Comment pages ------------ */

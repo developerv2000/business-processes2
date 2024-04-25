@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FactoryController;
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\ProfileController;
@@ -29,7 +30,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     Route::prefix('manufacturers')->controller(ManufacturerController::class)->name('manufacturers.')->group(function () {
-        Route::get('/items/{instance}', 'edit')->name('edit');
+        Route::get('/edit/{instance}', 'edit')->name('edit');
         Route::get('/create', 'create')->name('create');
         Route::get('/trash', 'trash')->name('trash');
 
@@ -38,5 +39,14 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::delete('/destroy', 'destroy')->name('destroy');
         Route::patch('/restore', 'restore')->name('restore');
         Route::post('/export', 'export')->name('export');
+    });
+
+    Route::prefix('comments')->controller(CommentController::class)->name('comments.')->group(function () {
+        Route::get('/{commentable_type}/{commentable_id}', 'index')->name('index');
+        Route::get('/edit/{instance}', 'edit')->name('edit');
+
+        Route::post('/store', 'store')->name('store');
+        Route::patch('/update/{instance}', 'update')->name('update');
+        Route::delete('/destroy', 'destroy')->name('destroy');
     });
 });

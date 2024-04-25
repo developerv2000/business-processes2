@@ -4,7 +4,7 @@
     <div class="main__conent-box styled-box">
         <div class="pre-content">
             @include('layouts.breadcrumbs', [
-                'crumbs' => [__('Trash'),  __('Filtered items') . ' - ' . $items->total()],
+                'crumbs' => [__('Trash'),  __('Filtered records') . ' - ' . $records->total()],
                 'fullScreen' => true,
                 'fullScreenSelector' => '.main-wrapper',
             ])
@@ -19,7 +19,7 @@
         @include('tables.trash-template', ['tableName' => 'manufacturers'])
     </div>
 
-    <x-modals.multiple-delete action="{{ route('manufacturers.destroy') }}" force-delete="1" />
+    <x-modals.multiple-delete action="{{ route('manufacturers.destroy') }}" :force-delete="true" />
     <x-modals.multiple-restore action="{{ route('manufacturers.restore') }}" />
     <x-modals.edit-table-columns action="{{ route('settings.update-table-columns') }}" table="manufacturers" :columns="$allTableColumns" />
 @endsection

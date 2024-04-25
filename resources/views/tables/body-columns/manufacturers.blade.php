@@ -1,18 +1,18 @@
 @switch($column['name'])
     @case('Edit')
-        @include('tables.components.td.edit-button', ['href' => route('manufacturers.edit', $item->id)])
+        @include('tables.components.td.edit-button', ['href' => route('manufacturers.edit', $instance->id)])
     @break
 
     @case('BDM')
-        <x-different.ava image="{{ $item->bdm->photo_assets_path }}" text="{{ $item->bdm->name }}" />
+        <x-different.ava image="{{ $instance->bdm->photo_asset_path }}" title="{{ $instance->bdm->name }}" />
     @break
 
     @case('Analyst')
-        <x-different.ava image="{{ $item->analyst->photo_assets_path }}" text="{{ $item->analyst->name }}" />
+        <x-different.ava image="{{ $instance->analyst->photo_asset_path }}" title="{{ $instance->analyst->name }}" />
     @break
 
     @case('Country')
-        {{ $item->country->name }}
+        {{ $instance->country->name }}
     @break
 
     @case('IVP')
@@ -20,21 +20,21 @@
     @break
 
     @case('Manufacturer')
-        {{ $item->name }}
+        {{ $instance->name }}
     @break
 
     @case('Category')
         <span @class([
             'badge',
-            'badge--yellow' => $item->category->name == 'УДС',
-            'badge--pink' => $item->category->name == 'НПП',
+            'badge--yellow' => $instance->category->name == 'УДС',
+            'badge--pink' => $instance->category->name == 'НПП',
         ])>
-            {{ $item->category->name }}
+            {{ $instance->category->name }}
         </span>
     @break
 
     @case('Status')
-        @if ($item->is_active)
+        @if ($instance->is_active)
             <span class="badge badge--blue">{{ __('Active') }}</span>
         @else
             <span class="badge badge--grey">{{ __('Stoped') }}</span>
@@ -42,69 +42,69 @@
     @break
 
     @case('Important')
-        @if ($item->is_important)
+        @if ($instance->is_important)
             <span class="badge badge--orange">{{ __('Important') }}</span>
         @endif
     @break
 
     @case('Product category')
         <div class="td__badges">
-            @foreach ($item->productClasses as $class)
+            @foreach ($instance->productClasses as $class)
                 <span class="badge badge--green">{{ $class->name }}</span>
             @endforeach
         </div>
     @break
 
     @case('Zones')
-        @foreach ($item->zones as $zone)
+        @foreach ($instance->zones as $zone)
             {{ $zone->name }}<br>
         @endforeach
     @break
 
     @case('Black list')
-        @foreach ($item->blacklists as $list)
+        @foreach ($instance->blacklists as $list)
             {{ $list->name }}<br>
         @endforeach
     @break
 
     @case('Presence')
         <div class="td__limited-text" data-on-click="toggle-text-limit">
-            @foreach ($item->presences as $presence)
+            @foreach ($instance->presences as $presence)
                 {{ $presence->name }}<br>
             @endforeach
         </div>
     @break
 
     @case('Website')
-        @include('tables.components.td.limited-text', ['text' => $item->website])
+        @include('tables.components.td.limited-text', ['text' => $instance->website])
     @break
 
     @case('About company')
-        @include('tables.components.td.limited-text', ['text' => $item->about])
+        @include('tables.components.td.limited-text', ['text' => $instance->about])
     @break
 
     @case('Relationship')
-        @include('tables.components.td.limited-text', ['text' => $item->relationship])
+        @include('tables.components.td.limited-text', ['text' => $instance->relationship])
     @break
 
     @case('Comments')
-        <x-different.arrowed-link href="#">{{ __('Comments') }}</x-different.arrowed-link>
+        @include('tables.components.td.all-comments-link')
     @break
 
     @case('Last comment')
-        @include('tables.components.td.limited-text', ['text' => $item->lastComment?->body])
+        @include('tables.components.td.limited-text', ['text' => $instance->lastComment?->body])
     @break
 
     @case('Comments date')
-        {{ $item->lastComment?->created_at->isoformat('DD MMM Y') }}
+        {{ $instance->lastComment?->created_at->isoformat('DD MMM Y') }}
     @break
 
     @case('Date of creation')
-        {{ $item->created_at->isoformat('DD MMM Y') }}
+        {{ $instance->created_at->isoformat('DD MMM Y') }}
     @break
 
     @case('Update date')
-        {{ $item->updated_at->isoformat('DD MMM Y') }}
+        {{ $instance->updated_at->isoformat('DD MMM Y') }}
     @break
 
     @case('Meetings')
@@ -112,6 +112,7 @@
     @break
 
     @case('ID')
-        {{ $item->id }}
+        {{ $instance->id }}
     @break
+
 @endswitch

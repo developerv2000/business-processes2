@@ -4,35 +4,33 @@ namespace App\Support\Traits;
 
 use App\Support\Helper;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
- * Trait MergeParamsToRequest
+ * Trait MergesParamsToRequest
  *
  * This trait provides functionality for merging query parameters into a request object.
  *
- * @package App\Traits
+ * @package App\Support\Traits
  */
 trait MergesParamsToRequest
 {
     /**
-     * Merge query parameters into the given request object.
+     * Merge default querying parameters into the given request object if misses.
      *
      * Used in index & trash pages for ordering, sorting & pagination.
      *
      * @param \Illuminate\Http\Request $request The request object to merge parameters into.
      * @return void
      */
-    public static function mergeQueryParamsToRequest(Request $request)
+    public static function mergeQueryingParamsToRequest(Request $request)
     {
-        $static = static::class;
+        $className = static::class;
 
-        // Merge default query parameters into the request
-        $request->merge([
-            'orderBy' => $request->orderBy ?: $static::DEFAULT_ORDER_BY,
-            'orderType' => $request->orderType ?: $static::DEFAULT_ORDER_TYPE,
-            'paginationLimit' => $request->paginationLimit ?: $static::DEFAULT_PAGINATION_LIMIT,
-            'page' => LengthAwarePaginator::resolveCurrentPage(),
+        // Merge default querying parameters into the request
+        $request->mergeIfMissing([
+            'orderBy' => $className::DEFAULT_ORDER_BY,
+            'orderType' => $className::DEFAULT_ORDER_TYPE,
+            'paginationLimit' => $className::DEFAULT_PAGINATION_LIMIT,
         ]);
 
         // Merge reversed sorting URL to the request
@@ -40,23 +38,23 @@ trait MergesParamsToRequest
     }
 
     /**
-     * Merge query parameters into the request and
-     * Merge export parameters into the given request object from requests previous url query.
+     * Merge export querying parameters into the given request object,
+     * from the referer header's query of the incoming request.
      *
      * Used only on export.
      *
      * @param \Illuminate\Http\Request $request The request object to merge parameters into.
      * @return void
      */
-    public static function mergeExportParamsToRequest(Request $request)
+    public static function mergeExportQueryingParamsToRequest(Request $request)
     {
-        $static = static::class;
-        $static::mergeQueryParamsToRequest($request);
-
-        $url = $request->input('previous_url');
+        // Parse then merge referer URL query parameters into the request
+        $url = $request->header('referer');
         $queryString = parse_url($url, PHP_URL_QUERY);
         parse_str($queryString, $queryParams);
-
         $request->merge($queryParams);
+
+        // Also merge default querying parameters to escape querying errors
+        static::mergeQueryingParamsToRequest($request);
     }
 }

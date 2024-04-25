@@ -4,12 +4,11 @@ namespace App\Models;
 
 use App\Support\Helper;
 use App\Support\Traits\Commentable;
+use App\Support\Traits\ExportsItems;
 use App\Support\Traits\MergesParamsToRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Manufacturer extends Model
 {
@@ -17,6 +16,7 @@ class Manufacturer extends Model
     use SoftDeletes;
     use MergesParamsToRequest;
     use Commentable;
+    use ExportsItems;
 
     const DEFAULT_ORDER_BY = 'created_at';
     const DEFAULT_ORDER_TYPE = 'desc';
@@ -334,45 +334,37 @@ class Manufacturer extends Model
     }
 
     /**
-     * Export items to Excel file.
+     * Get the Excel column values for exporting.
      *
-     * This function exports the given items to an Excel file using a template.
-     * It saves the Excel file to storage and returns a download response.
+     * This function returns an array containing the values of specific properties
+     * of the current model instance, which are intended to be exported to an Excel file.
      *
-     * @param \Illuminate\Support\Collection $items The items to export.
-     * @return \Illuminate\Http\Response The download response.
+     * @return array An array containing the Excel column values.
      */
-    public static function exportItemsAsExcel($items)
+    public function getExcelColumnValuesForExport()
     {
-        // Load the Excel template
-        $template = storage_path(self::EXCEL_TEMPLATE_STORAGE_PATH);
-        $spreadsheet = IOFactory::load($template);
-        $sheet = $spreadsheet->getActiveSheet();
-
-        // Start adding items from first column and second row (A2)
-        $columnIndex = 1;
-        $row = 2;
-
-        // Chunk items to avoid memory issues and iterate over each chunk
-        $items->chunk(800, function ($itemsChunk) use (&$sheet, &$columnIndex, &$row) {
-            foreach ($itemsChunk as $instance) {
-                $columnIndex = 1;
-                $sheet->setCellValue([$columnIndex++, $row], $instance->name);
-                $sheet->setCellValue([$columnIndex++, $row], $instance->category->name);
-
-                // Increment row for next item
-                $row++;
-            }
-        });
-
-        // Save the Excel file
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $filename = date('Y-m-d H-i-s') . '.xlsx';
-        $filename = Helper::escapeDuplicateFilename($filename, storage_path(self::EXCEL_EXPORT_STORAGE_PATH));
-        $filePath = storage_path(self::EXCEL_EXPORT_STORAGE_PATH  . '/' . $filename);
-        $writer->save($filePath);
-
-        // Return download response
-        return response()->download($filePath);
+        return [
+            $this->id,
+            $this->bdm->name,
+            $this->analyst->name,
+            $this->country->name,
+            'NOT DONE YET!!!',  // ИВП
+            $this->name,
+            $this->category->name,
+            $this->is_active ? __('Active') : __('Stoped'),
+            $this->is_important ? __('Important') : '',
+            $this->productClasses->pluck('name')->implode(' '),
+            $this->zones->pluck('name')->implode(' '),
+            $this->blacklists->pluck('name')->implode(' '),
+            $this->presences->pluck('name')->implode(' '),
+            $this->website,
+            $this->about,
+            $this->relationships,
+            $this->comments->pluck('body')->implode(' / '),
+            $this->lastComment?->created_at,
+            $this->created_at,
+            $this->updated_at,
+            'NOT DONE YET!!!', // Встречи
+        ];
     }
 }

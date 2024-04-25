@@ -19,10 +19,9 @@ class ManufacturerController extends Controller
 
     public function index(Request $request)
     {
-        // Merge additional query parameters to the requests
-        Manufacturer::mergeQueryParamsToRequest($request);
+        Manufacturer::mergeQueryingParamsToRequest($request);
+        $items = Manufacturer::getItemsFinalized($request, finaly: 'paginate');
 
-        $items = Manufacturer::getItemsFinalized($request);
         $allTableColumns = $request->user()->collectAllTableColumns('manufacturers_table_columns');
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
@@ -31,10 +30,9 @@ class ManufacturerController extends Controller
 
     public function trash(Request $request)
     {
-        // Merge additional query parameters to the requests
-        Manufacturer::mergeQueryParamsToRequest($request);
+        Manufacturer::mergeQueryingParamsToRequest($request);
+        $items = Manufacturer::getItemsFinalized($request, Manufacturer::onlyTrashed(), finaly: 'paginate');
 
-        $items = Manufacturer::getItemsFinalized($request, Manufacturer::onlyTrashed());
         $allTableColumns = $request->user()->collectAllTableColumns('manufacturers_table_columns');
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
@@ -79,9 +77,7 @@ class ManufacturerController extends Controller
 
     public function export(Request $request)
     {
-        // Merge export parameters into the request from requests previous url query.
-        Manufacturer::mergeExportParamsToRequest($request);
-
+        Manufacturer::mergeExportQueryingParamsToRequest($request);
         $items = Manufacturer::getItemsFinalized($request, finaly: 'query');
 
         return Manufacturer::exportItemsAsExcel($items);

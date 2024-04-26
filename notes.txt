@@ -1,0 +1,18 @@
+New version updates:
+
+1. Manufacturer (EPP)
+    Tables:
+        manufacturers_table:
+            Fields:
+                profile => about
+                active => is_active
+                important => is_important
+
+        product_categories => product_classes
+        manufacturer_product_category => manufacturer_product_class
+        blacklists => manufacturer_blacklists
+        blacklist_manufacturer => manufacturer_manufacturer_blacklist
+        presences => manufacturer_presences
+
+    Relationships:
+    productCategories => productClasses

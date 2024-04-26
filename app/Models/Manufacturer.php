@@ -245,7 +245,10 @@ class Manufacturer extends Model
         return $records;
     }
 
-    public static function getAllMinifed()
+    /**
+     * Not fully realized yet. Must be realized after binding IVP relationships
+     */
+    public static function getAllPrioritizedAndMinifed()
     {
         return self::select('id', 'name')->withOnly([])->get();
     }

@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
                 'analystUsers' => User::getAnalystsMinified(),
                 'bdmUsers' => User::getBdmsMinifed(),
                 'countries' => Country::getAll(),
-                'manufacturers' => Manufacturer::getAllMinifed(),
+                'manufacturers' => Manufacturer::getAllPrioritizedAndMinifed(),
                 'categories' => ManufacturerCategory::getAll(),
                 'zones' => Zone::getAll(),
                 'productClasses' => ProductClass::getAll(),

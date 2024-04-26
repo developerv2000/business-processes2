@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\FactoryController;
 use App\Http\Controllers\ManufacturerController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
+use App\Support\RouteGenerator;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthenticatedSessionController::class)->group(function () {
@@ -29,18 +30,6 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::patch('table-columns', 'updateTableColumns')->name('update-table-columns'); // ajax request
     });
 
-    Route::prefix('manufacturers')->controller(ManufacturerController::class)->name('manufacturers.')->group(function () {
-        Route::get('/edit/{instance}', 'edit')->name('edit');
-        Route::get('/create', 'create')->name('create');
-        Route::get('/trash', 'trash')->name('trash');
-
-        Route::post('/store', 'store')->name('store');
-        Route::patch('/update/{instance}', 'update')->name('update');
-        Route::delete('/destroy', 'destroy')->name('destroy');
-        Route::patch('/restore', 'restore')->name('restore');
-        Route::post('/export', 'export')->name('export');
-    });
-
     Route::prefix('comments')->controller(CommentController::class)->name('comments.')->group(function () {
         Route::get('/{commentable_type}/{commentable_id}', 'index')->name('index');
         Route::get('/edit/{instance}', 'edit')->name('edit');
@@ -48,5 +37,13 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::post('/store', 'store')->name('store');
         Route::patch('/update/{instance}', 'update')->name('update');
         Route::delete('/destroy', 'destroy')->name('destroy');
+    });
+
+    Route::prefix('manufacturers')->controller(ManufacturerController::class)->name('manufacturers.')->group(function () {
+        RouteGenerator::defineDefaultCrudRoutesExcept(['index']);
+    });
+
+    Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {
+        RouteGenerator::defineAllDefaultCrudRoutes();
     });
 });

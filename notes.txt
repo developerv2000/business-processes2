@@ -2,7 +2,7 @@ New version updates:
 
 1. Manufacturer (EPP)
     Tables:
-        manufacturers_table:
+        manufacturers:
             Fields:
                 profile => about
                 active => is_active
@@ -16,3 +16,24 @@ New version updates:
 
     Relationships:
     productCategories => productClasses
+
+2. Generics => Products
+    Tables:
+        generics => products:
+            Fields:
+                category_id => class_id
+                mnn_id => inn_id
+                dose => dosage
+                minimum_volume => moq
+                expiration_date_id => shelf_life_id
+                additional_payment => down_payment
+                patent_expiry => validity_period
+                marketed_in_eu => sold_in_eu
+
+        mnns => inns
+        expiration_dates => product_shelf_lives
+        generic_zone => product_zone
+
+    Relationships:
+        mnn => inn
+        category => class

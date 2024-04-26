@@ -84,6 +84,11 @@ class Manufacturer extends Model
         return $this->belongsToMany(Zone::class);
     }
 
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Events
@@ -97,10 +102,6 @@ class Manufacturer extends Model
         });
 
         static::deleting(function ($instance) { // trashing
-            // foreach ($instance->meetings as $meeting) {
-            //     $meeting->delete();
-            // }
-
             // foreach ($instance->generics as $generic) {
             //     $generic->delete();
             // }
@@ -111,10 +112,6 @@ class Manufacturer extends Model
         });
 
         static::restored(function ($instance) {
-            // foreach ($instance->meetings()->onlyTrashed()->get() as $meeting) {
-            //     $meeting->restore();
-            // }
-
             // foreach ($instance->generics()->onlyTrashed()->get() as $generic) {
             //     $generic->restore();
             // }
@@ -136,10 +133,6 @@ class Manufacturer extends Model
             foreach ($instance->presences as $presence) {
                 $presence->delete();
             }
-
-            // foreach ($instance->meetings()->withTrashed()->get() as $meeting) {
-            //     $meeting->forceDelete();
-            // }
 
             // foreach ($instance->generics()->withTrashed()->get() as $generic) {
             //     $generic->forceDelete();
@@ -223,6 +216,9 @@ class Manufacturer extends Model
             ->orderBy($request->orderBy, $request->orderType)
             ->orderBy('id', $request->orderType);
 
+        // attach relationship counts to the query
+        $records = $records->withCount('products');
+
         // Handle different finaly options
         switch ($finaly) {
             case 'paginate':
@@ -246,11 +242,18 @@ class Manufacturer extends Model
     }
 
     /**
-     * Not fully realized yet. Must be realized after binding IVP relationships
+     * Get all records minified & ordered by products count
+     *
+     * Used on filtering and creating/editing of model records
      */
     public static function getAllPrioritizedAndMinifed()
     {
-        return self::select('id', 'name')->withOnly([])->get();
+        return self::select('id', 'name')
+            ->withOnly([])
+            ->withCount('products')
+            ->orderBy('products_count', 'desc')
+            ->orderBy('id', 'asc')
+            ->get();
     }
 
     /*

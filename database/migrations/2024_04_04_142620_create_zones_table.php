@@ -21,6 +21,12 @@ return new class extends Migration
             $table->unsignedSmallInteger('zone_id');
             $table->primary(['manufacturer_id', 'zone_id']);
         });
+
+        Schema::create('product_zone', function (Blueprint $table) {
+            $table->unsignedInteger('product_id');
+            $table->unsignedSmallInteger('zone_id');
+            $table->primary(['product_id', 'zone_id']);
+        });
     }
 
     /**
@@ -30,5 +36,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('zones');
         Schema::dropIfExists('manufacturer_zone');
+        Schema::dropIfExists('product_zone');
     }
 };

@@ -16,7 +16,7 @@
     @break
 
     @case('IVP')
-        <a class="td__link" href="#">10 {{ __('products') }}</a>
+        <a class="td__link" href="#">{{ $instance->products_count }} {{ __('products') }}</a>
     @break
 
     @case('Manufacturer')

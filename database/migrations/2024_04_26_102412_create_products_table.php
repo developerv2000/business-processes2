@@ -12,8 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedInteger('id')->autoIncrement();
+            $table->unsignedInteger('manufacturer_id');
+            $table->unsignedMediumInteger('inn_id');
+            $table->string('brand')->nullable();
+            $table->unsignedSmallInteger('form_id');
+            $table->unsignedSmallInteger('class_id');
+            $table->string('dosage', 300)->nullable();
+            $table->string('pack')->nullable();
+            $table->string('moq')->nullable();
+            $table->unsignedSmallInteger('shelf_life_id');
+            $table->string('dossier', 1000)->nullable();
+            $table->string('bioequivalence', 600)->nullable();
+            $table->string('down_payment', 400)->nullable();
+            $table->string('validity_period', 400)->nullable();
+            $table->boolean('registered_in_eu')->default(0);
+            $table->boolean('sold_in_eu')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

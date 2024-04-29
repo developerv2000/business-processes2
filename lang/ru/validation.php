@@ -170,8 +170,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'ivp' => [
+            'unique' => 'Продукт с таким производителем, МНН, формой, дозой и упаковкой уже существует.',
         ],
     ],
 

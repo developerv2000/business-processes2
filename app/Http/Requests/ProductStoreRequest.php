@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProductStoreRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class ProductStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,22 @@ class ProductStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'dosage' => [
+                Rule::unique(Product::class)->where(function ($query) {
+                    $query->where('manufacturer_id', $this->manufacturer_id)
+                        ->where('inn_id', $this->inn_id)
+                        ->where('form_id', $this->form_id)
+                        ->where('dosage', $this->dosage)
+                        ->where('pack', $this->pack);
+                }),
+            ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'dosage.unique' => trans('validation.custom.ivp.unique'),
         ];
     }
 }

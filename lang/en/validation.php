@@ -171,8 +171,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'ivp' => [
+            'unique' => 'Product with a given manufacturer, IMN, form, dosage and pack already exists.',
         ],
     ],
 

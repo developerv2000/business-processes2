@@ -253,6 +253,28 @@ class Product extends Model
         return $records;
     }
 
+    /**
+     * Get similar records based on the provided request data.
+     *
+     * Used in AJAX requests
+     *
+     * @param  \Illuminate\Http\Request  $request The request object containing form data.
+     * @return \Illuminate\Database\Eloquent\Collection A collection of similar records.
+     */
+    public static function getSimilarRecords($request)
+    {
+        // Get the family IDs of the selected form
+        $formFamilyIDs = ProductForm::find($request->form_id)->getFamilyIDs();
+
+        // Query similar records based on manufacturer, inn, and form family IDs
+        $similarRecords = Product::where('manufacturer_id', $request->manufacturer_id)
+            ->where('inn_id', $request->inn_id)
+            ->whereIn('form_id', $formFamilyIDs)
+            ->get();
+
+        return $similarRecords;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Create and Update

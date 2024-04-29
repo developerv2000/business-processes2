@@ -70,6 +70,7 @@ class AppServiceProvider extends ServiceProvider
                 'inns' => Inn::getAll(),
                 'countries' => Country::getAll(),
                 'manufacturerCategories' => ManufacturerCategory::getAll(),
+                'booleanOptions' => Helper::getBooleanOptionsArray(),
             ]);
         });
     }

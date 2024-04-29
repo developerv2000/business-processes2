@@ -42,5 +42,6 @@ Route::middleware('auth', 'auth.session')->group(function () {
     Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
         Route::post('/export-vp', 'exportVp')->name('export-vp');
+        Route::post('/get-similar-records', 'getSimilarRecords');  // ajax request on create form for uniqness
     });
 });

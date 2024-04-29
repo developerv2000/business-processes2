@@ -1061,3 +1061,35 @@ body::-webkit-scrollbar-thumb,
     font-weight: 600;
 }
 /* ------------ /end Comment pages ------------ */
+
+
+/* ------------ Similar records ------------ */
+.similar-records {
+    gap: 0;
+    font-size: 15px;
+}
+
+.similar-records:empty {
+    display: none;
+}
+
+.similar-records__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.similar-records__list-item {
+    display: flex;
+    gap: 20px;
+}
+
+.similar-records__list-text {
+    display: flex;
+    gap: 12px;
+}
+
+.similar-records__empty-text {
+    margin: 0;
+}
+/* ------------ /end Similar records ------------ */

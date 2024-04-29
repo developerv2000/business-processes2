@@ -55,6 +55,21 @@ class ProductController extends Controller
     }
 
     /**
+     * Get similar records based on the provided request data.
+     *
+     * This method is used for AJAX requests to retrieve similar records on the create form.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getSimilarRecords(Request $request)
+    {
+        $similarRecords = Product::getSimilarRecords($request);
+
+        return view('products.similar-records', compact('similarRecords'));
+    }
+
+    /**
      * Store a newly created record in storage.
      */
     public function store(ProductStoreRequest $request)

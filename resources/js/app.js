@@ -1,6 +1,7 @@
 import { hideSpinner, showSpinner, showModal } from './bootstrap';
 
 const UPDATE_BODY_WIDTH_SETTINGS_URL = '/body-width';
+const GET_PRODUCTS_SIMILAR_RECORDS_URL = '/products/get-similar-records';
 const bodyInner = document.querySelector('.body__inner');
 
 window.addEventListener('load', () => {
@@ -141,34 +142,92 @@ function bootstrapForms() {
             const formGroup = input.closest('.form-group');
             filterForm.insertBefore(formGroup, filterForm.firstChild);
         });
+    }
 
-        // ========== Appending inputs before form submit ==========
-        /**
-         * Handles the form submission event by appending inputs to the form.
-         * Especially Used in multiple restore & delete table actions
-         */
+    // ========== Appending inputs before form submit ==========
+    /**
+     * Handles the form submission event by appending inputs to the form.
+     * Especially Used in multiple restore & delete table actions
+     */
 
-        document.querySelectorAll('[data-before-submit="appends-inputs"]').forEach((form) => {
-            form.addEventListener('submit', (evt) => {
-                // Prevent default form submission
-                evt.preventDefault();
+    document.querySelectorAll('[data-before-submit="appends-inputs"]').forEach((form) => {
+        form.addEventListener('submit', (evt) => {
+            // Prevent default form submission
+            evt.preventDefault();
 
-                const targ = evt.target;
-                const inputs = document.querySelectorAll(targ.dataset.inputsSelector);
+            const targ = evt.target;
+            const inputs = document.querySelectorAll(targ.dataset.inputsSelector);
 
-                // Append each input to the form
-                const hiddenInputsContainer = targ.querySelector('.form__hidden-inputs-container');
+            // Append each input to the form
+            const hiddenInputsContainer = targ.querySelector('.form__hidden-inputs-container');
 
-                inputs.forEach((input) => {
-                    // Clone the input element
-                    const inputCopy = input.cloneNode(true);
-                    // Append the copy to the hidden inputs container
+            inputs.forEach((input) => {
+                // Clone the input element
+                const inputCopy = input.cloneNode(true);
+                // Append the copy to the hidden inputs container
 
-                    hiddenInputsContainer.appendChild(inputCopy);
-                });
-
-                targ.submit();
+                hiddenInputsContainer.appendChild(inputCopy);
             });
+
+            targ.submit();
         });
+    });
+
+    // ========== Displaying similar records on products create form ==========
+    // Check if the page is the products create page
+    if (document.querySelector('.products-create')) {
+        // Select the container where similar records will be displayed
+        const similarRecordsContainer = document.querySelector('.similar-records');
+
+        // Select the dropdowns for manufacturer, inn, and form
+        let manufacturerSelect = document.querySelector('select[name="manufacturer_id"]');
+        let innSelect = document.querySelector('select[name="inn_id"]');
+        let formSelect = document.querySelector('select[name="form_id"]');
+
+        // Create an array of all select dropdowns
+        let selects = [innSelect, manufacturerSelect, formSelect];
+
+        // Attach change event listeners to all select dropdowns
+        for (let select of selects) {
+            select.selectize.on('change', function (value) {
+                // When any select dropdown changes, display similar records
+                displayProductsSimilarRecords();
+            });
+        }
+
+        // Function to display similar records based on selected options
+        function displayProductsSimilarRecords() {
+            const manufacturerID = manufacturerSelect.value;
+            const innID = innSelect.value;
+            const formID = formSelect.value;
+
+            // Return if any required fields are empty
+            if (manufacturerID == '' || innID == '' || formID == '') {
+                similarRecordsContainer.innerHTML = '';
+                return;
+            }
+
+            // Prepare data to be sent in the AJAX request
+            const data = {
+                'manufacturer_id': manufacturerID,
+                'inn_id': innID,
+                'form_id': formID,
+            };
+
+            // Send a POST request to the server to get similar records
+            axios.post(GET_PRODUCTS_SIMILAR_RECORDS_URL, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    // Display the similar records in the container
+                    similarRecordsContainer.innerHTML = response.data;
+                })
+                .finally(function () {
+                    // Hide any loading spinner after the request is complete
+                    hideSpinner();
+                });
+        }
     }
 }

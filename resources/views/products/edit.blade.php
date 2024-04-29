@@ -1,9 +1,9 @@
-@extends('layouts.app', ['page' => 'manufacturers-edit'])
+@extends('layouts.app', ['page' => 'products-edit'])
 
 @section('main')
     <div class="pre-content pre-content--intended styled-box">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('EPP'), __('Edit'), $instance->name],
+            'crumbs' => [__('IVP'), __('Edit'), '# ' . $instance->id],
             'fullScreen' => false,
         ])
 
@@ -12,82 +12,72 @@
         </div>
     </div>
 
-    <x-forms.template.edit-template action="{{ route('manufacturers.update', $instance->id) }}">
+    <x-forms.template.edit-template action="{{ route('products.update', $instance->id) }}">
         <div class="form__section">
-            <x-forms.input.instance-edit-input
+            <x-forms.id-based-single-select.instance-edit-select
                 label="Manufacturer"
-                name="name"
+                name="manufacturer_id"
+                :options="$manufacturers"
                 :instance="$instance"
                 required />
 
             <x-forms.id-based-single-select.instance-edit-select
-                label="Category"
-                name="category_id"
-                :options="$categories"
+                label="Generic"
+                name="inn_id"
+                :options="$inns"
                 :instance="$instance"
                 required />
 
             <x-forms.id-based-single-select.instance-edit-select
-                label="BDM"
-                name="bdm_user_id"
-                :options="$bdmUsers"
-                :instance="$instance"
-                required />
-
-            <x-forms.id-based-single-select.instance-edit-select
-                label="Analyst"
-                name="analyst_user_id"
-                :options="$analystUsers"
-                :instance="$instance"
-                required />
-
-            <x-forms.id-based-single-select.instance-edit-select
-                label="Country"
-                name="country_id"
-                :options="$countries"
+                label="Form"
+                name="form_id"
+                :options="$productForms"
                 :instance="$instance"
                 required />
         </div>
 
         <div class="form__section">
             <x-forms.input.instance-edit-input
-                label="Website"
-                name="website"
-                :instance="$instance" />
-
-            <x-forms.textarea.instance-edit-textarea
-                label="About company"
-                name="about"
+                label="Dosage"
+                name="dosage"
                 :instance="$instance" />
 
             <x-forms.input.instance-edit-input
-                label="Relationship"
-                name="relationship"
+                label="Pack"
+                name="pack"
                 :instance="$instance" />
-        </div>
 
-        <div class="form__section">
-            <x-forms.radiogroup.instance-edit-radiogroup
-                label="Status"
-                name="is_active"
-                :options="$statusOptions"
-                :instance="$instance"
-                required />
+            <x-forms.input.instance-edit-input
+                label="Manufacturer Brand"
+                name="brand"
+                :instance="$instance" />
 
-            <x-forms.radiogroup.instance-edit-radiogroup
-                label="Important"
-                name="is_important"
-                :options="$booleanOptions"
+            <x-forms.id-based-single-select.instance-edit-select
+                label="Product class"
+                name="class_id"
+                :options="$productClasses"
                 :instance="$instance"
                 required />
         </div>
 
         <div class="form__section">
-            <x-forms.multiple-select.instance-edit-select
-                label="Presence"
-                name="presences[]"
-                :taggable="true"
-                :options="$instance->presences->pluck('name')"
+            <x-forms.input.instance-edit-input
+                label="MOQ"
+                name="moq"
+                :instance="$instance" />
+
+            <x-forms.id-based-single-select.instance-edit-select
+                label="Shelf life"
+                name="shelf_life_id"
+                :options="$shelfLifes"
+                :instance="$instance"
+                required />
+        </div>
+
+        <div class="form__section">
+            <x-forms.input.instance-edit-input
+                label="Dossier"
+                name="dossier"
                 :instance="$instance" />
 
             <x-forms.id-based-multiple-select.instance-edit-select
@@ -97,18 +87,36 @@
                 :instance="$instance"
                 required />
 
-            <x-forms.id-based-multiple-select.instance-edit-select
-                label="Product category"
-                name="productClasses[]"
-                :options="$productClasses"
+            <x-forms.input.instance-edit-input
+                label="Bioequivalence"
+                name="bioequivalence"
+                :instance="$instance" />
+
+            <x-forms.input.instance-edit-input
+                label="Down payment"
+                name="down_payment"
+                :instance="$instance" />
+
+            <x-forms.input.instance-edit-input
+                label="Validity period"
+                name="validity_period"
+                :instance="$instance" />
+        </div>
+
+        <div class="form__section">
+            <x-forms.radiogroup.instance-edit-radiogroup
+                label="Registered in EU"
+                name="registered_in_eu"
+                :options="$booleanOptions"
                 :instance="$instance"
                 required />
 
-            <x-forms.id-based-multiple-select.instance-edit-select
-                label="Black list"
-                name="blacklists[]"
+            <x-forms.radiogroup.instance-edit-radiogroup
+                label="Sold in EU"
+                name="sold_in_eu"
+                :options="$booleanOptions"
                 :instance="$instance"
-                :options="$blacklists" />
+                required />
         </div>
 
         @include('comments.model-form-partials.edit-form-fields')

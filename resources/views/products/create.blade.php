@@ -1,9 +1,9 @@
-@extends('layouts.app', ['page' => 'manufacturers-create'])
+@extends('layouts.app', ['page' => 'products-create'])
 
 @section('main')
     <div class="pre-content pre-content--intended styled-box">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('EPP'), 'Create new'],
+            'crumbs' => [__('IVP'), 'Create new'],
             'fullScreen' => false,
         ])
 
@@ -12,74 +12,66 @@
         </div>
     </div>
 
-    <x-forms.template.create-template action="{{ route('manufacturers.store') }}">
+    <x-forms.template.create-template action="{{ route('products.store') }}">
         <div class="form__section">
-            <x-forms.input.default-input
+            <x-forms.id-based-single-select.default-select
                 label="Manufacturer"
-                name="name"
+                name="manufacturer_id"
+                :options="$manufacturers"
                 required />
 
             <x-forms.id-based-single-select.default-select
-                label="Category"
-                name="category_id"
-                :options="$categories"
+                label="Generic"
+                name="inn_id"
+                :options="$inns"
                 required />
 
             <x-forms.id-based-single-select.default-select
-                label="BDM"
-                name="bdm_user_id"
-                :options="$bdmUsers"
+                label="Form"
+                name="form_id"
+                :options="$productForms"
                 required />
+        </div>
 
-            <x-forms.id-based-single-select.current-user-select
-                label="Analyst"
-                name="analyst_user_id"
-                :options="$analystUsers"
-                required />
+        {{-- Empty container used to hold similar products after ajax request --}}
+        <div class="form__section similar-records"></div>
+
+        <div class="form__section">
+            <x-forms.input.default-input
+                label="Dosage"
+                name="dosage" />
+
+            <x-forms.input.default-input
+                label="Pack"
+                name="pack" />
+
+            <x-forms.input.default-input
+                label="Manufacturer Brand"
+                name="brand" />
 
             <x-forms.id-based-single-select.default-select
-                label="Country"
-                name="country_id"
-                :options="$countries"
+                label="Product class"
+                name="class_id"
+                :options="$productClasses"
                 required />
         </div>
 
         <div class="form__section">
             <x-forms.input.default-input
-                label="Website"
-                name="website" />
+                label="MOQ"
+                name="moq" />
 
-            <x-forms.textarea.default-textarea
-                label="About company"
-                name="about" />
+            <x-forms.id-based-single-select.default-select
+                label="Shelf life"
+                name="shelf_life_id"
+                :options="$shelfLifes"
+                required />
+        </div>
 
+        <div class="form__section">
             <x-forms.input.default-input
-                label="Relationship"
-                name="relationship" />
-        </div>
-
-        <div class="form__section">
-            <x-forms.radiogroup.default-radiogroup
-                label="Status"
-                name="is_active"
-                :options="$statusOptions"
-                default-value="0"
-                required />
-
-            <x-forms.radiogroup.default-radiogroup
-                label="Important"
-                name="is_important"
-                :options="$booleanOptions"
-                default-value="0"
-                required />
-        </div>
-
-        <div class="form__section">
-            <x-forms.multiple-select.default-select
-                label="Presence"
-                name="presences[]"
-                :taggable="true"
-                :options="[]" />
+                label="Dossier"
+                name="dossier" />
 
             <x-forms.id-based-multiple-select.default-select
                 label="Zones"
@@ -87,16 +79,33 @@
                 :options="$zones"
                 required />
 
-            <x-forms.id-based-multiple-select.default-select
-                label="Product category"
-                name="productClasses[]"
-                :options="$productClasses"
+            <x-forms.input.default-input
+                label="Bioequivalence"
+                name="bioequivalence" />
+
+            <x-forms.input.default-input
+                label="Down payment"
+                name="down_payment" />
+
+            <x-forms.input.default-input
+                label="Validity period"
+                name="validity_period" />
+        </div>
+
+        <div class="form__section">
+            <x-forms.radiogroup.default-radiogroup
+                label="Registered in EU"
+                name="registered_in_eu"
+                :options="$booleanOptions"
+                default-value="0"
                 required />
 
-            <x-forms.id-based-multiple-select.default-select
-                label="Black list"
-                name="blacklists[]"
-                :options="$blacklists" />
+            <x-forms.radiogroup.default-radiogroup
+                label="Sold in EU"
+                name="sold_in_eu"
+                :options="$booleanOptions"
+                default-value="0"
+                required />
         </div>
 
         @include('comments.model-form-partials.create-form-fields')

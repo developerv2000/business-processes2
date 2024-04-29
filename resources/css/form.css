@@ -204,6 +204,7 @@
     border-radius: 0.25em;
     appearance: none;
     print-color-adjust: exact;
+    cursor: pointer;
 }
 
 .checkbox:checked {

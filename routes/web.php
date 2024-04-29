@@ -31,12 +31,8 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     Route::prefix('comments')->controller(CommentController::class)->name('comments.')->group(function () {
-        Route::get('/{commentable_type}/{commentable_id}', 'index')->name('index');
-        Route::get('/edit/{instance}', 'edit')->name('edit');
-
-        Route::post('/store', 'store')->name('store');
-        Route::patch('/update/{instance}', 'update')->name('update');
-        Route::delete('/destroy', 'destroy')->name('destroy');
+        Route::get('/view/{commentable_type}/{commentable_id}', 'index')->name('index');
+        RouteGenerator::defineDefaultCrudRoutesOnly(['edit', 'store', 'update', 'destroy']);
     });
 
     Route::prefix('manufacturers')->controller(ManufacturerController::class)->name('manufacturers.')->group(function () {
@@ -45,5 +41,6 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
+        Route::post('/export-vp', 'exportVp')->name('export-vp');
     });
 });

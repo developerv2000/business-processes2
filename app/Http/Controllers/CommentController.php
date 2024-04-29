@@ -23,6 +23,18 @@ class CommentController extends Controller
         return view('comments.index', compact('instance'));
     }
 
+    public function edit(Comment $instance)
+    {
+        return view('comments.edit', compact('instance'));
+    }
+
+    public function update(Request $request, Comment $instance)
+    {
+        $instance->update($request->all());
+
+        return redirect($request->input('previous_url'));
+    }
+
     public function store(Request $request)
     {
         $model = $request->input('commentable_type');

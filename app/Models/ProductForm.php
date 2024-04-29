@@ -30,8 +30,16 @@ class ProductForm extends Model
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    public static function getAll()
+    /**
+     *
+     */
+    public function getParentNameAttribute()
     {
-        return self::orderBy('name')->get();
+        return $this->parent ? $this->parent->name : $this->name;
+    }
+
+    public static function getAllMinified()
+    {
+        return self::orderBy('name')->withOnly([])->get();
     }
 }

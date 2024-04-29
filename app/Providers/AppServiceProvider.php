@@ -3,10 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Country;
+use App\Models\Inn;
 use App\Models\Manufacturer;
 use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
 use App\Models\ProductClass;
+use App\Models\ProductForm;
+use App\Models\ProductShelfLife;
 use App\Models\User;
 use App\Models\Zone;
 use App\Support\Helper;
@@ -51,6 +54,22 @@ class AppServiceProvider extends ServiceProvider
                 'blacklists' => ManufacturerBlacklist::getAll(),
                 'statusOptions' => Manufacturer::getStatusOptions(),
                 'booleanOptions' => Helper::getBooleanOptionsArray(),
+            ]);
+        });
+
+        // Products
+        View::composer(['filters.products', 'products.create', 'products.edit'], function ($view) {
+            $view->with([
+                'manufacturers' => Manufacturer::getAllPrioritizedAndMinifed(),
+                'analystUsers' => User::getAnalystsMinified(),
+                'bdmUsers' => User::getBdmsMinifed(),
+                'productClasses' => ProductClass::getAll(),
+                'productForms' => ProductForm::getAllMinified(),
+                'shelfLifes' => ProductShelfLife::getAll(),
+                'zones' => Zone::getAll(),
+                'inns' => Inn::getAll(),
+                'countries' => Country::getAll(),
+                'manufacturerCategories' => ManufacturerCategory::getAll(),
             ]);
         });
     }

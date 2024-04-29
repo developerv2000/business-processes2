@@ -102,9 +102,9 @@ class Manufacturer extends Model
         });
 
         static::deleting(function ($instance) { // trashing
-            // foreach ($instance->generics as $generic) {
-            //     $generic->delete();
-            // }
+            foreach ($instance->generics as $generic) {
+                $generic->delete();
+            }
 
             // foreach ($instance->processes as $process) {
             //     $process->delete();
@@ -112,9 +112,9 @@ class Manufacturer extends Model
         });
 
         static::restored(function ($instance) {
-            // foreach ($instance->generics()->onlyTrashed()->get() as $generic) {
-            //     $generic->restore();
-            // }
+            foreach ($instance->generics()->onlyTrashed()->get() as $generic) {
+                $generic->restore();
+            }
 
             // foreach ($instance->processes()->onlyTrashed()->get() as $process) {
             //     $process->restore();
@@ -134,9 +134,9 @@ class Manufacturer extends Model
                 $presence->delete();
             }
 
-            // foreach ($instance->generics()->withTrashed()->get() as $generic) {
-            //     $generic->forceDelete();
-            // }
+            foreach ($instance->generics()->withTrashed()->get() as $generic) {
+                $generic->forceDelete();
+            }
 
             // foreach ($instance->processes()->withTrashed()->get() as $process) {
             //     $process->forceDelete();

@@ -17,6 +17,9 @@ class ManufacturerController extends Controller
 
     public $model = Manufacturer::class; // used in multiple destroy/restore traits
 
+    /**
+     * Display a listing of the records.
+     */
     public function index(Request $request)
     {
         Manufacturer::mergeQueryingParamsToRequest($request);
@@ -28,6 +31,9 @@ class ManufacturerController extends Controller
         return view('manufacturers.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
+    /**
+     * Display a listing of the trashed records.
+     */
     public function trash(Request $request)
     {
         Manufacturer::mergeQueryingParamsToRequest($request);
@@ -40,7 +46,7 @@ class ManufacturerController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new record.
      */
     public function create()
     {
@@ -48,7 +54,7 @@ class ManufacturerController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created record in storage.
      */
     public function store(ManufacturerStoreRequest $request)
     {
@@ -58,7 +64,7 @@ class ManufacturerController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified record.
      */
     public function edit(Manufacturer $instance)
     {
@@ -66,7 +72,7 @@ class ManufacturerController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified record in storage.
      */
     public function update(ManufacturerUpdateRequest $request, Manufacturer $instance)
     {
@@ -75,6 +81,9 @@ class ManufacturerController extends Controller
         return redirect($request->input('previous_url'));
     }
 
+    /**
+     * Export records as excel file
+     */
     public function export(Request $request)
     {
         Manufacturer::mergeExportQueryingParamsToRequest($request);

@@ -47,7 +47,7 @@
         @endif
     @break
 
-    @case('Product category')
+    @case('Product class')
         <div class="td__badges">
             @foreach ($instance->productClasses as $class)
                 <span class="badge badge--green">{{ $class->name }}</span>

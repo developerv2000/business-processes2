@@ -17,7 +17,7 @@ New version updates:
     Relationships:
     productCategories => productClasses
 
-2. Generics => Products
+2. Generic (IVP) => Product
     Tables:
         generics => products:
             Fields:
@@ -37,3 +37,29 @@ New version updates:
     Relationships:
         mnn => inn
         category => class
+
+3. Process (VPS)
+    Tables:
+        processes:
+            Fields:
+                date => -----REMOVED
+                year_1 => forecast_year_1
+                year_2 => forecast_year_2
+                year_3 => forecast_year_3
+                promo_company_id => marketing_authorization_holder_id
+                additional_1 => down_payment_1
+                additional_2 => down_payment_2
+
+        country_codes
+            Fields:
+                usage_count => -----REMOVED
+
+        promo_companies => marketing_authorization_holders
+        process_crbecountry => clinical_trial_country_process
+
+    Relationships:
+        countryCode => searchCountry
+        promoCompany => marketingAuthorizationHolder
+        crbeCountries => clinicalTrialCountries
+        process_owners => process_responsible_people
+        process_processowners => process_process_responsible_people

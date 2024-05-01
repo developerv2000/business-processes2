@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('country_codes', function (Blueprint $table) {
             $table->unsignedSmallInteger('id')->autoIncrement();
             $table->string('name')->unique();
-        });
-
-        Schema::create('clinical_trial_country_process', function (Blueprint $table) {
-            $table->unsignedInteger('process_id');
-            $table->unsignedSmallInteger('country_id');
-            $table->primary(['process_id', 'country_id']);
         });
     }
 
@@ -28,7 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('countries');
-        Schema::dropIfExists('clinical_trial_country_process');
+        Schema::dropIfExists('country_codes');
     }
 };

@@ -15,8 +15,8 @@
                 'navbar-link--active' => request()->routeIs('products.*'),
             ])>{{ __('IVP') }}</x-navbar.link>
 
-            <x-navbar.link icon="stacks" href="{{ route('manufacturers.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('template.*'),
+            <x-navbar.link icon="stacks" href="{{ route('processes.index') }}" @class([
+                'navbar-link--active' => request()->routeIs('processes.*'),
             ])>{{ __('VPS') }}</x-navbar.link>
 
             <x-navbar.link icon="calendar_month" href="{{ route('manufacturers.index') }}" @class([
@@ -27,9 +27,9 @@
                 'navbar-link--active' => request()->routeIs('template.*'),
             ])>{{ __('КПЭ') }}</x-navbar.link>
 
-            <x-navbar.link icon="info" href="{{ route('manufacturers.index') }}" @class([
+            {{-- <x-navbar.link icon="info" href="{{ route('manufacturers.index') }}" @class([
                 'navbar-link--active' => request()->routeIs('template.*'),
-            ])>{{ __('Info') }}</x-navbar.link>
+            ])>{{ __('Info') }}</x-navbar.link> --}}
         </nav>
     </div>
 </aside>

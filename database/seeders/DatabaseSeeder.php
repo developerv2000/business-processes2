@@ -26,6 +26,10 @@ class DatabaseSeeder extends Seeder
             ProductFormSeeder::class,
             ProductShelfLifeSeeder::class,
             ProductSeeder::class,
+            CountryCodeSeeder::class,
+            CurrencySeeder::class,
+            MarketingAuthorizationHolderSeeder::class,
+            ProcessResponsiblePersonSeeder::class,
         ]);
     }
 }

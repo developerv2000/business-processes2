@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ManufacturerController;
+use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
@@ -43,5 +44,9 @@ Route::middleware('auth', 'auth.session')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
         Route::post('/export-vp', 'exportVp')->name('export-vp');
         Route::post('/get-similar-records', 'getSimilarRecords');  // ajax request on create form for uniqness
+    });
+
+    Route::prefix('processes')->controller(ProcessController::class)->name('processes.')->group(function () {
+        RouteGenerator::defineAllDefaultCrudRoutes();
     });
 });

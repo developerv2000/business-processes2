@@ -47,6 +47,16 @@ class Product extends Model
         return $this->belongsTo(Manufacturer::class)->withTrashed();
     }
 
+    public function processes()
+    {
+        return $this->hasMany(Process::class)->withTrashed();
+    }
+
+    public function untrashedProcesses()
+    {
+        return $this->hasMany(Process::class);
+    }
+
     public function inn()
     {
         return $this->belongsTo(Inn::class);
@@ -80,10 +90,10 @@ class Product extends Model
 
     protected static function booted(): void
     {
-        static::deleting(function ($item) {
-            // foreach ($item->untrashedProcesses as $process) {
-            //     $process->delete();
-            // }
+        static::deleting(function ($item) { // trash
+            foreach ($item->untrashedProcesses as $process) {
+                $process->delete();
+            }
         });
 
         static::restoring(function ($item) {
@@ -91,11 +101,9 @@ class Product extends Model
                 $item->manufacturer->restoreQuietly();
             }
 
-            // foreach ($item->processes as $process) {
-            //     if ($process->trashed()) {
-            //         $process->restoreQuietly();
-            //     }
-            // }
+            foreach ($item->processes as $process) {
+                $process->restoreQuietly();
+            }
         });
 
         static::forceDeleting(function ($item) {
@@ -105,9 +113,9 @@ class Product extends Model
                 $comment->delete();
             }
 
-            // foreach ($item->processes as $process) {
-            //     $process->forceDelete();
-            // }
+            foreach ($item->processes as $process) {
+                $process->forceDelete();
+            }
         });
     }
 

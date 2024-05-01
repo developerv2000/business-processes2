@@ -44,6 +44,24 @@ class Manufacturer extends Model
     | Relations
     |--------------------------------------------------------------------------
     */
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function processes()
+    {
+        return $this->hasManyThrough(
+            Process::class,
+            Product::class,
+            'manufacturer_id', // Foreign key on Products table
+            'product_id',   // Foreign key on Processes table
+            'id',         // Local key on Manufacturers table
+            'id'          // Local key on Products table
+        );
+    }
+
     public function bdm()
     {
         return $this->belongsTo(User::class, 'bdm_user_id');
@@ -84,11 +102,6 @@ class Manufacturer extends Model
         return $this->belongsToMany(Zone::class);
     }
 
-    public function products()
-    {
-        return $this->hasMany(Product::class);
-    }
-
     /*
     |--------------------------------------------------------------------------
     | Events
@@ -106,9 +119,9 @@ class Manufacturer extends Model
                 $generic->delete();
             }
 
-            // foreach ($instance->processes as $process) {
-            //     $process->delete();
-            // }
+            foreach ($instance->processes as $process) {
+                $process->delete();
+            }
         });
 
         static::restored(function ($instance) {
@@ -116,9 +129,9 @@ class Manufacturer extends Model
                 $generic->restore();
             }
 
-            // foreach ($instance->processes()->onlyTrashed()->get() as $process) {
-            //     $process->restore();
-            // }
+            foreach ($instance->processes()->onlyTrashed()->get() as $process) {
+                $process->restore();
+            }
         });
 
         static::forceDeleting(function ($instance) {
@@ -138,9 +151,9 @@ class Manufacturer extends Model
                 $generic->forceDelete();
             }
 
-            // foreach ($instance->processes()->withTrashed()->get() as $process) {
-            //     $process->forceDelete();
-            // }
+            foreach ($instance->processes()->withTrashed()->get() as $process) {
+                $process->forceDelete();
+            }
         });
     }
 

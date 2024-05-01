@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\CountryCode;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,18 @@ class ProcessFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'product_id' => Product::inRandomOrder()->first()->id,
+            // 'status_id' => ProcessStatus::onlyChilds()->inRandomOrder()->first()->id,
+            'status_update_date' => fake()->date(),
+            'country_code_id' => CountryCode::inRandomOrder()->first()->id,
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function ($process) {
+            $process->responsiblePeople()->attach(rand(1, 10));
+            $process->responsiblePeople()->attach(rand(11, 20));
+        });
     }
 }

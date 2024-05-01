@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             CurrencySeeder::class,
             MarketingAuthorizationHolderSeeder::class,
             ProcessResponsiblePersonSeeder::class,
+            ProcessSeeder::class,
         ]);
     }
 }

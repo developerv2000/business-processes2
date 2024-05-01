@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('processes', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->unsignedInteger('product_id');
-            $table->unsignedSmallInteger('status_id');
+            // $table->unsignedSmallInteger('status_id');
             $table->date('status_update_date');
 
             // stage 1 (ВП)

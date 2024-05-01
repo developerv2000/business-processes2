@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Process;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,6 @@ class ProcessSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Process::factory(8)->create();
     }
 }

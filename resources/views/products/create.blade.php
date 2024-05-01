@@ -3,7 +3,7 @@
 @section('main')
     <div class="pre-content pre-content--intended styled-box">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('IVP'), 'Create new'],
+            'crumbs' => [__('IVP'), __('Create new')],
             'fullScreen' => false,
         ])
 

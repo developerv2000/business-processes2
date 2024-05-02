@@ -4,15 +4,15 @@ New version updates:
     Tables:
         manufacturers:
             Fields:
-                profile => about
-                active => is_active
+                profile   => about
+                active    => is_active
                 important => is_important
 
-        product_categories => product_classes
+        product_categories            => product_classes
         manufacturer_product_category => manufacturer_product_class
-        blacklists => manufacturer_blacklists
-        blacklist_manufacturer => manufacturer_manufacturer_blacklist
-        presences => manufacturer_presences
+        blacklists                    => manufacturer_blacklists
+        blacklist_manufacturer        => manufacturer_manufacturer_blacklist
+        presences                     => manufacturer_presences
 
     Relationships:
     productCategories => productClasses
@@ -21,21 +21,21 @@ New version updates:
     Tables:
         generics => products:
             Fields:
-                category_id => class_id
-                mnn_id => inn_id
-                dose => dosage
-                minimum_volume => moq
+                category_id        => class_id
+                mnn_id             => inn_id
+                dose               => dosage
+                minimum_volume     => moq
                 expiration_date_id => shelf_life_id
                 additional_payment => down_payment
-                patent_expiry => validity_period
-                marketed_in_eu => sold_in_eu
+                patent_expiry      => validity_period
+                marketed_in_eu     => sold_in_eu
 
-        mnns => inns
+        mnns             => inns
         expiration_dates => product_shelf_lives
-        generic_zone => product_zone
+        generic_zone     => product_zone
 
     Relationships:
-        mnn => inn
+        mnn      => inn
         category => class
 
 3. Process (VPS)
@@ -43,23 +43,34 @@ New version updates:
         processes:
             Fields:
                 date => -----REMOVED
-                year_1 => forecast_year_1
-                year_2 => forecast_year_2
-                year_3 => forecast_year_3
+                year_1           => forecast_year_1
+                year_2           => forecast_year_2
+                year_3           => forecast_year_3
                 promo_company_id => marketing_authorization_holder_id
-                additional_1 => down_payment_1
-                additional_2 => down_payment_2
+                additional_1     => down_payment_1
+                additional_2     => down_payment_2
 
-        country_codes
+        country_codes:
             Fields:
                 usage_count => -----REMOVED
 
-        promo_companies => marketing_authorization_holders
+        process_statuses:
+            Fields:
+                name_for_admins      => name
+                name_for_analysts    => -----REMOVED
+                stage                => -----REMOVED
+                responsible_child_id => -----REMOVED
+
+        promo_companies     => marketing_authorization_holders
         process_crbecountry => clinical_trial_country_process
 
+    Added:
+        Tables:
+            process_general_statuses
+
     Relationships:
-        countryCode => searchCountry
-        promoCompany => marketingAuthorizationHolder
-        crbeCountries => clinicalTrialCountries
-        process_owners => process_responsible_people
+        countryCode           => searchCountry
+        promoCompany          => marketingAuthorizationHolder
+        crbeCountries         => clinicalTrialCountries
+        process_owners        => process_responsible_people
         process_processowners => process_process_responsible_people

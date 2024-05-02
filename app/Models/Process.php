@@ -28,7 +28,7 @@ class Process extends Model
 
     protected $with = [
         'searchCountry',
-        // 'status',
+        'status',
         'currency',
         'marketingAuthorizationHolder',
         'clinicalTrialCountries',
@@ -45,6 +45,11 @@ class Process extends Model
     public function product()
     {
         return $this->belongsTo(Product::class)->withTrashed();
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(ProcessStatus::class, 'status_id');
     }
 
     public function manufacturer()

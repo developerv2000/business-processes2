@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\CountryCode;
+use App\Models\ProcessStatus;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

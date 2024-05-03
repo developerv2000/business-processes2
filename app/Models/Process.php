@@ -99,6 +99,18 @@ class Process extends Model
         );
     }
 
+    public function statusHistory()
+    {
+        return $this->hasMany(ProcessStatusHistory::class);
+    }
+
+    public function currentStatusHistory()
+    {
+        return $this->hasOne(ProcessStatusHistory::class)
+            ->whereNull('end_date')
+            ->orderBy('id', 'desc');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Events
@@ -106,6 +118,17 @@ class Process extends Model
     */
     protected static function booted(): void
     {
+        static::created(function ($instance) {
+            $instance->createNewStatusHistory();
+        });
+
+        static::updating(function ($instance) {
+            // Close the current status history and create a new one, if the status has changed
+            if ($instance->isDirty('status_id')) {
+                $instance->currentStatusHistory->close();
+                $instance->createNewStatusHistory();
+            }
+        });
     }
 
     /*
@@ -241,5 +264,18 @@ class Process extends Model
             $this->created_at,
             $this->updated_at,
         ];
+    }
+
+    /**
+     * Create the initial status history record when the Process is created.
+     *
+     * @return void
+     */
+    public function createNewStatusHistory()
+    {
+        $this->statusHistory()->create([
+            'status_id' => $this->status_id,
+            'start_date' => now(),
+        ]);
     }
 }

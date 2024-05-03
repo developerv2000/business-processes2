@@ -33,6 +33,11 @@ class DatabaseSeeder extends Seeder
             ProcessGeneralStatusSeeder::class,
             ProcessStatusSeeder::class,
             ProcessSeeder::class,
+            KvppStatusSeeder::class,
+            KvppPrioritySeeder::class,
+            KvppSourceSeeder::class,
+            PortfolioManagerSeeder::class,
+            KvppSeeder::class,
         ]);
     }
 }

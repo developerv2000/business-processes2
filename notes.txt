@@ -74,3 +74,17 @@ New version updates:
         crbeCountries         => clinicalTrialCountries
         process_owners        => process_responsible_people
         process_processowners => process_process_responsible_people
+
+4. Kvpp
+    Tables:
+        kvpp
+            Fields:
+                mnn_id           => inn_id
+                dose             => dosage
+                promo_company_id => marketing_authorization_holder_id
+                info             => information
+
+    Relationships:
+        countryCode => country
+        mnn => inn
+        promoCompany => marketingAuthorizationHolder

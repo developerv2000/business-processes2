@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\KvppController;
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProductController;
@@ -47,6 +48,10 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     Route::prefix('processes')->controller(ProcessController::class)->name('processes.')->group(function () {
+        RouteGenerator::defineAllDefaultCrudRoutes();
+    });
+
+    Route::prefix('kvpp')->controller(KvppController::class)->name('kvpp.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
     });
 });

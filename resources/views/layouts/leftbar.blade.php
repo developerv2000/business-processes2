@@ -7,8 +7,8 @@
                 'navbar-link--active' => request()->routeIs('manufacturers.*'),
             ])>{{ __('EPP') }}</x-navbar.link>
 
-            <x-navbar.link icon="content_paste_search" href="{{ route('manufacturers.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('template.*'),
+            <x-navbar.link icon="content_paste_search" href="{{ route('kvpp.index') }}" @class([
+                'navbar-link--active' => request()->routeIs('kvpp.*'),
             ])>{{ __('KVPP') }}</x-navbar.link>
 
             <x-navbar.link icon="pill" href="{{ route('products.index') }}" @class([

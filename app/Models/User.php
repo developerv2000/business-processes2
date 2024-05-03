@@ -217,6 +217,7 @@ class User extends Authenticatable
         $settings['manufacturers_table_columns'] = $this->getDefaultManufacturersTableColumns();
         $settings['products_table_columns'] = $this->getDefaultProductsTableColumns();
         $settings['processes_table_columns'] = $this->getDefaultProcessTableColumns();
+        $settings['kvpp_table_columns'] = $this->getDefaultKvppTableColumns();
 
         $this->update(['settings' => $settings]);
     }
@@ -323,9 +324,9 @@ class User extends Authenticatable
             ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
             ['name' => 'Status date', 'order' => $order++, 'width' => 98, 'visible' => 1],
             ['name' => 'Search country', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            // ['name' => 'Product status', 'order' => $order++, 'width' => 126, 'visible' => 1],
-            // ['name' => 'Product status An*', 'order' => $order++, 'width' => 136, 'visible' => 1],
-            // ['name' => 'General status', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Product status', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'Product status An*', 'order' => $order++, 'width' => 136, 'visible' => 1],
+            ['name' => 'General status', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Category', 'order' => $order++, 'width' => 84, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country of manufacturer', 'order' => $order++, 'width' => 174, 'visible' => 1],
@@ -392,5 +393,39 @@ class User extends Authenticatable
         array_push($columns, ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1]);
 
         return $columns;
+    }
+
+    private function getDefaultKvppTableColumns()
+    {
+        $order = 1;
+
+        return [
+            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 82, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 86, 'visible' => 1],
+            ['name' => 'Priority', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'VPS coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'IVP coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Source', 'order' => $order++, 'width' => 98, 'visible' => 1],
+            ['name' => 'Generic', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Basic form', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Dosage', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Information', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'Date of forecast', 'order' => $order++, 'width' => 136, 'visible' => 1],
+            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Portfolio manager', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
+        ];
     }
 }

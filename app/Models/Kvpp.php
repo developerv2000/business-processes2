@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Requests\KvppStoreRequest;
+use App\Support\Helper;
 use App\Support\Traits\Commentable;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
@@ -38,6 +40,18 @@ class Kvpp extends Model
         'analyst',
         'lastComment',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'date_of_forecast' => 'date:m-Y-d',
+        ];
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -92,6 +106,36 @@ class Kvpp extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+    public function getCoincidentProcessesAttribute()
+    {
+        return Process::whereHas('product', function ($query) {
+            $query->where([
+                'inn_id' => $this->inn_id,
+                'form_id' => $this->form_id,
+                'dosage' => $this->dosage,
+                'pack' => $this->pack,
+            ]);
+        })
+            ->where('country_code_id', $this->country_code_id)
+            ->select('id', 'status_id')
+            ->withOnly('status')
+            ->get();
+    }
+
+    public function getCoincidentProductsCountAttribute()
+    {
+        return Product::where([
+            'inn_id' => $this->inn_id,
+            'form_id' => $this->form_id,
+        ])->count();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Events
     |--------------------------------------------------------------------------
     */
@@ -128,6 +172,32 @@ class Kvpp extends Model
 
     private static function filterRecords($request, $query)
     {
+        $whereEqualAttributes = [
+            'country_code_id',
+            'priority_id',
+            'source_id',
+            'inn_id',
+            'form_id',
+            'marketing_authorization_holder_id',
+            'portfolio_manager_id',
+            'analyst_user_id',
+            'id',
+        ];
+
+        $whereLikeAttributes = [
+            'dosage',
+            'pack',
+        ];
+
+        $dateRangeAttributes = [
+            'created_at',
+            'updated_at',
+        ];
+
+        $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Helper::filterQueryLikeStatements($request, $query, $whereLikeAttributes);
+        $query = Helper::filterQueryDateRangeStatements($request, $query, $dateRangeAttributes);
+
         return $query;
     }
 
@@ -145,6 +215,9 @@ class Kvpp extends Model
         $records = $query
             ->orderBy($request->orderBy, $request->orderType)
             ->orderBy('id', $request->orderType);
+
+        // attach relationship counts to the query
+        $records = $records->withCount('comments');
 
         // Handle different finaly options
         switch ($finaly) {
@@ -168,22 +241,73 @@ class Kvpp extends Model
         return $records;
     }
 
+    /**
+     * Retrieve all used inns.
+     *
+     * Used in filtering
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getAllUsedInns()
+    {
+        return Inn::has('kvpps')->orderBy('name')->get();
+    }
+
+    /**
+     * Retrieve all used forms.
+     *
+     * Used in filtering
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getAllUsedForms()
+    {
+        return ProductForm::has('kvpps')->orderBy('name')->get();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Create and Update
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Create instances from the given request.
+     *
+     * This method iterates over each marketing_authorization_holder_ids,
+     * validates request for each of marketing_authorization_holder_id,
+     * and creates new instances on validation success.
+     *
+     * @param \Illuminate\Http\Request $request The request containing data.
+     * @return void
+     */
     public static function createFromRequest($request)
     {
+        // Extract marketing authorization holder IDs from the request
         $mahIDs = $request->input('marketing_authorization_holder_ids');
 
+        // Iterate over each marketing authorization holder ID
         foreach ($mahIDs as $id) {
-            $instance = self::create($request->merge([
-                'marketing_authorization_holder_id' => $id
-            ]));
+            // Merge the marketing authorization holder ID into the request
+            $mergedRequest = $request->merge(['marketing_authorization_holder_id' => $id]);
 
-            // HasMany relations
+            // Create a KvppStoreRequest instance from the merged request
+            $formRequest = KvppStoreRequest::createFrom($mergedRequest);
+
+            // Create a validator instance
+            $validator = app('validator')->make(
+                $formRequest->all(),
+                $formRequest->rules(),
+                $formRequest->messages()
+            );
+
+            // Perform validation
+            $validator->validate();
+
+            // Create an instance using the merged request data
+            $instance = self::create($mergedRequest->all());
+
+            // Store HasMany relations
             $instance->storeComment($request->comment);
         }
     }
@@ -218,5 +342,31 @@ class Kvpp extends Model
             $this->created_at,
             $this->updated_at,
         ];
+    }
+
+    /**
+     * Get similar records based on the provided request data.
+     *
+     * Used in AJAX requests
+     *
+     * @param  \Illuminate\Http\Request  $request The request object containing form data.
+     * @return \Illuminate\Database\Eloquent\Collection A collection of similar records.
+     */
+    public static function getSimilarRecords($request)
+    {
+        // Get the family IDs of the selected form
+        $formFamilyIDs = ProductForm::find($request->form_id)->getFamilyIDs();
+
+        // Query similar records based on manufacturer, inn, and form family IDs
+        $similarRecords = Kvpp::where([
+            'inn_id' => $request->inn_id,
+            'dosage' => $request->dosage,
+            'pack' => $request->pack,
+            'country_code_id' => $request->country_code_id,
+        ])
+            ->whereIn('form_id', $formFamilyIDs)
+            ->get();
+
+        return $similarRecords;
     }
 }

@@ -44,7 +44,7 @@
     "Date of creation": "Дата создания",
     "Update date": "Дата обновления",
     "Deletion date": "Дата удаления",
-    "ID": "Нвои",
+    "ID": "Номер",
     "Cancel": "Отмена",
     "Close": "Закрыть",
 
@@ -108,9 +108,19 @@
     "Sold": "Прод.",
     "Down payment": "Доп. платёж",
     "KVPP coincidents": "Совпадение с КВПП",
-    "Similar products": "Похожие продукты",
-    "No similar products found": "Похожие продукты не найдены",
+    "Similar records": "Похожие записи",
+    "No similar records found": "Похожих записей не найдено",
 
+    "Priority": "Приоритет",
+    "VPS coincidents": "Совпадение с ВПЦ",
+    "IVP coincidents": "Совпадение с ИВП",
+    "Source": "Источник",
+    "Information": "Инофрмация",
+    "Date of forecast": "Дата ПО",
+    "Forecast 1 year": "Прогноз 1 год",
+    "Forecast 2 year": "Прогноз 2 год",
+    "Forecast 3 year": "Прогноз 3 год",
+    "Portfolio manager": "Менеджер",
 
     "meetings": "встреч",
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"

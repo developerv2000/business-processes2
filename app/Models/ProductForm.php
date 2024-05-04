@@ -25,6 +25,11 @@ class ProductForm extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function kvpps()
+    {
+        return $this->hasMany(Kvpp::class, 'form_id');
+    }
+
     public function childs()
     {
         return $this->hasMany(self::class, 'parent_id');

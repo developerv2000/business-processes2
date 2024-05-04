@@ -9,12 +9,12 @@
                 <div class="similar-records__list-text">
                     <span>{{ __('ID') }}: {{ $product->id }}</span>
                     <span>{{ __('Form') }}: {{ $product->form->name }}</span>
-                    <span>{{ __('Dosage') }}: {{ $product->dose }}</span>
+                    <span>{{ __('Dosage') }}: {{ $product->dosage }}</span>
                     <span>{{ __('Pack') }}: {{ $product->pack }}</span>
                 </div>
             </div>
         @endforeach
     </div>
 @else
-    <p class="similar-records__empty-text">{{ __('No similar records found') }}</p>
+    <p class="similar-records__empty-text">{{ __('No similar records found') }}!</p>
 @endif

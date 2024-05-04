@@ -53,5 +53,6 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     Route::prefix('kvpp')->controller(KvppController::class)->name('kvpp.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
+        Route::post('/get-similar-records', 'getSimilarRecords');  // ajax request on create form for uniqness
     });
 });

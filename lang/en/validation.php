@@ -174,6 +174,10 @@ return [
         'ivp' => [
             'unique' => 'Product with a given manufacturer, IMN, form, dosage and pack already exists.',
         ],
+
+        'kvpp' => [
+            'unique' => 'Kvpp with a given INN, form, dosage, pack and country already exists.',
+        ],
     ],
 
     /*

@@ -21,7 +21,7 @@
         @foreach ($options as $option)
             <option
                 value="{{ $option->id }}"
-                @selected($option->id == $instance->{$name})
+                @selected(($option->id == old($name)) || (!old($name) && $option->id == $instance->{$name}))
             >
                 {{ $option->{$optionCaptionAttribute} }}
             </option>

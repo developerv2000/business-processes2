@@ -3,10 +3,17 @@
 namespace App\Providers;
 
 use App\Models\Country;
+use App\Models\CountryCode;
 use App\Models\Inn;
+use App\Models\Kvpp;
+use App\Models\KvppPriority;
+use App\Models\KvppSource;
+use App\Models\KvppStatus;
 use App\Models\Manufacturer;
 use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
+use App\Models\MarketingAuthorizationHolder;
+use App\Models\PortfolioManager;
 use App\Models\ProductClass;
 use App\Models\ProductForm;
 use App\Models\ProductShelfLife;
@@ -71,6 +78,36 @@ class AppServiceProvider extends ServiceProvider
                 'countries' => Country::getAll(),
                 'manufacturerCategories' => ManufacturerCategory::getAll(),
                 'booleanOptions' => Helper::getBooleanOptionsArray(),
+            ]);
+        });
+
+        // KVPP
+        View::composer(['kvpp.create', 'kvpp.edit'], function ($view) {
+            $view->with([
+                'statuses' => KvppStatus::getAll(),
+                'countryCodes' => CountryCode::getAllPrioritized(),
+                'priorities' => KvppPriority::getAll(),
+                'sources' => KvppSource::getAll(),
+                'inns' => Inn::getAll(),
+                'forms' => ProductForm::getAllMinified(),
+                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+                'portfolioManagers' => PortfolioManager::getAll(),
+                'analystUsers' => User::getAnalystsMinified(),
+            ]);
+        });
+
+        // Inns and forms vary from create & update
+        View::composer(['filters.kvpp'], function ($view) {
+            $view->with([
+                'statuses' => KvppStatus::getAll(),
+                'countryCodes' => CountryCode::getAllPrioritized(),
+                'priorities' => KvppPriority::getAll(),
+                'sources' => KvppSource::getAll(),
+                'inns' => Kvpp::getAllUsedInns(),
+                'forms' => Kvpp::getAllUsedForms(),
+                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+                'portfolioManagers' => PortfolioManager::getAll(),
+                'analystUsers' => User::getAnalystsMinified(),
             ]);
         });
     }

@@ -61,7 +61,7 @@ const toggleFullscreenClass = (target) => {
 };
 
 // Other functions
-function debounce(callback, timeoutDelay = 500) {
+export function debounce(callback, timeoutDelay = 500) {
     let timeoutId;
 
     return (...rest) => {

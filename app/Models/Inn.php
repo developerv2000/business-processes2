@@ -17,6 +17,11 @@ class Inn extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function kvpps()
+    {
+        return $this->hasMany(Kvpp::class);
+    }
+
     public static function getAll()
     {
         return self::orderBy('name')->get();

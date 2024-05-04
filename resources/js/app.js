@@ -1,7 +1,8 @@
-import { hideSpinner, showSpinner, showModal } from './bootstrap';
+import { hideSpinner, showSpinner, showModal, debounce } from './bootstrap';
 
 const UPDATE_BODY_WIDTH_SETTINGS_URL = '/body-width';
 const GET_PRODUCTS_SIMILAR_RECORDS_URL = '/products/get-similar-records';
+const GET_KVPP_SIMILAR_RECORDS_URL = '/kvpp/get-similar-records';
 const bodyInner = document.querySelector('.body__inner');
 
 window.addEventListener('load', () => {
@@ -190,7 +191,6 @@ function bootstrapForms() {
         // Attach change event listeners to all select dropdowns
         for (let select of selects) {
             select.selectize.on('change', function (value) {
-                // When any select dropdown changes, display similar records
                 displayProductsSimilarRecords();
             });
         }
@@ -216,6 +216,82 @@ function bootstrapForms() {
 
             // Send a POST request to the server to get similar records
             axios.post(GET_PRODUCTS_SIMILAR_RECORDS_URL, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    // Display the similar records in the container
+                    similarRecordsContainer.innerHTML = response.data;
+                })
+                .finally(function () {
+                    // Hide any loading spinner after the request is complete
+                    hideSpinner();
+                });
+        }
+    }
+
+    // ========== Displaying similar records on kvpp create form ==========
+    // Check if the page is the kvpp create page
+    if (document.querySelector('.kvpp-create')) {
+        // Select the container where similar records will be displayed
+        const similarRecordsContainer = document.querySelector('.similar-records');
+
+        // Select the dropdowns for inn, form and country_code_id
+        let innSelect = document.querySelector('select[name="inn_id"]');
+        let formSelect = document.querySelector('select[name="form_id"]');
+        let countryCodeSelect = document.querySelector('select[name="country_code_id"]');
+
+        // Create an array of all select dropdowns
+        let selects = [innSelect, formSelect, countryCodeSelect];
+
+        // Attach change event listeners to all select dropdowns
+        for (let select of selects) {
+            select.selectize.on('change', function (value) {
+                displayKvppSimilarRecords();
+            });
+        }
+
+        // Select inputs
+        let dosageInput = document.querySelector('input[name="dosage"]');
+        let packInput = document.querySelector('input[name="pack"]');
+
+        // Create an array of all inputs
+        let inputs = [dosageInput, packInput];
+
+        // Attach change event listeners to all inputs
+        for (let input of inputs) {
+            // delay 1000 is used because input values are also formatted via debounce
+            input.addEventListener('input', debounce((evt) => {
+                displayKvppSimilarRecords();
+            }, 1000));
+        }
+
+        // Function to display similar records based on selected options
+        function displayKvppSimilarRecords() {
+            const innID = innSelect.value;
+            const formID = formSelect.value;
+            const countryCodeID = countryCodeSelect.value;
+            const dosage = dosageInput.value;
+            const pack = packInput.value;
+
+            // Return if any required fields are empty
+            if (innID == '' || formID == '' || countryCodeID == '') {
+                similarRecordsContainer.innerHTML = '';
+                return;
+            }
+
+            // Prepare data to be sent in the AJAX request
+            const data = {
+                'inn_id': innID,
+                'form_id': formID,
+                'country_code_id': countryCodeID,
+                'dosage': dosage,
+                'pack': pack,
+            };
+
+            // Send a POST request to the server to get similar records
+            axios.post(GET_KVPP_SIMILAR_RECORDS_URL, data, {
                 headers: {
                     'Content-Type': 'application/json'
                 }

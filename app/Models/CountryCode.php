@@ -15,4 +15,16 @@ class CountryCode extends Model
     {
         return $this->hasMany(Process::class);
     }
+
+    public function kvpps()
+    {
+        return $this->hasMany(Kvpp::class);
+    }
+
+    public static function getAllPrioritized()
+    {
+        return self::withCount(['processes', 'kvpps'])
+           ->orderByRaw('processes_count + kvpps_count DESC')
+           ->get();
+    }
 }

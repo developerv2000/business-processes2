@@ -880,8 +880,9 @@ body::-webkit-scrollbar-thumb,
 }
 
 .td__link--margined {
+    width: max-content;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .td__edit {

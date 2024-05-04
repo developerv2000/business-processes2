@@ -230,7 +230,8 @@ class Manufacturer extends Model
             ->orderBy('id', $request->orderType);
 
         // attach relationship counts to the query
-        $records = $records->withCount('products');
+        $records = $records->withCount('products')
+            ->withCount('comments');
 
         // Handle different finaly options
         switch ($finaly) {
@@ -367,7 +368,7 @@ class Manufacturer extends Model
             $this->bdm->name,
             $this->analyst->name,
             $this->country->name,
-            'NOT DONE YET!!!',  // ИВП
+            $this->products_count,
             $this->name,
             $this->category->name,
             $this->is_active ? __('Active') : __('Stoped'),

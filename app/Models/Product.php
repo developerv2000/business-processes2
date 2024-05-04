@@ -84,6 +84,36 @@ class Product extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+    public function getProcessesIndexFilteredLinkAttribute()
+    {
+        return route('processes.index', [
+            'manufacturer_id' => $this->manufacturer_id,
+            'inn_id' => $this->inn_id,
+            'form_id' => $this->form_id,
+            'dosage' => urlencode($this->dosage),
+            'pack' => urlencode($this->pack),
+        ]);
+    }
+
+    public function getCoincidentKvppsAttribute()
+    {
+        return Kvpp::where([
+            'inn_id' => $this->inn_id,
+            'form_id' => $this->form_id,
+            'dosage' => $this->dosage,
+            'pack' => $this->pack,
+        ])
+            ->select('id', 'country_code_id')
+            ->withOnly('country')
+            ->get();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Events
     |--------------------------------------------------------------------------
     */
@@ -236,8 +266,9 @@ class Product extends Model
         // eager load complex relations
         $records = $records->withComplexRelations();
 
-        // attach relationship counts to the query !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NOT DONE YET
-        // $records = $records->withCount('processes');
+        // attach relationship counts to the query
+        $records = $records->withCount('untrashedProcesses')
+            ->withCount('comments');
 
         // Handle different finaly options
         switch ($finaly) {
@@ -329,7 +360,7 @@ class Product extends Model
     {
         return [
             $this->id,
-            'NOT DONE YET!!!',  // Processes
+            $this->untrashed_processes_count,
             $this->manufacturer->category->name,
             $this->manufacturer->country->name,
             $this->manufacturer->name,
@@ -355,7 +386,7 @@ class Product extends Model
             $this->manufacturer->analyst->name,
             $this->created_at,
             $this->updated_at,
-            'NOT DONE YET!!!', // KVPP
+            $this->coincident_kvpps->count(),
         ];
     }
 

@@ -1,1 +1,3 @@
-<x-different.arrowed-link href="{{ route('comments.index', [get_class($instance), $instance->id]) }}">{{ __('Comments') }}</x-different.arrowed-link>
+<a class="td__link" href="{{ route('comments.index', [get_class($instance), $instance->id]) }}">
+    {{ $instance->comments_count }} {{ __('Comments') }}
+</a>

@@ -66,6 +66,7 @@
 
     "Comment": "Комментарий",
     "Comments": "Комм Ан*",
+    "comments": "комментарии",
     "Last comment": "Последний комментарий",
     "Comments date": "Дата комм",
     "All comments": "Все комментарии",
@@ -87,8 +88,8 @@
     "Stop/pause": "Стоп/пауза",
 
     "Processes": "Процессы",
-    "Add process": "Добавить процесс",
-    "All processes": "Все процессы",
+    "processes": "процессов",
+    "New process": "Новый процесс",
     "Manufacturer Brand": "Бренд Производителя",
     "Generic": "Дженерик",
     "Form": "Форма",
@@ -111,5 +112,6 @@
     "No similar products found": "Похожие продукты не найдены",
 
 
+    "meetings": "встреч",
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

@@ -16,7 +16,9 @@
     @break
 
     @case('IVP')
-        <a class="td__link" href="#">{{ $instance->products_count }} {{ __('products') }}</a>
+        <a class="td__link" href="{{ route('products.index', ['manufacturer_id' => $instance->id]) }}">
+            {{ $instance->products_count }} {{ __('products') }}
+        </a>
     @break
 
     @case('Manufacturer')
@@ -108,7 +110,9 @@
     @break
 
     @case('Meetings')
-        <x-different.arrowed-link href="#">{{ __('Meetings') }}</x-different.arrowed-link>
+        <a class="td__link" href="#">
+            0 {{ __('meetings') }}
+        </a>
     @break
 
     @case('ID')

@@ -268,7 +268,7 @@ class User extends Authenticatable
             ['name' => 'Website', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'About company', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Relationship', 'order' => $order++, 'width' => 200, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
@@ -284,14 +284,14 @@ class User extends Authenticatable
 
         return [
             ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
-            ['name' => 'Processes', 'order' => $order++, 'width' => 166, 'visible' => 1],
+            ['name' => 'Processes', 'order' => $order++, 'width' => 146, 'visible' => 1],
             ['name' => 'Category', 'order' => $order++, 'width' => 84, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 144, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
-            ['name' => 'Form', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Basic form', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Dosage', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'MOQ', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Shelf life', 'order' => $order++, 'width' => 92, 'visible' => 1],
@@ -304,7 +304,7 @@ class User extends Authenticatable
             ['name' => 'Registered in EU', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Sold in EU', 'order' => $order++, 'width' => 106, 'visible' => 1],
             ['name' => 'Down payment', 'order' => $order++, 'width' => 132, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
@@ -333,12 +333,12 @@ class User extends Authenticatable
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
-            ['name' => 'Form', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Dosage', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
 
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
 
@@ -377,20 +377,14 @@ class User extends Authenticatable
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Product category', 'order' => $order++, 'width' => 126, 'visible' => 1],
+
+            ['name' => 'ВП', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'ПО', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'АЦ', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'СЦ', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'Кк', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
         ];
-
-        if ($this->isAdmin()) {
-            array_push(
-                $columns,
-                ['name' => 'ВП', 'order' => $order++, 'width' => 200, 'visible' => 1],
-                ['name' => 'ПО', 'order' => $order++, 'width' => 200, 'visible' => 1],
-                ['name' => 'АЦ', 'order' => $order++, 'width' => 200, 'visible' => 1],
-                ['name' => 'СЦ', 'order' => $order++, 'width' => 200, 'visible' => 1],
-                ['name' => 'Кк', 'order' => $order++, 'width' => 200, 'visible' => 1],
-            );
-        }
-
-        array_push($columns, ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1]);
 
         return $columns;
     }
@@ -408,13 +402,13 @@ class User extends Authenticatable
             ['name' => 'IVP coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Source', 'order' => $order++, 'width' => 98, 'visible' => 1],
             ['name' => 'Generic', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Form', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Basic form', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Dosage', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
             ['name' => 'Information', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Date of forecast', 'order' => $order++, 'width' => 136, 'visible' => 1],

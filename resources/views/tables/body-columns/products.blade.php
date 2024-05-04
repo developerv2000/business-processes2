@@ -4,10 +4,13 @@
     @break
 
     @case('Processes')
-        <a class="td__link td__link--margined" href="#">{{ __('Add process') }}</a>
+        <a class="td__link td__link--margined" href="{{ $instance->processes_index_filtered_link }}">
+            {{ $instance->untrashed_processes_count }} {{ __('processes') }}
+        </a>
 
-        {{-- !!!!!!!!!!!!!!!!!!!! NOT DONE YET --}}
-        <x-different.arrowed-link href="#">{{ __('All processes') }}: 0</x-different.arrowed-link>
+        <x-different.arrowed-link href="{{ route('processes.create', ['product_id' => $instance->id]) }}">
+            {{ __('New process') }}
+        </x-different.arrowed-link>
     @break
 
     @case('Category')
@@ -127,13 +130,11 @@
     @break
 
     @case('KVPP coincidents')
-        <a class="td__link" href="#">Not done yet</a>
-
-        {{-- @foreach ($instance->coincident_kvpps as $coincidentKvpp)
-            <a class="td__link" href="{{ route('kvpp.index') }}?id={{ $coincidentKvpp->id }}" target="_blank">
-                {{ $coincidentKvpp->countryCode->name }}
-            </a>
-        @endforeach --}}
+        @foreach ($instance->coincident_kvpps as $coincidentKvpp)
+            <a class="td__link" href="{{ route('kvpp.index', ['id' => $coincidentKvpp->id]) }}">
+                # {{ $coincidentKvpp->id }} {{ $coincidentKvpp->country->name }}
+            </a><br>
+        @endforeach
     @break
 
     @case('ID')

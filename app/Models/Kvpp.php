@@ -52,7 +52,7 @@ class Kvpp extends Model
 
     public function country()
     {
-        return $this->belongsTo(CountryCode::class);
+        return $this->belongsTo(CountryCode::class, 'country_code_id');
     }
 
     public function priority()

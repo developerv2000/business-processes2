@@ -39,11 +39,13 @@
         <div class="form__section">
             <x-forms.input.default-input
                 label="Dosage"
-                name="dosage" />
+                name="dosage"
+                data-on-input="validate-specific-input" />
 
             <x-forms.input.default-input
                 label="Pack"
-                name="pack" />
+                name="pack"
+                data-on-input="validate-specific-input" />
 
             <x-forms.input.default-input
                 label="Manufacturer Brand"

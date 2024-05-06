@@ -1,6 +1,6 @@
 @props(['action', 'id' => 'edit-form'])
 
-<form {{ $attributes->merge(['class' => 'form edit-form']) }} action="{{ $action }}" id="{{ $id }}" method="POST" enctype="multipart/form-data">
+<form {{ $attributes->merge(['class' => 'form edit-form']) }} action="{{ $action }}" id="{{ $id }}" method="POST" enctype="multipart/form-data" data-on-submit="show-spinner">
     @csrf
     @method('PATCH')
     <input type="hidden" name="previous_url" value="{{ old('previous_url', url()->previous()) }}">

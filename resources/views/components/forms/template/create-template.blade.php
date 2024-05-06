@@ -1,6 +1,6 @@
 @props(['action', 'id' => 'create-form'])
 
-<form {{ $attributes->merge(['class' => 'form create-form']) }} action="{{ $action }}" id="{{ $id }}" method="POST" enctype="multipart/form-data">
+<form {{ $attributes->merge(['class' => 'form create-form']) }} action="{{ $action }}" id="{{ $id }}" method="POST" enctype="multipart/form-data" data-on-submit="show-spinner">
     @csrf
 
     {{ $slot }}

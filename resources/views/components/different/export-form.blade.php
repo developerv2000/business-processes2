@@ -3,8 +3,5 @@
 <form class="export-form" action="{{ $action }}" method="POST">
     @csrf
 
-    <button class="button button--action">
-        <span class="button__icon material-symbols-outlined">download</span>
-        <span class="button__text">{{ __('Export') }}</span>
-    </button>
+    <x-different.button style="action" icon="download" type="submit">{{ __('Export') }}</x-different.button>
 </form>

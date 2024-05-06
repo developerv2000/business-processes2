@@ -40,12 +40,14 @@
             <x-forms.input.instance-edit-input
                 label="Dosage"
                 name="dosage"
-                :instance="$instance" />
+                :instance="$instance"
+                data-on-input="validate-specific-input" />
 
             <x-forms.input.instance-edit-input
                 label="Pack"
                 name="pack"
-                :instance="$instance" />
+                :instance="$instance"
+                data-on-input="validate-specific-input" />
 
             <x-forms.input.instance-edit-input
                 label="Manufacturer Brand"

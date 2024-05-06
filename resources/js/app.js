@@ -75,6 +75,72 @@ function bootstrapComponents() {
 }
 
 function bootstrapForms() {
+    // ========== Displaying spinner on form submits ==========
+    document.querySelectorAll('[data-on-submit="show-spinner"]').forEach((form) => {
+        form.addEventListener('submit', showSpinner);
+    })
+
+    // ========== Appending inputs before form submit ==========
+    /**
+     * Handles the form submission event by appending inputs to the form.
+     * Especially Used in multiple restore & delete table actions
+     */
+
+    document.querySelectorAll('[data-before-submit="appends-inputs"]').forEach((form) => {
+        form.addEventListener('submit', (evt) => {
+            // Prevent default form submission
+            evt.preventDefault();
+
+            const targ = evt.target;
+            const inputs = document.querySelectorAll(targ.dataset.inputsSelector);
+
+            // Append each input to the form
+            const hiddenInputsContainer = targ.querySelector('.form__hidden-inputs-container');
+
+            inputs.forEach((input) => {
+                // Clone the input element
+                const inputCopy = input.cloneNode(true);
+                // Append the copy to the hidden inputs container
+
+                hiddenInputsContainer.appendChild(inputCopy);
+            });
+
+            targ.submit();
+        });
+    });
+
+    // ========== Specific input validations for inputs like dosage, pack etc ==========
+    document.querySelectorAll('[data-on-input="validate-specific-input"]').forEach((input) => {
+        input.addEventListener('input', debounce((evt) => {
+            let targ = evt.target;
+
+            targ.value = targ.value
+                // Add spaces before and after '*', '+', '%' and '/' symbols
+                .replace(/([+%/*])/g, ' $1 ')
+                // Replace consecutive whitespaces with a single space
+                .replace(/\s+/g, ' ')
+                // Separate letters from numbers
+                .replace(/(\d+)([a-zA-Z]+)/g, '$1 $2')
+                .replace(/([a-zA-Z]+)(\d+)/g, '$1 $2')
+                // Remove non-English characters
+                .replace(/[^a-zA-Z0-9\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g, '')
+                // Remove inner whitespaces
+                .replace(/\s+(?=\S)/g, ' ')
+                // Replace symbols ',' with '.'
+                .replace(/,/g, '.')
+                // Convert the entire string to uppercase
+                .toUpperCase();
+        }));
+    });
+
+    // ========== Excape multiple export action ==========
+    document.querySelectorAll('.export-form').forEach((form) => {
+        form.addEventListener('submit', (evt) => {
+            const submit = evt.target.querySelector('button[type="submit"]');
+            submit.disabled = true;
+        });
+    });
+
     // ========== Table columns edit form ==========
     document.querySelector('.table-columns-edit-form')?.addEventListener('submit', (evt) => {
         evt.preventDefault();
@@ -144,35 +210,6 @@ function bootstrapForms() {
             filterForm.insertBefore(formGroup, filterForm.firstChild);
         });
     }
-
-    // ========== Appending inputs before form submit ==========
-    /**
-     * Handles the form submission event by appending inputs to the form.
-     * Especially Used in multiple restore & delete table actions
-     */
-
-    document.querySelectorAll('[data-before-submit="appends-inputs"]').forEach((form) => {
-        form.addEventListener('submit', (evt) => {
-            // Prevent default form submission
-            evt.preventDefault();
-
-            const targ = evt.target;
-            const inputs = document.querySelectorAll(targ.dataset.inputsSelector);
-
-            // Append each input to the form
-            const hiddenInputsContainer = targ.querySelector('.form__hidden-inputs-container');
-
-            inputs.forEach((input) => {
-                // Clone the input element
-                const inputCopy = input.cloneNode(true);
-                // Append the copy to the hidden inputs container
-
-                hiddenInputsContainer.appendChild(inputCopy);
-            });
-
-            targ.submit();
-        });
-    });
 
     // ========== Displaying similar records on products create form ==========
     // Check if the page is the products create page

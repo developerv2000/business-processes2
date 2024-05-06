@@ -139,8 +139,14 @@ class Kvpp extends Model
     | Events
     |--------------------------------------------------------------------------
     */
+    
     protected static function booted(): void
     {
+        static::forceDeleting(function ($instance) {
+            foreach ($instance->comments as $comment) {
+                $comment->delete();
+            }
+        });
     }
 
     /*

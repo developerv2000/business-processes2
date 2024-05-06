@@ -9,6 +9,10 @@ use App\Support\Traits\MergesParamsToRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Color;
 
 class Product extends Model
 {
@@ -24,6 +28,32 @@ class Product extends Model
 
     const EXCEL_TEMPLATE_STORAGE_PATH = 'app/excel/templates/ivp.xlsx';
     const EXCEL_EXPORT_STORAGE_PATH = 'app/excel/exports/ivp';
+
+    const EXCEL_VP_TEMPLATE_STORAGE_PATH = 'app/excel/templates/ivp-vp.xlsx';
+    const EXCEL_VP_EXPORT_STORAGE_PATH = 'app/excel/exports/ivp-vp';
+
+    const VP_DEFAULT_COUNTRIES = [
+        'KZ',
+        'TM',
+        'KG',
+        'AM',
+        'TJ',
+        'UZ',
+        'GE',
+        'MN',
+        'RU',
+        'AZ',
+        'AL',
+        'KE',
+        'DO',
+        'KH',
+        'MM',
+    ];
+
+    const VP_FIRST_DEFAULT_COUNTRY_COLUMN_INDEX = 'J';
+    const VP_LAST_DEFAULT_COUNTRY_COLUMN_INDEX = 'X';
+    const VP_TITLES_ROW_INDEX = 2;
+    const VP_PRODUCTS_START_ROW_INDEX = 4;
 
     protected $guarded = ['id'];
 
@@ -390,8 +420,107 @@ class Product extends Model
         ];
     }
 
-    public static function exportVpRecordsAsExcel()
+    /**
+     * Requires refactoring and optimization !!!
+     *
+     * Export VP records as an Excel file.
+     *
+     * This function exports VP records as an Excel file with additional functionality,
+     * such as inserting additional country titles and setting cell styles.
+     *
+     * @param \Illuminate\Database\Query\Builder $query The query builder instance.
+     * @param string $manufacturerName The name of the manufacturer.
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse The response containing the Excel file.
+     */
+    public static function exportVpRecordsAsExcel($query, $manufacturerName)
     {
-        dd('Not done yet');
+        // Load Excel template
+        $templatePath = storage_path(self::EXCEL_VP_TEMPLATE_STORAGE_PATH);
+        $spreadsheet = IOFactory::load($templatePath);
+        $worksheet = $spreadsheet->getActiveSheet();
+
+        // Get all items
+        $allItems = collect();
+        $query->chunk(400, function ($chunked) use (&$allItems) {
+            $allItems = $allItems->merge($chunked);
+        });
+
+        // Append coincident_kvpps manually, so it won`t load many times
+        $allItems->each(function ($item) {
+            $item->coincident_kvpps = $item->coincident_kvpps;
+        });
+
+        // Collect unique additional countries
+        $additionalCountries = $allItems->flatMap->coincident_kvpps->pluck('countryCode.name')->unique();
+
+        // Remove countries already present in default countries
+        $additionalCountries = $additionalCountries->diff(self::VP_DEFAULT_COUNTRIES);
+
+        // insert additional country titles between last default country and ZONE 4B columns
+        $lastCountryColumnIndex = self::VP_LAST_DEFAULT_COUNTRY_COLUMN_INDEX;
+        foreach ($additionalCountries as $country) {
+            $nextCountryColumnIndex = Coordinate::stringFromColumnIndex(Coordinate::columnIndexFromString($lastCountryColumnIndex) + 1);
+            $worksheet->insertNewColumnBefore($nextCountryColumnIndex, 1);
+            $insertedCellCoordinates = $nextCountryColumnIndex . self::VP_TITLES_ROW_INDEX;
+            $worksheet->setCellValue($insertedCellCoordinates, $country);
+            // Update cell styles
+            $worksheet->getColumnDimension($nextCountryColumnIndex)->setWidth(5);
+            $cellStyle = $worksheet->getCell($insertedCellCoordinates)->getStyle();
+            $cellStyle->getFill()->getStartColor()->setARGB('00FFFF');
+            $cellStyle->getFont()->setColor(new Color(Color::COLOR_BLACK));
+            $lastCountryColumnIndex = $nextCountryColumnIndex;
+        }
+
+        // Join default and additional countries
+        $allCountries = collect(self::VP_DEFAULT_COUNTRIES)->merge($additionalCountries);
+
+        // Insert product rows
+        $rowIndex = self::VP_PRODUCTS_START_ROW_INDEX;
+        $productsCounter = 1;
+
+        foreach ($allItems as $item) {
+            $worksheet->setCellValue('A' . $rowIndex, $productsCounter);
+            $worksheet->setCellValue('B' . $rowIndex, $item->inn->name);
+            $worksheet->setCellValue('C' . $rowIndex, $item->form->name);
+            $worksheet->setCellValue('D' . $rowIndex, $item->dosage);
+            $worksheet->setCellValue('E' . $rowIndex, $item->pack);
+            $worksheet->setCellValue('F' . $rowIndex, $item->moq);
+            $worksheet->setCellValue('G' . $rowIndex, $item->shelfLife->name);
+
+            $countryColumnIndex = self::VP_FIRST_DEFAULT_COUNTRY_COLUMN_INDEX;  // Reset value for each row
+            foreach ($allCountries as $country) {
+                $cellIndex = $countryColumnIndex . $rowIndex;
+                $cellStyle = $worksheet->getCell($cellIndex)->getStyle();
+
+                if ($item->coincident_kvpps->contains('countryCode.name', $country)) {
+                    $worksheet->setCellValue($cellIndex, '1');
+                    $cellStyle->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                    $cellStyle->getFill()->getStartColor()->setARGB('92D050');
+                } else {
+                    // Reset background color because new inserted rows copy previous row styles
+                    $cellStyle->getFill()->getStartColor()->setARGB('FFFFFF');
+                }
+
+                $countryColumnIndex = Coordinate::stringFromColumnIndex(Coordinate::columnIndexFromString($countryColumnIndex) + 1);
+            }
+
+            $rowIndex++;
+            $productsCounter++;
+            $worksheet->insertNewRowBefore($rowIndex, 1);  // Insert new rows to escape rewriting default countries list
+        }
+
+        // Remove last inserted row
+        if ($allItems->isNotEmpty()) {
+            $worksheet->removeRow($rowIndex);
+        }
+
+        // Save file
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = $manufacturerName . date(' Y-m-d') . '.xlsx';
+        $filename = Helper::escapeDuplicateFilename($filename, storage_path(self::EXCEL_VP_EXPORT_STORAGE_PATH));
+        $filePath = storage_path(self::EXCEL_VP_EXPORT_STORAGE_PATH  . '/' . $filename);
+        $writer->save($filePath);
+
+        return response()->download($filePath);
     }
 }

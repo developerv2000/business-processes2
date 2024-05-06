@@ -190,6 +190,9 @@ class Process extends Model
         // eager load complex relations
         $records = $records->withComplexRelations();
 
+        // attach relationship counts to the query
+        $records = $records->withCount('comments');
+
         // Handle different finaly options
         switch ($finaly) {
             case 'paginate':

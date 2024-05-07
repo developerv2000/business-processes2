@@ -8,6 +8,7 @@ use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\StatisticController;
 use App\Support\RouteGenerator;
 use Illuminate\Support\Facades\Route;
 
@@ -18,7 +19,7 @@ Route::controller(AuthenticatedSessionController::class)->group(function () {
 });
 
 Route::middleware('auth', 'auth.session')->group(function () {
-    Route::get('/', [ManufacturerController::class, 'index'])->name('manufacturers.index'); // home
+    Route::get('/', [StatisticController::class, 'index'])->name('statistics.index'); // home page
 
     Route::controller(ProfileController::class)->name('profile.')->group(function () {
         Route::get('profile', 'edit')->name('edit');
@@ -38,7 +39,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     Route::prefix('manufacturers')->controller(ManufacturerController::class)->name('manufacturers.')->group(function () {
-        RouteGenerator::defineDefaultCrudRoutesExcept(['index']);
+        RouteGenerator::defineAllDefaultCrudRoutes();
     });
 
     Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {

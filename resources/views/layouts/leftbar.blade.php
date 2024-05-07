@@ -23,13 +23,9 @@
                 'navbar-link--active' => request()->routeIs('template.*'),
             ])>{{ __('Meetings') }}</x-navbar.link>
 
-            <x-navbar.link icon="bar_chart" href="{{ route('manufacturers.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('template.*'),
+            <x-navbar.link icon="bar_chart" href="{{ route('statistics.index') }}" @class([
+                'navbar-link--active' => request()->routeIs('statistics.*'),
             ])>{{ __('КПЭ') }}</x-navbar.link>
-
-            {{-- <x-navbar.link icon="info" href="{{ route('manufacturers.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('template.*'),
-            ])>{{ __('Info') }}</x-navbar.link> --}}
         </nav>
     </div>
 </aside>

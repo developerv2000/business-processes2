@@ -110,5 +110,13 @@ class AppServiceProvider extends ServiceProvider
                 'analystUsers' => User::getAnalystsMinified(),
             ]);
         });
+
+        // Statistics
+        View::composer(['filters.statistics'], function ($view) {
+            $view->with([
+                'analystUsers' => User::getAnalystsMinified(),
+                'bdmUsers' => User::getBdmsMinifed(),
+            ]);
+        });
     }
 }

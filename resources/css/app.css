@@ -1094,3 +1094,10 @@ body::-webkit-scrollbar-thumb,
     margin: 0;
 }
 /* ------------ /end Similar records ------------ */
+
+
+/* ------------ Statistics pages ------------ */
+.statistics-index__table1-container {
+    margin-bottom: 40px;
+}
+/* ------------ /end Statistics pages ------------ */

@@ -43,12 +43,18 @@ class StatisticController extends Controller
         self::addStatusCurrentProcessesCount($request, $generalStatusses, $monthes);
         // Add transitional processes count of each month for statusses. Table 2
         self::addStatusTransitionalProcessesCount($request, $generalStatusses, $monthes);
+
         // Calculate total current process and total transition processes of each statusses (Table 1 and Table 2)
         self::calculateStatusTotalProcessesCount($generalStatusses);
+        // Calculate total current process and total transition processes of each monthes (Table 1 and Table 2)
+        self::calculateMonthTotalProcessesCount($generalStatusses, $monthes);
 
-        dd($generalStatusses);
+        // Calculate sum of all total current processes count of statusses
+        $sumOfTotalCurrentProcessesCount = $generalStatusses->sum('total_current_processes_count');
+        // Calculate sum of all total transitional processes count of statusses
+        $sumOfTotalTransitionalProcessesCount = $generalStatusses->sum('total_transitional_processes_count');
 
-        view('statistics.index');
+        return view('statistics.index', compact('request', 'monthes', 'generalStatusses', 'sumOfTotalCurrentProcessesCount', 'sumOfTotalTransitionalProcessesCount'));
     }
 
     /**
@@ -212,7 +218,8 @@ class StatisticController extends Controller
     }
 
     /**
-     * Calculate total processes count for each status.
+     * Calculate total current processes count
+     * and total transitional processes count for each status.
      *
      * Iterates through general statuses and calculates the total current and transitional processes count
      * based on the counts for each month.
@@ -233,6 +240,30 @@ class StatisticController extends Controller
 
             $status->total_current_processes_count = $totalCurrentProcesses;
             $status->total_transitional_processes_count = $totalTransitionalProcesses;
+        }
+    }
+
+    /**
+     * Calculate total current processes count
+     * and total transitional processes count for each month.
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection  $generalStatusses
+     * @param  \Illuminate\Support\Collection  $monthes
+     * @return void
+     */
+    private static function calculateMonthTotalProcessesCount($generalStatusses, $monthes)
+    {
+        foreach ($monthes as $month) {
+            $totalCurrentProcesses = 0;
+            $totalTransitionalProcesses = 0;
+
+            foreach ($generalStatusses as $status) {
+                $totalCurrentProcesses += $status->monthes[$month['number']]['current_processes_count'];
+                $totalTransitionalProcesses += $status->monthes[$month['number']]['transitional_processes_count'];
+            }
+
+            $month['total_current_processes_count'] = $totalCurrentProcesses;
+            $month['total_transitional_processes_count'] = $totalTransitionalProcesses;
         }
     }
 }

@@ -1105,7 +1105,75 @@ body::-webkit-scrollbar-thumb,
     align-self: flex-start;
 }
 
+.statistics-counter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+}
+.statistics-counter__item {
+    width: calc(20% - 16px);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: white;
+    border-radius: var(--theme-border-radius);
+}
+.statistics-counter__count {
+    margin-bottom: 0;
+    padding: 4px 10px;
+    background-color: var(--main-color);
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+}
+
+.statistics-counter__status-name {
+    margin-bottom: 0;
+    font-size: 15px;
+}
+
 .statistics-index__table1-container {
-    margin-bottom: 40px;
+    margin: 20px 0;
+}
+
+/* Statuses */
+.general-status-1 {
+    background-color: var(--text-color);
+}
+
+.general-status-2 {
+    background-color: var(--secondary-color);
+}
+
+.general-status-3 {
+    background-color: var(--success-color);
+}
+
+.general-status-4 {
+    background-color: var(--danger-color);
+}
+
+.general-status-5 {
+    background-color: var(--main-color);
+}
+
+.general-status-6 {
+    background-color: #A66999;
+}
+
+.general-status-7 {
+    background-color: #7d59f3;
+}
+
+.general-status-8 {
+    background-color: #ff00fa;
+}
+
+.general-status-9 {
+    background-color: #00c7ff;
+}
+
+.general-status-10 {
+    background-color: #8b9597;
 }
 /* ------------ /end Statistics pages ------------ */

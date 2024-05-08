@@ -1,7 +1,7 @@
 <div class="statistics-index__table2-container styled-box">
     <div class="pre-content">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Table') . ' 2', __('Table 1 description')],
+            'crumbs' => [__('Table') . ' 2', __('Описание таблицы 2')],
             'fullScreen' => false,
         ])
     </div>
@@ -12,7 +12,7 @@
             <tr>
                 <th>{{ __('Status') }}</th>
 
-                @foreach ($monthes as $month)
+                @foreach ($months as $month)
                     <th>{{ __($month['name']) }}</th>
                 @endforeach
 
@@ -22,11 +22,11 @@
 
         {{-- Body Start --}}
         <tbody>
-            @foreach ($generalStatusses as $status)
+            @foreach ($generalStatuses as $status)
                 <tr>
                     <td>{{ $status->name }}</td>
 
-                    @foreach ($status->monthes as $month)
+                    @foreach ($status->months as $month)
                         <td>{{ $month['transitional_processes_count'] }}</td>
                     @endforeach
 
@@ -34,11 +34,11 @@
                 </tr>
             @endforeach
 
-            {{-- Sum of total statusses --}}
+            {{-- Sum of total statuses --}}
             <tr>
                 <td>{{ __('Total') }}</td>
 
-                @foreach ($monthes as $month)
+                @foreach ($months as $month)
                     <td>{{ $month['total_transitional_processes_count'] }}</td>
                 @endforeach
 

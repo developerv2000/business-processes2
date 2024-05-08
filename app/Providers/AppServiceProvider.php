@@ -116,6 +116,8 @@ class AppServiceProvider extends ServiceProvider
             $view->with([
                 'analystUsers' => User::getAnalystsMinified(),
                 'bdmUsers' => User::getBdmsMinifed(),
+                'calendarMonths' => Helper::collectCalendarMonths(),
+                'countryCodes' => CountryCode::getAllPrioritized(),
             ]);
         });
     }

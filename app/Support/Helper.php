@@ -232,6 +232,29 @@ class Helper
         return number_format((int)$price, 0, ',', ' ');
     }
 
+    /**
+     * Collect all calendar months
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public static function collectCalendarMonths()
+    {
+        return collect([
+            collect(['name' => 'January', 'number' => 1]),
+            collect(['name' => 'February', 'number' => 2]),
+            collect(['name' => 'March', 'number' => 3]),
+            collect(['name' => 'April', 'number' => 4]),
+            collect(['name' => 'May', 'number' => 5]),
+            collect(['name' => 'June', 'number' => 6]),
+            collect(['name' => 'July', 'number' => 7]),
+            collect(['name' => 'August', 'number' => 8]),
+            collect(['name' => 'September', 'number' => 9]),
+            collect(['name' => 'October', 'number' => 10]),
+            collect(['name' => 'November', 'number' => 11]),
+            collect(['name' => 'December', 'number' => 12]),
+        ]);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Query filtering

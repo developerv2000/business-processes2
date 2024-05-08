@@ -1097,6 +1097,14 @@ body::-webkit-scrollbar-thumb,
 
 
 /* ------------ Statistics pages ------------ */
+.statistics-index {
+    padding-bottom: 40px;
+}
+
+.statistics-index .rightbar {
+    align-self: flex-start;
+}
+
 .statistics-index__table1-container {
     margin-bottom: 40px;
 }

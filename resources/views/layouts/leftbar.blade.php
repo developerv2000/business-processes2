@@ -19,8 +19,8 @@
                 'navbar-link--active' => request()->routeIs('processes.*'),
             ])>{{ __('VPS') }}</x-navbar.link>
 
-            <x-navbar.link icon="calendar_month" href="{{ route('manufacturers.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('template.*'),
+            <x-navbar.link icon="calendar_month" href="{{ route('meetings.index') }}" @class([
+                'navbar-link--active' => request()->routeIs('meetings.*'),
             ])>{{ __('Meetings') }}</x-navbar.link>
 
             <x-navbar.link icon="bar_chart" href="{{ route('statistics.index') }}" @class([

@@ -214,10 +214,11 @@ class User extends Authenticatable
             'locale' => User::DEFAULT_LOCALE_NAME,
         ];
 
-        $settings['manufacturers_table_columns'] = $this->getDefaultManufacturersTableColumns();
-        $settings['products_table_columns'] = $this->getDefaultProductsTableColumns();
-        $settings['processes_table_columns'] = $this->getDefaultProcessTableColumns();
-        $settings['kvpp_table_columns'] = $this->getDefaultKvppTableColumns();
+        $settings['manufacturers_table_columns'] = Manufacturer::getDefaultTableColumns();
+        $settings['products_table_columns'] = Product::getDefaultTableColumns();
+        $settings['processes_table_columns'] = Process::getDefaultTableColumns();
+        $settings['kvpp_table_columns'] = Kvpp::getDefaultTableColumns();
+        $settings['meetings_table_columns'] = Meeting::getDefaultTableColumns();
 
         $this->update(['settings' => $settings]);
     }
@@ -237,189 +238,25 @@ class User extends Authenticatable
         $this->update(['settings' => $settings]);
     }
 
+    /**
+     * Collects all table columns for a given key from user settings.
+     *
+     * @param  string  $key
+     * @return \Illuminate\Support\Collection
+     */
     public function collectAllTableColumns($key): Collection
     {
         return collect($this->settings[$key])->sortBy('order');
     }
 
+    /**
+     * Filters out only the visible columns from the provided collection.
+     *
+     * @param  \Illuminate\Support\Collection  $columns
+     * @return array
+     */
     public static function filterOnlyVisibleColumns($columns): array
     {
         return $columns->where('visible', 1)->sortBy('order')->values()->all();
-    }
-
-    private function getDefaultManufacturersTableColumns(): array
-    {
-        $order = 1;
-
-        return [
-            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
-            ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Country', 'order' => $order++, 'width' => 144, 'visible' => 1],
-            ['name' => 'IVP', 'order' => $order++, 'width' => 120, 'visible' => 1],
-            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Category', 'order' => $order++, 'width' => 104, 'visible' => 1],
-            ['name' => 'Status', 'order' => $order++, 'width' => 106, 'visible' => 1],
-            ['name' => 'Important', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            ['name' => 'Product class', 'order' => $order++, 'width' => 126, 'visible' => 1],
-            ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
-            ['name' => 'Black list', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Presence', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Website', 'order' => $order++, 'width' => 180, 'visible' => 1],
-            ['name' => 'About company', 'order' => $order++, 'width' => 240, 'visible' => 1],
-            ['name' => 'Relationship', 'order' => $order++, 'width' => 200, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
-            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
-            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
-            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Meetings', 'order' => $order++, 'width' => 106, 'visible' => 1],
-            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
-        ];
-    }
-
-    private function getDefaultProductsTableColumns(): array
-    {
-        $order = 1;
-
-        return [
-            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
-            ['name' => 'Processes', 'order' => $order++, 'width' => 146, 'visible' => 1],
-            ['name' => 'Category', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Country', 'order' => $order++, 'width' => 144, 'visible' => 1],
-            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
-            ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Basic form', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
-            ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'MOQ', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Shelf life', 'order' => $order++, 'width' => 92, 'visible' => 1],
-            ['name' => 'Product class', 'order' => $order++, 'width' => 102, 'visible' => 1],
-            ['name' => 'Dossier', 'order' => $order++, 'width' => 180, 'visible' => 1],
-            ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
-            ['name' => 'Manufacturer Brand', 'order' => $order++, 'width' => 182, 'visible' => 1],
-            ['name' => 'Bioequivalence', 'order' => $order++, 'width' => 124, 'visible' => 1],
-            ['name' => 'Validity period', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'Registered in EU', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'Sold in EU', 'order' => $order++, 'width' => 106, 'visible' => 1],
-            ['name' => 'Down payment', 'order' => $order++, 'width' => 132, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
-            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
-            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
-            ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'KVPP coincidents', 'order' => $order++, 'width' => 146, 'visible' => 1],
-            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
-        ];
-    }
-
-    private function getDefaultProcessTableColumns()
-    {
-        $order = 1;
-
-        $columns = [
-            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
-            ['name' => 'Status date', 'order' => $order++, 'width' => 98, 'visible' => 1],
-            ['name' => 'Search country', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Product status', 'order' => $order++, 'width' => 126, 'visible' => 1],
-            ['name' => 'Product status An*', 'order' => $order++, 'width' => 136, 'visible' => 1],
-            ['name' => 'General status', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'Category', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Country of manufacturer', 'order' => $order++, 'width' => 174, 'visible' => 1],
-            ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
-            ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
-            ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
-
-            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
-            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
-            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
-
-            ['name' => 'Manufacturer price 1', 'order' => $order++, 'width' => 146, 'visible' => 1],
-            ['name' => 'Manufacturer price 2', 'order' => $order++, 'width' => 148, 'visible' => 1],
-            ['name' => 'Currency', 'order' => $order++, 'width' => 74, 'visible' => 1],
-            ['name' => 'USD', 'order' => $order++, 'width' => 70, 'visible' => 1],
-            ['name' => 'Agreed', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Our price 2', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            ['name' => 'Our price 1', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            ['name' => 'Price increased new price', 'order' => $order++, 'width' => 180, 'visible' => 1],
-            ['name' => 'Price increased by%', 'order' => $order++, 'width' => 154, 'visible' => 1],
-            ['name' => 'Date of price increased', 'order' => $order++, 'width' => 164, 'visible' => 1],
-
-            ['name' => 'Shelf life', 'order' => $order++, 'width' => 76, 'visible' => 1],
-            ['name' => 'MOQ', 'order' => $order++, 'width' => 140, 'visible' => 1],
-
-            ['name' => 'Dossier status', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'Year Cr/Be', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Countries Cr/Be', 'order' => $order++, 'width' => 116, 'visible' => 1],
-            ['name' => 'Country ich', 'order' => $order++, 'width' => 90, 'visible' => 1],
-            ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
-            ['name' => 'Down payment 1', 'order' => $order++, 'width' => 124, 'visible' => 1],
-            ['name' => 'Down payment 2', 'order' => $order++, 'width' => 124, 'visible' => 1],
-
-            ['name' => 'Date of forecast', 'order' => $order++, 'width' => 136, 'visible' => 1],
-            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
-            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
-            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
-
-            ['name' => 'Responsible', 'order' => $order++, 'width' => 120, 'visible' => 1],
-            ['name' => 'Process date', 'order' => $order++, 'width' => 116, 'visible' => 1],
-            ['name' => 'Days have passed!', 'order' => $order++, 'width' => 134, 'visible' => 1],
-            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 82, 'visible' => 1],
-            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 82, 'visible' => 1],
-            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Product category', 'order' => $order++, 'width' => 126, 'visible' => 1],
-
-            ['name' => 'ВП', 'order' => $order++, 'width' => 200, 'visible' => 1],
-            ['name' => 'ПО', 'order' => $order++, 'width' => 200, 'visible' => 1],
-            ['name' => 'АЦ', 'order' => $order++, 'width' => 200, 'visible' => 1],
-            ['name' => 'СЦ', 'order' => $order++, 'width' => 200, 'visible' => 1],
-            ['name' => 'Кк', 'order' => $order++, 'width' => 200, 'visible' => 1],
-            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
-        ];
-
-        return $columns;
-    }
-
-    private function getDefaultKvppTableColumns()
-    {
-        $order = 1;
-
-        return [
-            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
-            ['name' => 'Status', 'order' => $order++, 'width' => 82, 'visible' => 1],
-            ['name' => 'Country', 'order' => $order++, 'width' => 86, 'visible' => 1],
-            ['name' => 'Priority', 'order' => $order++, 'width' => 106, 'visible' => 1],
-            ['name' => 'VPS coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'IVP coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'Source', 'order' => $order++, 'width' => 98, 'visible' => 1],
-            ['name' => 'Generic', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Basic form', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
-            ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
-            ['name' => 'Information', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
-            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
-            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
-            ['name' => 'Date of forecast', 'order' => $order++, 'width' => 136, 'visible' => 1],
-            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
-            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
-            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
-            ['name' => 'Portfolio manager', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
-        ];
     }
 }

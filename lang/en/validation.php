@@ -178,6 +178,10 @@ return [
         'kvpp' => [
             'unique' => 'Kvpp with a given INN, form, dosage, pack and country already exists.',
         ],
+
+        'meetings' => [
+            'unique' => 'Meeting for such a year, with a current manufacturer already exists.',
+        ],
     ],
 
     /*

@@ -120,5 +120,15 @@ class AppServiceProvider extends ServiceProvider
                 'countryCodes' => CountryCode::getAllPrioritized(),
             ]);
         });
+
+        // Meetings
+        View::composer(['filters.meetings', 'meetings.create', 'meetings.edit'], function ($view) {
+            $view->with([
+                'manufacturers' => Manufacturer::getAllPrioritizedAndMinifed(),
+                'analystUsers' => User::getAnalystsMinified(),
+                'bdmUsers' => User::getBdmsMinifed(),
+                'countries' => Country::getAll(),
+            ]);
+        });
     }
 }

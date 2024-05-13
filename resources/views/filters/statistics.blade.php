@@ -18,11 +18,6 @@
     </x-forms.groups.default-group>
 
     <x-forms.id-based-single-select.request-based-select
-        label="Search country"
-        name="country_code_id"
-        :options="$countryCodes" />
-
-    <x-forms.id-based-single-select.request-based-select
         label="Analyst"
         name="analyst_user_id"
         :options="$analystUsers" />
@@ -35,4 +30,9 @@
     <x-forms.boolean-select.request-based-select
         label="Extensive statistics"
         name="extensive" />
+
+    <x-forms.id-based-single-select.request-based-select
+        label="Search country"
+        name="country_code_id"
+        :options="$countryCodes" />
 @endsection

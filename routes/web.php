@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\KvppController;
 use App\Http\Controllers\ManufacturerController;
+use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -55,5 +56,9 @@ Route::middleware('auth', 'auth.session')->group(function () {
     Route::prefix('kvpp')->controller(KvppController::class)->name('kvpp.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
         Route::post('/get-similar-records', 'getSimilarRecords');  // ajax request on create form for uniqness
+    });
+
+    Route::prefix('meetings')->controller(MeetingController::class)->name('meetings.')->group(function () {
+        RouteGenerator::defineAllDefaultCrudRoutes();
     });
 });

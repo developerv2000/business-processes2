@@ -62,6 +62,11 @@ class Manufacturer extends Model
         );
     }
 
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
     public function bdm()
     {
         return $this->belongsTo(User::class, 'bdm_user_id');
@@ -115,22 +120,30 @@ class Manufacturer extends Model
         });
 
         static::deleting(function ($instance) { // trashing
-            foreach ($instance->generics as $generic) {
-                $generic->delete();
+            foreach ($instance->products as $product) {
+                $product->delete();
             }
 
             foreach ($instance->processes as $process) {
                 $process->delete();
             }
+
+            foreach ($instance->meetings as $meeting) {
+                $meeting->delete();
+            }
         });
 
         static::restored(function ($instance) {
-            foreach ($instance->generics()->onlyTrashed()->get() as $generic) {
-                $generic->restore();
+            foreach ($instance->products()->onlyTrashed()->get() as $product) {
+                $product->restore();
             }
 
             foreach ($instance->processes()->onlyTrashed()->get() as $process) {
                 $process->restore();
+            }
+
+            foreach ($instance->meetings()->onlyTrashed()->get() as $meeting) {
+                $meeting->restore();
             }
         });
 
@@ -147,12 +160,16 @@ class Manufacturer extends Model
                 $presence->delete();
             }
 
-            foreach ($instance->generics()->withTrashed()->get() as $generic) {
-                $generic->forceDelete();
+            foreach ($instance->products()->withTrashed()->get() as $product) {
+                $product->forceDelete();
             }
 
             foreach ($instance->processes()->withTrashed()->get() as $process) {
                 $process->forceDelete();
+            }
+
+            foreach ($instance->meetings()->withTrashed()->get() as $meeting) {
+                $meeting->forceDelete();
             }
         });
     }
@@ -231,6 +248,7 @@ class Manufacturer extends Model
 
         // attach relationship counts to the query
         $records = $records->withCount('products')
+            ->withCount('meetings')
             ->withCount('comments');
 
         // Handle different finaly options
@@ -339,6 +357,45 @@ class Manufacturer extends Model
     */
 
     /**
+     * Provides the default table columns along with their properties.
+     *
+     * These columns are typically used to display data in tables,
+     * such as on index and trash pages, and are iterated over in a loop.
+     *
+     * @return array
+     */
+    public static function getDefaultTableColumns(): array
+    {
+        $order = 1;
+
+        return [
+            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 144, 'visible' => 1],
+            ['name' => 'IVP', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Category', 'order' => $order++, 'width' => 104, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'Important', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Product class', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
+            ['name' => 'Black list', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Presence', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Website', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'About company', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Relationship', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Meetings', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
+        ];
+    }
+
+    /**
      * Return an array of status options
      *
      * used on creating/updating of records as radiogroups
@@ -384,7 +441,7 @@ class Manufacturer extends Model
             $this->lastComment?->created_at,
             $this->created_at,
             $this->updated_at,
-            'NOT DONE YET!!!', // Встречи
+            $this->meetings_count,
         ];
     }
 }

@@ -54,8 +54,8 @@ class StatisticController extends Controller
     private static function mergeDefaultParamsToRequest($request)
     {
         $request->mergeIfMissing([
-            'month' => null,
-            'extensive' => false,
+            // 'months' => null,
+            // 'extensive' => false,
             'year' => date('Y'),
         ]);
     }

@@ -110,8 +110,8 @@
     @break
 
     @case('Meetings')
-        <a class="td__link" href="#">
-            0 {{ __('meetings') }}
+        <a class="td__link" href="{{ route('meetings.index', ['manufacturer_id' => $instance->id]) }}">
+            {{ $instance->meetings_count }} {{ __('meetings') }}
         </a>
     @break
 

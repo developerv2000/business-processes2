@@ -379,6 +379,52 @@ class Product extends Model
     */
 
     /**
+     * Provides the default table columns along with their properties.
+     *
+     * These columns are typically used to display data in tables,
+     * such as on index and trash pages, and are iterated over in a loop.
+     *
+     * @return array
+     */
+    public static function getDefaultTableColumns(): array
+    {
+        $order = 1;
+
+        return [
+            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            ['name' => 'Processes', 'order' => $order++, 'width' => 146, 'visible' => 1],
+            ['name' => 'Category', 'order' => $order++, 'width' => 84, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 144, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Basic form', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'MOQ', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Shelf life', 'order' => $order++, 'width' => 92, 'visible' => 1],
+            ['name' => 'Product class', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Dossier', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
+            ['name' => 'Manufacturer Brand', 'order' => $order++, 'width' => 182, 'visible' => 1],
+            ['name' => 'Bioequivalence', 'order' => $order++, 'width' => 124, 'visible' => 1],
+            ['name' => 'Validity period', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Registered in EU', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Sold in EU', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'Down payment', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'KVPP coincidents', 'order' => $order++, 'width' => 146, 'visible' => 1],
+            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
+        ];
+    }
+
+    /**
      * Get the Excel column values for exporting.
      *
      * This function returns an array containing the values of specific properties

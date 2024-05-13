@@ -139,7 +139,7 @@ class Kvpp extends Model
     | Events
     |--------------------------------------------------------------------------
     */
-    
+
     protected static function booted(): void
     {
         static::forceDeleting(function ($instance) {
@@ -331,6 +331,48 @@ class Kvpp extends Model
     | Miscellaneous
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Provides the default table columns along with their properties.
+     *
+     * These columns are typically used to display data in tables,
+     * such as on index and trash pages, and are iterated over in a loop.
+     *
+     * @return array
+     */
+    public static function getDefaultTableColumns(): array
+    {
+        $order = 1;
+
+        return [
+            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 82, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 86, 'visible' => 1],
+            ['name' => 'Priority', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'VPS coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'IVP coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Source', 'order' => $order++, 'width' => 98, 'visible' => 1],
+            ['name' => 'Generic', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Basic form', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Information', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'Date of forecast', 'order' => $order++, 'width' => 136, 'visible' => 1],
+            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Portfolio manager', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
+        ];
+    }
 
     /**
      * Get the Excel column values for exporting.

@@ -17,6 +17,7 @@ use App\Models\PortfolioManager;
 use App\Models\ProductClass;
 use App\Models\ProductForm;
 use App\Models\ProductShelfLife;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Zone;
 use App\Support\Helper;
@@ -128,6 +129,13 @@ class AppServiceProvider extends ServiceProvider
                 'analystUsers' => User::getAnalystsMinified(),
                 'bdmUsers' => User::getBdmsMinifed(),
                 'countries' => Country::getAll(),
+            ]);
+        });
+
+        // Users
+        View::composer(['users.create', 'users.edit'], function ($view) {
+            $view->with([
+                'roles' => Role::getAll(),
             ]);
         });
     }

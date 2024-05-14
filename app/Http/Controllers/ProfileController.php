@@ -16,7 +16,7 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         return view('profile.edit', [
-            'user' => $request->user(),
+            'instance' => $request->user(),
         ]);
     }
 
@@ -25,14 +25,17 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->updateFromRequest($request);
+        $request->user()->updateFromProfilePage($request);
 
         return redirect()->route('profile.edit');
     }
 
+    /**
+     * Update the user`s password
+     */
     public function updatePassword(PasswordUpdateRequest $request): RedirectResponse
     {
-        $request->user()->updatePassword($request);
+        $request->user()->updatePasswordFromProfilePage($request);
 
         return back()->with('status', 'password-updated');
     }

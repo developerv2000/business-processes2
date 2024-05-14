@@ -426,12 +426,12 @@ body::-webkit-scrollbar-thumb,
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 12px 0;
+    margin-bottom: 12px;
     color: #9da9bb;
 }
 
-.navbar-title--first {
-    margin-top: 0;
+.navbar-title--top-margined {
+    margin-top: 12px;
 }
 
 .navbar-title__text {
@@ -583,6 +583,7 @@ body::-webkit-scrollbar-thumb,
 .ava__description:empty {
     display: none;
 }
+
 /* ------------ /END Ava ------------ */
 
 
@@ -886,8 +887,14 @@ body::-webkit-scrollbar-thumb,
 }
 
 .td__edit {
+    width: max-content;
     margin-top: 4px;
     color: var(--main-color);
+}
+
+.td__image {
+    border-radius: var(--theme-border-radius);
+    width: 60px;
 }
 
 /* ------------ /END Table ------------ */
@@ -1061,6 +1068,7 @@ body::-webkit-scrollbar-thumb,
     font-size: 15px;
     font-weight: 600;
 }
+
 /* ------------ /end Comment pages ------------ */
 
 
@@ -1093,6 +1101,7 @@ body::-webkit-scrollbar-thumb,
 .similar-records__empty-text {
     margin: 0;
 }
+
 /* ------------ /end Similar records ------------ */
 
 
@@ -1110,6 +1119,7 @@ body::-webkit-scrollbar-thumb,
     flex-wrap: wrap;
     gap: 12px 20px;
 }
+
 .statistics-counter__item {
     width: calc(20% - 16px);
     display: flex;
@@ -1118,6 +1128,7 @@ body::-webkit-scrollbar-thumb,
     background-color: white;
     border-radius: var(--theme-border-radius);
 }
+
 .statistics-counter__count {
     margin-bottom: 0;
     padding: 4px 10px;
@@ -1176,4 +1187,14 @@ body::-webkit-scrollbar-thumb,
 .general-status-10 {
     background-color: #8b9597;
 }
+
 /* ------------ /end Statistics pages ------------ */
+
+
+/* ------------ Users pages ------------ */
+.users-create .main,
+.users-edit .main {
+    overflow: unset;
+}
+
+/* ------------ /end users pages ------------ */

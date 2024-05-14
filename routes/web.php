@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StatisticController;
+use App\Http\Controllers\UserController;
 use App\Support\RouteGenerator;
 use Illuminate\Support\Facades\Route;
 
@@ -60,5 +61,10 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     Route::prefix('meetings')->controller(MeetingController::class)->name('meetings.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
+    });
+
+    Route::prefix('users')->controller(UserController::class)->name('users.')->group(function () {
+        RouteGenerator::defineDefaultCrudRoutesExcept(['trash', 'restore', 'export']);
+        Route::patch('/update-password/{instance}', 'updatePassword')->name('update-password');
     });
 });

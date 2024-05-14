@@ -1,15 +1,15 @@
-@extends('layouts.app', ['page' => 'profile-edit'])
+@extends('layouts.app', ['page' => 'users-edit'])
 
 @section('main')
     <div class="pre-content pre-content--intended styled-box">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('My profile'), __('Edit')],
+            'crumbs' => [__('Users'), __('Edit'), $instance->name],
             'fullScreen' => false,
         ])
     </div>
 
     {{-- Personal data --}}
-    <x-forms.template.edit-template action="{{ route('profile.update') }}">
+    <x-forms.template.edit-template action="{{ route('users.update', $instance->id) }}">
         <div class="form__section">
             <h1 class="form__title main-title">{{ __('Personal data') }}</h1>
 
@@ -25,25 +25,27 @@
                 :instance="$instance"
                 required />
 
+            <x-forms.id-based-multiple-select.instance-edit-select
+                label="Roles"
+                name="roles[]"
+                :options="$roles"
+                :instance="$instance"
+                required />
+
             <x-forms.input.default-input
                 label="{{ __('Photo') }}"
-                name="photo" type="file"
+                name="photo"
+                type="file"
                 accept=".png, .jpg, .jpeg" />
         </div>
     </x-forms.template.edit-template>
 
     {{-- Password --}}
-    <x-forms.template.edit-template class="update-password-form" action="{{ route('profile.update-password') }}">
+    <x-forms.template.edit-template class="update-password-form" action="{{ route('users.update-password', $instance->id) }}">
         <div class="form__section">
             <h1 class="form__title main-title">{{ __('Password') }}</h1>
 
-            <x-forms.input.default-input
-                label="{{ __('Current password') }}"
-                name="current_password"
-                type="password"
-                autocomplete="current-password"
-                minlength="4"
-                required />
+            <input type="hidden" name="by_dashboard" value="1"> {{-- used to differ from profile edit page --}}
 
             <x-forms.input.default-input
                 label="{{ __('New password') }}"

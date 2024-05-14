@@ -2,9 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
-class PasswordUpdateRequest extends FormRequest
+class UserStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,15 +24,12 @@ class PasswordUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'new_password' => ['required', 'min:4'],
+        return [
+            'name' => ['string', 'max:255', Rule::unique(User::class)],
+            'email' => ['email', 'max:255', Rule::unique(User::class)],
+            'photo' => ['file', File::types(['png', 'jpg', 'jpeg'])],
+            'roles' => ['required'],
+            'password' => ['required', 'min:4'],
         ];
-
-        // Only validate current password if not an admin or not updating via dashboard panel
-        if (!$this->user()->isAdmin() || !$this->by_dashboard) {
-            $rules['current_password'] = ['required', 'current_password'];
-        }
-
-        return $rules;
     }
 }

@@ -7,7 +7,7 @@
     "VPS": "ВПЦ",
     "KVPP": "КВПП",
     "Meetings": "Встречи",
-    "Info": "Инфо",
+    "Users": "Пользователи",
 
     "Trash": "Корзина",
     "Delete": "Удалить",
@@ -26,6 +26,7 @@
     "Full screen mode": "Полноэкранный режим",
     "Edit": "Редактировать",
     "Create new": "Создать новый",
+    "Store": "Сохранить",
     "Update": "Обновить",
     "Filtered records": "Отфильтрованных записей",
     "New": "Новый",
@@ -88,7 +89,7 @@
     "Stop/pause": "Стоп/пауза",
 
     "Processes": "Процессы",
-    "processes": "процессов",
+    "processes": "процесса",
     "New process": "Новый процесс",
     "Manufacturer Brand": "Бренд Производителя",
     "Generic": "Дженерик",
@@ -121,6 +122,12 @@
     "Forecast 2 year": "Прогноз 2 год",
     "Forecast 3 year": "Прогноз 3 год",
     "Portfolio manager": "Менеджер",
+
+    "Who met": "Кто встретил",
+    "Plan": "План",
+    "Topic": "Тема",
+    "Result": "Итог",
+    "Outside the exhibition": "За пределами выставки",
 
     "Table": "Таблица",
     "Total": "Всего",

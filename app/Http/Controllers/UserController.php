@@ -52,7 +52,7 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $instance)
     {
-        $instance->updateFromDashboard($request);
+        $instance->updateByAdmin($request);
 
         return redirect($request->input('previous_url'));
     }
@@ -62,7 +62,7 @@ class UserController extends Controller
      */
     public function updatePassword(PasswordUpdateRequest $request, User $instance)
     {
-        $instance->updatePasswordFromDashboard($request);
+        $instance->updatePasswordByAdmin($request);
 
         return redirect($request->input('previous_url'));
     }

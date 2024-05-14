@@ -267,12 +267,29 @@ class User extends Authenticatable
      * @param \Illuminate\Http\Request $request The request object containing the profile data.
      * @return void
      */
-    public function updateFromProfilePage($request): void
+    public function updateProfile($request): void
     {
         // Update the user's profile
         $this->update($request->validated());
         // Upload user's photo if provided
         $this->uploadPhoto($request);
+    }
+
+    /**
+     * Update the user's password from the profile edit page.
+     *
+     * @param \Illuminate\Http\Request $request The request object containing the new password.
+     * @return void
+     */
+    public function updateProfilePassword($request): void
+    {
+        // Update the user's password with the new hashed password
+        $this->update([
+            'password' => bcrypt($request->new_password),
+        ]);
+
+        // Logout other devices using the new password
+        Auth::logoutOtherDevices($request->new_password);
     }
 
     /**
@@ -282,7 +299,7 @@ class User extends Authenticatable
      * @param \Illuminate\Http\Request $request The request object containing the profile and role data.
      * @return void
      */
-    public function updateFromDashboard($request): void
+    public function updateByAdmin($request): void
     {
         // Update the user's profile
         $this->update($request->validated());
@@ -290,6 +307,26 @@ class User extends Authenticatable
         $this->updateRoles($request);
         // Upload user's photo if provided
         $this->uploadPhoto($request);
+    }
+
+    /**
+     * Update the user's password from the dashboard.
+     *
+     * @param \Illuminate\Http\Request $request The request object containing the new password.
+     * @return void
+     */
+    public function updatePasswordByAdmin($request): void
+    {
+        // Update the user's password with the new hashed password
+        $this->update([
+            'password' => bcrypt($request->new_password),
+        ]);
+
+        // Laravel automatically logouts user, while updating its password
+        // Manually logout user from all devices by cleaning session, if not current users password is being changed
+        if (Auth::user()->id != $this->id) {
+            $this->logoutByClearingSession();
+        }
     }
 
     /**
@@ -330,46 +367,11 @@ class User extends Authenticatable
             // Reload the default settings if roles have been changed
             $this->loadDefaultSettings();
 
-            // Logout all devices by cleaing session if not the current user
+            // Laravel automatically logouts user, while updating its password
+            // Manually logout user from all devices by cleaning session, if not current users password is being changed
             if (Auth::user()->id != $this->id) {
                 $this->logoutByClearingSession();
             }
-        }
-    }
-
-    /**
-     * Update the user's password from the profile edit page.
-     *
-     * @param \Illuminate\Http\Request $request The request object containing the new password.
-     * @return void
-     */
-    public function updatePasswordFromProfilePage($request): void
-    {
-        // Update the user's password with the new hashed password
-        $this->update([
-            'password' => bcrypt($request->new_password),
-        ]);
-
-        // Logout other devices using the new password
-        Auth::logoutOtherDevices($request->new_password);
-    }
-
-    /**
-     * Update the user's password from the dashboard.
-     *
-     * @param \Illuminate\Http\Request $request The request object containing the new password.
-     * @return void
-     */
-    public function updatePasswordFromDashboard($request): void
-    {
-        // Update the user's password with the new hashed password
-        $this->update([
-            'password' => bcrypt($request->new_password),
-        ]);
-
-        // Logout all devices by cleaing session if not the current user
-        if (Auth::user()->id != $this->id) {
-            $this->logoutByClearingSession();
         }
     }
 

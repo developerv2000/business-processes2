@@ -25,7 +25,7 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->updateFromProfilePage($request);
+        $request->user()->updateProfile($request);
 
         return redirect()->route('profile.edit');
     }
@@ -35,7 +35,7 @@ class ProfileController extends Controller
      */
     public function updatePassword(PasswordUpdateRequest $request): RedirectResponse
     {
-        $request->user()->updatePasswordFromProfilePage($request);
+        $request->user()->updateProfilePassword($request);
 
         return back()->with('status', 'password-updated');
     }

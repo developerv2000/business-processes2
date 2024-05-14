@@ -41,11 +41,12 @@
     </x-forms.template.edit-template>
 
     {{-- Password --}}
-    <x-forms.template.edit-template class="update-password-form" action="{{ route('users.update-password', $instance->id) }}">
+    <x-forms.template.edit-template class="update-password-form" id="update-password-form" action="{{ route('users.update-password', $instance->id) }}">
         <div class="form__section">
             <h1 class="form__title main-title">{{ __('Password') }}</h1>
 
-            <input type="hidden" name="by_dashboard" value="1"> {{-- used to differ from profile edit page --}}
+            {{-- used in UpdatePassword FormRequest, to differ from profile edit page --}}
+            <input type="hidden" name="by_admin" value="1">
 
             <x-forms.input.default-input
                 label="{{ __('New password') }}"

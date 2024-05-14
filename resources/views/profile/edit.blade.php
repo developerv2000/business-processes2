@@ -33,7 +33,7 @@
     </x-forms.template.edit-template>
 
     {{-- Password --}}
-    <x-forms.template.edit-template class="update-password-form" action="{{ route('profile.update-password') }}">
+    <x-forms.template.edit-template class="update-password-form" id="update-password-form" action="{{ route('profile.update-password') }}">
         <div class="form__section">
             <h1 class="form__title main-title">{{ __('Password') }}</h1>
 

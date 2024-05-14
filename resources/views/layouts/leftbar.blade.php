@@ -1,6 +1,7 @@
 <aside class="leftbar">
     <div class="leftbar__inner">
         <nav class="navbar">
+            {{-- Main --}}
             <x-navbar.title class="navbar-title--first">{{ __('Main') }}</x-navbar.title>
 
             <x-navbar.link icon="view_list" href="{{ route('manufacturers.index') }}" @class([
@@ -28,11 +29,13 @@
             ])>{{ __('КПЭ') }}</x-navbar.link>
 
             {{-- Dashboard --}}
-            <x-navbar.title class="navbar-title--top-margined">{{ __('Dashboard') }}</x-navbar.title>
+            @if (request()->user()->isAdmin())
+                <x-navbar.title class="navbar-title--top-margined">{{ __('Dashboard') }}</x-navbar.title>
 
-            <x-navbar.link icon="account_circle" href="{{ route('users.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('users.*'),
-            ])>{{ __('Users') }}</x-navbar.link>
+                <x-navbar.link icon="account_circle" href="{{ route('users.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('users.*'),
+                ])>{{ __('Users') }}</x-navbar.link>
+            @endif
         </nav>
     </div>
 </aside>

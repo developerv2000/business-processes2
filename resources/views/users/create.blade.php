@@ -20,7 +20,7 @@
                 required />
 
             <x-forms.input.default-input
-                label="Email"
+                label="Email address"
                 name="email"
                 type="email"
                 required />

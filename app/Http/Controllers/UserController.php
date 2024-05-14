@@ -66,4 +66,12 @@ class UserController extends Controller
 
         return redirect($request->input('previous_url'));
     }
+
+    public function destroy(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->deleteByAdmin();
+
+        return to_route('users.index');
+    }
 }

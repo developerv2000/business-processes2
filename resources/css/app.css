@@ -593,6 +593,7 @@ body::-webkit-scrollbar-thumb,
     padding-bottom: 40px;
 }
 
+
 /* ------------ /END Different ------------ */
 
 
@@ -990,6 +991,29 @@ body::-webkit-scrollbar-thumb,
 }
 
 /* ------------ /end Badge ------------ */
+
+
+/* ------------ Erros ------------ */
+.errors {
+    margin: 8px 0;
+    padding: 12px 20px;
+    font-size: 16px;
+    color: #ffdce2;
+    background-color: var(--danger-color);
+    border-radius: var(--theme-border-radius);
+}
+
+.errors__title {
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.errors__list {
+    margin: 0;
+    padding-left: 20px;
+}
+
+/* ------------ /end Errors ------------ */
 
 
 /* ------------ Comment pages ------------ */

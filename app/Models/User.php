@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class User extends Authenticatable
 {
@@ -478,5 +479,35 @@ class User extends Authenticatable
     public static function filterOnlyVisibleColumns($columns): array
     {
         return $columns->where('visible', 1)->sortBy('order')->values()->all();
+    }
+
+    /**
+     * Delete the user by admin, throwing an error if the user is currently in use.
+     *
+     * @throws ValidationException
+     */
+    public function deleteByAdmin()
+    {
+        if ($this->isCurrentlyInUse()) {
+            throw ValidationException::withMessages([
+                'user_deletion' => trans('validation.custom.users.is_in_use'),
+            ]);
+        }
+
+        $this->delete();
+    }
+
+    /**
+     * Check if the user is currently in use.
+     *
+     * @return bool
+     */
+    private function isCurrentlyInUse()
+    {
+        $isBdmInUse = Manufacturer::where('bdm_user_id', $this->id)->exists();
+        $isAnalystInUse = Manufacturer::where('analyst_user_id', $this->id)->exists()
+            || Kvpp::where('analyst_user_id', $this->id)->exists();
+
+        return $isBdmInUse || $isAnalystInUse;
     }
 }

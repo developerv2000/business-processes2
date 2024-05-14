@@ -6,7 +6,13 @@
             'crumbs' => [__('Users'), __('Edit'), $instance->name],
             'fullScreen' => false,
         ])
+
+        <div class="pre-content__actions">
+            <x-different.button style="action" icon="remove" data-click-action="show-modal" data-modal-selector=".single-delete-modal">{{ __('Delete') }}</x-different.button>
+        </div>
     </div>
+
+    <x-errors.single name="user_deletion" />
 
     {{-- Personal data --}}
     <x-forms.template.edit-template action="{{ route('users.update', $instance->id) }}">
@@ -57,4 +63,6 @@
                 required />
         </div>
     </x-forms.template.edit-template>
+
+    <x-modals.single-delete action="{{ route('users.destroy') }}" :instance-id="$instance->id" :force-delete="false" />
 @endsection

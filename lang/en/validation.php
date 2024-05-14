@@ -182,6 +182,10 @@ return [
         'meetings' => [
             'unique' => 'Meeting for such a year, with a current manufacturer already exists.',
         ],
+
+        'users' => [
+            'is_in_use' => 'User is used as BDM or Analyst, please replace it with another user and retry again!',
+        ],
     ],
 
     /*

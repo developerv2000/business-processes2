@@ -48,6 +48,8 @@
     "ID": "Номер",
     "Cancel": "Отмена",
     "Close": "Закрыть",
+    "Error": "Ошибка",
+    "Please correct the errors and try again": "Пожалуйста, исправьте ошибки и попробуйте заново",
 
     "Filter": "Фильтр",
     "Reset": "Сбросить",
@@ -62,6 +64,7 @@
     "Email address": "Адрес электронной почты",
     "Photo": "Фото",
     "Password": "Пароль",
+    "Roles": "Роли",
     "Current password": "Текущий пароль",
     "New password": "Новый пароль",
 

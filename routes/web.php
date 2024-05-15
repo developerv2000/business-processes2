@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StatisticController;
+use App\Http\Controllers\TemplatedModelController;
 use App\Http\Controllers\UserController;
 use App\Support\RouteGenerator;
 use Illuminate\Support\Facades\Route;
@@ -66,5 +67,16 @@ Route::middleware('auth', 'auth.session')->group(function () {
     Route::prefix('users')->controller(UserController::class)->name('users.')->group(function () {
         RouteGenerator::defineDefaultCrudRoutesExcept(['trash', 'restore', 'export']);
         Route::patch('/update-password/{instance}', 'updatePassword')->name('update-password');
+    });
+
+    Route::prefix('templated-models')->controller(TemplatedModelController::class)->name('templated-models.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{model}', 'show')->name('show');
+        Route::get('/{model}/create', 'create')->name('create');
+        Route::get('/{model}/edit/{id}', 'edit')->name('edit');
+
+        Route::post('/store', 'store')->name('store');
+        Route::patch('/update/{id}', 'update')->name('update');
+        Route::delete('/destroy', 'destroy')->name('destroy');
     });
 });

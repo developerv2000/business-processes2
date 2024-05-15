@@ -35,6 +35,10 @@
                 <x-navbar.link icon="account_circle" href="{{ route('users.index') }}" @class([
                     'navbar-link--active' => request()->routeIs('users.*'),
                 ])>{{ __('Users') }}</x-navbar.link>
+
+                <x-navbar.link icon="dataset" href="{{ route('templated-models.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('templated-models.*'),
+                ])>{{ __('Different') }}</x-navbar.link>
             @endif
         </nav>
     </div>

@@ -8,7 +8,11 @@
     "KVPP": "КВПП",
     "Meetings": "Встречи",
     "Users": "Пользователи",
+    "Different": "Разное",
 
+    "Records": "Записи",
+    "Usage count": "Счетчик использования",
+    "Parent": "Родитель",
     "Trash": "Корзина",
     "Delete": "Удалить",
     "Permanent delete": "Удалить навсегда",
@@ -50,6 +54,7 @@
     "Close": "Закрыть",
     "Error": "Ошибка",
     "Please correct the errors and try again": "Пожалуйста, исправьте ошибки и попробуйте заново",
+    "Error": "Ошибка",
 
     "Filter": "Фильтр",
     "Reset": "Сбросить",

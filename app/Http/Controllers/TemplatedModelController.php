@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TemplatedModelStoreRequest;
+use App\Http\Requests\TemplatedModelUpdateRequest;
 use App\Support\Helper;
 use Illuminate\Http\Request;
 
@@ -17,25 +19,29 @@ class TemplatedModelController extends Controller
      *
      * @return \Illuminate\Support\Collection
      */
-    private static function collectModelDefinitions()
+    public static function collectModelDefinitions()
     {
-        return collect([
-            collect(['name' => 'ManufacturerBlacklist', 'attributes' => ['name']]),
-            collect(['name' => 'Country', 'attributes' => ['name']]),
-            collect(['name' => 'CountryCode', 'attributes' => ['name']]),
-            collect(['name' => 'ProductShelfLife', 'attributes' => ['name']]),
-            collect(['name' => 'KvppPriority', 'attributes' => ['name']]),
-            collect(['name' => 'KvppSource', 'attributes' => ['name']]),
-            collect(['name' => 'KvppStatus', 'attributes' => ['name']]),
-            collect(['name' => 'ManufacturerCategory', 'attributes' => ['name']]),
-            collect(['name' => 'Inn', 'attributes' => ['name']]),
-            collect(['name' => 'PortfolioManager', 'attributes' => ['name']]),
-            // collect(['name' => 'ProcessOwner', 'attributes' => ['name']]),
-            collect(['name' => 'ProductClass', 'attributes' => ['name']]),
-            collect(['name' => 'MarketingAuthorizationHolder', 'attributes' => ['name']]),
-            collect(['name' => 'Zone', 'attributes' => ['name']]),
-            collect(['name' => 'ProductForm', 'attributes' => ['name', 'parent_id']]),
+        $models = collect([
+            collect(['name' => 'ManufacturerBlacklist', 'display_name' => 'Manufacturer black lists', 'attributes' => ['name']]),
+            collect(['name' => 'Country', 'display_name' => 'Countries', 'attributes' => ['name']]),
+            collect(['name' => 'CountryCode', 'display_name' => 'Country codes', 'attributes' => ['name']]),
+            collect(['name' => 'ProductShelfLife', 'display_name' => 'Product shelf lives', 'attributes' => ['name']]),
+            collect(['name' => 'KvppPriority', 'display_name' => 'KVPP priorities', 'attributes' => ['name']]),
+            collect(['name' => 'KvppSource', 'display_name' => 'KVPP sources', 'attributes' => ['name']]),
+            collect(['name' => 'KvppStatus', 'display_name' => 'KVPP statusses', 'attributes' => ['name']]),
+            collect(['name' => 'ManufacturerCategory', 'display_name' => 'Manufacturer categories', 'attributes' => ['name']]),
+            collect(['name' => 'Inn', 'display_name' => 'Inns', 'attributes' => ['name']]),
+            collect(['name' => 'PortfolioManager', 'display_name' => 'Portfolio managers', 'attributes' => ['name']]),
+            // collect(['name' => 'ProcessOwner', 'display_name' => 'Process owners', 'attributes' => ['name']]),
+            collect(['name' => 'ProductClass', 'display_name' => 'Product classes', 'attributes' => ['name']]),
+            collect(['name' => 'MarketingAuthorizationHolder', 'display_name' => 'Marketing authorization holders', 'attributes' => ['name']]),
+            collect(['name' => 'Zone', 'display_name' => 'Zones', 'attributes' => ['name']]),
+            collect(['name' => 'ProductForm', 'display_name' => 'Product forms', 'attributes' => ['name', 'parent_id']]),
         ]);
+
+        $models = self::addFullNamespaceToModels($models);
+
+        return $models;
     }
 
     /**
@@ -59,14 +65,10 @@ class TemplatedModelController extends Controller
      */
     public function show(Request $request, $modelName)
     {
-        // Collect all model definitions
-        $models = self::collectModelDefinitions();
-
         // Find the specified model
-        $model = $models->where('name', $modelName)->first();
+        $model = self::findModelByName($modelName);
 
         // Add full namespace and item count to the model
-        $model = self::addFullNamespaceToModel($model);
         $model = self::addItemsCountToModel($model);
 
         // Collect model attributes for easy access and checking
@@ -78,7 +80,7 @@ class TemplatedModelController extends Controller
         // Get all model records for filtering purposes
         $allRecords = self::getAllModelRecords($model);
 
-        // Get all parent records for filtering purposes, if model templates contains 'parented'
+        // Get all parent records for filtering purposes, if model attributes contains 'parent_id'
         $parentRecords = self::getAllModelParentRecords($model, $modelAttributes);
 
         return view('templated-models.show', compact('request', 'model', 'modelAttributes', 'records', 'allRecords', 'parentRecords'));
@@ -87,41 +89,92 @@ class TemplatedModelController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request, $modelName)
     {
-        //
+        $model = self::findModelByName($modelName);
+        $modelAttributes = collect($model['attributes']);
+
+        // Get all parent records, if model attributes contains 'parent_id'
+        $parentRecords = self::getAllModelParentRecords($model, $modelAttributes);
+
+        return view('templated-models.create', compact('model', 'modelAttributes', 'parentRecords'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TemplatedModelStoreRequest $request, $modelName)
     {
-        //
+        $model = self::findModelByName($modelName);
+
+        $fullNamespace = $model['full_namespace'];
+        $fullNamespace::create($request->all());
+
+        return to_route('templated-models.show', $modelName);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($modelName, $id)
     {
-        //
+        $model = self::findModelByName($modelName);
+        $modelAttributes = collect($model['attributes']);
+
+        // Get all parent records, if model attributes contains 'parent_id'
+        $parentRecords = self::getAllModelParentRecords($model, $modelAttributes);
+
+        $fullNamespace = $model['full_namespace'];
+        $instance = $fullNamespace::Find($id);
+
+        return view('templated-models.edit', compact('instance', 'model', 'modelAttributes', 'parentRecords'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(TemplatedModelUpdateRequest $request, $modelName, $id)
     {
-        //
+        $model = self::findModelByName($modelName);
+
+        $fullNamespace = $model['full_namespace'];
+        $instance = $fullNamespace::find($id);
+        $instance->update($request->all());
+
+        return redirect($request->input('previous_url'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, $modelName)
     {
-        //
+        $model = self::findModelByName($modelName);
+        $ids = $request->input('ids');
+
+        $fullNamespace = $model['full_namespace'];
+
+        foreach ($ids as $id) {
+            $instance = $fullNamespace::find($id);
+
+            // Escape deleting of used records
+            if ($instance->usage_count) {
+                return redirect()->back()->withErrors([
+                    'templated_models_deletion' => trans('validation.custom.templated_models.is_in_use', ['name' => $instance->name ?: $instance->id])
+                ]);
+            }
+
+            $instance->delete();
+        }
+
+        return redirect()->back();
+    }
+
+    public static function findModelByName($modelName)
+    {
+        $models = self::collectModelDefinitions();
+
+        return $models->where('name', $modelName)->first();
     }
 
     /**
@@ -233,19 +286,23 @@ class TemplatedModelController extends Controller
     }
 
     /**
-     * Add full namespace to a single model definition.
+     * Add full namespace to each model definition.
      *
-     * @param \Illuminate\Support\Collection $model
+     * @param \Illuminate\Support\Collection $models
      * @return \Illuminate\Support\Collection
      */
-    private static function addFullNamespaceToModel($model)
+    private static function addFullNamespaceToModels($models)
     {
-        $model['full_namespace'] = self::MODELS_BASE_NAMESPACE . $model['name'];
-        return $model;
+        return $models->map(function ($model) {
+            $model['full_namespace'] = self::MODELS_BASE_NAMESPACE . $model['name'];
+            return $model;
+        });
     }
 
     /**
      * Add item count to a single model definition.
+     *
+     * Requires defined full_namespace attribute of the model!!!
      *
      * @param \Illuminate\Support\Collection $model
      * @return \Illuminate\Support\Collection
@@ -256,19 +313,6 @@ class TemplatedModelController extends Controller
         $model['items_count'] = $fullNamespace::count();
 
         return $model;
-    }
-
-    /**
-     * Add full namespace to each model definition.
-     *
-     * @param \Illuminate\Support\Collection $models
-     * @return \Illuminate\Support\Collection
-     */
-    private static function addFullNamespaceToModels($models)
-    {
-        return $models->map(function ($model) {
-            return self::addFullNamespaceToModel($model);
-        });
     }
 
     /**

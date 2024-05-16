@@ -10,6 +10,7 @@ class Country extends Model implements TemplatedModelInterface
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
     public $timestamps = false;
 
     public function manufacturers()

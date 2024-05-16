@@ -184,7 +184,11 @@ return [
         ],
 
         'users' => [
-            'is_in_use' => 'User is used as BDM or Analyst, please replace it with another user and retry again!',
+            'is_in_use' => 'User is used as BDM or Analyst, please replace it with another user and retry again.',
+        ],
+
+        'templated_models' => [
+            'is_in_use' => 'The ":name" cannot be removed because it is used by other tables.',
         ],
     ],
 

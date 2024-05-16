@@ -11,7 +11,8 @@ class MarketingAuthorizationHolder extends Model implements TemplatedModelInterf
     use HasFactory;
 
     public $timestamps = false;
-
+    protected $guarded = ['id'];
+    
     public function processes()
     {
         return $this->hasMany(Process::class);

@@ -1222,3 +1222,12 @@ body::-webkit-scrollbar-thumb,
 }
 
 /* ------------ /end users pages ------------ */
+
+
+/* ------------ Templated Models pages ------------ */
+.templated-models-create .main,
+.templated-models-edit .main {
+    overflow: unset;
+}
+
+/* ------------ /end Templated Models pages ------------ */

@@ -14,10 +14,12 @@
             </div>
         </div>
 
+        <x-errors.single name="templated_models_deletion" />
+
         @include('templated-models.partials.show-page-table')
     </div>
 
-    <x-modals.multiple-delete action="{{ route('templated-models.destroy') }}" :force-delete="false" />
+    <x-modals.multiple-delete action="{{ route('templated-models.destroy', $model['name']) }}" :force-delete="false" />
 @endsection
 
 @section('rightbar')

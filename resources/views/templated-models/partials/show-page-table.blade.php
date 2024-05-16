@@ -30,7 +30,7 @@
                     @include('tables.components.td.checkbox')
 
                     <td>
-                        @include('tables.components.td.edit-button', ['href' => route('templated-models.edit', ['model' => $model['name'], 'id' => $instance->id])])
+                        @include('tables.components.td.edit-button', ['href' => route('templated-models.edit', ['modelName' => $model['name'], 'id' => $instance->id])])
                     </td>
 
                     @if ($modelAttributes->contains('name'))

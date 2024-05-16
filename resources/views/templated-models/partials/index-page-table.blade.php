@@ -12,7 +12,7 @@
         @foreach ($models as $model)
             <tr>
                 <td>
-                    <a class="td__link" href="{{ route('templated-models.show', $model['name']) }}">{{ $model['name'] }}</a>
+                    <a class="td__link" href="{{ route('templated-models.show', $model['name']) }}">{{ $model['display_name'] }}</a>
                 </td>
 
                 <td>{{ $model['items_count'] }}</td>

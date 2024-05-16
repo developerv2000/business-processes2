@@ -11,6 +11,7 @@ class KvppStatus extends Model implements TemplatedModelInterface
     use HasFactory;
 
     public $timestamps = false;
+    protected $guarded = ['id'];
 
     public function kvpps()
     {

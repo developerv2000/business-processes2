@@ -1,9 +1,12 @@
-@extends('layouts.app', ['page' => 'users-create'])
+@extends('layouts.app', ['page' => 'templated-models-create'])
 
 @section('main')
     <div class="pre-content pre-content--intended styled-box">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Users'), __('Create new')],
+            'crumbs' => [
+                '<a href="' . route('templated-models.show', $model['name'])  . '">' . $model['name'] . '</a>'
+                , __('Create new')
+            ],
             'fullScreen' => false,
         ])
 
@@ -12,41 +15,21 @@
         </div>
     </div>
 
-    <x-forms.template.create-template action="{{ route('users.store') }}">
+    <x-forms.template.create-template action="{{ route('templated-models.store', $model['name']) }}">
         <div class="form__section">
-            <x-forms.input.default-input
-                label="Name"
-                name="name"
-                required />
+            @if ($modelAttributes->contains('name'))
+                <x-forms.input.default-input
+                    label="Name"
+                    name="name"
+                    required />
+            @endif
 
-            <x-forms.input.default-input
-                label="Email address"
-                name="email"
-                type="email"
-                required />
-
-            <x-forms.input.default-input
-                label="Photo"
-                name="photo"
-                type="file"
-                accept=".png, .jpg, .jpeg"
-                required />
-        </div>
-
-        <div class="form__section">
-            <x-forms.id-based-multiple-select.default-select
-                label="Roles"
-                name="roles[]"
-                :options="$roles"
-                required />
-
-            <x-forms.input.default-input
-                label="Password"
-                name="password"
-                type="password"
-                minlength="4"
-                autocomplete="new-password"
-                required />
+            @if ($modelAttributes->contains('parent_id'))
+                <x-forms.id-based-single-select.default-select
+                    label="Parent"
+                    name="parent_id"
+                    :options="$parentRecords" />
+            @endif
         </div>
     </x-forms.template.create-template>
 @endsection

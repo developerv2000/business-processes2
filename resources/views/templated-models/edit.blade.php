@@ -1,68 +1,39 @@
-@extends('layouts.app', ['page' => 'users-edit'])
+@extends('layouts.app', ['page' => 'templated-models-edit'])
 
 @section('main')
     <div class="pre-content pre-content--intended styled-box">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Users'), __('Edit'), $instance->name],
+            'crumbs' => [
+                '<a href="' . route('templated-models.show', $model['name'])  . '">' . $model['name'] . '</a>',
+                __('Edit'),
+                $modelAttributes->contains('name') ? $instance->name : $instance->id
+            ],
             'fullScreen' => false,
         ])
 
         <div class="pre-content__actions">
-            <x-different.button style="action" icon="remove" data-click-action="show-modal" data-modal-selector=".single-delete-modal">{{ __('Delete') }}</x-different.button>
+            <x-different.button style="action" icon="add" type="submit" form="edit-form">{{ __('Update') }}</x-different.button>
         </div>
     </div>
 
-    <x-errors.single name="user_deletion" />
-
     {{-- Personal data --}}
-    <x-forms.template.edit-template action="{{ route('users.update', $instance->id) }}">
+    <x-forms.template.edit-template action="{{ route('templated-models.update', ['modelName' => $model['name'], 'id' => $instance->id]) }}">
         <div class="form__section">
-            <h1 class="form__title main-title">{{ __('Personal data') }}</h1>
+            @if ($modelAttributes->contains('name'))
+                <x-forms.input.instance-edit-input
+                    label="Name"
+                    name="name"
+                    :instance="$instance"
+                    required />
+            @endif
 
-            <x-forms.input.instance-edit-input
-                label="{{ __('Name') }}"
-                name="name" type="text"
-                :instance="$instance"
-                required />
-
-            <x-forms.input.instance-edit-input
-                label="{{ __('Email address') }}"
-                name="email" type="email"
-                :instance="$instance"
-                required />
-
-            <x-forms.id-based-multiple-select.instance-edit-select
-                label="Roles"
-                name="roles[]"
-                :options="$roles"
-                :instance="$instance"
-                required />
-
-            <x-forms.input.default-input
-                label="{{ __('Photo') }}"
-                name="photo"
-                type="file"
-                accept=".png, .jpg, .jpeg" />
+            @if ($modelAttributes->contains('parent_id'))
+                <x-forms.id-based-single-select.instance-edit-select
+                    label="Parent"
+                    name="parent_id"
+                    :instance="$instance"
+                    :options="$parentRecords" />
+            @endif
         </div>
     </x-forms.template.edit-template>
-
-    {{-- Password --}}
-    <x-forms.template.edit-template class="update-password-form" id="update-password-form" action="{{ route('users.update-password', $instance->id) }}">
-        <div class="form__section">
-            <h1 class="form__title main-title">{{ __('Password') }}</h1>
-
-            {{-- used in UpdatePassword FormRequest, to differ from profile edit page --}}
-            <input type="hidden" name="by_admin" value="1">
-
-            <x-forms.input.default-input
-                label="{{ __('New password') }}"
-                name="new_password"
-                type="password"
-                autocomplete="new_password"
-                minlength="4"
-                required />
-        </div>
-    </x-forms.template.edit-template>
-
-    <x-modals.single-delete action="{{ route('users.destroy') }}" :instance-id="$instance->id" :force-delete="false" />
 @endsection

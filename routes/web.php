@@ -71,12 +71,12 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     Route::prefix('templated-models')->controller(TemplatedModelController::class)->name('templated-models.')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/{model}', 'show')->name('show');
-        Route::get('/{model}/create', 'create')->name('create');
-        Route::get('/{model}/edit/{id}', 'edit')->name('edit');
+        Route::get('/{modelName}', 'show')->name('show');
+        Route::get('/{modelName}/create', 'create')->name('create');
+        Route::get('/{modelName}/edit/{id}', 'edit')->name('edit');
 
-        Route::post('/store', 'store')->name('store');
-        Route::patch('/update/{id}', 'update')->name('update');
-        Route::delete('/destroy', 'destroy')->name('destroy');
+        Route::post('{modelName}/store', 'store')->name('store');
+        Route::patch('{modelName}/update/{id}', 'update')->name('update');
+        Route::delete('{modelName}/destroy', 'destroy')->name('destroy');
     });
 });

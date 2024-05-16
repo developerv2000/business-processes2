@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Support\Interfaces\TemplatedModelInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CountryCode extends Model
+class CountryCode extends Model implements TemplatedModelInterface
 {
     use HasFactory;
 
@@ -24,7 +25,14 @@ class CountryCode extends Model
     public static function getAllPrioritized()
     {
         return self::withCount(['processes', 'kvpps'])
-           ->orderByRaw('processes_count + kvpps_count DESC')
-           ->get();
+            ->orderByRaw('processes_count + kvpps_count DESC')
+            ->get();
+    }
+
+    // Implement the method declared in the TemplatedModelInterface
+    public function getUsageCountAttribute(): int
+    {
+        return $this->processes()->count()
+            + $this->kvpps()->count();
     }
 }

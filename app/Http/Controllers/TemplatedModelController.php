@@ -20,20 +20,21 @@ class TemplatedModelController extends Controller
     private static function collectModelDefinitions()
     {
         return collect([
-            collect(['name' => 'ManufacturerBlacklist', 'templates' => ['named']]),
-            collect(['name' => 'Country', 'templates' => ['named']]),
-            collect(['name' => 'CountryCode', 'templates' => ['named']]),
-            collect(['name' => 'ProductShelfLife', 'templates' => ['named']]),
-            collect(['name' => 'KvppPriority', 'templates' => ['named']]),
-            collect(['name' => 'KvppSource', 'templates' => ['named']]),
-            collect(['name' => 'KvppStatus', 'templates' => ['named']]),
-            collect(['name' => 'ManufacturerCategory', 'templates' => ['named']]),
-            collect(['name' => 'Inn', 'templates' => ['named']]),
-            collect(['name' => 'PortfolioManager', 'templates' => ['named']]),
-            // collect(['name' => 'ProcessOwner', 'templates' => ['named']]),
-            collect(['name' => 'ProductClass', 'templates' => ['named']]),
-            collect(['name' => 'MarketingAuthorizationHolder', 'templates' => ['named']]),
-            collect(['name' => 'Zone', 'templates' => ['named']]),
+            collect(['name' => 'ManufacturerBlacklist', 'attributes' => ['name']]),
+            collect(['name' => 'Country', 'attributes' => ['name']]),
+            collect(['name' => 'CountryCode', 'attributes' => ['name']]),
+            collect(['name' => 'ProductShelfLife', 'attributes' => ['name']]),
+            collect(['name' => 'KvppPriority', 'attributes' => ['name']]),
+            collect(['name' => 'KvppSource', 'attributes' => ['name']]),
+            collect(['name' => 'KvppStatus', 'attributes' => ['name']]),
+            collect(['name' => 'ManufacturerCategory', 'attributes' => ['name']]),
+            collect(['name' => 'Inn', 'attributes' => ['name']]),
+            collect(['name' => 'PortfolioManager', 'attributes' => ['name']]),
+            // collect(['name' => 'ProcessOwner', 'attributes' => ['name']]),
+            collect(['name' => 'ProductClass', 'attributes' => ['name']]),
+            collect(['name' => 'MarketingAuthorizationHolder', 'attributes' => ['name']]),
+            collect(['name' => 'Zone', 'attributes' => ['name']]),
+            collect(['name' => 'ProductForm', 'attributes' => ['name', 'parent_id']]),
         ]);
     }
 
@@ -68,16 +69,19 @@ class TemplatedModelController extends Controller
         $model = self::addFullNamespaceToModel($model);
         $model = self::addItemsCountToModel($model);
 
-        // Collect model templates for easy access and checking
-        $modelTemplates = collect($model['templates']);
+        // Collect model attributes for easy access and checking
+        $modelAttributes = collect($model['attributes']);
 
         // Get finalized model records
-        $records = self::getModelRecordsFinalized($request, $model, $modelTemplates);
+        $records = self::getModelRecordsFinalized($request, $model, $modelAttributes);
 
         // Get all model records for filtering purposes
         $allRecords = self::getAllModelRecords($model);
 
-        return view('templated-models.show', compact('request', 'model', 'modelTemplates', 'records', 'allRecords'));
+        // Get all parent records for filtering purposes, if model templates contains 'parented'
+        $parentRecords = self::getAllModelParentRecords($model, $modelAttributes);
+
+        return view('templated-models.show', compact('request', 'model', 'modelAttributes', 'records', 'allRecords', 'parentRecords'));
     }
 
     /**
@@ -125,19 +129,19 @@ class TemplatedModelController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Support\Collection $model
-     * @param \Illuminate\Support\Collection $modelTemplates
+     * @param \Illuminate\Support\Collection $modelAttributes
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    private static function getModelRecordsFinalized($request, $model, $modelTemplates)
+    private static function getModelRecordsFinalized($request, $model, $modelAttributes)
     {
         $fullNamespace = $model['full_namespace'];
         $query = $fullNamespace::query();
 
         // Apply filters to the model records
-        $query = self::applyFiltersToModelRecords($request, $query, $modelTemplates);
+        $query = self::applyFiltersToModelRecords($request, $query, $modelAttributes);
 
         // Finalize the model records (e.g., apply sorting, pagination)
-        $records = self::finalizeModelRecords($request, $query, $modelTemplates);
+        $records = self::finalizeModelRecords($request, $query, $modelAttributes);
 
         return $records;
     }
@@ -147,19 +151,19 @@ class TemplatedModelController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param \Illuminate\Support\Collection $modelTemplates
+     * @param \Illuminate\Support\Collection $modelAttributes
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    private static function applyFiltersToModelRecords($request, $query, $modelTemplates)
+    private static function applyFiltersToModelRecords($request, $query, $modelAttributes)
     {
         $filterAttributes = [];
 
-        // Add filtering attributes based on templates
-        if ($modelTemplates->contains('named')) {
+        // Add filtering attributes based on attributes of the model
+        if ($modelAttributes->contains('name')) {
             $filterAttributes[] = 'id'; // id related single select is used as filter for name
         }
 
-        if ($modelTemplates->contains('parented')) {
+        if ($modelAttributes->contains('parent_id')) {
             $filterAttributes[] = 'parent_id';
         }
 
@@ -174,12 +178,12 @@ class TemplatedModelController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param \Illuminate\Support\Collection $modelTemplates
+     * @param \Illuminate\Support\Collection $modelAttributes
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    private static function finalizeModelRecords($request, $query, $modelTemplates)
+    private static function finalizeModelRecords($request, $query, $modelAttributes)
     {
-        $sortByName = $modelTemplates->contains('named');
+        $sortByName = $modelAttributes->contains('name');
 
         $records = $query->when($sortByName, function ($q) {
             $q->orderBy('name', 'asc');
@@ -201,6 +205,31 @@ class TemplatedModelController extends Controller
     {
         $fullNamespace = $modelDefinition['full_namespace'];
         return $fullNamespace::all();
+    }
+
+    /**
+     * Retrieve all parent records for a given model.
+     *
+     * @param string $model The model class name.
+     * @param \Illuminate\Support\Collection $modelAttributes The collection of model attributes.
+     * @return \Illuminate\Database\Eloquent\Collection|null The collection of parent records or null if none found.
+     */
+    private static function getAllModelParentRecords($model, $modelAttributes)
+    {
+        // Initialize variable to store parent records
+        $parents = null;
+
+        // Check if the model attributes contain a 'parent_id' field
+        if ($modelAttributes->contains('parent_id')) {
+            // Retrieve the full namespace of the model
+            $fullNamespace = $model['full_namespace'];
+
+            // Retrieve only parent records using the model scope
+            $parents = $fullNamespace::onlyParents();
+        }
+
+        // Return the collection of parent records or null if none found
+        return $parents;
     }
 
     /**

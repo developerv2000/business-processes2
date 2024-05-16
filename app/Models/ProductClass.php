@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Support\Interfaces\TemplatedModelInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductClass extends Model
+class ProductClass extends Model implements TemplatedModelInterface
 {
     use HasFactory;
 
@@ -16,8 +17,20 @@ class ProductClass extends Model
         return $this->belongsToMany(Manufacturer::class);
     }
 
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'class_id');
+    }
+
     public static function getAll()
     {
         return self::orderBy('name')->get();
+    }
+
+    // Implement the method declared in the TemplatedModelInterface
+    public function getUsageCountAttribute(): int
+    {
+        return $this->manufacturers()->count()
+            + $this->products()->count();
     }
 }

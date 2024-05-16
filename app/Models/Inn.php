@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Support\Interfaces\TemplatedModelInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Inn extends Model
+class Inn extends Model implements TemplatedModelInterface
 {
     use HasFactory;
 
@@ -25,5 +26,12 @@ class Inn extends Model
     public static function getAll()
     {
         return self::orderBy('name')->get();
+    }
+
+    // Implement the method declared in the TemplatedModelInterface
+    public function getUsageCountAttribute(): int
+    {
+        return $this->products()->count()
+            + $this->kvpps()->count();
     }
 }

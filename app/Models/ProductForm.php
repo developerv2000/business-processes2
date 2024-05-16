@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Support\Interfaces\ParentableInterface;
+use App\Support\Interfaces\TemplatedModelInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductForm extends Model
+class ProductForm extends Model implements ParentableInterface, TemplatedModelInterface
 {
     use HasFactory;
 
@@ -22,7 +24,7 @@ class ProductForm extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'form_id');
     }
 
     public function kvpps()
@@ -43,6 +45,19 @@ class ProductForm extends Model
     public static function getAllMinified()
     {
         return self::orderBy('name')->withOnly([])->get();
+    }
+
+    // Implement the method declared in the ParentableInterface
+    public function scopeOnlyParents()
+    {
+        return self::whereNull('parent_id')->orderBy('name')->get();
+    }
+
+    // Implement the method declared in the TemplatedModelInterface
+    public function getUsageCountAttribute(): int
+    {
+        return $this->products()->count()
+            + $this->kvpps()->count();
     }
 
     /**

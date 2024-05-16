@@ -1,3 +1,5 @@
+@include('tables.style-validations')
+
 <div class="table-wrapper thin-scrollbar">
     <table class="table main-table">
         {{-- Head start --}}
@@ -9,8 +11,12 @@
                     @include('tables.components.th.edit')
                 </th>
 
-                @if ($modelTemplates->contains('named'))
+                @if ($modelAttributes->contains('name'))
                     <th>{{ __('Name') }}</th>
+                @endif
+
+                @if ($modelAttributes->contains('parent_id'))
+                    <th>{{ __('Parent') }}</th>
                 @endif
 
                 <th>{{ __('Usage count') }}</th>
@@ -27,11 +33,15 @@
                         @include('tables.components.td.edit-button', ['href' => route('templated-models.edit', ['model' => $model['name'], 'id' => $instance->id])])
                     </td>
 
-                    @if ($modelTemplates->contains('named'))
+                    @if ($modelAttributes->contains('name'))
                         <td>{{ $instance->name }}</td>
                     @endif
 
-                    <td>0</td>
+                    @if ($modelAttributes->contains('parent_id'))
+                        <td>{{ $instance->parent?->name }}</td>
+                    @endif
+
+                    <td>{{ $instance->usage_count }}</td>
                 </tr>
             @endforeach
         </tbody> {{-- Body end --}}

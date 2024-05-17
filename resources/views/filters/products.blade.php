@@ -1,9 +1,9 @@
 @extends('filters.template')
 
 @section('elements')
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Generic"
-        name="inn_id"
+        name="inn_id[]"
         :options="$inns" />
 
     <x-forms.id-based-single-select.request-based-select
@@ -21,14 +21,14 @@
         label="Pack"
         name="pack" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Country"
-        name="country_id"
+        name="country_id[]"
         :options="$countries" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Manufacturer"
-        name="manufacturer_id"
+        name="manufacturer_id[]"
         :options="$manufacturers" />
 
     <x-forms.id-based-single-select.request-based-select

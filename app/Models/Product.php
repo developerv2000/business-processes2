@@ -222,11 +222,14 @@ class Product extends Model
     private static function filterRecords($request, $query)
     {
         $whereEqualAttributes = [
-            'inn_id',
             'form_id',
-            'manufacturer_id',
             'class_id',
             'shelf_life_id',
+        ];
+
+        $whereInAttributes = [
+            'inn_id',
+            'manufacturer_id',
         ];
 
         $whereLikeAttributes = [
@@ -246,17 +249,19 @@ class Product extends Model
         $whereRelationEqualStatements = [
             [
                 'name' => 'manufacturer',
-                'attribute' => 'country_id',
-            ],
-
-            [
-                'name' => 'manufacturer',
                 'attribute' => 'analyst_user_id',
             ],
 
             [
                 'name' => 'manufacturer',
                 'attribute' => 'bdm_user_id',
+            ],
+        ];
+
+        $whereRelationInStatements = [
+            [
+                'name' => 'manufacturer',
+                'attribute' => 'country_id',
             ],
         ];
 
@@ -269,10 +274,12 @@ class Product extends Model
         ];
 
         $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Helper::filterQueryWhereInStatements($request, $query, $whereInAttributes);
         $query = Helper::filterQueryLikeStatements($request, $query, $whereLikeAttributes);
         $query = Helper::filterQueryDateRangeStatements($request, $query, $dateRangeAttributes);
         $query = Helper::filterBelongsToManyRelations($request, $query, $belongsToManyRelations);
         $query = Helper::filterWhereRelationEqualStatements($request, $query, $whereRelationEqualStatements);
+        $query = Helper::filterWhereRelationInStatements($request, $query, $whereRelationInStatements);
         $query = Helper::filterWhereRelationEqualAmbiguousStatements($request, $query, $whereRelationEqualAmbigiousStatements);
 
         return $query;

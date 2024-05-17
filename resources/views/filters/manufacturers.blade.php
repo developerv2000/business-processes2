@@ -11,14 +11,14 @@
         name="bdm_user_id"
         :options="$bdmUsers" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Country"
-        name="country_id"
+        name="country_id[]"
         :options="$countries" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Manufacturer"
-        name="id"
+        name="id[]"
         :options="$manufacturers" />
 
     <x-forms.id-based-single-select.request-based-select

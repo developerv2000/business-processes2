@@ -4,9 +4,9 @@
     <div class="pre-content pre-content--intended styled-box">
         @include('layouts.breadcrumbs', [
             'crumbs' => [
-                '<a href="' . route('templated-models.show', $model['name'])  . '">' . $model['name'] . '</a>',
+                '<a href="' . route('templated-models.show', $model['name']) . '">' . $model['name'] . '</a>',
                 __('Edit'),
-                $modelAttributes->contains('name') ? $instance->name : $instance->id
+                $modelAttributes->contains('name') ? $instance->name : $instance->id,
             ],
             'fullScreen' => false,
         ])
@@ -24,6 +24,7 @@
                     label="Name"
                     name="name"
                     :instance="$instance"
+                    data-on-input="{{ $model['name'] == 'Inn' ? 'validate-specific-input' : '' }}"
                     required />
             @endif
 

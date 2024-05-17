@@ -1,7 +1,7 @@
 <div class="statistics-index__table2-container styled-box">
     <div class="pre-content">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Table') . ' 2', __('Описание таблицы 2')],
+            'crumbs' => [__('Описание таблицы 2')],
             'fullScreen' => false,
         ])
     </div>

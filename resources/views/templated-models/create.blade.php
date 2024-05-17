@@ -21,6 +21,7 @@
                 <x-forms.input.default-input
                     label="Name"
                     name="name"
+                    data-on-input="{{ $model['name'] == 'Inn' ? 'validate-specific-input' : '' }}"
                     required />
             @endif
 

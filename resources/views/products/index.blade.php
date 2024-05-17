@@ -21,7 +21,7 @@
                 @endunless
 
                 {{-- Export VP --}}
-                @if (!$request->user()->isTrainee() && $request->manufacturer_id)
+                @if (!$request->user()->isTrainee() && $request->manufacturer_id && count($request->manufacturer_id) == 1)
                     <x-different.export-products-vp-form :manufacturer_id="$request->manufacturer_id" />
                 @endif
             </div>

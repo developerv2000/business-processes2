@@ -206,11 +206,14 @@ class Manufacturer extends Model
         $whereEqualAttributes = [
             'analyst_user_id',
             'bdm_user_id',
-            'country_id',
-            'id',
             'category_id',
             'is_active',
             'is_important',
+        ];
+
+        $whereInAttributes = [
+            'country_id',
+            'id',
         ];
 
         $dateRangeAttributes = [
@@ -225,6 +228,7 @@ class Manufacturer extends Model
         ];
 
         $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Helper::filterQueryWhereInStatements($request, $query, $whereInAttributes);
         $query = Helper::filterQueryDateRangeStatements($request, $query, $dateRangeAttributes);
         $query = Helper::filterBelongsToManyRelations($request, $query, $belongsToManyRelations);
 

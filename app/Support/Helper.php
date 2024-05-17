@@ -285,6 +285,31 @@ class Helper
     }
 
     /**
+     * Add WHERE IN clauses to the query based on the specified attributes in the request.
+     *
+     * @param \Illuminate\Http\Request $request   The current request instance.
+     * @param \Illuminate\Database\Eloquent\Builder $query    The query builder instance.
+     * @param array $attributes  The attributes to check in the request and apply to the query.
+     * @return \Illuminate\Database\Eloquent\Builder The modified query builder instance.
+     */
+    public static function filterQueryWhereInStatements($request, $query, $attributes)
+    {
+        // Iterate through each attribute provided
+        foreach ($attributes as $attribute) {
+            // Skip to the next attribute if the current attribute does not exist in the request
+            if (!$request->has($attribute)) {
+                continue;
+            }
+
+            // Add a WHERE IN clause to the query using the attribute and its values from the request
+            $query = $query->whereIn($attribute, $request->input($attribute));
+        }
+
+        // Return the modified query builder instance
+        return $query;
+    }
+
+    /**
      * Filter the Eloquent query with WHERE DATE statements based on request attributes.
      *
      * @param \Illuminate\Http\Request $request
@@ -421,6 +446,34 @@ class Helper
 
         return $query;
     }
+
+    /**
+     * Add WHERE IN clauses to the query based on the specified relations and their attributes in the request.
+     *
+     * @param \Illuminate\Http\Request $request   The current request instance.
+     * @param \Illuminate\Database\Eloquent\Builder $query    The query builder instance.
+     * @param array $relations  The relations and their attributes to check in the request and apply to the query.
+     * @return \Illuminate\Database\Eloquent\Builder The modified query builder instance.
+     */
+    public static function filterWhereRelationInStatements($request, $query, $relations)
+    {
+        // Iterate through each relation provided
+        foreach ($relations as $relation) {
+            // Skip to the next relation if the request does not have the attribute for the current relation
+            if (!$request->has($relation['attribute'])) {
+                continue;
+            }
+
+            // Add a WHERE clause to the query using whereHas and whereIn for the relation
+            $query = $query->whereHas($relation['name'], function ($q) use ($request, $relation) {
+                $q->whereIn($relation['attribute'], $request->input($relation['attribute']));
+            });
+        }
+
+        // Return the modified query builder instance
+        return $query;
+    }
+
 
     /**
      * Filter the Eloquent query by WHERE relation LIKE statements based on request attributes.

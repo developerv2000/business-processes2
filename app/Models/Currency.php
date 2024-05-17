@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Http;
 
 class Currency extends Model
 {
@@ -21,7 +22,7 @@ class Currency extends Model
     /**
      * Update all currencies except USD using an external API.
      *
-     * This method is used in the Kernel for updating currencies via a cron job every day.
+     * This method is used for updating currencies via a cron job every day.
      *
      * @return void
      */

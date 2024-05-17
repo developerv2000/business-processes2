@@ -19,7 +19,7 @@ class Kvpp extends Model
     use Commentable;
     use ExportsRecords;
 
-    const DEFAULT_ORDER_BY = 'created_at';
+    const DEFAULT_ORDER_BY = 'updated_at';
     const DEFAULT_ORDER_TYPE = 'desc';
     const DEFAULT_PAGINATION_LIMIT = 50;
 

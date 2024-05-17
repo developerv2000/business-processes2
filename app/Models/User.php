@@ -445,6 +445,18 @@ class User extends Authenticatable
     }
 
     /**
+     * Reset default settings for all users
+     *
+     * Used in artisan command line
+     */
+    public static function resetDefaultSettingsForAll()
+    {
+        self::all()->each(function ($user) {
+            $user->loadDefaultSettings();
+        });
+    }
+
+    /**
      * Update the specified setting for the user.
      *
      * @param  string  $key

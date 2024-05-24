@@ -72,10 +72,10 @@ class AppServiceProvider extends ServiceProvider
                 'analystUsers' => User::getAnalystsMinified(),
                 'bdmUsers' => User::getBdmsMinifed(),
                 'productClasses' => ProductClass::getAll(),
-                'productForms' => ProductForm::getAllMinified(),
+                'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
                 'shelfLifes' => ProductShelfLife::getAll(),
                 'zones' => Zone::getAll(),
-                'inns' => Inn::getAll(),
+                'inns' => Inn::getAllPrioritized(),
                 'countries' => Country::getAll(),
                 'manufacturerCategories' => ManufacturerCategory::getAll(),
                 'booleanOptions' => Helper::getBooleanOptionsArray(),
@@ -89,15 +89,15 @@ class AppServiceProvider extends ServiceProvider
                 'countryCodes' => CountryCode::getAllPrioritized(),
                 'priorities' => KvppPriority::getAll(),
                 'sources' => KvppSource::getAll(),
-                'inns' => Inn::getAll(),
-                'forms' => ProductForm::getAllMinified(),
+                'inns' => Inn::getAllPrioritized(),
+                'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
                 'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
                 'portfolioManagers' => PortfolioManager::getAll(),
                 'analystUsers' => User::getAnalystsMinified(),
             ]);
         });
 
-        // Inns and forms vary from create & update
+        // KVPP FILTER Inns and forms vary from create & update
         View::composer(['filters.kvpp'], function ($view) {
             $view->with([
                 'statuses' => KvppStatus::getAll(),
@@ -105,7 +105,7 @@ class AppServiceProvider extends ServiceProvider
                 'priorities' => KvppPriority::getAll(),
                 'sources' => KvppSource::getAll(),
                 'inns' => Kvpp::getAllUsedInns(),
-                'forms' => Kvpp::getAllUsedForms(),
+                'productForms' => Kvpp::getAllUsedForms(),
                 'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
                 'portfolioManagers' => PortfolioManager::getAll(),
                 'analystUsers' => User::getAnalystsMinified(),

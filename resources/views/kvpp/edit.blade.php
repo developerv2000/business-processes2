@@ -54,7 +54,7 @@
             <x-forms.id-based-single-select.instance-edit-select
                 label="Form"
                 name="form_id"
-                :options="$forms"
+                :options="$productForms"
                 :instance="$instance"
                 required />
 

@@ -43,9 +43,9 @@ class ProductForm extends Model implements ParentableInterface, TemplatedModelIn
         return $this->parent ? $this->parent->name : $this->name;
     }
 
-    public static function getAllMinified()
+    public static function getAllPrioritizedAndMinifed()
     {
-        return self::orderBy('name')->withOnly([])->get();
+        return self::withOnly([])->get()->sortByDesc('usage_count');
     }
 
     // Implement the method declared in the ParentableInterface

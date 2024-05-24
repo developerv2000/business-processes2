@@ -24,7 +24,7 @@
     <x-forms.id-based-single-select.request-based-select
         label="Form"
         name="form_id"
-        :options="$forms" />
+        :options="$productForms" />
 
     <x-forms.input.request-based-input
         type="text"

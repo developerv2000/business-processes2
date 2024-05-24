@@ -51,11 +51,19 @@
                 label="Manufacturer Brand"
                 name="brand" />
 
-            <x-forms.id-based-single-select.default-select
-                label="Product class"
-                name="class_id"
-                :options="$productClasses"
-                required />
+            @if (old('class_id'))
+                <x-forms.id-based-single-select.default-select
+                    label="Product class"
+                    name="class_id"
+                    :options="$productClasses"
+                    required />
+            @else
+                <x-forms.id-based-single-select.default-selected-select
+                    label="Product class"
+                    name="class_id"
+                    :options="$productClasses"
+                    required />
+            @endif
         </div>
 
         <div class="form__section">
@@ -75,11 +83,19 @@
                 label="Dossier"
                 name="dossier" />
 
-            <x-forms.id-based-multiple-select.default-select
-                label="Zones"
-                name="zones[]"
-                :options="$zones"
-                required />
+            @if (old('zones'))
+                <x-forms.id-based-multiple-select.default-select
+                    label="Zones"
+                    name="zones[]"
+                    :options="$zones"
+                    required />
+            @else
+                <x-forms.id-based-multiple-select.default-selected-select
+                    label="Zones"
+                    name="zones[]"
+                    :options="$zones"
+                    required />
+            @endif
 
             <x-forms.input.default-input
                 label="Bioequivalence"

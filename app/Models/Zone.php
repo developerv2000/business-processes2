@@ -10,6 +10,8 @@ class Zone extends Model implements TemplatedModelInterface
 {
     use HasFactory;
 
+    const DEFAULT_SELECTED_IDS = [2]; // Zone ||
+
     public $timestamps = false;
     protected $guarded = ['id'];
 
@@ -33,5 +35,13 @@ class Zone extends Model implements TemplatedModelInterface
     {
         return $this->manufacturers()->count()
             + $this->products()->count();
+    }
+
+    /**
+     * Used to select default values on products create form
+     */
+    public function getSelectedByDefaultAttribute()
+    {
+        return $this->id == in_array($this->id, self::DEFAULT_SELECTED_IDS) ?? false;
     }
 }

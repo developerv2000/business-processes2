@@ -49,7 +49,7 @@
             <x-forms.id-based-single-select.default-select
                 label="Form"
                 name="form_id"
-                :options="$forms"
+                :options="$productForms"
                 required />
 
             <x-forms.input.default-input

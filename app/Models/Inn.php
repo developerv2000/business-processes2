@@ -28,6 +28,16 @@ class Inn extends Model implements TemplatedModelInterface
         return self::orderBy('name')->get();
     }
 
+    /**
+     * Get all records ordered by usage count
+     *
+     * Used on filtering and creating/editing of related models
+     */
+    public static function getAllPrioritized()
+    {
+        return self::all()->sortByDesc('usage_count');
+    }
+
     // Implement the method declared in the TemplatedModelInterface
     public function getUsageCountAttribute(): int
     {

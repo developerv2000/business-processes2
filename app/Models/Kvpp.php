@@ -256,7 +256,7 @@ class Kvpp extends Model
      */
     public static function getAllUsedInns()
     {
-        return Inn::has('kvpps')->orderBy('name')->get();
+        return Inn::has('kvpps')->get()->sortByDesc('usage_count');
     }
 
     /**
@@ -268,7 +268,7 @@ class Kvpp extends Model
      */
     public static function getAllUsedForms()
     {
-        return ProductForm::has('kvpps')->orderBy('name')->get();
+        return ProductForm::has('kvpps')->get()->sortByDesc('usage_count');
     }
 
     /*

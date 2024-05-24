@@ -14,6 +14,7 @@ use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\PortfolioManager;
+use App\Models\Product;
 use App\Models\ProductClass;
 use App\Models\ProductForm;
 use App\Models\ProductShelfLife;
@@ -72,9 +73,11 @@ class AppServiceProvider extends ServiceProvider
                 'analystUsers' => User::getAnalystsMinified(),
                 'bdmUsers' => User::getBdmsMinifed(),
                 'productClasses' => ProductClass::getAll(),
+                'productsDefaultClassID' => Product::getDefaultClassID(), // used only on create
                 'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
                 'shelfLifes' => ProductShelfLife::getAll(),
                 'zones' => Zone::getAll(),
+                'productsDefaultZonesIDs' => Product::getDefaultZoneIDs(), // used only on create
                 'inns' => Inn::getAllPrioritized(),
                 'countries' => Country::getAll(),
                 'manufacturerCategories' => ManufacturerCategory::getAll(),

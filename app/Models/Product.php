@@ -386,6 +386,26 @@ class Product extends Model
     */
 
     /**
+     * Get default products class id
+     * Used on products create
+     */
+    public static function getDefaultClassID()
+    {
+        return ProductClass::where('name', 'ЛС')->first()->id;
+    }
+
+    /**
+     * Get default zone ids
+     * Used on products create
+     */
+    public static function getDefaultZoneIDs()
+    {
+        $names = ['II'];
+
+        return Zone::whereIn('name', $names)->pluck('id')->all();
+    }
+
+    /**
      * Provides the default table columns along with their properties.
      *
      * These columns are typically used to display data in tables,

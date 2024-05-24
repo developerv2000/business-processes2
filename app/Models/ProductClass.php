@@ -10,8 +10,6 @@ class ProductClass extends Model implements TemplatedModelInterface
 {
     use HasFactory;
 
-    const DEFAULT_SELECTED_ID = 1; // ЛС
-
     public $timestamps = false;
     protected $guarded = ['id'];
 
@@ -35,13 +33,5 @@ class ProductClass extends Model implements TemplatedModelInterface
     {
         return $this->manufacturers()->count()
             + $this->products()->count();
-    }
-
-    /**
-     * Used to select default value on products create form
-     */
-    public function getSelectedByDefaultAttribute()
-    {
-        return $this->id == self::DEFAULT_SELECTED_ID ?? false;
     }
 }

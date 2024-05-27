@@ -80,4 +80,16 @@ class ProductForm extends Model implements ParentableInterface, TemplatedModelIn
 
         return $IDs;
     }
+
+    /**
+     * Retrieve all records that have been used by Kvpp.
+     *
+     * Used in Kvpp filtering
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getOnlyKvppForms()
+    {
+        return self::has('kvpps')->get()->sortByDesc('usage_count');
+    }
 }

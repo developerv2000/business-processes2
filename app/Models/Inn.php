@@ -44,4 +44,16 @@ class Inn extends Model implements TemplatedModelInterface
         return $this->products()->count()
             + $this->kvpps()->count();
     }
+
+    /**
+     * Retrieve all records that have been used by Kvpp.
+     *
+     * Used in Kvpp filtering
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getOnlyKvppInns()
+    {
+        return self::has('kvpps')->get()->sortByDesc('usage_count');
+    }
 }

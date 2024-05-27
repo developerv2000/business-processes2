@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Models\Country;
 use App\Models\CountryCode;
 use App\Models\Inn;
-use App\Models\Kvpp;
 use App\Models\KvppPriority;
 use App\Models\KvppSource;
 use App\Models\KvppStatus;
@@ -85,34 +84,31 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        // KVPP
-        View::composer(['kvpp.create', 'kvpp.edit'], function ($view) {
-            $view->with([
-                'statuses' => KvppStatus::getAll(),
-                'countryCodes' => CountryCode::getAllPrioritized(),
-                'priorities' => KvppPriority::getAll(),
-                'sources' => KvppSource::getAll(),
-                'inns' => Inn::getAllPrioritized(),
-                'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
-                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
-                'portfolioManagers' => PortfolioManager::getAll(),
-                'analystUsers' => User::getAnalystsMinified(),
-            ]);
+        // Kvpp create & edit
+        $kvppShareData = [
+            'statuses' => KvppStatus::getAll(),
+            'countryCodes' => CountryCode::getAllPrioritized(),
+            'priorities' => KvppPriority::getAll(),
+            'sources' => KvppSource::getAll(),
+            'inns' => Inn::getAllPrioritized(),
+            'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
+            'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+            'portfolioManagers' => PortfolioManager::getAll(),
+            'analystUsers' => User::getAnalystsMinified(),
+        ];
+
+        View::composer(['kvpp.create', 'kvpp.edit'], function ($view) use ($kvppShareData) {
+            $view->with($kvppShareData);
         });
 
-        // KVPP FILTER Inns and forms vary from create & update
-        View::composer(['filters.kvpp'], function ($view) {
-            $view->with([
-                'statuses' => KvppStatus::getAll(),
-                'countryCodes' => CountryCode::getAllPrioritized(),
-                'priorities' => KvppPriority::getAll(),
-                'sources' => KvppSource::getAll(),
-                'inns' => Kvpp::getAllUsedInns(),
-                'productForms' => Kvpp::getAllUsedForms(),
-                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
-                'portfolioManagers' => PortfolioManager::getAll(),
-                'analystUsers' => User::getAnalystsMinified(),
+        // Kvpp filter
+        View::composer(['filters.kvpp'], function ($view) use ($kvppShareData) {
+            $mergedData = array_merge($kvppShareData, [
+                'inns' => Inn::getOnlyKvppInns(),
+                'productForms' => ProductForm::getOnlyKvppForms(),
             ]);
+
+            $view->with($mergedData);
         });
 
         // Statistics

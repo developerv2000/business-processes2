@@ -247,30 +247,6 @@ class Kvpp extends Model
         return $records;
     }
 
-    /**
-     * Retrieve all used inns.
-     *
-     * Used in filtering
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public static function getAllUsedInns()
-    {
-        return Inn::has('kvpps')->get()->sortByDesc('usage_count');
-    }
-
-    /**
-     * Retrieve all used forms.
-     *
-     * Used in filtering
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public static function getAllUsedForms()
-    {
-        return ProductForm::has('kvpps')->get()->sortByDesc('usage_count');
-    }
-
     /*
     |--------------------------------------------------------------------------
     | Create and Update

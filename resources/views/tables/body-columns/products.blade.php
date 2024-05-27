@@ -56,7 +56,7 @@
     @break
 
     @case('MOQ')
-        {{ $instance->moq }}
+        @include('tables.components.td.formatted-price', ['attribute' => 'moq'])
     @break
 
     @case('Shelf life')

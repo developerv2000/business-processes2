@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Interfaces\HasTitle;
 use App\Support\Traits\Commentable;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Process extends Model
+class Process extends Model implements HasTitle
 {
     use HasFactory;
     use SoftDeletes;
@@ -308,9 +309,9 @@ class Process extends Model
             ['name' => 'Down payment 2', 'order' => $order++, 'width' => 124, 'visible' => 1],
 
             ['name' => 'Date of forecast', 'order' => $order++, 'width' => 136, 'visible' => 1],
-            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
-            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
-            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
 
             ['name' => 'Responsible', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Process date', 'order' => $order++, 'width' => 116, 'visible' => 1],
@@ -361,5 +362,11 @@ class Process extends Model
             'status_id' => $this->status_id,
             'start_date' => now(),
         ]);
+    }
+
+    // Implement the method declared in the HasTitle interface
+    public function getTitle(): string
+    {
+        return 'NOT DONE YET!!!';
     }
 }

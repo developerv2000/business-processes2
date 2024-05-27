@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Http\Requests\KvppStoreRequest;
 use App\Support\Helper;
+use App\Support\Interfaces\HasTitle;
 use App\Support\Traits\Commentable;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Kvpp extends Model
+class Kvpp extends Model implements HasTitle
 {
     use HasFactory;
     use SoftDeletes;
@@ -339,9 +340,9 @@ class Kvpp extends Model
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Date of forecast', 'order' => $order++, 'width' => 136, 'visible' => 1],
-            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
-            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
-            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Portfolio manager', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
@@ -412,5 +413,11 @@ class Kvpp extends Model
             ->get();
 
         return $similarRecords;
+    }
+
+    // Implement the method declared in the HasTitle interface
+    public function getTitle(): string
+    {
+        return __('KVPP') . ' # ' . $this->id . ' / ' . Helper::truncateString($this->inn->name, 90);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Helper;
+use App\Support\Interfaces\HasTitle;
 use App\Support\Traits\Commentable;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Manufacturer extends Model
+class Manufacturer extends Model implements HasTitle
 {
     use HasFactory;
     use SoftDeletes;
@@ -447,5 +448,11 @@ class Manufacturer extends Model
             $this->updated_at,
             $this->meetings_count,
         ];
+    }
+
+    // Implement the method declared in the HasTitle interface
+    public function getTitle(): string
+    {
+        return Helper::truncateString($this->name, 90);
     }
 }

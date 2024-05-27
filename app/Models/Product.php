@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Helper;
+use App\Support\Interfaces\HasTitle;
 use App\Support\Traits\Commentable;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
@@ -14,7 +15,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 
-class Product extends Model
+class Product extends Model implements HasTitle
 {
     use HasFactory;
     use SoftDeletes;
@@ -428,14 +429,14 @@ class Product extends Model
             ['name' => 'Basic form', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'MOQ', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'MOQ', 'order' => $order++, 'width' => 158, 'visible' => 1],
             ['name' => 'Shelf life', 'order' => $order++, 'width' => 92, 'visible' => 1],
-            ['name' => 'Product class', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Product class', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Dossier', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
             ['name' => 'Manufacturer Brand', 'order' => $order++, 'width' => 182, 'visible' => 1],
-            ['name' => 'Bioequivalence', 'order' => $order++, 'width' => 124, 'visible' => 1],
-            ['name' => 'Validity period', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Bioequivalence', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Validity period', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'Registered in EU', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Sold in EU', 'order' => $order++, 'width' => 106, 'visible' => 1],
             ['name' => 'Down payment', 'order' => $order++, 'width' => 132, 'visible' => 1],
@@ -595,5 +596,11 @@ class Product extends Model
         $writer->save($filePath);
 
         return response()->download($filePath);
+    }
+
+    // Implement the method declared in the HasTitle interface
+    public function getTitle(): string
+    {
+        return Helper::truncateString($this->manufacturer->name, 50) . ' / ' . Helper::truncateString($this->inn->name, 50);
     }
 }

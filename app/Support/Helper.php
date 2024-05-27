@@ -187,6 +187,22 @@ class Helper
     }
 
     /**
+     * Truncate a string to the specified length and append '...' if necessary.
+     *
+     * @param string $value The string to be truncated.
+     * @param int $length The desired length of the truncated string.
+     * @return string The truncated string with '...' appended if it exceeds the length.
+     */
+    public static function truncateString(string $value, int $length): string
+    {
+        if (mb_strlen($value) <= $length) {
+            return $value;
+        }
+
+        return mb_substr($value, 0, $length) . '...';
+    }
+
+    /**
      * Used while generating slug
      */
     private static function transliterateIntoLatin($string): string

@@ -9,10 +9,6 @@
         @include('tables.components.th.sort-link', ['orderBy' => 'manufacturer_id'])
     @break
 
-    @case('Manufacturer Brand')
-        @include('tables.components.th.sort-link', ['orderBy' => 'brand'])
-    @break
-
     @case('Generic')
         @include('tables.components.th.sort-link', ['orderBy' => 'inn_id'])
     @break
@@ -21,8 +17,32 @@
         @include('tables.components.th.sort-link', ['orderBy' => 'form_id'])
     @break
 
+    @case('Dosage')
+        @include('tables.components.th.sort-link', ['orderBy' => 'dosage'])
+    @break
+
+    @case('MOQ')
+        @include('tables.components.th.sort-link', ['orderBy' => 'moq'])
+    @break
+
     @case('Shelf life')
         @include('tables.components.th.sort-link', ['orderBy' => 'shelf_life_id'])
+    @break
+
+    @case('Product class')
+        @include('tables.components.th.sort-link', ['orderBy' => 'class_id'])
+    @break
+
+    @case('Manufacturer Brand')
+        @include('tables.components.th.sort-link', ['orderBy' => 'brand'])
+    @break
+
+    @case('Bioequivalence')
+        @include('tables.components.th.sort-link', ['orderBy' => 'bioequivalence'])
+    @break
+
+    @case('Validity period')
+        @include('tables.components.th.sort-link', ['orderBy' => 'validity_period'])
     @break
 
     @case('Down payment')

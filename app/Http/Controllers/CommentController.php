@@ -20,12 +20,16 @@ class CommentController extends Controller
         $instance = $model::find($instanceId);
         $instance->load('comments');
 
-        return view('comments.index', compact('instance'));
+        $title = $instance->getTitle();
+
+        return view('comments.index', compact('instance', 'title'));
     }
 
     public function edit(Comment $instance)
     {
-        return view('comments.edit', compact('instance'));
+        $title = $instance->commentable->getTitle();
+
+        return view('comments.edit', compact('instance', 'title'));
     }
 
     public function update(Request $request, Comment $instance)

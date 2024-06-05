@@ -430,7 +430,7 @@ class Product extends Model implements HasTitle
             ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'MOQ', 'order' => $order++, 'width' => 158, 'visible' => 1],
-            ['name' => 'Shelf life', 'order' => $order++, 'width' => 92, 'visible' => 1],
+            ['name' => 'Shelf life', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Product class', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Dossier', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],

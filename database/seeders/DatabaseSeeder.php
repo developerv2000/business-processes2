@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             KvppSourceSeeder::class,
             PortfolioManagerSeeder::class,
             KvppSeeder::class,
-            MeetingSeeder::class,
+            // MeetingSeeder::class,
         ]);
     }
 }

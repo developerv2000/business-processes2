@@ -54,6 +54,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $with = [
+        'roles'
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -67,10 +71,6 @@ class User extends Authenticatable
             'settings' => 'array',
         ];
     }
-
-    protected $with = [
-        'roles'
-    ];
 
     /*
     |--------------------------------------------------------------------------

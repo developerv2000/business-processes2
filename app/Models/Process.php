@@ -6,6 +6,7 @@ use App\Support\Interfaces\HasTitle;
 use App\Support\Traits\Commentable;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,6 +38,21 @@ class Process extends Model implements HasTitle
         'lastComment',
     ];
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status_update_date' => 'date',
+            'forecast_year_1_update_date' => 'date',
+            'increased_price_date' => 'date',
+            'responsible_people_update_date' => 'date',
+        ];
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Relations
@@ -67,7 +83,7 @@ class Process extends Model implements HasTitle
 
     public function searchCountry()
     {
-        return $this->belongsTo(CountryCode::class);
+        return $this->belongsTo(CountryCode::class, 'country_code_id');
     }
 
     public function currency()
@@ -110,6 +126,27 @@ class Process extends Model implements HasTitle
         return $this->hasOne(ProcessStatusHistory::class)
             ->whereNull('end_date')
             ->orderBy('id', 'desc');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+
+    /**
+     * Get the number of days past since the 'responsible_people_update_date'.
+     *
+     * @return int|null Number of days past since the update date, or null if the date is not set.
+     */
+    public function getDaysPastAttribute()
+    {
+        if ($this->responsible_people_update_date) {
+            return (int) $this->responsiblePeopleUpdateDate->diffInDays(now(), false);
+        }
+
+        return null;
     }
 
     /*
@@ -266,14 +303,14 @@ class Process extends Model implements HasTitle
 
         $columns = [
             ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
-            ['name' => 'Status date', 'order' => $order++, 'width' => 98, 'visible' => 1],
+            ['name' => 'Status date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Search country', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Product status', 'order' => $order++, 'width' => 126, 'visible' => 1],
             ['name' => 'Product status An*', 'order' => $order++, 'width' => 136, 'visible' => 1],
             ['name' => 'General status', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'Category', 'order' => $order++, 'width' => 84, 'visible' => 1],
+            ['name' => 'Manufacturer category', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Country of manufacturer', 'order' => $order++, 'width' => 174, 'visible' => 1],
+            ['name' => 'Manufacturer country', 'order' => $order++, 'width' => 174, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
@@ -286,48 +323,53 @@ class Process extends Model implements HasTitle
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
 
-            ['name' => 'Manufacturer price 1', 'order' => $order++, 'width' => 146, 'visible' => 1],
-            ['name' => 'Manufacturer price 2', 'order' => $order++, 'width' => 148, 'visible' => 1],
-            ['name' => 'Currency', 'order' => $order++, 'width' => 74, 'visible' => 1],
-            ['name' => 'USD', 'order' => $order++, 'width' => 70, 'visible' => 1],
-            ['name' => 'Agreed', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Our price 2', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            ['name' => 'Our price 1', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            ['name' => 'Price increased new price', 'order' => $order++, 'width' => 180, 'visible' => 1],
-            ['name' => 'Price increased by%', 'order' => $order++, 'width' => 154, 'visible' => 1],
-            ['name' => 'Date of price increased', 'order' => $order++, 'width' => 164, 'visible' => 1],
+            ['name' => 'Manufacturer price 1', 'order' => $order++, 'width' => 164, 'visible' => 1],
+            ['name' => 'Manufacturer price 2', 'order' => $order++, 'width' => 166, 'visible' => 1],
+            ['name' => 'Currency', 'order' => $order++, 'width' => 92, 'visible' => 1],
+            ['name' => 'Price in USD', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Agreed price', 'order' => $order++, 'width' => 114, 'visible' => 1],
+            ['name' => 'Our price 2', 'order' => $order++, 'width' => 118, 'visible' => 1],
+            ['name' => 'Our price 1', 'order' => $order++, 'width' => 118, 'visible' => 1],
+            ['name' => 'Increased price', 'order' => $order++, 'width' => 158, 'visible' => 1],
+            ['name' => 'Increased price %', 'order' => $order++, 'width' => 172, 'visible' => 1],
+            ['name' => 'Increased price date', 'order' => $order++, 'width' => 164, 'visible' => 1],
 
-            ['name' => 'Shelf life', 'order' => $order++, 'width' => 76, 'visible' => 1],
+            ['name' => 'Shelf life', 'order' => $order++, 'width' => 112, 'visible' => 1],
             ['name' => 'MOQ', 'order' => $order++, 'width' => 140, 'visible' => 1],
 
-            ['name' => 'Dossier status', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'Year Cr/Be', 'order' => $order++, 'width' => 84, 'visible' => 1],
+            ['name' => 'Dossier status', 'order' => $order++, 'width' => 124, 'visible' => 1],
+            ['name' => 'Year Cr/Be', 'order' => $order++, 'width' => 102, 'visible' => 1],
             ['name' => 'Countries Cr/Be', 'order' => $order++, 'width' => 116, 'visible' => 1],
-            ['name' => 'Country ich', 'order' => $order++, 'width' => 90, 'visible' => 1],
+            ['name' => 'Country ich', 'order' => $order++, 'width' => 108, 'visible' => 1],
             ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
-            ['name' => 'Down payment 1', 'order' => $order++, 'width' => 124, 'visible' => 1],
-            ['name' => 'Down payment 2', 'order' => $order++, 'width' => 124, 'visible' => 1],
+            ['name' => 'Down payment 1', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Down payment 2', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Down payment condition', 'order' => $order++, 'width' => 194, 'visible' => 1],
 
             ['name' => 'Date of forecast', 'order' => $order++, 'width' => 136, 'visible' => 1],
-            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 148, 'visible' => 1],
+            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 148, 'visible' => 1],
+            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 148, 'visible' => 1],
 
             ['name' => 'Responsible', 'order' => $order++, 'width' => 120, 'visible' => 1],
-            ['name' => 'Process date', 'order' => $order++, 'width' => 116, 'visible' => 1],
-            ['name' => 'Days have passed!', 'order' => $order++, 'width' => 134, 'visible' => 1],
-            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 82, 'visible' => 1],
-            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 82, 'visible' => 1],
+            ['name' => 'Responsible date', 'order' => $order++, 'width' => 250, 'visible' => 1],
+            ['name' => 'Days have passed', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Product category', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'Product class', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
 
             ['name' => 'ВП', 'order' => $order++, 'width' => 200, 'visible' => 1],
             ['name' => 'ПО', 'order' => $order++, 'width' => 200, 'visible' => 1],
             ['name' => 'АЦ', 'order' => $order++, 'width' => 200, 'visible' => 1],
             ['name' => 'СЦ', 'order' => $order++, 'width' => 200, 'visible' => 1],
             ['name' => 'Кк', 'order' => $order++, 'width' => 200, 'visible' => 1],
-            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
+            ['name' => 'КД', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'НПР', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'Р', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'Зя', 'order' => $order++, 'width' => 200, 'visible' => 1],
         ];
 
         return $columns;

@@ -84,25 +84,14 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        // Kvpp create & edit
-        $kvppShareData = [
-            'statuses' => KvppStatus::getAll(),
-            'countryCodes' => CountryCode::getAllPrioritized(),
-            'priorities' => KvppPriority::getAll(),
-            'sources' => KvppSource::getAll(),
-            'inns' => Inn::getAllPrioritized(),
-            'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
-            'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
-            'portfolioManagers' => PortfolioManager::getAll(),
-            'analystUsers' => User::getAnalystsMinified(),
-        ];
-
-        View::composer(['kvpp.create', 'kvpp.edit'], function ($view) use ($kvppShareData) {
-            $view->with($kvppShareData);
+        View::composer(['kvpp.create', 'kvpp.edit'], function ($view) {
+            $view->with(self::getKvppShareData());
         });
 
         // Kvpp filter
-        View::composer(['filters.kvpp'], function ($view) use ($kvppShareData) {
+        View::composer(['filters.kvpp'], function ($view) {
+            $kvppShareData = self::getKvppShareData();
+
             $mergedData = array_merge($kvppShareData, [
                 'inns' => Inn::getOnlyKvppInns(),
                 'productForms' => ProductForm::getOnlyKvppForms(),
@@ -137,5 +126,20 @@ class AppServiceProvider extends ServiceProvider
                 'roles' => Role::getAll(),
             ]);
         });
+    }
+
+    private static function getKvppShareData()
+    {
+        return [
+            'statuses' => KvppStatus::getAll(),
+            'countryCodes' => CountryCode::getAllPrioritized(),
+            'priorities' => KvppPriority::getAll(),
+            'sources' => KvppSource::getAll(),
+            'inns' => Inn::getAllPrioritized(),
+            'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
+            'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+            'portfolioManagers' => PortfolioManager::getAll(),
+            'analystUsers' => User::getAnalystsMinified(),
+        ];
     }
 }

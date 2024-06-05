@@ -12,46 +12,47 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('processes', function (Blueprint $table) {
+            // globals
             $table->unsignedInteger('id')->autoIncrement();
-            $table->unsignedInteger('product_id');
-            $table->unsignedSmallInteger('status_id');
-            $table->date('status_update_date');
+            $table->unsignedInteger('product_id'); // auto
+            $table->unsignedSmallInteger('status_id'); // required
+            $table->date('status_update_date'); // auto, but also can be set manually only on create
 
             // stage 1 (ВП)
-            $table->unsignedSmallInteger('country_code_id');
-            $table->smallInteger('days_past')->nullable();
+            $table->unsignedSmallInteger('country_code_id'); // required
 
             // stage 2 (ПО)
-            $table->date('stage_2_start_date')->nullable(); // forecast date
-            $table->unsignedInteger('forecast_year_1')->nullable();
-            $table->unsignedInteger('forecast_year_2')->nullable();
-            $table->unsignedInteger('forecast_year_3')->nullable();
+            $table->unsignedInteger('forecast_year_1')->nullable(); // required
+            $table->unsignedInteger('forecast_year_2')->nullable(); // required
+            $table->unsignedInteger('forecast_year_3')->nullable(); // required
+            $table->date('forecast_year_1_update_date')->nullable(); // auto
 
             // Stage 3 (АЦ)
-            $table->decimal('manufacturer_first_offered_price', 8, 2)->nullable();
-            $table->decimal('manufacturer_followed_offered_price', 8, 2)->nullable();
-            $table->decimal('our_first_offered_price', 8, 2)->nullable();
-            $table->decimal('our_followed_offered_price', 8, 2)->nullable();
-            $table->unsignedSmallInteger('currency_id')->nullable();
-            $table->decimal('manufacturer_followed_offered_price_in_usd', 8, 2)->nullable();
+            $table->unsignedSmallInteger('marketing_authorization_holder_id')->nullable(); // nullable at stages 3, 4 but became required at stage 5
+            $table->string('trademark_en')->nullable(); // nullable at stages 3, 4 but became required at stage 5
+            $table->string('trademark_ru')->nullable(); // nullable at stages 3, 4 but became required at stage 5
+
+            $table->decimal('manufacturer_first_offered_price', 8, 2)->nullable(); // required
+            $table->decimal('manufacturer_followed_offered_price', 8, 2)->nullable(); // required
+            $table->decimal('our_first_offered_price', 8, 2)->nullable(); // required
+            $table->decimal('our_followed_offered_price', 8, 2)->nullable(); // required
+            $table->unsignedSmallInteger('currency_id')->nullable(); // required
+            $table->decimal('manufacturer_followed_offered_price_in_usd', 8, 2)->nullable(); // auto
 
             // Stage 4 (СЦ)
-            $table->decimal('agreed_price', 8, 2)->nullable();
+            $table->decimal('agreed_price', 8, 2)->nullable(); // required
 
-            // Stage 5 (КК)
-            $table->unsignedSmallInteger('marketing_authorization_holder_id')->nullable();
-            $table->string('trademark_en')->nullable();
-            $table->string('trademark_ru')->nullable();
-
-            // After Stage 5 (КК)
-            $table->decimal('increased_price', 8, 2)->nullable();
-            $table->decimal('increased_price_percentage', 8, 2)->nullable();
-            $table->date('increased_price_date')->nullable();
-            $table->string('dossier_status')->nullable();
-            $table->string('clinical_trial_year')->nullable();
-            $table->string('clinical_trial_ich_country')->nullable();
-            $table->string('down_payment_1')->nullable();
-            $table->string('down_payment_2')->nullable();
+            // From stage 5 (КК) to stage 10 (Отмена)
+            $table->decimal('increased_price', 8, 2)->nullable(); // nullable
+            $table->decimal('increased_price_percentage', 8, 2)->nullable(); // auto
+            $table->date('increased_price_date')->nullable(); // auto
+            $table->string('dossier_status')->nullable(); // nullable
+            $table->string('clinical_trial_year')->nullable(); // nullable
+            $table->string('clinical_trial_ich_country')->nullable(); // nullable
+            $table->date('responsible_people_update_date')->nullable(); // auto
+            $table->string('down_payment_1')->nullable(); // nullable
+            $table->string('down_payment_2')->nullable(); // nullable
+            $table->string('down_payment_condition')->nullable(); // nullable
 
             $table->timestamps();
             $table->softDeletes();

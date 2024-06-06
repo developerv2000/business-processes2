@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Support\Interfaces\TemplatedModelInterface;
+use App\Support\Contracts\TemplatedModelInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

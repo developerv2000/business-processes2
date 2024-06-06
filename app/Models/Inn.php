@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Support\Interfaces\TemplatedModelInterface;
+use App\Support\Contracts\TemplatedModelInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +12,11 @@ class Inn extends Model implements TemplatedModelInterface
 
     public $timestamps = false;
     protected $guarded = ['id'];
+
+    public $withCount = [
+        'products',
+        'kvpps',
+    ];
 
     public function products()
     {
@@ -41,8 +46,7 @@ class Inn extends Model implements TemplatedModelInterface
     // Implement the method declared in the TemplatedModelInterface
     public function getUsageCountAttribute(): int
     {
-        return $this->products()->count()
-            + $this->kvpps()->count();
+        return $this->products_count + $this->kvpps_count;
     }
 
     /**

@@ -9,7 +9,7 @@ use App\Models\Comment;
  *
  * This trait provides functionality for associating comments with a model.
  *
- * Each model that uses this trait SHOULD implement App\Support\Interfaces\HasTitle interface
+ * Each model that uses this trait SHOULD implement App\Support\Contracts\HasTitle interface
  *
  * @package App\Support\Traits
  */

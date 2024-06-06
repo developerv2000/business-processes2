@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Support\Interfaces\HasTitle;
+use App\Support\Helper;
+use App\Support\Contracts\HasTitle;
 use App\Support\Traits\Commentable;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
@@ -143,7 +144,7 @@ class Process extends Model implements HasTitle
     public function getDaysPastAttribute()
     {
         if ($this->responsible_people_update_date) {
-            return (int) $this->responsiblePeopleUpdateDate->diffInDays(now(), false);
+            return (int) $this->responsible_people_update_date->diffInDays(now(), false);
         }
 
         return null;
@@ -177,11 +178,31 @@ class Process extends Model implements HasTitle
 
     /**
      * Scoping queries with eager loaded complex relationships
-     * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NOT DONE YET!!!!
      */
     public function scopeWithComplexRelations($query)
     {
-        return $query;
+        return $query->with([
+            'product' => function ($query) {
+                $query->select('id', 'manufacturer_id', 'inn_id', 'class_id', 'form_id', 'dosage', 'pack', 'moq', 'shelf_life_id')
+                    ->withOnly(['inn', 'class', 'form', 'shelfLife', 'zones']);
+            },
+
+            'manufacturer' => function ($query) {
+                $query->select('manufacturers.id', 'manufacturers.name', 'manufacturers.category_id', 'manufacturers.country_id', 'manufacturers.bdm_user_id', 'manufacturers.analyst_user_id')
+                    ->withOnly([
+                        'category',
+                        'country',
+                        'bdm' => function ($query) {
+                            $query->select('id', 'name', 'photo')
+                                ->withOnly([]);
+                        },
+                        'analyst' => function ($query) {
+                            $query->select('id', 'name', 'photo')
+                                ->withOnly([]);
+                        },
+                    ]);
+            }
+        ]);
     }
 
     /**
@@ -207,6 +228,91 @@ class Process extends Model implements HasTitle
 
     private static function filterRecords($request, $query)
     {
+        $whereEqualAttributes = [
+            'id',
+            'country_code_id',
+            'marketing_authorization_holder_id',
+        ];
+
+        $dateRangeAttributes = [
+            'status_update_date',
+            'created_at',
+            'updated_at',
+        ];
+
+        $whereLikeAttributes = [
+            'trademark_en',
+            'trademark_ru',
+        ];
+
+        $belongsToManyRelations = [
+            'responsiblePeople',
+        ];
+
+        $whereRelationEqualStatements = [
+            [
+                'name' => 'product',
+                'attribute' => 'inn_id',
+            ],
+
+            [
+                'name' => 'product',
+                'attribute' => 'form_id',
+            ],
+
+            [
+                'name' => 'product',
+                'attribute' => 'dosage',
+            ],
+
+            [
+                'name' => 'product',
+                'attribute' => 'pack',
+            ],
+
+            [
+                'name' => 'manufacturer',
+                'attribute' => 'analyst_user_id',
+            ],
+
+            [
+                'name' => 'manufacturer',
+                'attribute' => 'bdm_user_id',
+            ],
+
+            [
+                'name' => 'manufacturer',
+                'attribute' => 'country_id',
+            ],
+        ];
+
+        $whereRelationEqualAmbigiousStatements = [
+            [
+                'name' => 'manufacturer',
+                'attribute' => 'manufacturer_id',
+                'ambiguousAttribute' => 'manufacturers.id',
+            ],
+
+            [
+                'name' => 'product',
+                'attribute' => 'product_class_id',
+                'ambiguousAttribute' => 'products.class_id',
+            ],
+
+            [
+                'name' => 'manufacturer',
+                'attribute' => 'manufacturer_category_id',
+                'ambiguousAttribute' => 'manufacturers.category_id',
+            ],
+        ];
+
+        $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Helper::filterQueryLikeStatements($request, $query, $whereLikeAttributes);
+        $query = Helper::filterQueryDateRangeStatements($request, $query, $dateRangeAttributes);
+        $query = Helper::filterBelongsToManyRelations($request, $query, $belongsToManyRelations);
+        $query = Helper::filterWhereRelationEqualStatements($request, $query, $whereRelationEqualStatements);
+        $query = Helper::filterWhereRelationEqualAmbiguousStatements($request, $query, $whereRelationEqualAmbigiousStatements);
+
         return $query;
     }
 

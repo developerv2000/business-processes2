@@ -42,13 +42,16 @@ New version updates:
     Tables:
         processes:
             Fields:
-                date => -----REMOVED
-                year_1           => forecast_year_1
-                year_2           => forecast_year_2
-                year_3           => forecast_year_3
-                promo_company_id => marketing_authorization_holder_id
-                additional_1     => down_payment_1
-                additional_2     => down_payment_2
+                generic_id         => product_id
+                date               => responsible_people_update_date
+                days_past          => -----REMOVED
+                stage_2_start_date => forecast_year_1_update_date
+                year_1             => forecast_year_1
+                year_2             => forecast_year_2
+                year_3             => forecast_year_3
+                promo_company_id   => marketing_authorization_holder_id
+                additional_1       => down_payment_1
+                additional_2       => down_payment_2
 
         country_codes:
             Fields:

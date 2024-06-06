@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Support\Interfaces\TemplatedModelInterface;
+use App\Support\Contracts\TemplatedModelInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +12,7 @@ class MarketingAuthorizationHolder extends Model implements TemplatedModelInterf
 
     public $timestamps = false;
     protected $guarded = ['id'];
-    
+
     public function processes()
     {
         return $this->hasMany(Process::class);

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Support\Helper;
-use App\Support\Interfaces\HasTitle;
+use App\Support\Contracts\HasTitle;
 use App\Support\Traits\Commentable;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
@@ -223,6 +223,7 @@ class Product extends Model implements HasTitle
     private static function filterRecords($request, $query)
     {
         $whereEqualAttributes = [
+            'id',
             'form_id',
             'class_id',
             'shelf_life_id',

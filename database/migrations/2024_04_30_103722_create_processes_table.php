@@ -12,48 +12,50 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('processes', function (Blueprint $table) {
-            // globals
-            $table->unsignedInteger('id')->autoIncrement();
+            // Globals
+            $table->unsignedInteger('id')->autoIncrement(); // auto
             $table->unsignedInteger('product_id'); // auto
             $table->unsignedSmallInteger('status_id'); // required
             $table->date('status_update_date'); // auto, but also can be set manually only on create
 
-            // stage 1 (ВП)
-            $table->unsignedSmallInteger('country_code_id'); // required
+            // Stage 1 (ВП)
+            $table->unsignedSmallInteger('country_code_id'); // required and immutable after stage 1
+            $table->date('responsible_people_update_date'); // auto
 
-            // stage 2 (ПО)
+            // Stage 2 (ПО)
             $table->unsignedInteger('forecast_year_1')->nullable(); // required
             $table->unsignedInteger('forecast_year_2')->nullable(); // required
             $table->unsignedInteger('forecast_year_3')->nullable(); // required
             $table->date('forecast_year_1_update_date')->nullable(); // auto
 
-            // Stage 3 (АЦ)
-            $table->unsignedSmallInteger('marketing_authorization_holder_id')->nullable(); // nullable at stages 3, 4 but became required at stage 5
-            $table->string('trademark_en')->nullable(); // nullable at stages 3, 4 but became required at stage 5
-            $table->string('trademark_ru')->nullable(); // nullable at stages 3, 4 but became required at stage 5
+            $table->string('dossier_status')->nullable(); // nullable until the end
+            $table->string('clinical_trial_year')->nullable(); // nullable until the end
+            $table->string('clinical_trial_ich_country')->nullable(); // nullable until the end
+            $table->string('down_payment_1')->nullable(); // nullable until the end
+            $table->string('down_payment_2')->nullable(); // nullable until the end
+            $table->string('down_payment_condition')->nullable(); // nullable until the end
 
+            // Stage 3 (АЦ)
+            $table->unsignedSmallInteger('currency_id')->nullable(); // required
             $table->decimal('manufacturer_first_offered_price', 8, 2)->nullable(); // required
             $table->decimal('manufacturer_followed_offered_price', 8, 2)->nullable(); // required
+            $table->decimal('manufacturer_followed_offered_price_in_usd', 8, 2)->nullable(); // auto
             $table->decimal('our_first_offered_price', 8, 2)->nullable(); // required
             $table->decimal('our_followed_offered_price', 8, 2)->nullable(); // required
-            $table->unsignedSmallInteger('currency_id')->nullable(); // required
-            $table->decimal('manufacturer_followed_offered_price_in_usd', 8, 2)->nullable(); // auto
 
-            // Stage 4 (СЦ)
+            $table->unsignedSmallInteger('marketing_authorization_holder_id')->nullable(); // nullable at stages (3, 4) and became required at stage 5
+            $table->string('trademark_en')->nullable(); // nullable at stages (3, 4) and became required at stage 5
+            $table->string('trademark_ru')->nullable(); // nullable at stages (3, 4) and became required at stage 5
+
+            // Stage 5 (КК)
             $table->decimal('agreed_price', 8, 2)->nullable(); // required
 
-            // From stage 5 (КК) to stage 10 (Отмена)
+            // Stage 6 (КД) until the end
             $table->decimal('increased_price', 8, 2)->nullable(); // nullable
             $table->decimal('increased_price_percentage', 8, 2)->nullable(); // auto
             $table->date('increased_price_date')->nullable(); // auto
-            $table->string('dossier_status')->nullable(); // nullable
-            $table->string('clinical_trial_year')->nullable(); // nullable
-            $table->string('clinical_trial_ich_country')->nullable(); // nullable
-            $table->date('responsible_people_update_date')->nullable(); // auto
-            $table->string('down_payment_1')->nullable(); // nullable
-            $table->string('down_payment_2')->nullable(); // nullable
-            $table->string('down_payment_condition')->nullable(); // nullable
 
+            // Globals
             $table->timestamps();
             $table->softDeletes();
         });

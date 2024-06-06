@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Interfaces;
+namespace App\Support\Contracts;
 
 /**
  * HasTitle Model Interface
@@ -9,7 +9,7 @@ namespace App\Support\Interfaces;
  *
  * Displays title of commentable_type on comment create/edit pages
  *
- * @package App\Support\Interfaces
+ * @package App\Support\Contracts
  */
 interface HasTitle
 {

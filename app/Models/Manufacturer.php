@@ -282,8 +282,8 @@ class Manufacturer extends CommentableModel
     {
         return self::select('id', 'name')
             ->withOnly([])
-            ->withCount('products')
-            ->orderBy('products_count', 'desc')
+            ->withCount(['products', 'processes'])
+            ->orderByRaw('products_count + processes_count DESC')
             ->orderBy('id', 'asc')
             ->get();
     }

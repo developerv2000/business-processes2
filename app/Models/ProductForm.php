@@ -18,10 +18,11 @@ class ProductForm extends Model implements ParentableInterface, TemplatedModelIn
         'parent'
     ];
 
-    public $withCount = [
-        'products',
-        'kvpps',
-    ];
+    /*
+    |--------------------------------------------------------------------------
+    | Relations
+    |--------------------------------------------------------------------------
+    */
 
     public function parent()
     {
@@ -43,14 +44,35 @@ class ProductForm extends Model implements ParentableInterface, TemplatedModelIn
         return $this->hasMany(self::class, 'parent_id');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+    // Implement the method declared in the TemplatedModelInterface.
+    public function getUsageCountAttribute(): int
+    {
+        return $this->products()->count() + $this->kvpps()->count();
+    }
+
     public function getParentNameAttribute()
     {
         return $this->parent ? $this->parent->name : $this->name;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Querying
+    |--------------------------------------------------------------------------
+    */
+
     public static function getAllPrioritizedAndMinifed()
     {
-        return self::withOnly([])->get()->sortByDesc('usage_count');
+        return self::withOnly([])
+            ->withCount(['products', 'kvpps'])
+            ->orderByRaw('products_count + kvpps_count DESC')
+            ->get();
     }
 
     // Implement the method declared in the ParentableInterface
@@ -59,11 +81,27 @@ class ProductForm extends Model implements ParentableInterface, TemplatedModelIn
         return self::whereNull('parent_id')->orderBy('name')->get();
     }
 
-    // Implement the method declared in the TemplatedModelInterface
-    public function getUsageCountAttribute(): int
+    /**
+     * Retrieve all records that have been used by Kvpp.
+     *
+     * Used in Kvpp filtering
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getOnlyKvppForms()
     {
-        return $this->products_count + $this->kvpps_count;
+        return self::has('kvpps')
+            ->withOnly([])
+            ->withCount(['products', 'kvpps'])
+            ->orderByRaw('products_count + kvpps_count DESC')
+            ->get();
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Miscellaneous
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * Get the IDs of all related records in the family tree, including the current record.
@@ -83,17 +121,5 @@ class ProductForm extends Model implements ParentableInterface, TemplatedModelIn
         $IDs[] = $parent->id;
 
         return $IDs;
-    }
-
-    /**
-     * Retrieve all records that have been used by Kvpp.
-     *
-     * Used in Kvpp filtering
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public static function getOnlyKvppForms()
-    {
-        return self::has('kvpps')->get()->sortByDesc('usage_count');
     }
 }

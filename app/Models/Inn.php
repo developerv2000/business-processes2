@@ -13,11 +13,6 @@ class Inn extends Model implements TemplatedModelInterface
     public $timestamps = false;
     protected $guarded = ['id'];
 
-    public $withCount = [
-        'products',
-        'kvpps',
-    ];
-
     public function products()
     {
         return $this->hasMany(Product::class);
@@ -40,13 +35,15 @@ class Inn extends Model implements TemplatedModelInterface
      */
     public static function getAllPrioritized()
     {
-        return self::all()->sortByDesc('usage_count');
+        return self::withCount(['products', 'kvpps'])
+            ->orderByRaw('products_count + kvpps_count DESC')
+            ->get();
     }
 
     // Implement the method declared in the TemplatedModelInterface
     public function getUsageCountAttribute(): int
     {
-        return $this->products_count + $this->kvpps_count;
+        return $this->products()->count() + $this->kvpps()->count();
     }
 
     /**
@@ -58,6 +55,9 @@ class Inn extends Model implements TemplatedModelInterface
      */
     public static function getOnlyKvppInns()
     {
-        return self::has('kvpps')->get()->sortByDesc('usage_count');
+        return self::has('kvpps')
+            ->withCount(['products', 'kvpps'])
+            ->orderByRaw('products_count + kvpps_count DESC')
+            ->get();
     }
 }

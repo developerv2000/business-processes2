@@ -14,8 +14,8 @@ interface TemplatedModelInterface
     /**
      * Get the usage count of the model.
      *
-     * Must eager load relations count for performance reasons!
-     * Used while deleting records and displaying usage count.
+     * Implemented model must eager load relations count for performance reasons! (Not done yet!)
+     * It typically aggregates the counts of all (eager loaded) relevant relations.
      *
      * @return int The usage count of the model.
      */

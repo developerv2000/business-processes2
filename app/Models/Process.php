@@ -129,7 +129,6 @@ class Process extends CommentableModel
     |--------------------------------------------------------------------------
     */
 
-
     /**
      * Get the number of days past since the 'responsible_people_update_date'.
      *
@@ -149,6 +148,7 @@ class Process extends CommentableModel
     | Events
     |--------------------------------------------------------------------------
     */
+
     protected static function booted(): void
     {
         static::created(function ($instance) {

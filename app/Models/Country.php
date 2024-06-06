@@ -13,6 +13,11 @@ class Country extends Model implements TemplatedModelInterface
     protected $guarded = ['id'];
     public $timestamps = false;
 
+    // Eager load relations count for usage_count attribute perfomance
+    public $withCount = [
+        'manufacturers',
+    ];
+
     public function manufacturers()
     {
         return $this->hasMany(Manufacturer::class);
@@ -26,6 +31,6 @@ class Country extends Model implements TemplatedModelInterface
     // Implement the method declared in the TemplatedModelInterface
     public function getUsageCountAttribute(): int
     {
-        return $this->manufacturers()->count();
+        return $this->manufacturers_count;
     }
 }

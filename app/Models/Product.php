@@ -2,25 +2,20 @@
 
 namespace App\Models;
 
+use App\Support\Abstracts\CommentableModel;
 use App\Support\Helper;
-use App\Support\Contracts\HasTitle;
-use App\Support\Traits\Commentable;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 
-class Product extends Model implements HasTitle
+class Product extends CommentableModel
 {
-    use HasFactory;
     use SoftDeletes;
     use MergesParamsToRequest;
-    use Commentable;
     use ExportsRecords;
 
     const DEFAULT_ORDER_BY = 'updated_at';
@@ -599,7 +594,7 @@ class Product extends Model implements HasTitle
         return response()->download($filePath);
     }
 
-    // Implement the method declared in the HasTitle interface
+    // Implement the abstract method declared in the CommentableModel class
     public function getTitle(): string
     {
         return Helper::truncateString($this->manufacturer->name, 50) . ' / ' . Helper::truncateString($this->inn->name, 50);

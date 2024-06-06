@@ -2,22 +2,16 @@
 
 namespace App\Models;
 
+use App\Support\Abstracts\CommentableModel;
 use App\Support\Helper;
-use App\Support\Contracts\HasTitle;
-use App\Support\Traits\Commentable;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Process extends Model implements HasTitle
+class Process extends CommentableModel
 {
-    use HasFactory;
     use SoftDeletes;
     use MergesParamsToRequest;
-    use Commentable;
     use ExportsRecords;
 
     const DEFAULT_ORDER_BY = 'updated_at';
@@ -512,7 +506,7 @@ class Process extends Model implements HasTitle
         ]);
     }
 
-    // Implement the method declared in the HasTitle interface
+    // Implement the abstract method declared in the CommentableModel class
     public function getTitle(): string
     {
         return 'NOT DONE YET!!!';

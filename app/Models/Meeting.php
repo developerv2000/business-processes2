@@ -2,20 +2,16 @@
 
 namespace App\Models;
 
+use App\Support\Abstracts\CommentableModel;
 use App\Support\Helper;
-use App\Support\Traits\Commentable;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Meeting extends Model
+class Meeting extends CommentableModel
 {
-    use HasFactory;
     use SoftDeletes;
     use MergesParamsToRequest;
-    use Commentable;
     use ExportsRecords;
 
     const DEFAULT_ORDER_BY = 'updated_at';
@@ -245,5 +241,11 @@ class Meeting extends Model
             $this->created_at,
             $this->updated_at,
         ];
+    }
+
+    // Implement the abstract method declared in the CommentableModel class
+    public function getTitle(): string
+    {
+        return $this->year . ' / ' . $this->manufacturer->name;
     }
 }

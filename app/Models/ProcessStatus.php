@@ -24,4 +24,9 @@ class ProcessStatus extends Model
     {
         return $this->hasMany(Process::class);
     }
+
+    public static function getAll()
+    {
+        return self::orderBy('id', 'asc')->get();
+    }
 }

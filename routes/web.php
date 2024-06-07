@@ -53,6 +53,8 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     Route::prefix('processes')->controller(ProcessController::class)->name('processes.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
+        Route::post('/get-create-form-stage-inputs', 'getCreateFormStageInputs');  // ajx request on create form status select change
+        Route::post('/get-create-form-forecast-inputs', 'getCreateFormForecastInputs');  // ajax request on create form search countries change
     });
 
     Route::prefix('kvpp')->controller(KvppController::class)->name('kvpp.')->group(function () {

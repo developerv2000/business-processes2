@@ -16,6 +16,11 @@
         :options="$manufacturers" />
 
     <x-forms.id-based-single-select.request-based-select
+        label="Product status"
+        name="status_id"
+        :options="$statuses" />
+
+    <x-forms.id-based-single-select.request-based-select
         label="Generic"
         name="inn_id"
         :options="$inns" />

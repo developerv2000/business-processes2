@@ -70,6 +70,18 @@ export function debounce(callback, timeoutDelay = 500) {
     };
 }
 
+export function initializeNewSelectizes() {
+    // singular Selectizes
+    $('select.singular-selectize:not(.selectize--manually-initializable):not(.selectized)').selectize({
+        plugins: ["auto_position"],
+    });
+
+    // Multiple Selectizes
+    $('select.multiple-selectize:not(.selectize--manually-initializable):not(.selectized)').selectize({
+        plugins: ["auto_position"],
+    });
+}
+
 function bootstrapDefaultComponents() {
     // ********** Dropdown **********
     // Event listener for dropdown buttons

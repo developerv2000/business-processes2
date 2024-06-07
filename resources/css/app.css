@@ -898,6 +898,16 @@ body::-webkit-scrollbar-thumb,
     width: 60px;
 }
 
+/* Secondary table */
+.secondary-table {
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.secondary-table td {
+    padding: 6px 12px;
+    border: 1px solid #c2ccd9;
+}
 /* ------------ /END Table ------------ */
 
 
@@ -1231,3 +1241,11 @@ body::-webkit-scrollbar-thumb,
 }
 
 /* ------------ /end Templated Models pages ------------ */
+
+
+/* ------------ Processes pages ------------ */
+/* Create page */
+.processes-create__forecast-inputs-container:empty {
+    display: none;
+}
+/* ------------ /end Processes pages ------------ */

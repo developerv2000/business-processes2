@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Country;
 use App\Models\CountryCode;
+use App\Models\Currency;
 use App\Models\Inn;
 use App\Models\KvppPriority;
 use App\Models\KvppSource;
@@ -14,6 +15,7 @@ use App\Models\ManufacturerCategory;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\PortfolioManager;
 use App\Models\ProcessResponsiblePerson;
+use App\Models\ProcessStatus;
 use App\Models\Product;
 use App\Models\ProductClass;
 use App\Models\ProductForm;
@@ -92,9 +94,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Kvpp filter
         View::composer(['filters.kvpp'], function ($view) {
-            $kvppShareData = self::getKvppShareData();
+            $shareData = self::getKvppShareData();
 
-            $mergedData = array_merge($kvppShareData, [
+            $mergedData = array_merge($shareData, [
                 'inns' => Inn::getOnlyKvppInns(),
                 'productForms' => ProductForm::getOnlyKvppForms(),
             ]);
@@ -122,21 +124,22 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        // Processes
-        View::composer(['filters.processes', 'processes.create', 'processes.edit'], function ($view) {
-            $view->with([
-                'countryCodes' => CountryCode::getAllPrioritized(),
-                'manufacturers' => Manufacturer::getAllPrioritizedAndMinifed(),
-                'inns' => Inn::getAllPrioritized(),
-                'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
-                'analystUsers' => User::getAnalystsMinified(),
-                'bdmUsers' => User::getBdmsMinifed(),
-                'responsiblePeople' => ProcessResponsiblePerson::getAll(),
-                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
-                'productClasses' => ProductClass::getAll(),
-                'manufacturerCategories' => ManufacturerCategory::getAll(),
-                'countries' => Country::getAll(),
+        // Processes create/edit
+        View::composer(['processes.create', 'processes.edit', 'processes.partials.create-form-stage-inputs'], function ($view) {
+            $shareData = self::getProcessesShareData();
+
+            $mergedData = array_merge($shareData, [
+                'shelfLifes' => ProductShelfLife::getAll(),
+                'currencies' => Currency::getAll(),
+                'currencies' => Currency::getAll(),
             ]);
+
+            $view->with($mergedData);
+        });
+
+        // Processes filter
+        View::composer('filters.processes', function ($view) {
+            $view->with(self::getProcessesShareData());
         });
 
         // Users
@@ -159,6 +162,24 @@ class AppServiceProvider extends ServiceProvider
             'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
             'portfolioManagers' => PortfolioManager::getAll(),
             'analystUsers' => User::getAnalystsMinified(),
+        ];
+    }
+
+    private static function getProcessesShareData()
+    {
+        return [
+            'countryCodes' => CountryCode::getAllPrioritized(),
+            'manufacturers' => Manufacturer::getAllPrioritizedAndMinifed(),
+            'statuses' => ProcessStatus::getAll(),
+            'inns' => Inn::getAllPrioritized(),
+            'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
+            'analystUsers' => User::getAnalystsMinified(),
+            'bdmUsers' => User::getBdmsMinifed(),
+            'responsiblePeople' => ProcessResponsiblePerson::getAll(),
+            'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+            'productClasses' => ProductClass::getAll(),
+            'manufacturerCategories' => ManufacturerCategory::getAll(),
+            'countries' => Country::getAll(),
         ];
     }
 }

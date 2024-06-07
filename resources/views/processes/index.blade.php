@@ -10,7 +10,6 @@
             ])
 
             <div class="pre-content__actions">
-                <x-different.linked-button style="action" icon="add" href="{{ route('processes.create') }}">{{ __('New') }}</x-different.linked-button>
                 <x-different.linked-button style="action" icon="delete" href="{{ route('processes.trash') }}">{{ __('Trash') }}</x-different.linked-button>
 
                 <x-different.button style="action" icon="view_column" data-click-action="show-modal" data-modal-selector=".edit-table-columns-modal">{{ __('Columns') }}</x-different.button>

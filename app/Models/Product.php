@@ -120,8 +120,8 @@ class Product extends CommentableModel
             'manufacturer_id' => $this->manufacturer_id,
             'inn_id' => $this->inn_id,
             'form_id' => $this->form_id,
-            'dosage' => urlencode($this->dosage),
-            'pack' => urlencode($this->pack),
+            'dosage' => $this->dosage,
+            'pack' => $this->pack,
         ]);
     }
 

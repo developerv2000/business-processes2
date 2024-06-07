@@ -225,6 +225,7 @@ class Process extends CommentableModel
         $whereEqualAttributes = [
             'id',
             'country_code_id',
+            'status_id',
             'marketing_authorization_holder_id',
         ];
 
@@ -361,14 +362,25 @@ class Process extends CommentableModel
 
     public static function createFromRequest($request)
     {
-        $instance = self::create($request->all());
+        $countryCodeIDs = $request->input('country_code_ids');
 
-        // BelongsToMany relations
-        $instance->clinicalTrialCountries()->attach($request->input('clinicalTrialCountries'));
-        $instance->responsiblePeople()->attach($request->input('responsiblePeople'));
+        foreach ($countryCodeIDs as $countryCodeID) {
+            $countryCode = CountryCode::find($countryCodeID);
 
-        // HasMany relations
-        $instance->storeComment($request->comment);
+            $instance = self::create($request->merge([
+                'country_code_id' => $countryCodeID,
+                'forecast_year_1' => $request->input('forecast_year_1_' . $countryCode->name),
+                'forecast_year_2' => $request->input('forecast_year_2_' . $countryCode->name),
+                'forecast_year_3' => $request->input('forecast_year_3_' . $countryCode->name),
+            ]));
+
+            // BelongsToMany relations
+            $instance->clinicalTrialCountries()->attach($request->input('clinicalTrialCountries'));
+            $instance->responsiblePeople()->attach($request->input('responsiblePeople'));
+
+            // HasMany relations
+            $instance->storeComment($request->comment);
+        }
     }
 
     public function updateFromRequest($request)

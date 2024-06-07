@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Process;
 use App\Http\Requests\ProcessStoreRequest;
 use App\Http\Requests\ProcessUpdateRequest;
+use App\Models\CountryCode;
+use App\Models\ProcessStatus;
+use App\Models\Product;
 use App\Models\User;
 use App\Support\Traits\DestroysModelRecords;
 use App\Support\Traits\RestoresModelRecords;
@@ -48,9 +51,40 @@ class ProcessController extends Controller
     /**
      * Show the form for creating a new record.
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('processes.create');
+        $product = Product::find($request->product_id);
+        $product->load('manufacturer');
+
+        return view('processes.create', compact('product'));
+    }
+
+    /**
+     * Return required stage inputs for each stage
+     * on status select change ajax request
+     */
+    public function getCreateFormStageInputs(Request $request)
+    {
+        $product = Product::find($request->product_id);
+        $status = ProcessStatus::find($request->status_id);
+        $stage = $status->generalStatus->stage;
+
+        return view('processes.partials.create-form-stage-inputs', compact('product', 'stage'));
+    }
+
+    /**
+     * Return required forecast inputs for each countries separately,
+     * on status select & search countries select changes ajax request
+     */
+    public function getCreateFormForecastInputs(Request $request)
+    {
+        $status = ProcessStatus::find($request->status_id);
+        $stage = $status->generalStatus->stage;
+
+        $countryCodesIDs = $request->input('country_code_ids', []);
+        $selectedCountryCodes = CountryCode::whereIn('id', $countryCodesIDs)->pluck('name');
+
+        return view('processes.partials.create-form-forecast-inputs', compact('stage', 'selectedCountryCodes'));
     }
 
     /**

@@ -32,7 +32,7 @@ class TemplatedModelController extends Controller
             collect(['name' => 'ManufacturerCategory', 'display_name' => 'Manufacturer categories', 'attributes' => ['name']]),
             collect(['name' => 'Inn', 'display_name' => 'Inns', 'attributes' => ['name']]),
             collect(['name' => 'PortfolioManager', 'display_name' => 'Portfolio managers', 'attributes' => ['name']]),
-            // collect(['name' => 'ProcessOwner', 'display_name' => 'Process owners', 'attributes' => ['name']]),
+            collect(['name' => 'ProcessResponsiblePerson', 'display_name' => 'Process responsible people', 'attributes' => ['name']]),
             collect(['name' => 'ProductClass', 'display_name' => 'Product classes', 'attributes' => ['name']]),
             collect(['name' => 'MarketingAuthorizationHolder', 'display_name' => 'Marketing authorization holders', 'attributes' => ['name']]),
             collect(['name' => 'Zone', 'display_name' => 'Zones', 'attributes' => ['name']]),

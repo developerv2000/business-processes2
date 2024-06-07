@@ -13,6 +13,7 @@ use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\PortfolioManager;
+use App\Models\ProcessResponsiblePerson;
 use App\Models\Product;
 use App\Models\ProductClass;
 use App\Models\ProductForm;
@@ -84,6 +85,7 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
+        // KVPP
         View::composer(['kvpp.create', 'kvpp.edit'], function ($view) {
             $view->with(self::getKvppShareData());
         });
@@ -116,6 +118,23 @@ class AppServiceProvider extends ServiceProvider
                 'manufacturers' => Manufacturer::getAllPrioritizedAndMinifed(),
                 'analystUsers' => User::getAnalystsMinified(),
                 'bdmUsers' => User::getBdmsMinifed(),
+                'countries' => Country::getAll(),
+            ]);
+        });
+
+        // Processes
+        View::composer(['filters.processes', 'processes.create', 'processes.edit'], function ($view) {
+            $view->with([
+                'countryCodes' => CountryCode::getAllPrioritized(),
+                'manufacturers' => Manufacturer::getAllPrioritizedAndMinifed(),
+                'inns' => Inn::getAllPrioritized(),
+                'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
+                'analystUsers' => User::getAnalystsMinified(),
+                'bdmUsers' => User::getBdmsMinifed(),
+                'responsiblePeople' => ProcessResponsiblePerson::getAll(),
+                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+                'productClasses' => ProductClass::getAll(),
+                'manufacturerCategories' => ManufacturerCategory::getAll(),
                 'countries' => Country::getAll(),
             ]);
         });

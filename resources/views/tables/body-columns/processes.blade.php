@@ -213,6 +213,10 @@
         {{ $instance->updated_at->isoformat('DD MMM Y') }}
     @break
 
+    @case('Product class')
+        <span class="badge badge--green">{{ $instance->product->class->name }}</span>
+    @break
+
     @case('ID')
         {{ $instance->id }}
     @break

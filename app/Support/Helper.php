@@ -271,6 +271,22 @@ class Helper
         ]);
     }
 
+    /**
+     * Add the full namespace to a given model name.
+     *
+     * @param string $model The model name without the namespace.
+     * @return string The fully-qualified class name with namespace.
+     */
+    public static function addFullNamespaceToModel($model)
+    {
+        // Define the base namespace for the models
+        $baseNamespace = 'App\Models\\';
+
+        $fullClassName = $baseNamespace . $model;
+
+        return $fullClassName;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Query filtering

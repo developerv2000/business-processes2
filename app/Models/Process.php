@@ -715,6 +715,6 @@ class Process extends CommentableModel
     // Implement the abstract method declared in the CommentableModel class
     public function getTitle(): string
     {
-        return 'NOT DONE YET!!!';
+        return '# ' . trans('Process') . ' / ' . $this->searchCountry->name;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Support\Helper;
 use App\Support\Traits\DestroysModelRecords;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,9 @@ class CommentController extends Controller
 
     public function index(Request $request)
     {
-        $model = $request->route('commentable_type');
+        $modelBaseName = $request->route('commentable_type');
+        $model = Helper::addFullNamespaceToModel($modelBaseName);
+
         $instanceId = $request->route('commentable_id');
 
         $instance = $model::find($instanceId);

@@ -151,7 +151,15 @@ class Process extends CommentableModel
 
     protected static function booted(): void
     {
+        static::creating(function ($instance) {
+            $instance->status_update_date = now();
+
+            // set as now() on creating, because responsible people field is required from stage 1
+            $instance->responsible_people_update_date = now();
+        });
+
         static::created(function ($instance) {
+            $instance->validateManufacturerPriceInUSD();
             $instance->createNewStatusHistory();
         });
 
@@ -161,6 +169,19 @@ class Process extends CommentableModel
                 $instance->currentStatusHistory->close();
                 $instance->createNewStatusHistory();
             }
+
+            $instance->validateResponsiblePeopleUpdateDate();
+        });
+
+        static::updated(function ($instance) {
+            $instance->validateManufacturerPriceInUSD();
+        });
+
+        static::saving(function ($instance) {
+            $instance->validateManufacturerFollowedPrice();
+            $instance->syncRelatedProductUpdates();
+            $instance->validateForecastUpdateDate();
+            $instance->validateIncreasedPrice();
         });
     }
 
@@ -367,12 +388,14 @@ class Process extends CommentableModel
         foreach ($countryCodeIDs as $countryCodeID) {
             $countryCode = CountryCode::find($countryCodeID);
 
-            $instance = self::create($request->merge([
+            $mergedData = $request->merge([
                 'country_code_id' => $countryCodeID,
                 'forecast_year_1' => $request->input('forecast_year_1_' . $countryCode->name),
                 'forecast_year_2' => $request->input('forecast_year_2_' . $countryCode->name),
                 'forecast_year_3' => $request->input('forecast_year_3_' . $countryCode->name),
-            ]));
+            ])->all();
+
+            $instance = self::create($mergedData);
 
             // BelongsToMany relations
             $instance->clinicalTrialCountries()->attach($request->input('clinicalTrialCountries'));
@@ -400,6 +423,119 @@ class Process extends CommentableModel
     | Miscellaneous
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Synchronize related product attributes of the process
+     * on the saving event of the model instance.
+     */
+    private function syncRelatedProductUpdates()
+    {
+        $product = Product::find($this->product_id);
+
+        // Shelf life and MOQ are available from stage 2
+        if (request()->has('shelf_life_id')) {
+            $product->shelf_life_id = request()->input('shelf_life_id');
+            $product->moq = request()->input('moq');
+        }
+
+        // Product class is available only at stages 1 and 2
+        if (request()->has('class_id')) {
+            $product->class_id = request()->input('class_id');
+        }
+
+        if ($product->isDirty()) {
+            $product->save();
+        }
+    }
+
+    /**
+     * Validate and set the manufacturer_followed_offered_price attribute
+     * on the saving event of the model instance.
+     */
+    private function validateManufacturerFollowedPrice()
+    {
+        $firstOfferedPrice = $this->manufacturer_first_offered_price;
+        $followedOfferedPrice = $this->manufacturer_followed_offered_price;
+
+        if ($firstOfferedPrice && !$followedOfferedPrice) {
+            $this->manufacturer_followed_offered_price = $firstOfferedPrice;
+        }
+    }
+
+    /**
+     * Validate and update the forecast_year_1_update_date attribute
+     * on the saving event of the model instance.
+     */
+    private function validateForecastUpdateDate()
+    {
+        // forecast_year_1 is available from stage 2
+        if ($this->forecast_year_1 && $this->isDirty('forecast_year_1')) {
+            $this->forecast_year_1_update_date = now();
+        }
+    }
+
+    /**
+     * Validate and update the increased_price,
+     * increased_price_percentage and increased_price_date attributes
+     * on the saving event of the model instance.
+     */
+    private function validateIncreasedPrice()
+    {
+        // increased_price is available from stage 4
+        if ($this->increased_price && $this->isDirty('increased_price')) {
+            $this->increased_price_percentage = round(($this->increased_price * 100) / $this->agreed_price, 2);
+            $this->increased_price_date = now();
+        } else {
+            $this->increased_price_percentage = null;
+            $this->increased_price_date = null;
+        }
+    }
+
+    /**
+     * Validate and update the responsible_people_update_date attribute
+     * on the updating event of the model instance.
+     */
+    private function validateResponsiblePeopleUpdateDate()
+    {
+        // Compare the current responsible people IDs with the requested responsible people IDs
+        $requestedIDs = request()->input('responsiblePeople', []);
+        $instanceIDs = $this->responsiblePeople->pluck('id')->toArray();
+
+        // Check for differences between the current and requested responsible people IDs
+        if (count(array_diff($requestedIDs, $instanceIDs)) || count(array_diff($instanceIDs, $requestedIDs))) {
+            // If there are any differences, update the responsible_people_update_date to the current date and time
+            $this->responsible_people_update_date = now();
+        }
+    }
+
+    /**
+     * Validate and update the manufacturer_followed_offered_price_in_usd attribute
+     * on the created and updated events of the model instance.
+     *
+     * Timestamps are temporarily disabled because the price in USD is updated daily via cron.
+     */
+    public function validateManufacturerPriceInUSD()
+    {
+        // Refresh the instance to get the latest values from the database
+        $instance = $this->fresh();
+
+        $followedOfferedPrice = $instance->manufacturer_followed_offered_price;
+        $currencyName = $instance->currency?->name;
+
+        // If the followed offered price is set, convert it to USD and update the attribute
+        if ($followedOfferedPrice) {
+            $convertedPrice = Currency::convertPriceToUSD($followedOfferedPrice, $currencyName);
+
+            // Temporarily disable timestamps to avoid updating the updated_at column
+            $instance->timestamps = false;
+
+            // Update the followed offered price in USD and save the instance quietly (without triggering events)
+            $instance->manufacturer_followed_offered_price_in_usd = $convertedPrice;
+            $instance->saveQuietly();
+
+            $instance->timestamps = true;
+        }
+    }
 
     /**
      * Provides the default table columns along with their properties.

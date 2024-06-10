@@ -75,8 +75,7 @@
             type="number"
             step="0.01"
             label="Manufacturer price 2"
-            name="manufacturer_followed_offered_price"
-            required />
+            name="manufacturer_followed_offered_price" />
 
         <x-forms.id-based-single-select.default-select
             label="Currency"
@@ -95,8 +94,7 @@
             type="number"
             step="0.01"
             label="Our price 2"
-            name="our_followed_offered_price"
-            required />
+            name="our_followed_offered_price" />
 
         {{-- These fields are nullable until stage 5 --}}
         @if ($stage < 5)

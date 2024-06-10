@@ -15,4 +15,9 @@ class ProcessGeneralStatus extends Model
     {
         return $this->hasMany(ProcessStatus::class, 'general_status_id');
     }
+
+    public static function getAll()
+    {
+        return self::orderBy('id', 'asc')->get();
+    }
 }

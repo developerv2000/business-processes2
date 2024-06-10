@@ -1,5 +1,6 @@
 @props([
     'name', // The name of the input field.
+    'label',
     'trueOptionLabel' => 'Yes', // The label text for the true option.
     'falseOptionLabel' => 'No', // The label text for the false option.
     'trueOptionValue' => 1,

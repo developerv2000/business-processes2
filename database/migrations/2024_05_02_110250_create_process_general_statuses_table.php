@@ -15,6 +15,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('id')->autoIncrement();
             $table->string('name');
             $table->string('name_for_analysts');
+            $table->boolean('visible_only_for_admins');
             $table->unsignedSmallInteger('stage');
         });
     }

@@ -152,7 +152,7 @@ class Process extends CommentableModel
     protected static function booted(): void
     {
         static::creating(function ($instance) {
-            $instance->status_update_date = now();
+            $instance->validateStatusUpdateDateOnCreating();
 
             // set as now() on creating, because responsible people field is required from stage 1
             $instance->responsible_people_update_date = now();
@@ -234,6 +234,7 @@ class Process extends CommentableModel
         $query = $query ?: self::query();
 
         $query = self::filterRecords($request, $query);
+        $query = self::filterRecordsByRoles($request, $query);
 
         // Get the finalized records based on the specified finaly option
         $records = self::finalizeRecords($request, $query, $finaly);
@@ -266,6 +267,11 @@ class Process extends CommentableModel
         ];
 
         $whereRelationEqualStatements = [
+            [
+                'name' => 'status',
+                'attribute' => 'general_status_id',
+            ],
+
             [
                 'name' => 'product',
                 'attribute' => 'inn_id',
@@ -328,6 +334,29 @@ class Process extends CommentableModel
         $query = Helper::filterBelongsToManyRelations($request, $query, $belongsToManyRelations);
         $query = Helper::filterWhereRelationEqualStatements($request, $query, $whereRelationEqualStatements);
         $query = Helper::filterWhereRelationEqualAmbiguousStatements($request, $query, $whereRelationEqualAmbigiousStatements);
+
+        return $query;
+    }
+
+    /**
+     * Filter records based on user roles.
+     *
+     * This method filters records based on the user's roles. If the user is not an admin or moderator,
+     * it filters records to only include processes where the user is the analyst.
+     *
+     * @param Illuminate\Http\Request $request The request object containing the user information.
+     * @param Illuminate\Database\Eloquent\Builder $query The query builder instance to apply filters.
+     * @return Illuminate\Database\Eloquent\Builder The modified query builder instance.
+     */
+    private static function filterRecordsByRoles($request, $query)
+    {
+        $user = $request->user();
+
+        if (!$user->isAdminOrModerator()) {
+            $query = $query->whereHas('manufacturer', function ($subquery) use ($user) {
+                $subquery->where('analyst_user_id', $user->id);
+            });
+        }
 
         return $query;
     }
@@ -435,6 +464,22 @@ class Process extends CommentableModel
     | Miscellaneous
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Validate and set the status_update_date
+     * on the creating event of the model instance.
+     *
+     * This function checks if the process is historical and sets the status_update_date
+     * accordingly. If the process is historical, it uses the provided historical_date.
+     * Otherwise, it sets the status_update_date to the current date and time.
+     */
+    private function validateStatusUpdateDateOnCreating()
+    {
+        $isHistorical = request()->input('is_historical');
+        $historicalDate = request()->input('historical_date');
+
+        $this->status_update_date = $isHistorical ? $historicalDate : now();
+    }
 
     /**
      * Synchronize related product attributes of the process

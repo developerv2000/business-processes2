@@ -14,6 +14,7 @@ use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\PortfolioManager;
+use App\Models\ProcessGeneralStatus;
 use App\Models\ProcessResponsiblePerson;
 use App\Models\ProcessStatus;
 use App\Models\Product;
@@ -129,6 +130,7 @@ class AppServiceProvider extends ServiceProvider
             $shareData = self::getProcessesShareData();
 
             $mergedData = array_merge($shareData, [
+                'statuses' => ProcessStatus::getAllFilteredByRoles(), // important
                 'shelfLifes' => ProductShelfLife::getAll(),
                 'currencies' => Currency::getAll(),
                 'currencies' => Currency::getAll(),
@@ -139,7 +141,14 @@ class AppServiceProvider extends ServiceProvider
 
         // Processes filter
         View::composer('filters.processes', function ($view) {
-            $view->with(self::getProcessesShareData());
+            $shareData = self::getProcessesShareData();
+
+            $mergedData = array_merge($shareData, [
+                'statuses' => ProcessStatus::getAll(), // important
+                'generalStatuses' => ProcessGeneralStatus::getAll(),
+            ]);
+
+            $view->with($mergedData);
         });
 
         // Users
@@ -170,7 +179,6 @@ class AppServiceProvider extends ServiceProvider
         return [
             'countryCodes' => CountryCode::getAllPrioritized(),
             'manufacturers' => Manufacturer::getAllPrioritizedAndMinifed(),
-            'statuses' => ProcessStatus::getAll(),
             'inns' => Inn::getAllPrioritized(),
             'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
             'analystUsers' => User::getAnalystsMinified(),

@@ -31,6 +31,19 @@
                 name="country_code_ids[]"
                 :options="$countryCodes"
                 required />
+
+            <x-forms.boolean-select.default-select
+                class="historical-process-selectize selectize--manually-initializable"
+                label="Historical process"
+                name="is_historical"
+                required />
+        </div>
+
+        <div class="form__section historical-process-date-container">
+            <x-forms.input.default-input
+                type="date"
+                label="Historical process date"
+                name="historical_date" />
         </div>
 
         <div class="processes-create__forecast-inputs-container form">@include('processes.partials.create-form-forecast-inputs', ['stage' => 1, 'selectedCountryCodes' => null])</div>

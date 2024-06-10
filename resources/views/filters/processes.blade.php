@@ -21,6 +21,11 @@
         :options="$statuses" />
 
     <x-forms.id-based-single-select.request-based-select
+        label="General status"
+        name="general_status_id"
+        :options="$generalStatuses" />
+
+    <x-forms.id-based-single-select.request-based-select
         label="Generic"
         name="inn_id"
         :options="$inns" />

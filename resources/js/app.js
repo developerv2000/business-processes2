@@ -350,8 +350,16 @@ function bootstrapForms() {
     // ========== Handling processes create ==========
     const processesCreateForm = document.querySelector('.processes-create');
 
-    // Update stage inputs on status single select change
     if (processesCreateForm) {
+        // Update historical process inputs on value change
+        $('.historical-process-selectize').selectize({
+            plugins: ["auto_position"],
+            onChange(value) {
+                validateHistoricalProcessDateInput(value);
+            }
+        });
+
+        // Update stage inputs on status single select change
         $('.statuses-selectize').selectize({
             plugins: ["auto_position"],
             onChange(value) {
@@ -366,6 +374,31 @@ function bootstrapForms() {
                 updateProcessesCreateForecastInputs(values);
             }
         });
+    }
+
+    /**
+     * Validates and toggles the visibility and required attribute of the historical process date input.
+     *
+     * @param {boolean} isHistorical - Determines if the process is historical.
+     */
+    function validateHistoricalProcessDateInput(isHistorical) {
+        showSpinner();
+
+        const inputContainer = document.querySelector('.historical-process-date-container');
+        const input = inputContainer.querySelector('input[name="historical_date"]');
+        console.log(isHistorical);
+
+        // If the process is historical, make the input container visible and remove the required attribute
+        if (isHistorical == true) {
+            inputContainer.classList.add('historical-process-date-container--visible');
+            input.setAttribute('required', 'required');
+        } else {
+            // If the process is not historical, hide the input container and add the required attribute
+            inputContainer.classList.remove('historical-process-date-container--visible');
+            input.removeAttribute('required');
+        }
+
+        hideSpinner();
     }
 
     function updateProcessesCreateStageInputs(status_id) {

@@ -29,4 +29,24 @@ class ProcessStatus extends Model
     {
         return self::orderBy('id', 'asc')->get();
     }
+
+    /**
+     * Get all records filtered based on user roles.
+     *
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public static function getAllFilteredByRoles()
+    {
+        // Check if the user is an admin or moderator
+        $isAdminOrModerator = request()->user()->isAdminOrModerator();
+
+        // Query records, applying additional filters if the user is not an admin or moderator
+        $records = self::when(!$isAdminOrModerator, function ($query) {
+            $query->whereHas('generalStatus', function ($subquery) {
+                $subquery->where('visible_only_for_admins', false);
+            });
+        })->orderBy('id', 'asc')->get();
+
+        return $records;
+    }
 }

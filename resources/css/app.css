@@ -1245,6 +1245,14 @@ body::-webkit-scrollbar-thumb,
 
 /* ------------ Processes pages ------------ */
 /* Create page */
+.historical-process-date-container {
+    display: none;
+}
+
+.historical-process-date-container--visible {
+    display: block;
+}
+
 .processes-create__forecast-inputs-container:empty {
     display: none;
 }

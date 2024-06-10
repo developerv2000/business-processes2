@@ -381,6 +381,17 @@ class Process extends CommentableModel
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Create multiple instances of the model from the request data.
+     *
+     * This method processes an array of country code IDs from the request,
+     * merges specific forecast year data for each country code, and creates
+     * model instances with the combined data. It also attaches related
+     * clinical trial countries and responsible people, and stores comments.
+     *
+     * @param App\Http\Requests\ProcessStoreRequest $request The request containing the input data.
+     * @return void
+     */
     public static function createFromRequest($request)
     {
         $countryCodeIDs = $request->input('country_code_ids');
@@ -388,6 +399,7 @@ class Process extends CommentableModel
         foreach ($countryCodeIDs as $countryCodeID) {
             $countryCode = CountryCode::find($countryCodeID);
 
+            // Merge additional forecast data for the specific country code into the request array
             $mergedData = $request->merge([
                 'country_code_id' => $countryCodeID,
                 'forecast_year_1' => $request->input('forecast_year_1_' . $countryCode->name),
@@ -475,19 +487,20 @@ class Process extends CommentableModel
     }
 
     /**
-     * Validate and update the increased_price,
-     * increased_price_percentage and increased_price_date attributes
-     * on the saving event of the model instance.
+     * Validate and update the increased_price, increased_price_percentage,
+     * and increased_price_date attributes on the saving event of the model instance.
      */
     private function validateIncreasedPrice()
     {
         // increased_price is available from stage 4
-        if ($this->increased_price && $this->isDirty('increased_price')) {
-            $this->increased_price_percentage = round(($this->increased_price * 100) / $this->agreed_price, 2);
-            $this->increased_price_date = now();
-        } else {
+        if (!$this->increased_price) {
+            // If increased_price is not set, reset the percentage and date attributes
             $this->increased_price_percentage = null;
             $this->increased_price_date = null;
+        } elseif ($this->isDirty('increased_price')) {
+            // If increased_price is set and has been modified, calculate the percentage and update the date
+            $this->increased_price_percentage = round(($this->increased_price * 100) / $this->agreed_price, 2);
+            $this->increased_price_date = now();
         }
     }
 

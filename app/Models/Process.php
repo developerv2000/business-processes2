@@ -6,6 +6,7 @@ use App\Support\Abstracts\CommentableModel;
 use App\Support\Helper;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Process extends CommentableModel
@@ -41,7 +42,7 @@ class Process extends CommentableModel
     protected function casts(): array
     {
         return [
-            'status_update_date' => 'date',
+            'status_update_date' => 'datetime',
             'forecast_year_1_update_date' => 'date',
             'increased_price_date' => 'date',
             'responsible_people_update_date' => 'date',
@@ -574,8 +575,8 @@ class Process extends CommentableModel
     {
         if ($this->isDirty('status_id')) {
             $this->currentStatusHistory->close();
-            $this->createNewStatusHistory();
             $this->status_update_date = now();
+            $this->createNewStatusHistory();
         }
     }
 
@@ -586,7 +587,7 @@ class Process extends CommentableModel
     private function validateResponsiblePeopleUpdateDate()
     {
         // set as now() on creating, because responsible people field is required from stage 1
-        if (!$this->responsiblePeople) {
+        if (!$this->responsible_people_update_date) {
             $this->responsible_people_update_date = now();
         } else {
             // Compare the current responsible people IDs with the requested responsible people IDs
@@ -628,6 +629,70 @@ class Process extends CommentableModel
             $instance->saveQuietly();
 
             $instance->timestamps = true;
+        }
+    }
+
+    /**
+     * Add general status periods for a collection of records.
+     *
+     * This method processes a collection of records and adds general status periods
+     * based on the status history of each record. It clones the general statuses to
+     * avoid modifying the original collection, calculates the start and end dates,
+     * duration days, and duration days ratio for each general status.
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $records The collection of records to process.
+     *
+     * @return void
+     */
+    public static function addGeneralStatusPeriodsForRecords($records)
+    {
+        // Load the statusHistory relationship for all records to avoid N+1 query problem
+        $records->load('statusHistory');
+
+        // Get all general statuses
+        $generalStatuses = ProcessGeneralStatus::getAll();
+
+        foreach ($records as $instance) {
+            // Clone general statuses to avoid modifying the original collection
+            $clonedGeneralStatuses = $generalStatuses->map(function ($item) {
+                return clone $item;
+            });
+
+            foreach ($clonedGeneralStatuses as $generalStatus) {
+                // Filter status histories related to the current general status
+                $histories = $instance->statusHistory->filter(function ($history) use ($generalStatus) {
+                    return $history->status->generalStatus->id === $generalStatus->id;
+                });
+
+                // Skip if no histories found
+                if ($histories->isEmpty()) continue;
+
+                // Sort histories by ID to find the first and last history
+                $firstHistory = $histories->sortBy('id')->first();
+                $lastHistory = $histories->sortByDesc('id')->first();
+
+                // Set the start_date of the general status
+                $generalStatus->start_date = $firstHistory->start_date;
+
+                // Set the end_date of the general status
+                $generalStatus->end_date = $lastHistory->end_date ?: Carbon::now();
+
+                // Calculate the total duration_days
+                $generalStatus->duration_days = $histories->sum('duration_days');
+            }
+
+            // Calculate the highest duration_days among all general statuses
+            $highestPeriod = $clonedGeneralStatuses->max('duration_days') ?: 1;
+
+            // Calculate duration_days_ratio for each general status
+            foreach ($clonedGeneralStatuses as $generalStatus) {
+                $generalStatus->duration_days_ratio = $generalStatus->duration_days
+                    ? intval($generalStatus->duration_days * 100 / $highestPeriod)
+                    : 0;
+            }
+
+            // Assign the cloned general statuses to the instance
+            $instance->general_status_periods = $clonedGeneralStatuses;
         }
     }
 
@@ -712,6 +777,7 @@ class Process extends CommentableModel
             ['name' => 'НПР', 'order' => $order++, 'width' => 200, 'visible' => 1],
             ['name' => 'Р', 'order' => $order++, 'width' => 200, 'visible' => 1],
             ['name' => 'Зя', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'Отмена', 'order' => $order++, 'width' => 200, 'visible' => 1],
         ];
 
         return $columns;
@@ -778,7 +844,16 @@ class Process extends CommentableModel
             $this->created_at,
             $this->updated_at,
             $this->product->class->name,
-            'ВП',
+            'Not_done_yet',
+            'Not_done_yet',
+            'Not_done_yet',
+            'Not_done_yet',
+            'Not_done_yet',
+            'Not_done_yet',
+            'Not_done_yet',
+            'Not_done_yet',
+            'Not_done_yet',
+            'Not_done_yet',
         ];
     }
 
@@ -791,7 +866,7 @@ class Process extends CommentableModel
     {
         $this->statusHistory()->create([
             'status_id' => $this->status_id,
-            'start_date' => now(),
+            'start_date' => $this->status_update_date,
         ]);
     }
 

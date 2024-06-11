@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('id')->autoIncrement(); // auto
             $table->unsignedInteger('product_id'); // auto
             $table->unsignedSmallInteger('status_id'); // required
-            $table->date('status_update_date'); // auto, but also can be set manually only on create
+            $table->timestamp('status_update_date'); // auto, but also can be set manually only on create
 
             // Stage 1 (ВП)
             $table->unsignedSmallInteger('country_code_id'); // required and immutable after stage 1

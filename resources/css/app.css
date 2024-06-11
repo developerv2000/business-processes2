@@ -1244,6 +1244,13 @@ body::-webkit-scrollbar-thumb,
 
 
 /* ------------ Processes pages ------------ */
+/* Index page */
+.status-periods__hr {
+    height: 4px;
+    margin: 8px 0;
+    border: none;
+}
+
 /* Create page */
 .historical-process-date-container {
     display: none;

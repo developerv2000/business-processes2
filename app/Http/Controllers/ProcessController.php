@@ -27,6 +27,8 @@ class ProcessController extends Controller
     {
         Process::mergeQueryingParamsToRequest($request);
         $records = Process::getRecordsFinalized($request, finaly: 'paginate');
+        Process::addGeneralStatusPeriodsForRecords($records);
+        // dd($records[0]->general_status_periods);
 
         $allTableColumns = $request->user()->collectAllTableColumns('processes_table_columns');
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
@@ -94,7 +96,7 @@ class ProcessController extends Controller
     {
         Process::createFromRequest($request);
 
-        return to_route('processes.index');
+        return redirect($request->input('previous_url'));
     }
 
     /**

@@ -219,4 +219,44 @@
         {{ $instance->id }}
     @break
 
+    @case('ВП')
+        @include('tables.components.td.general-status-period', ['stage' => 1])
+    @break
+
+    @case('ПО')
+        @include('tables.components.td.general-status-period', ['stage' => 2])
+    @break
+
+    @case('АЦ')
+        @include('tables.components.td.general-status-period', ['stage' => 3])
+    @break
+
+    @case('СЦ')
+        @include('tables.components.td.general-status-period', ['stage' => 4])
+    @break
+
+    @case('Кк')
+        @include('tables.components.td.general-status-period', ['stage' => 5])
+    @break
+
+    @case('КД')
+        @include('tables.components.td.general-status-period', ['stage' => 6])
+    @break
+
+    @case('НПР')
+        @include('tables.components.td.general-status-period', ['stage' => 7])
+    @break
+
+    @case('Р')
+        @include('tables.components.td.general-status-period', ['stage' => 8])
+    @break
+
+    @case('Зя')
+        @include('tables.components.td.general-status-period', ['stage' => 9])
+    @break
+
+    @case('Отмена')
+        @include('tables.components.td.general-status-period', ['stage' => 10])
+    @break
+
 @endswitch

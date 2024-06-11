@@ -118,9 +118,7 @@
     @break
 
     @case('Increased price date')
-        @if ($instance->increased_price_date)
-            {{ $instance->increased_price_date->isoformat('DD MMM Y') }}
-        @endif
+        {{ $instance->increased_price_date?->isoformat('DD MMM Y') }}
     @break
 
     @case('Shelf life')

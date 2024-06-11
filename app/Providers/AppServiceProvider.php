@@ -126,7 +126,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Processes create/edit
-        View::composer(['processes.create', 'processes.edit', 'processes.partials.create-form-stage-inputs'], function ($view) {
+        View::composer(['processes.create', 'processes.edit', 'processes.partials.create-form-stage-inputs', 'processes.partials.edit-form-stage-inputs'], function ($view) {
             $shareData = self::getProcessesShareData();
 
             $mergedData = array_merge($shareData, [

@@ -153,9 +153,6 @@ class Process extends CommentableModel
     {
         static::creating(function ($instance) {
             $instance->validateStatusUpdateDateOnCreating();
-
-            // set as now() on creating, because responsible people field is required from stage 1
-            $instance->responsible_people_update_date = now();
         });
 
         static::created(function ($instance) {
@@ -164,13 +161,7 @@ class Process extends CommentableModel
         });
 
         static::updating(function ($instance) {
-            // Close the current status history and create a new one, if the status has changed
-            if ($instance->isDirty('status_id')) {
-                $instance->currentStatusHistory->close();
-                $instance->createNewStatusHistory();
-            }
-
-            $instance->validateResponsiblePeopleUpdateDate();
+            $instance->handleStatusUpdate();
         });
 
         static::updated(function ($instance) {
@@ -182,6 +173,30 @@ class Process extends CommentableModel
             $instance->syncRelatedProductUpdates();
             $instance->validateForecastUpdateDate();
             $instance->validateIncreasedPrice();
+            $instance->validateResponsiblePeopleUpdateDate();
+        });
+
+        static::restoring(function ($instance) {
+            if ($instance->product->trashed()) {
+                $instance->product->restoreQuietly();
+            }
+
+            if ($instance->manufacturer->trashed()) {
+                $instance->manufacturer->restoreQuietly();
+            }
+        });
+
+        static::forceDeleting(function ($instance) {
+            $instance->responsiblePeople()->detach();
+            $instance->clinicalTrialCountries()->detach();
+
+            foreach ($instance->comments as $comment) {
+                $comment->delete();
+            }
+
+            foreach ($instance->statusHistory as $history) {
+                $history->delete();
+            }
         });
     }
 
@@ -550,19 +565,40 @@ class Process extends CommentableModel
     }
 
     /**
+     * Handle status update on the updating event of the model instance.
+     *
+     * If the status has changed, this method closes the current status history,
+     * creates a new status history, and updates the status_update_date.
+     */
+    private function handleStatusUpdate()
+    {
+        if ($this->isDirty('status_id')) {
+            $this->currentStatusHistory->close();
+            $this->createNewStatusHistory();
+            $this->status_update_date = now();
+        }
+    }
+
+    /**
      * Validate and update the responsible_people_update_date attribute
-     * on the updating event of the model instance.
+     * on the saving event of the model instance.
      */
     private function validateResponsiblePeopleUpdateDate()
     {
-        // Compare the current responsible people IDs with the requested responsible people IDs
-        $requestedIDs = request()->input('responsiblePeople', []);
-        $instanceIDs = $this->responsiblePeople->pluck('id')->toArray();
-
-        // Check for differences between the current and requested responsible people IDs
-        if (count(array_diff($requestedIDs, $instanceIDs)) || count(array_diff($instanceIDs, $requestedIDs))) {
-            // If there are any differences, update the responsible_people_update_date to the current date and time
+        // set as now() on creating, because responsible people field is required from stage 1
+        if (!$this->responsiblePeople) {
             $this->responsible_people_update_date = now();
+        } else {
+            // Compare the current responsible people IDs with the requested responsible people IDs
+            $requestedIDs = request()->input('responsiblePeople', []);
+            // dd($requestedIDs);
+            $instanceIDs = $this->responsiblePeople->pluck('id')->toArray();
+
+            // Check for differences between the current and requested responsible people IDs
+            if (count(array_diff($requestedIDs, $instanceIDs)) || count(array_diff($instanceIDs, $requestedIDs))) {
+                // If there are any differences, update the responsible_people_update_date to the current date and time
+                $this->responsible_people_update_date = now();
+            }
         }
     }
 
@@ -715,6 +751,6 @@ class Process extends CommentableModel
     // Implement the abstract method declared in the CommentableModel class
     public function getTitle(): string
     {
-        return '# ' . trans('Process') . ' / ' . $this->searchCountry->name;
+        return trans('Process') . ' #' . $this->id . ' / ' . $this->searchCountry->name;
     }
 }

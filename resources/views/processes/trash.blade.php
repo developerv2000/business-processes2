@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => 'products-trash'])
+@extends('layouts.app', ['page' => 'processes-trash'])
 
 @section('main')
     <div class="main__conent-box styled-box">
@@ -16,14 +16,14 @@
             </div>
         </div>
 
-        @include('tables.trash-template', ['tableName' => 'products'])
+        @include('tables.trash-template', ['tableName' => 'processes'])
     </div>
 
-    <x-modals.multiple-delete action="{{ route('products.destroy') }}" :force-delete="true" />
-    <x-modals.multiple-restore action="{{ route('products.restore') }}" />
-    <x-modals.edit-table-columns action="{{ route('settings.update-table-columns') }}" table="products" :columns="$allTableColumns" />
+    <x-modals.multiple-delete action="{{ route('processes.destroy') }}" :force-delete="true" />
+    <x-modals.multiple-restore action="{{ route('processes.restore') }}" />
+    <x-modals.edit-table-columns action="{{ route('settings.update-table-columns') }}" table="processes" :columns="$allTableColumns" />
 @endsection
 
 @section('rightbar')
-    @include('filters.products')
+    @include('filters.processes')
 @endsection

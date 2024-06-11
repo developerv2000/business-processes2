@@ -102,7 +102,23 @@ class ProcessController extends Controller
      */
     public function edit(Process $instance)
     {
-        return view('processes.edit', compact('instance'));
+        $product = $instance->product;
+
+        return view('processes.edit', compact('instance', 'product'));
+    }
+
+    /**
+     * Return required stage inputs for each stage
+     * on status select change ajax request
+     */
+    public function getEditFormStageInputs(Request $request)
+    {
+        $instance = Process::find($request->process_id);
+        $product = Product::find($request->product_id);
+        $status = ProcessStatus::find($request->status_id);
+        $stage = $status->generalStatus->stage;
+
+        return view('processes.partials.edit-form-stage-inputs', compact('instance', 'product', 'stage'));
     }
 
     /**

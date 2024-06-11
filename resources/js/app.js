@@ -3,8 +3,9 @@ import { hideSpinner, showSpinner, showModal, debounce, initializeNewSelectizes 
 const UPDATE_BODY_WIDTH_SETTINGS_URL = '/body-width';
 const GET_PRODUCTS_SIMILAR_RECORDS_URL = '/products/get-similar-records';
 const GET_KVPP_SIMILAR_RECORDS_URL = '/kvpp/get-similar-records';
-const GET_PROCESSES_CREATE_STAGE_INPUTS_URL = 'get-create-form-stage-inputs';
-const GET_PROCESSES_CREATE_FORECAST_INPUTS_URL = 'get-create-form-forecast-inputs';
+const GET_PROCESSES_CREATE_STAGE_INPUTS_URL = '/processes/get-create-form-stage-inputs';
+const GET_PROCESSES_CREATE_FORECAST_INPUTS_URL = '/processes/get-create-form-forecast-inputs';
+const GET_PROCESSES_EDIT_STAGE_INPUTS_URL = '/processes/get-edit-form-stage-inputs';
 const bodyInner = document.querySelector('.body__inner');
 
 let countryCodesSelectize; // used as global to access it locally (used only on processes create form)
@@ -451,6 +452,48 @@ function bootstrapForms() {
             .then(response => {
                 // Replace old inputs with the new ones received from the server
                 document.querySelector('.processes-create__forecast-inputs-container').innerHTML = response.data;
+            })
+            .finally(function () {
+                hideSpinner();
+            });
+    }
+
+    // ========== Handling processes create ==========
+    const processesEditForm = document.querySelector('.processes-edit');
+
+    if (processesEditForm) {
+        // Update stage inputs on status single select change
+        $('.statuses-selectize').selectize({
+            plugins: ["auto_position"],
+            onChange(value) {
+                updateProcessesEditStageInputs(value);
+            }
+        });
+    }
+
+    function updateProcessesEditStageInputs(status_id) {
+        showSpinner();
+
+        // Prepare data to be sent in the AJAX request
+        const data = {
+            'process_id': processesEditForm.querySelector('input[name="process_id"]').value,
+            'product_id': processesEditForm.querySelector('input[name="product_id"]').value,
+            'status_id': status_id,
+        }
+
+        // Send a POST request to the server to get updated stage inputs
+        axios.post(GET_PROCESSES_EDIT_STAGE_INPUTS_URL, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                // Replace old inputs with the new ones received from the server
+                const stageInputsContainer = processesEditForm.querySelector('.processes-edit__stage-inputs-container')
+                stageInputsContainer.innerHTML = response.data;
+
+                // Initialize the new selectize inputs
+                initializeNewSelectizes();
             })
             .finally(function () {
                 hideSpinner();

@@ -31,7 +31,7 @@
     @break
 
     @case('IVP coincidents')
-        <a class="td__link" href="{{ route('products.index', ['inn_id' => $instance->inn_id, 'form_id' => $instance->form_id]) }}">
+        <a class="td__link" href="{{ route('products.index', ['inn_id[]' => $instance->inn_id, 'form_id' => $instance->form_id]) }}">
             {{ $instance->coincident_products_count }} {{ __('products') }}
         </a><br>
     @break

@@ -16,7 +16,7 @@
     @break
 
     @case('IVP')
-        <a class="td__link" href="{{ route('products.index', ['manufacturer_id' => $instance->id]) }}">
+        <a class="td__link" href="{{ route('products.index', ['manufacturer_id[]' => $instance->id]) }}">
             {{ $instance->products_count }} {{ __('products') }}
         </a>
     @break

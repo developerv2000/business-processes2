@@ -1,4 +1,3 @@
-
 @props([
     'name', // The name of the input field.
     'label', // The label text for the input field.

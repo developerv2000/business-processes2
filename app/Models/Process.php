@@ -607,7 +607,8 @@ class Process extends CommentableModel
      * Validate and update the manufacturer_followed_offered_price_in_usd attribute
      * on the created and updated events of the model instance.
      *
-     * Timestamps are temporarily disabled because the price in USD is updated daily via cron.
+     * Important!
+     * Timestamps are temporarily disabled because the price in USD is also updated daily via cron.
      */
     public function validateManufacturerPriceInUSD()
     {
@@ -694,6 +695,16 @@ class Process extends CommentableModel
             // Assign the cloned general statuses to the instance
             $instance->general_status_periods = $clonedGeneralStatuses;
         }
+    }
+
+    /**
+     * Update all manufacturer_followed_offered_price_in_usd for instances via a cron job daily.
+     */
+    public static function updateAllManufacturerPricesInUSD()
+    {
+        self::weach(function ($instance) {
+            $instance->validateManufacturerPriceInUSD();
+        });
     }
 
     /**

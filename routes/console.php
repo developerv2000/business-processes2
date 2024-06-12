@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Currency;
+use App\Models\Process;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -14,4 +15,5 @@ Schedule::command('telescope:prune')->daily();
 
 Schedule::call(function () {
     Currency::updateExchangeRatesExceptUSD();
+    Process::updateAllManufacturerPricesInUSD();
 })->daily();

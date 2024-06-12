@@ -71,8 +71,10 @@ class ProductForm extends Model implements ParentableInterface, TemplatedModelIn
     {
         return self::withOnly([])
             ->withCount(['products', 'kvpps'])
-            ->orderByRaw('products_count + kvpps_count DESC')
-            ->get();
+            ->get()
+            ->sortByDesc(function ($instance) {
+                return $instance->products_count + $instance->kvpps_count;
+            });
     }
 
     // Implement the method declared in the ParentableInterface
@@ -93,8 +95,10 @@ class ProductForm extends Model implements ParentableInterface, TemplatedModelIn
         return self::has('kvpps')
             ->withOnly([])
             ->withCount(['products', 'kvpps'])
-            ->orderByRaw('products_count + kvpps_count DESC')
-            ->get();
+            ->get()
+            ->sortByDesc(function ($instance) {
+                return $instance->products_count + $instance->kvpps_count;
+            });
     }
 
     /*

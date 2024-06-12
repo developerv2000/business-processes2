@@ -36,8 +36,10 @@ class Inn extends Model implements TemplatedModelInterface
     public static function getAllPrioritized()
     {
         return self::withCount(['products', 'kvpps'])
-            ->orderByRaw('products_count + kvpps_count DESC')
-            ->get();
+            ->get()
+            ->sortByDesc(function ($instance) {
+                return $instance->products_count + $instance->kvpps_count;
+            });
     }
 
     // Implement the method declared in the TemplatedModelInterface
@@ -57,7 +59,9 @@ class Inn extends Model implements TemplatedModelInterface
     {
         return self::has('kvpps')
             ->withCount(['products', 'kvpps'])
-            ->orderByRaw('products_count + kvpps_count DESC')
-            ->get();
+            ->get()
+            ->sortByDesc(function ($instance) {
+                return $instance->products_count + $instance->kvpps_count;
+            });
     }
 }

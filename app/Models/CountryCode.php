@@ -32,8 +32,10 @@ class CountryCode extends Model implements TemplatedModelInterface
     public static function getAllPrioritized()
     {
         return self::withCount(['processes', 'kvpps'])
-            ->orderByRaw('processes_count + kvpps_count DESC')
-            ->get();
+            ->get()
+            ->sortByDesc(function ($instance) {
+                return $instance->processes_count + $instance->kvpps_count;
+            });
     }
 
     // Implement the method declared in the TemplatedModelInterface

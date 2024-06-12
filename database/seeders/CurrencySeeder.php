@@ -14,7 +14,7 @@ class CurrencySeeder extends Seeder
     public function run(): void
     {
         $name = ['USD', 'EUR', 'RUB', 'INR'];
-        $usd_ratio = [1, 1.094, 0.011, 0.012];
+        $usd_ratio = [1, 1.076, 0.011, 0.012];
 
         for ($i = 0; $i < count($name); $i++) {
             $item = new Currency();

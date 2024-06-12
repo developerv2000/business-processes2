@@ -67,14 +67,11 @@ class ProductForm extends Model implements ParentableInterface, TemplatedModelIn
     |--------------------------------------------------------------------------
     */
 
-    public static function getAllPrioritizedAndMinifed()
+    public static function getAllMinified()
     {
         return self::withOnly([])
-            ->withCount(['products', 'kvpps'])
-            ->get()
-            ->sortByDesc(function ($instance) {
-                return $instance->products_count + $instance->kvpps_count;
-            });
+            ->orderBy('name')
+            ->get();
     }
 
     // Implement the method declared in the ParentableInterface
@@ -94,11 +91,8 @@ class ProductForm extends Model implements ParentableInterface, TemplatedModelIn
     {
         return self::has('kvpps')
             ->withOnly([])
-            ->withCount(['products', 'kvpps'])
-            ->get()
-            ->sortByDesc(function ($instance) {
-                return $instance->products_count + $instance->kvpps_count;
-            });
+            ->orderBy('name')
+            ->get();
     }
 
     /*

@@ -13,12 +13,6 @@ class CountryCode extends Model implements TemplatedModelInterface
     protected $guarded = ['id'];
     public $timestamps = false;
 
-    // Eager load relations count for usage_count attribute perfomance
-    public $withCount = [
-        'processes',
-        'kvpps',
-    ];
-
     public function processes()
     {
         return $this->hasMany(Process::class);
@@ -29,18 +23,14 @@ class CountryCode extends Model implements TemplatedModelInterface
         return $this->hasMany(Kvpp::class);
     }
 
-    public static function getAllPrioritized()
+    public static function getAll()
     {
-        return self::withCount(['processes', 'kvpps'])
-            ->get()
-            ->sortByDesc(function ($instance) {
-                return $instance->processes_count + $instance->kvpps_count;
-            });
+        return self::orderBy('name')->get();
     }
 
     // Implement the method declared in the TemplatedModelInterface
     public function getUsageCountAttribute(): int
     {
-        return $this->processes_count + $this->kvpps_count;
+        return $this->processes()->count() + $this->kvpps()->count();
     }
 }

@@ -28,20 +28,6 @@ class Inn extends Model implements TemplatedModelInterface
         return self::orderBy('name')->get();
     }
 
-    /**
-     * Get all records ordered by usage count
-     *
-     * Used on filtering and creating/editing of related models
-     */
-    public static function getAllPrioritized()
-    {
-        return self::withCount(['products', 'kvpps'])
-            ->get()
-            ->sortByDesc(function ($instance) {
-                return $instance->products_count + $instance->kvpps_count;
-            });
-    }
-
     // Implement the method declared in the TemplatedModelInterface
     public function getUsageCountAttribute(): int
     {
@@ -58,10 +44,7 @@ class Inn extends Model implements TemplatedModelInterface
     public static function getOnlyKvppInns()
     {
         return self::has('kvpps')
-            ->withCount(['products', 'kvpps'])
-            ->get()
-            ->sortByDesc(function ($instance) {
-                return $instance->products_count + $instance->kvpps_count;
-            });
+            ->orderBy('name')
+            ->get();
     }
 }

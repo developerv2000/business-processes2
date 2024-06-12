@@ -274,17 +274,15 @@ class Manufacturer extends CommentableModel
     }
 
     /**
-     * Get all records minified & ordered by products count
+     * Get all records minified
      *
      * Used on filtering and creating/editing of model records
      */
-    public static function getAllPrioritizedAndMinifed()
+    public static function getAllMinified()
     {
         return self::select('id', 'name')
             ->withOnly([])
-            ->withCount(['products'])
-            ->get()
-            ->sortByDesc('products_count');
+            ->get();
     }
 
     /*

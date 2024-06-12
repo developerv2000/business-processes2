@@ -59,7 +59,7 @@ class AppServiceProvider extends ServiceProvider
                 'analystUsers' => User::getAnalystsMinified(),
                 'bdmUsers' => User::getBdmsMinifed(),
                 'countries' => Country::getAll(),
-                'manufacturers' => Manufacturer::getAllPrioritizedAndMinifed(),
+                'manufacturers' => Manufacturer::getAllMinified(),
                 'categories' => ManufacturerCategory::getAll(),
                 'zones' => Zone::getAll(),
                 'productClasses' => ProductClass::getAll(),
@@ -72,16 +72,16 @@ class AppServiceProvider extends ServiceProvider
         // Products
         View::composer(['filters.products', 'products.create', 'products.edit'], function ($view) {
             $view->with([
-                'manufacturers' => Manufacturer::getAllPrioritizedAndMinifed(),
+                'manufacturers' => Manufacturer::getAllMinified(),
                 'analystUsers' => User::getAnalystsMinified(),
                 'bdmUsers' => User::getBdmsMinifed(),
                 'productClasses' => ProductClass::getAll(),
                 'productsDefaultClassID' => Product::getDefaultClassID(), // used only on create
-                'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
+                'productForms' => ProductForm::getAllMinified(),
                 'shelfLifes' => ProductShelfLife::getAll(),
                 'zones' => Zone::getAll(),
                 'productsDefaultZonesIDs' => Product::getDefaultZoneIDs(), // used only on create
-                'inns' => Inn::getAllPrioritized(),
+                'inns' => Inn::getAll(),
                 'countries' => Country::getAll(),
                 'manufacturerCategories' => ManufacturerCategory::getAll(),
                 'booleanOptions' => Helper::getBooleanOptionsArray(),
@@ -111,14 +111,14 @@ class AppServiceProvider extends ServiceProvider
                 'analystUsers' => User::getAnalystsMinified(),
                 'bdmUsers' => User::getBdmsMinifed(),
                 'calendarMonths' => Helper::collectCalendarMonths(),
-                'countryCodes' => CountryCode::getAllPrioritized(),
+                'countryCodes' => CountryCode::getAll(),
             ]);
         });
 
         // Meetings
         View::composer(['filters.meetings', 'meetings.create', 'meetings.edit'], function ($view) {
             $view->with([
-                'manufacturers' => Manufacturer::getAllPrioritizedAndMinifed(),
+                'manufacturers' => Manufacturer::getAllMinified(),
                 'analystUsers' => User::getAnalystsMinified(),
                 'bdmUsers' => User::getBdmsMinifed(),
                 'countries' => Country::getAll(),
@@ -163,11 +163,11 @@ class AppServiceProvider extends ServiceProvider
     {
         return [
             'statuses' => KvppStatus::getAll(),
-            'countryCodes' => CountryCode::getAllPrioritized(),
+            'countryCodes' => CountryCode::getAll(),
             'priorities' => KvppPriority::getAll(),
             'sources' => KvppSource::getAll(),
-            'inns' => Inn::getAllPrioritized(),
-            'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
+            'inns' => Inn::getAll(),
+            'productForms' => ProductForm::getAllMinified(),
             'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
             'portfolioManagers' => PortfolioManager::getAll(),
             'analystUsers' => User::getAnalystsMinified(),
@@ -177,10 +177,10 @@ class AppServiceProvider extends ServiceProvider
     private static function getProcessesShareData()
     {
         return [
-            'countryCodes' => CountryCode::getAllPrioritized(),
-            'manufacturers' => Manufacturer::getAllPrioritizedAndMinifed(),
-            'inns' => Inn::getAllPrioritized(),
-            'productForms' => ProductForm::getAllPrioritizedAndMinifed(),
+            'countryCodes' => CountryCode::getAll(),
+            'manufacturers' => Manufacturer::getAllMinified(),
+            'inns' => Inn::getAll(),
+            'productForms' => ProductForm::getAllMinified(),
             'analystUsers' => User::getAnalystsMinified(),
             'bdmUsers' => User::getBdmsMinifed(),
             'responsiblePeople' => ProcessResponsiblePerson::getAll(),

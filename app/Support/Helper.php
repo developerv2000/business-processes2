@@ -296,7 +296,7 @@ class Helper
     public static function sanitizeFilename($filename)
     {
         // Define a pattern for allowed characters
-        $pattern = '/[^a-zA-Z0-9\-\_\.]/';
+        $pattern = '/[^a-zA-Z0-9\-\_\.\s]/';
 
         // Replace all characters that do not match the allowed pattern
         $sanitized = preg_replace($pattern, '', $filename);

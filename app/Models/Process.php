@@ -138,7 +138,7 @@ class Process extends CommentableModel
     public function getDaysPastAttribute()
     {
         if ($this->responsible_people_update_date) {
-            return (int) $this->responsible_people_update_date->diffInDays(now(), false);
+            return round($this->responsible_people_update_date->diffInDays(now(), true));
         }
 
         return null;
@@ -678,7 +678,11 @@ class Process extends CommentableModel
                 // Set the end_date of the general status
                 $generalStatus->end_date = $lastHistory->end_date ?: Carbon::now();
 
-                // Calculate the total duration_days
+                // Calculate duration_days for not closed status history
+                // Process current status last history must not be closed logically
+                $lastHistory->duration_days = $lastHistory->duration_days ?? round($lastHistory->start_date->diffInDays(now(), true));
+
+                // Then calculate the total duration_days
                 $generalStatus->duration_days = $histories->sum('duration_days');
             }
 
@@ -688,7 +692,7 @@ class Process extends CommentableModel
             // Calculate duration_days_ratio for each general status
             foreach ($clonedGeneralStatuses as $generalStatus) {
                 $generalStatus->duration_days_ratio = $generalStatus->duration_days
-                    ? intval($generalStatus->duration_days * 100 / $highestPeriod)
+                    ? round($generalStatus->duration_days * 100 / $highestPeriod)
                     : 0;
             }
 

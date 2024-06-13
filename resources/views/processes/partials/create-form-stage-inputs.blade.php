@@ -137,20 +137,14 @@
         <x-forms.input.default-input
             type="number"
             step="0.01"
-            label="Increased price"
-            name="increased_price" />
-    </div>
-@endif
-
-
-{{-- Stage 5 (КК) inputs --}}
-@if ($stage >= 5)
-    <div class="form__section">
-        <x-forms.input.default-input
-            type="number"
-            step="0.01"
             label="Agreed price"
             name="agreed_price"
             required />
+
+        <x-forms.input.default-input
+            type="number"
+            step="0.01"
+            label="Increased price"
+            name="increased_price" />
     </div>
 @endif

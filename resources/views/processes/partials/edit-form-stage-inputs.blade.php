@@ -242,21 +242,16 @@
         <x-forms.input.instance-edit-input
             type="number"
             step="0.01"
-            label="Increased price"
-            name="increased_price"
-            :instance="$instance" />
-    </div>
-@endif
-
-{{-- Stage 5 (КК) inputs --}}
-@if ($stage >= 5)
-    <div class="form__section">
-        <x-forms.input.instance-edit-input
-            type="number"
-            step="0.01"
             label="Agreed price"
             name="agreed_price"
             :instance="$instance"
             required />
+
+        <x-forms.input.instance-edit-input
+            type="number"
+            step="0.01"
+            label="Increased price"
+            name="increased_price"
+            :instance="$instance" />
     </div>
 @endif

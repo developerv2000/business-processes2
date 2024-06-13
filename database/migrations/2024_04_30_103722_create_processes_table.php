@@ -47,10 +47,8 @@ return new class extends Migration
             $table->string('trademark_en')->nullable(); // nullable at stages (3, 4) and became required at stage 5
             $table->string('trademark_ru')->nullable(); // nullable at stages (3, 4) and became required at stage 5
 
-            // Stage 5 (КК)
+            // Stage 4 (СЦ)
             $table->decimal('agreed_price', 8, 2)->nullable(); // required
-
-            // Stage 6 (КД) until the end
             $table->decimal('increased_price', 8, 2)->nullable(); // nullable
             $table->decimal('increased_price_percentage', 8, 2)->nullable(); // auto
             $table->date('increased_price_date')->nullable(); // auto

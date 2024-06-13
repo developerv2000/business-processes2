@@ -111,13 +111,13 @@ class ProductController extends Controller
     /**
      * Export VP as excel file
      *
-     * Available only if manufacturer_id is active on filter
+     * Available only if only 1 Manufacturer is selected on filter
      */
     public function exportVp(Request $request)
     {
+        $manufacturerName = Manufacturer::find($request->manufacturer_id)->name;
         Product::mergeExportQueryingParamsToRequest($request);
         $records = Product::getRecordsFinalized($request, finaly: 'query');
-        $manufacturerName = Manufacturer::find($request->manufacturer_id)->name;
 
         return Product::exportVpRecordsAsExcel($records, $manufacturerName);
     }

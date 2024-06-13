@@ -287,6 +287,24 @@ class Helper
         return $fullClassName;
     }
 
+    /**
+     * Sanitize a filename by removing unexpected symbols.
+     *
+     * @param string $filename
+     * @return string
+     */
+    public static function sanitizeFilename($filename)
+    {
+        // Define a pattern for allowed characters
+        $pattern = '/[^a-zA-Z0-9\-\_\.]/';
+
+        // Replace all characters that do not match the allowed pattern
+        $sanitized = preg_replace($pattern, '', $filename);
+
+        // Return the sanitized filename
+        return $sanitized;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Query filtering

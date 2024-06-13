@@ -588,6 +588,7 @@ class Product extends CommentableModel
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $filename = $manufacturerName . date(' Y-m-d') . '.xlsx';
         $filename = Helper::escapeDuplicateFilename($filename, storage_path(self::EXCEL_VP_EXPORT_STORAGE_PATH));
+        $filename = Helper::sanitizeFilename($filename);
         $filePath = storage_path(self::EXCEL_VP_EXPORT_STORAGE_PATH  . '/' . $filename);
         $writer->save($filePath);
 

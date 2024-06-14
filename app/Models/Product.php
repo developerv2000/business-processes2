@@ -470,7 +470,7 @@ class Product extends CommentableModel
             $this->dosage,
             $this->pack,
             $this->moq,
-            $this->shelfLife->name,
+            $this->shelfLife?->name,
             $this->class->name,
             $this->dossier,
             $this->zones->pluck('name')->implode(' '),

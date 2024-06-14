@@ -725,13 +725,13 @@ class Process extends CommentableModel
 
         $columns = [
             ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
-            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
+            ['name' => 'ID', 'order' => $order++, 'width' => 60, 'visible' => 1],
 
             ['name' => 'Status date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Product status', 'order' => $order++, 'width' => 126, 'visible' => 1],
             ['name' => 'Product status An*', 'order' => $order++, 'width' => 136, 'visible' => 1],
             ['name' => 'General status', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            
+
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Search country', 'order' => $order++, 'width' => 130, 'visible' => 1],

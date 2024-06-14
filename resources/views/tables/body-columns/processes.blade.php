@@ -219,6 +219,10 @@
         {{ $instance->id }}
     @break
 
+    @case('History')
+        @include('tables.components.td.edit-button', ['href' => route('process-status-history.index', $instance->id)])
+    @break
+
     @case('ВП')
         @include('tables.components.td.general-status-period', ['stage' => 1])
     @break

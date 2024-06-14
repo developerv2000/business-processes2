@@ -450,7 +450,7 @@ class User extends Authenticatable
 
         $settings['manufacturers_table_columns'] = Manufacturer::getDefaultTableColumns();
         $settings['products_table_columns'] = Product::getDefaultTableColumns();
-        $settings['processes_table_columns'] = Process::getDefaultTableColumns();
+        $settings['processes_table_columns'] = Process::getDefaultTableColumnsForUser($this);
         $settings['kvpp_table_columns'] = Kvpp::getDefaultTableColumns();
         $settings['meetings_table_columns'] = Meeting::getDefaultTableColumns();
 

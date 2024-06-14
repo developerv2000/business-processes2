@@ -6,6 +6,7 @@ use App\Http\Controllers\KvppController;
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\ProcessController;
+use App\Http\Controllers\ProcessStatusHistoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
@@ -58,6 +59,14 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::post('/get-create-form-forecast-inputs', 'getCreateFormForecastInputs');  // ajax request on create form search countries change
         Route::post('/get-edit-form-stage-inputs', 'getEditFormStageInputs');  // ajax request on edit form status select change
     });
+
+    Route::prefix('process/{process}/status-history')
+        ->controller(ProcessStatusHistoryController::class)
+        ->name('process-status-history.')
+        ->middleware('role:admin,moderator')
+        ->group(function () {
+            RouteGenerator::defineDefaultCrudRoutesOnly(['index', 'edit', 'update', 'destroy']);
+        });
 
     Route::prefix('kvpp')->controller(KvppController::class)->name('kvpp.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();

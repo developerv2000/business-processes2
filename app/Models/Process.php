@@ -712,14 +712,15 @@ class Process extends CommentableModel
     }
 
     /**
-     * Provides the default table columns along with their properties.
+     * Provides the default table columns along with their properties
+     * based on user roles
      *
      * These columns are typically used to display data in tables,
      * such as on index and trash pages, and are iterated over in a loop.
      *
      * @return array
      */
-    public static function getDefaultTableColumns(): array
+    public static function getDefaultTableColumnsForUser($user): array
     {
         $order = 1;
 
@@ -779,7 +780,7 @@ class Process extends CommentableModel
             ['name' => 'Down payment condition', 'order' => $order++, 'width' => 194, 'visible' => 1],
 
             ['name' => 'Responsible', 'order' => $order++, 'width' => 120, 'visible' => 1],
-            ['name' => 'Responsible date', 'order' => $order++, 'width' => 250, 'visible' => 1],
+            ['name' => 'Responsible update date', 'order' => $order++, 'width' => 250, 'visible' => 1],
             ['name' => 'Days have passed', 'order' => $order++, 'width' => 130, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
@@ -788,7 +789,17 @@ class Process extends CommentableModel
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+        ];
 
+        if ($user->isAdminOrModerator()) {
+            array_push(
+                $columns,
+                ['name' => 'History', 'order' => $order++, 'width' => 72, 'visible' => 1]
+            );
+        }
+
+        array_push(
+            $columns,
             ['name' => 'ВП', 'order' => $order++, 'width' => 200, 'visible' => 1],
             ['name' => 'ПО', 'order' => $order++, 'width' => 200, 'visible' => 1],
             ['name' => 'АЦ', 'order' => $order++, 'width' => 200, 'visible' => 1],
@@ -799,7 +810,7 @@ class Process extends CommentableModel
             ['name' => 'Р', 'order' => $order++, 'width' => 200, 'visible' => 1],
             ['name' => 'Зя', 'order' => $order++, 'width' => 200, 'visible' => 1],
             ['name' => 'Отмена', 'order' => $order++, 'width' => 200, 'visible' => 1],
-        ];
+        );
 
         return $columns;
     }

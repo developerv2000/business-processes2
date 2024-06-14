@@ -85,7 +85,6 @@
     "Country": "Страна",
     "Manufacturer": "Производитель",
     "Category": "Категория",
-    "Status": "Статус",
     "Product class": "Класс Пд",
     "Zones": "Зоны",
     "Black list": "Чёрный список",
@@ -136,6 +135,8 @@
     "Result": "Итог",
     "Outside the exhibition": "За пределами выставки",
 
+    "Status": "Статус",
+    "Statuses": "Статусы",
     "Status date": "Дата Статуса",
     "Search country": "Страна поиска",
     "Historical process": "Исторический процесс",
@@ -169,6 +170,12 @@
     "Brand Rus": "ТМ Рус",
     "days": "дня",
     "About product": "Информация о продукте",
+
+    "History": "История",
+    "Start date": "Начало",
+    "End date": "Конец",
+    "Duration days": "Продолжительность дней",
+    "About process": "Информация о процессе",
 
     "Total": "Всего",
     "Year": "Год",

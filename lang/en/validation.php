@@ -187,6 +187,10 @@ return [
             'is_in_use' => 'User is used as BDM or Analyst, please replace it with another user and retry again.',
         ],
 
+        'process_status_history' => [
+            'is_active_history' => 'Active status history can not be deleted.',
+        ],
+
         'templated_models' => [
             'is_in_use' => 'The ":name" cannot be removed because it is used by other tables.',
         ],

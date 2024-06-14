@@ -22,7 +22,8 @@ Route::controller(AuthenticatedSessionController::class)->group(function () {
 });
 
 Route::middleware('auth', 'auth.session')->group(function () {
-    Route::get('/', [StatisticController::class, 'index'])->name('statistics.index'); // home page
+    Route::get('/', [ManufacturerController::class, 'index'])->name('manufacturers.index'); // home page
+    Route::get('/statistics', [StatisticController::class, 'index'])->name('statistics.index');
 
     Route::controller(ProfileController::class)->name('profile.')->group(function () {
         Route::get('profile', 'edit')->name('edit');
@@ -42,7 +43,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     Route::prefix('manufacturers')->controller(ManufacturerController::class)->name('manufacturers.')->group(function () {
-        RouteGenerator::defineAllDefaultCrudRoutes();
+        RouteGenerator::defineDefaultCrudRoutesExcept(['index']);
     });
 
     Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {

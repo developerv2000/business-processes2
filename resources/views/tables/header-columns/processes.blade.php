@@ -96,7 +96,7 @@
         @include('tables.components.th.sort-link', ['orderBy' => 'forecast_year_3'])
     @break
 
-    @case('Responsible date')
+    @case('Responsible update date')
         @include('tables.components.th.sort-link', ['orderBy' => 'responsible_people_update_date'])
     @break
 

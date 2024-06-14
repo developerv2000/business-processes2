@@ -187,7 +187,7 @@
         @endforeach
     @break
 
-    @case('Responsible date')
+    @case('Responsible update date')
         {{ $instance->responsible_people_update_date?->isoformat('DD MMM Y') }}
     @break
 

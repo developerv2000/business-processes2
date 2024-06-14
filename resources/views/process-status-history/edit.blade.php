@@ -19,7 +19,7 @@
             {{-- status_id can not be edited for active status history --}}
             @unless ($instance->isActiveStatusHistory())
                 <x-forms.id-based-single-select.instance-edit-select
-                    label="Process status"
+                    label="Product status"
                     name="status_id"
                     :options="$statuses"
                     :instance="$instance"

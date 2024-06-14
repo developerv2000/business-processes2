@@ -38,6 +38,8 @@ trait ExportsRecords
 
         // Chunk records to avoid memory issues and iterate over each chunk
         $records->chunk(800, function ($recordsChunk) use (&$sheet, &$columnIndex, &$row) {
+            $recordsChunk->load('comments'); // Load comments for performance
+
             foreach ($recordsChunk as $instance) {
                 $columnIndex = 1;
                 $columnValues = $instance->getExcelColumnValuesForExport();

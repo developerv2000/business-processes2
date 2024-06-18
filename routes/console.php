@@ -34,5 +34,6 @@ Artisan::command('validate-dosage-and-packs', function () {
         $instance->pack = Helper::formatSpecificString($instance->pack);
         $instance->timestamps = false;
         $instance->saveQuietly();
+        $this->info('Dosages and packs have been updated!');
     });
-})->purpose("Dosages and packs have been updated");
+})->purpose("Validate dosages and packs for Product & KVPP tables");

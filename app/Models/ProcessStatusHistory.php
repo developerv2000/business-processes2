@@ -87,6 +87,12 @@ class ProcessStatusHistory extends Model
             $this->status_id = $request->input('status_id');
             $this->end_date = $request->input('end_date');
             $this->duration_days = $this->start_date->diffInDays($this->end_date);
+            // Update status_update_date of related process
+        } else {
+            $process = $this->process;
+            $process->status_update_date = $request->input('start_date');
+            $process->timestamps = false;
+            $process->saveQuietly();
         }
 
         $this->save();

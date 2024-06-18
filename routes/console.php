@@ -26,13 +26,13 @@ Artisan::command('validate-dosage-and-packs', function () {
         $instance->dosage = Helper::formatSpecificString($instance->dosage);
         $instance->pack = Helper::formatSpecificString($instance->pack);
         $instance->timestamps = false;
-        $instance->saveQuetly();
+        $instance->saveQuietly();
     });
 
     Kvpp::all()->each(function ($instance) {
         $instance->dosage = Helper::formatSpecificString($instance->dosage);
         $instance->pack = Helper::formatSpecificString($instance->pack);
         $instance->timestamps = false;
-        $instance->saveQuetly();
+        $instance->saveQuietly();
     });
 })->purpose("Dosages and packs have been updated");

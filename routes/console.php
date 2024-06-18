@@ -23,15 +23,15 @@ Artisan::command('users:reset-settings', function () {
 
 Artisan::command('validate-dosage-and-packs', function () {
     Product::all()->each(function ($instance) {
-        $instance->dosage = Helper::formatString($instance->dosage);
-        $instance->pack = Helper::formatString($instance->pack);
+        $instance->dosage = Helper::formatSpecificString($instance->dosage);
+        $instance->pack = Helper::formatSpecificString($instance->pack);
         $instance->timestamps = false;
         $instance->saveQuetly();
     });
 
     Kvpp::all()->each(function ($instance) {
-        $instance->dosage = Helper::formatString($instance->dosage);
-        $instance->pack = Helper::formatString($instance->pack);
+        $instance->dosage = Helper::formatSpecificString($instance->dosage);
+        $instance->pack = Helper::formatSpecificString($instance->pack);
         $instance->timestamps = false;
         $instance->saveQuetly();
     });

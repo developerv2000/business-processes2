@@ -113,7 +113,6 @@ class Kvpp extends CommentableModel
                 'inn_id' => $this->inn_id,
                 'form_id' => $this->form_id,
                 'dosage' => $this->dosage,
-                'pack' => $this->pack,
             ]);
         })
             ->where('country_code_id', $this->country_code_id)

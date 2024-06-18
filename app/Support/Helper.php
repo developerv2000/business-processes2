@@ -305,6 +305,30 @@ class Helper
         return $sanitized;
     }
 
+    /**
+     * Helper function to format dosage & pack of records
+     * as a signle format
+     */
+    public static function formatSpecificString($value) {
+        // Add spaces before and after '*', '+', '%' and '/' symbols
+        $value = preg_replace('/([+%\/\*])/', ' $1 ', $value);
+        // Replace consecutive whitespaces with a single space
+        $value = preg_replace('/\s+/', ' ', $value);
+        // Separate letters from numbers
+        $value = preg_replace('/(\d+)([a-zA-Z]+)/', '$1 $2', $value);
+        $value = preg_replace('/([a-zA-Z]+)(\d+)/', '$1 $2', $value);
+        // Remove non-English characters
+        $value = preg_replace('/[^a-zA-Z0-9\s!@#$%^&*()_+\-=\[\]{};\'":\\|,.<>\/?]/', '', $value);
+        // Remove inner whitespaces
+        $value = preg_replace('/\s+(?=\S)/', ' ', $value);
+        // Replace symbols ',' with '.'
+        $value = str_replace(',', '.', $value);
+        // Convert the entire string to uppercase
+        $value = strtoupper($value);
+
+        return $value;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Query filtering

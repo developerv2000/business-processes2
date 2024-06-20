@@ -1,7 +1,7 @@
 <div class="statistics-index__table1-container styled-box">
     <div class="pre-content">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Описание таблицы 1')],
+            'crumbs' => [__('Статистика текущих "Общих статусов" за год')],
             'fullScreen' => false,
         ])
     </div>
@@ -27,7 +27,11 @@
                     <td>{{ $status->name }}</td>
 
                     @foreach ($status->months as $month)
-                        <td>{{ $month['current_processes_count'] }}</td>
+                        <td>
+                            <a href="{{ $month['current_processes_link'] }}">
+                                {{ $month['current_processes_count'] }}
+                            </a>
+                        </td>
                     @endforeach
 
                     <td>{{ $status->total_current_processes_count }}</td>

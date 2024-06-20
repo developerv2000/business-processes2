@@ -146,6 +146,7 @@ class AppServiceProvider extends ServiceProvider
             $mergedData = array_merge($shareData, [
                 'statuses' => ProcessStatus::getAll(), // important
                 'generalStatuses' => ProcessGeneralStatus::getAll(),
+                'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueStatusNamesForAnalysts(),
             ]);
 
             $view->with($mergedData);

@@ -285,6 +285,11 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
         $whereRelationEqualStatements = [
             [
+                'name' => 'status.generalStatus',
+                'attribute' => 'name_for_analysts',
+            ],
+
+            [
                 'name' => 'status',
                 'attribute' => 'general_status_id',
             ],

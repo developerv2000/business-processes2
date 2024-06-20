@@ -18,18 +18,20 @@
     </x-forms.groups.default-group>
 
     <x-forms.id-based-single-select.request-based-select
-        label="Analyst"
-        name="analyst_user_id"
-        :options="$analystUsers" />
-
-    <x-forms.id-based-single-select.request-based-select
         label="BDM"
         name="bdm_user_id"
         :options="$bdmUsers" />
 
-    <x-forms.boolean-select.request-based-select
-        label="Extensive statistics"
-        name="extensive" />
+    @if ($request->user()->isAdminOrModerator())
+        <x-forms.id-based-single-select.request-based-select
+            label="Analyst"
+            name="analyst_user_id"
+            :options="$analystUsers" />
+
+        <x-forms.boolean-select.request-based-select
+            label="Extensive statistics"
+            name="extensive" />
+    @endif
 
     <x-forms.id-based-single-select.request-based-select
         label="Search country"

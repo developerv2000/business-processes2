@@ -20,4 +20,14 @@ class ProcessGeneralStatus extends Model
     {
         return self::orderBy('id', 'asc')->get();
     }
+
+    /**
+     * Pluck all unique name_for_analysts
+     *
+     * Used on process filtering
+     */
+    public static function getUniqueStatusNamesForAnalysts()
+    {
+        return self::orderBy('id', 'asc')->pluck('name_for_analysts')->unique();
+    }
 }

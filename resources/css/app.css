@@ -908,6 +908,7 @@ body::-webkit-scrollbar-thumb,
     padding: 6px 12px;
     border: 1px solid #c2ccd9;
 }
+
 /* ------------ /END Table ------------ */
 
 
@@ -1181,6 +1182,10 @@ body::-webkit-scrollbar-thumb,
     margin: 20px 0;
 }
 
+.statistics-index .main-table a {
+    text-decoration: none;
+}
+
 /* Statuses */
 .general-status-1 {
     background-color: var(--text-color);
@@ -1263,6 +1268,7 @@ body::-webkit-scrollbar-thumb,
 .processes-create__forecast-inputs-container:empty {
     display: none;
 }
+
 /* ------------ /end Processes pages ------------ */
 
 
@@ -1280,4 +1286,5 @@ body::-webkit-scrollbar-thumb,
 .process-status-history-index .about-process .secondary-table {
     width: 100%;
 }
+
 /* ------------ /end Processes status history pages ------------ */

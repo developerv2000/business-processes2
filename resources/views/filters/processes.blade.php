@@ -20,6 +20,11 @@
         name="status_id"
         :options="$statuses" />
 
+    <x-forms.single-select.request-based-select
+        label="Product status An*"
+        name="name_for_analysts"
+        :options="$generalStatusNamesForAnalysts" />
+
     <x-forms.id-based-single-select.request-based-select
         label="General status"
         name="general_status_id"

@@ -13,12 +13,13 @@ class StatisticController extends Controller
 {
     /**
      * =============== Important ===============
-     * All general status stages are used,
-     * while extensive statistics requested
+     * All general status stages are used, while extensive statistics requested.
+     * Else only first 5 general status stages are used,
+     * and (stages > 5) are also included in the stage 5, while minified statistics requested
      *
-     * Else only first 5 stages are used,
-     * and (stages > stage 5) are also included in the stage 5,
-     * while minified statistics requested
+     * Some tricky methods are used for querying:
+     * General statuses are compared by id, while extensive statistics requested.
+     * Else general statuses are compared by name_for_analysts, while minified statistics requested
      * =============== Important ===============
      */
     public function index(Request $request)
@@ -32,13 +33,13 @@ class StatisticController extends Controller
 
         // Add current processes count for each month of statuses. Table 1
         self::addCurrentProcessesCountForStatusMonths($request, $generalStatuses, $months);
-        // Add transitional processes count for each month of statuses. Table 2
-        self::addTransitionalProcessesCountForStatusMonths($request, $generalStatuses, $months);
+        // Add permanent processes count for each month of statuses. Table 2
+        self::addPermanentProcessesCountForStatusMonths($request, $generalStatuses, $months);
 
         // Add current processes link for each month of statuses. Table 1
         self::addCurrentProcessesLinkForStatusMonths($request, $generalStatuses);
-        // Add transitional processes link for each month of statuses. Table 2
-        // self::addTransitionalProcessesLinkForStatusMonths($request, $generalStatuses);
+        // Add permanent processes link for each month of statuses. Table 2
+        // self::addPermanentProcessesLinkForStatusMonths($request, $generalStatuses);
 
         // Calculate total current process and total transition processes of each statuses (Table 1 and Table 2)
         self::calculateTotalProcessesCountForStatuses($generalStatuses);
@@ -47,10 +48,10 @@ class StatisticController extends Controller
 
         // Calculate sum of all total current processes count of statuses
         $sumOfTotalCurrentProcessesCount = $generalStatuses->sum('total_current_processes_count');
-        // Calculate sum of all total transitional processes count of statuses
-        $sumOfTotalTransitionalProcessesCount = $generalStatuses->sum('total_transitional_processes_count');
+        // Calculate sum of all total permanent processes count of statuses
+        $sumOfTotalPermanentProcessesCount = $generalStatuses->sum('total_permanent_processes_count');
 
-        return view('statistics.index', compact('request', 'months', 'generalStatuses', 'sumOfTotalCurrentProcessesCount', 'sumOfTotalTransitionalProcessesCount'));
+        return view('statistics.index', compact('request', 'months', 'generalStatuses', 'sumOfTotalCurrentProcessesCount', 'sumOfTotalPermanentProcessesCount'));
     }
 
     /**
@@ -67,7 +68,7 @@ class StatisticController extends Controller
             'year' => date('Y'),
         ]);
 
-        // Restrict simple users to only see their own processes
+        // Restrict simple users to only see their own process statistics
         if (!$request->user()->isAdminOrModerator()) {
             $request->mergeIfMissing([
                 'analyst_user_id' => $request->user()->id,
@@ -136,16 +137,16 @@ class StatisticController extends Controller
                 $array[$month['number']] = [
                     'number' => $month['number'],
                     'current_processes_count' => 0,
-                    'transitional_processes_count' => 0,
+                    'permanent_processes_count' => 0,
                     'current_processes_link' => '#',
-                    'transitional_processes_link' => '#',
+                    'permanent_processes_link' => '#',
                 ];
 
                 $status->months = $array;
 
                 // Add total counts
                 $status->total_current_processes_count = 0;
-                $status->total_transitional_processes_count = 0;
+                $status->total_permanent_processes_count = 0;
             }
         }
     }
@@ -173,23 +174,14 @@ class StatisticController extends Controller
                 $query = Process::whereMonth('status_update_date', $month['number'])
                     ->whereYear('status_update_date', $request->year);
 
-                // Include all matching stages while extensive statistics requested
                 if ($request->extensive) {
                     $query = $query->whereHas('status.generalStatus', function ($q) use ($status) {
-                        $q->where('stage', $status->stage);
+                        $q->where('id', $status->id);
                     });
                 } else {
-                    // Else Include all matching stages for (stages <=4) while minified statistics requested
-                    if ($status->stage <= 4) {
-                        $query = $query->whereHas('status.generalStatus', function ($q) use ($status) {
-                            $q->where('stage', $status->stage);
-                        });
-                        // And include all (stages >= 5) in the (STAGE == 5) while inified statistics requested
-                    } else if ($status->stage == 5) {
-                        $query = $query->whereHas('status.generalStatus', function ($q) {
-                            $q->where('stage', '>=', 5);
-                        });
-                    }
+                    $query = $query->whereHas('status.generalStatus', function ($q) use ($status) {
+                        $q->where('name_for_analysts', $status->name_for_analysts);
+                    });
                 }
 
                 // Additional filtering
@@ -286,55 +278,46 @@ class StatisticController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | Helper functions for Table 2. Transitional general statuses
+    | Helper functions for Table 2. Permanent general statuses
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Add transitional processes count by months for each statuses.
+     * Add permanent processes count by months for each statuses.
      *
-     * Iterates through general statuses and months to add the count of transitional processes for each month of status.
+     * Iterates through general statuses and months to add the count of permanent processes for each month of status.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Database\Eloquent\Collection  $generalStatuses
      * @param  \Illuminate\Support\Collection  $months
      * @return void
      */
-    private static function addTransitionalProcessesCountForStatusMonths($request, $generalStatuses, $months)
+    private static function addPermanentProcessesCountForStatusMonths($request, $generalStatuses, $months)
     {
         foreach ($generalStatuses as $status) {
             foreach ($months as $month) {
                 $query = ProcessStatusHistory::whereMonth('start_date', $month['number'])
                     ->whereYear('start_date', $request->year);
 
-                // Include all matching stages while extensive statistics requested
                 if ($request->extensive) {
                     $query = $query->whereHas('status.generalStatus', function ($q) use ($status) {
-                        $q->where('stage', $status->stage);
+                        $q->where('id', $status->id);
                     });
                 } else {
-                    // Else Include all matching stages for (stages <=4) while minified statistics requested
-                    if ($status->stage <= 4) {
-                        $query = $query->whereHas('status.generalStatus', function ($q) use ($status) {
-                            $q->where('stage', $status->stage);
-                        });
-                        // And include all (stages >= 5) in the (STAGE == 5) while inified statistics requested
-                    } else if ($status->stage == 5) {
-                        $query = $query->whereHas('status.generalStatus', function ($q) {
-                            $q->where('stage', '>=', 5);
-                        });
-                    }
+                    $query = $query->whereHas('status.generalStatus', function ($q) use ($status) {
+                        $q->where('name_for_analysts', $status->name_for_analysts);
+                    });
                 }
 
                 // Additional filtering
-                $query = self::filterTransitionalProcessesQuery($request, $query);
+                $query = self::filterPermanentProcessesQuery($request, $query);
 
-                // Get transitional processes count of the month fot the status
+                // Get permanent processes count of the month fot the status
                 $monthProcessesCount = $query->count();
 
-                // Set transitional processes count of the month fot the status
+                // Set permanent processes count of the month fot the status
                 $statusMonths = $status->months;
-                $statusMonths[$month['number']]['transitional_processes_count'] = $monthProcessesCount;
+                $statusMonths[$month['number']]['permanent_processes_count'] = $monthProcessesCount;
                 $status->months = $statusMonths;
             }
         }
@@ -347,7 +330,7 @@ class StatisticController extends Controller
      * @param  \Illuminate\Database\Eloquent\Builder  $historyQuery
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    private static function filterTransitionalProcessesQuery($request, $historyQuery)
+    private static function filterPermanentProcessesQuery($request, $historyQuery)
     {
         // Extract request parameters
         $analystID = $request->analyst_user_id;
@@ -382,7 +365,7 @@ class StatisticController extends Controller
 
     /**
      * Calculate total current processes count
-     * and total transitional processes count for each month.
+     * and total permanent processes count for each month.
      *
      * @param  \Illuminate\Database\Eloquent\Collection  $generalStatuses
      * @param  \Illuminate\Support\Collection  $months
@@ -392,23 +375,23 @@ class StatisticController extends Controller
     {
         foreach ($months as $month) {
             $totalCurrentProcesses = 0;
-            $totalTransitionalProcesses = 0;
+            $totalPermanentProcesses = 0;
 
             foreach ($generalStatuses as $status) {
                 $totalCurrentProcesses += $status->months[$month['number']]['current_processes_count'];
-                $totalTransitionalProcesses += $status->months[$month['number']]['transitional_processes_count'];
+                $totalPermanentProcesses += $status->months[$month['number']]['permanent_processes_count'];
             }
 
             $month['total_current_processes_count'] = $totalCurrentProcesses;
-            $month['total_transitional_processes_count'] = $totalTransitionalProcesses;
+            $month['total_permanent_processes_count'] = $totalPermanentProcesses;
         }
     }
 
     /**
      * Calculate total current processes count
-     * and total transitional processes count for each status.
+     * and total permanent processes count for each status.
      *
-     * Iterates through general statuses and calculates the total current and transitional processes count
+     * Iterates through general statuses and calculates the total current and permanent processes count
      * based on the counts for each month.
      *
      * @param  \Illuminate\Database\Eloquent\Collection  $generalStatuses
@@ -418,15 +401,15 @@ class StatisticController extends Controller
     {
         foreach ($generalStatuses as $status) {
             $totalCurrentProcesses = 0;
-            $totalTransitionalProcesses = 0;
+            $totalPermanentProcesses = 0;
 
             foreach ($status->months as $month) {
                 $totalCurrentProcesses += $month['current_processes_count'];
-                $totalTransitionalProcesses += $month['transitional_processes_count'];
+                $totalPermanentProcesses += $month['permanent_processes_count'];
             }
 
             $status->total_current_processes_count = $totalCurrentProcesses;
-            $status->total_transitional_processes_count = $totalTransitionalProcesses;
+            $status->total_permanent_processes_count = $totalPermanentProcesses;
         }
     }
 }

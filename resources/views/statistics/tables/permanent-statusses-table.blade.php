@@ -1,7 +1,7 @@
 <div class="statistics-index__table2-container styled-box">
     <div class="pre-content">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Описание таблицы 2')],
+            'crumbs' => [__('Максимальное количество процессов, которое определённый "Общий статус" имел в течении месяца')],
             'fullScreen' => false,
         ])
     </div>
@@ -27,10 +27,10 @@
                     <td>{{ $status->name }}</td>
 
                     @foreach ($status->months as $month)
-                        <td>{{ $month['transitional_processes_count'] }}</td>
+                        <td>{{ $month['permanent_processes_count'] }}</td>
                     @endforeach
 
-                    <td>{{ $status->total_transitional_processes_count }}</td>
+                    <td>{{ $status->total_permanent_processes_count }}</td>
                 </tr>
             @endforeach
 
@@ -39,10 +39,10 @@
                 <td>{{ __('Total') }}</td>
 
                 @foreach ($months as $month)
-                    <td>{{ $month['total_transitional_processes_count'] }}</td>
+                    <td>{{ $month['total_permanent_processes_count'] }}</td>
                 @endforeach
 
-                <td>{{ $sumOfTotalTransitionalProcessesCount }}</td>
+                <td>{{ $sumOfTotalPermanentProcessesCount }}</td>
             </tr>
         </tbody> {{-- Body end --}}
     </table>

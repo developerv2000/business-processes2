@@ -1,7 +1,7 @@
 <div class="statistics-index__table2-container styled-box">
     <div class="pre-content">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Максимальное количество процессов, которое определённый "Общий статус" имел в течении месяца')],
+            'crumbs' => [__('Максимальное количество процессов, которое определённый статус имел в течении месяца')],
             'fullScreen' => false,
         ])
     </div>

@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Support\Abstracts\CommentableModel;
+use App\Support\Contracts\PreparesRecordsForExportInterface;
 use App\Support\Helper;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Process extends CommentableModel
+class Process extends CommentableModel implements PreparesRecordsForExportInterface
 {
     use SoftDeletes;
     use MergesParamsToRequest;
@@ -634,7 +635,7 @@ class Process extends CommentableModel
     }
 
     /**
-     * Add general status periods for a collection of records.
+     * Add general statuses with periods for a collection of records.
      *
      * This method processes a collection of records and adds general status periods
      * based on the status history of each record. It clones the general statuses to
@@ -697,7 +698,7 @@ class Process extends CommentableModel
             }
 
             // Assign the cloned general statuses to the instance
-            $instance->general_status_periods = $clonedGeneralStatuses;
+            $instance->general_statuses_with_periods = $clonedGeneralStatuses;
         }
     }
 
@@ -816,6 +817,16 @@ class Process extends CommentableModel
     }
 
     /**
+     * Prepare chunked records for export
+     */
+    public static function prepareRecordsForExport($records)
+    {
+        self::addGeneralStatusPeriodsForRecords($records);
+
+        return $records;
+    }
+
+    /**
      * Get the Excel column values for exporting.
      *
      * This function returns an array containing the values of specific properties
@@ -876,16 +887,16 @@ class Process extends CommentableModel
             $this->created_at,
             $this->updated_at,
             $this->product->class->name,
-            'Not_done_yet',
-            'Not_done_yet',
-            'Not_done_yet',
-            'Not_done_yet',
-            'Not_done_yet',
-            'Not_done_yet',
-            'Not_done_yet',
-            'Not_done_yet',
-            'Not_done_yet',
-            'Not_done_yet',
+            $this->general_statuses_with_periods[0]->start_date,
+            $this->general_statuses_with_periods[1]->start_date,
+            $this->general_statuses_with_periods[2]->start_date,
+            $this->general_statuses_with_periods[3]->start_date,
+            $this->general_statuses_with_periods[4]->start_date,
+            $this->general_statuses_with_periods[5]->start_date,
+            $this->general_statuses_with_periods[6]->start_date,
+            $this->general_statuses_with_periods[7]->start_date,
+            $this->general_statuses_with_periods[8]->start_date,
+            $this->general_statuses_with_periods[9]->start_date,
         ];
     }
 

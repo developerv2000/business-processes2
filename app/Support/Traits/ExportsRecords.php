@@ -18,6 +18,7 @@ trait ExportsRecords
      * Export model records to an Excel file.
      *
      * This function exports the given records to an Excel file using a template.
+     * It also prepares records for export if class has method "prepareRecordsForExport".
      * It saves the Excel file to storage and returns a download response.
      *
      * @param \Illuminate\Support\Collection $records The records to export.
@@ -37,8 +38,13 @@ trait ExportsRecords
         $row = 2;
 
         // Chunk records to avoid memory issues and iterate over each chunk
-        $records->chunk(800, function ($recordsChunk) use (&$sheet, &$columnIndex, &$row) {
+        $records->chunk(800, function ($recordsChunk) use (&$sheet, &$columnIndex, &$row, $className) {
             $recordsChunk->load('comments'); // Load comments for performance
+
+            // Prepare records (load relations etc for perfomance) for export
+            if (method_exists($className, 'prepareRecordsForExport')) {
+                $className::prepareRecordsForExport($recordsChunk);
+            }
 
             foreach ($recordsChunk as $instance) {
                 $columnIndex = 1;

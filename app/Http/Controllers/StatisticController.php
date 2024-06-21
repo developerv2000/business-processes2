@@ -33,13 +33,17 @@ class StatisticController extends Controller
 
         // Add current processes count for each month of statuses. Table 1
         self::addCurrentProcessesCountForStatusMonths($request, $generalStatuses, $months);
-        // Add permanent processes count for each month of statuses. Table 2
-        self::addPermanentProcessesCountForStatusMonths($request, $generalStatuses, $months);
+
+        // Add year based current processes count for each month of statuses. Table 1
+        self::addYearBasedStage5CurrentProcessesCountForStatusMonths($request, $generalStatuses, $months);
+
+        // Add maximum processes count for each month of statuses. Table 2
+        self::addMaximumProcessesCountForStatusMonths($request, $generalStatuses, $months);
 
         // Add current processes link for each month of statuses. Table 1
         self::addCurrentProcessesLinkForStatusMonths($request, $generalStatuses);
-        // Add permanent processes link for each month of statuses. Table 2
-        // self::addPermanentProcessesLinkForStatusMonths($request, $generalStatuses);
+        // Add maximum processes link for each month of statuses. Table 2
+        // self::addMaximumProcessesLinkForStatusMonths($request, $generalStatuses);
 
         // Calculate total current process and total transition processes of each statuses (Table 1 and Table 2)
         self::calculateTotalProcessesCountForStatuses($generalStatuses);
@@ -48,10 +52,10 @@ class StatisticController extends Controller
 
         // Calculate sum of all total current processes count of statuses
         $sumOfTotalCurrentProcessesCount = $generalStatuses->sum('total_current_processes_count');
-        // Calculate sum of all total permanent processes count of statuses
-        $sumOfTotalPermanentProcessesCount = $generalStatuses->sum('total_permanent_processes_count');
+        // Calculate sum of all total maximum processes count of statuses
+        $sumOfTotalMaximumProcessesCount = $generalStatuses->sum('total_maximum_processes_count');
 
-        return view('statistics.index', compact('request', 'months', 'generalStatuses', 'sumOfTotalCurrentProcessesCount', 'sumOfTotalPermanentProcessesCount'));
+        return view('statistics.index', compact('request', 'months', 'generalStatuses', 'sumOfTotalCurrentProcessesCount', 'sumOfTotalMaximumProcessesCount'));
     }
 
     /**
@@ -137,24 +141,24 @@ class StatisticController extends Controller
                 $array[$month['number']] = [
                     'number' => $month['number'],
                     'current_processes_count' => 0,
-                    'permanent_processes_count' => 0,
+                    'maximum_processes_count' => 0,
                     'current_processes_link' => '#',
-                    'permanent_processes_link' => '#',
+                    'maximum_processes_link' => '#',
                 ];
 
                 $status->months = $array;
 
                 // Add total counts
                 $status->total_current_processes_count = 0;
-                $status->total_permanent_processes_count = 0;
+                $status->total_maximum_processes_count = 0;
             }
         }
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | Helper functions for Table 1. Current general statuses
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------------------------
+    | Helper functions for adding current processes count for each month of statuses. Table 1
+    |----------------------------------------------------------------------------------------
     */
 
     /**
@@ -193,9 +197,95 @@ class StatisticController extends Controller
                 // Set current processes count of the month for the status
                 $statusMonths = $status->months;
                 $statusMonths[$month['number']]['current_processes_count'] = $monthProcessesCount;
+
                 $status->months = $statusMonths;
             }
         }
+    }
+
+    /**
+     * Add year-based current processes count for status months where stage is 5.
+     *
+     * @return void
+     */
+    private static function addYearBasedStage5CurrentProcessesCountForStatusMonths($request, $generalStatuses, $months)
+    {
+        if ($request->extensive) {
+            return; // Exit early if extensive is true
+        }
+
+        foreach ($generalStatuses as $status) {
+            if ($status->stage == 5) {
+                foreach ($months as $month) {
+                    // Get year-based current processes count for the status and month
+                    $yearBasedProcessesCount = self::getMonthStage5YearBasedCurrentProcessesCount($month, $request, $status);
+
+                    // Update the status object with the current processes count for the month
+                    $statusMonths = $status->months;
+                    $statusMonths[$month['number']]['year_based_current_processes_count'] = $yearBasedProcessesCount;
+                    $status->months = $statusMonths;
+                }
+            }
+        }
+    }
+
+    private static function getMonthStage5YearBasedCurrentProcessesCount($month, $request, $status)
+    {
+        $query = Process::where(function ($processesQuery) use ($month, $request, $status) {
+            // Filter processes by month and year
+            $processesQuery->whereMonth('status_update_date', $month['number'])
+                ->whereYear('status_update_date', $request->year)
+                // Filter processes by the specific status ID
+                ->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
+                    $statusesQuery->where('id', $status->id);
+                });
+
+            // Additional conditions based on request parameters
+            if (!$request->extensive && $status->stage == 5) {
+                // Subquery for status stage greater than 5 with specific history conditions
+                $processesQuery->orWhere(function ($subquery) use ($month, $request, $status) {
+                    $subquery->whereMonth('status_update_date', $month['number'])
+                        ->whereYear('status_update_date', $request->year)
+                        ->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
+                            $statusesQuery->where('stage', '>', 5);
+                        })
+                        ->whereHas('statusHistory', function ($historyQuery) use ($month, $request, $status) {
+                            // Subquery to find history with stage 5 during the month/year
+                            $historyQuery->where(function ($historySubquery) use ($month, $request, $status) {
+                                $historySubquery->whereMonth('start_date', $month['number'])
+                                    ->whereYear('start_date', $request->year)
+                                    ->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
+                                        $statusesQuery->where('stage', 5);
+                                    });
+                            });
+                        });
+                })
+                    // Additional subquery for stage greater than 5 without specific history conditions
+                    ->orWhere(function ($subquery) use ($month, $request, $status) {
+                        $subquery->whereMonth('status_update_date', $month['number'])
+                            ->whereYear('status_update_date', $request->year)
+                            ->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
+                                $statusesQuery->where('stage', '>', 5);
+                            })
+                            ->whereDoesntHave('statusHistory', function ($historyQuery) use ($month, $request, $status) {
+                                // Check for absence of history with stage 5 during the month/year
+                                $historyQuery->where(function ($historySubquery) use ($month, $request, $status) {
+                                    $historySubquery->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
+                                        $statusesQuery->where('stage', 5);
+                                    });
+                                });
+                            });
+                    });
+            }
+        });
+
+        // Additional filtering
+        $query = self::filterCurrentProcessesQuery($request, $query);
+
+        // Get current processes count of the month for the status
+        $processesCount = $query->count();
+
+        return $processesCount;
     }
 
     /**
@@ -229,6 +319,93 @@ class StatisticController extends Controller
 
         return $processesQuery;
     }
+
+    /*
+    |----------------------------------------------------------------------------------------
+    | Helper functions for adding maximum processes count for each month of statuses. Table 2
+    |----------------------------------------------------------------------------------------
+    */
+
+    /**
+     * Add maximum processes count by months for each statuses.
+     *
+     * Iterates through general statuses and months to add the count of maximum processes for each month of status.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Database\Eloquent\Collection  $generalStatuses
+     * @param  \Illuminate\Support\Collection  $months
+     * @return void
+     */
+    private static function addMaximumProcessesCountForStatusMonths($request, $generalStatuses, $months)
+    {
+        foreach ($generalStatuses as $status) {
+            foreach ($months as $month) {
+                $query = ProcessStatusHistory::whereMonth('start_date', $month['number'])
+                    ->whereYear('start_date', $request->year);
+
+                if ($request->extensive) {
+                    $query = $query->whereHas('status.generalStatus', function ($q) use ($status) {
+                        $q->where('id', $status->id);
+                    });
+                } else {
+                    $query = $query->whereHas('status.generalStatus', function ($q) use ($status) {
+                        $q->where('name_for_analysts', $status->name_for_analysts);
+                    });
+                }
+
+                // Additional filtering
+                $query = self::filterMaximumProcessesQuery($request, $query);
+
+                // Get maximum processes count of the month fot the status
+                $monthProcessesCount = $query->count();
+
+                // Set maximum processes count of the month fot the status
+                $statusMonths = $status->months;
+                $statusMonths[$month['number']]['maximum_processes_count'] = $monthProcessesCount;
+                $status->months = $statusMonths;
+            }
+        }
+    }
+
+    /**
+     * Filter the given process status history query based on request parameters.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $historyQuery
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private static function filterMaximumProcessesQuery($request, $historyQuery)
+    {
+        // Extract request parameters
+        $analystID = $request->analyst_user_id;
+        $bdmID = $request->bdm_user_id;
+        $countryCodeID = $request->country_code_id;
+
+        // Apply filters based on request parameters
+        $historyQuery->when($analystID, function ($query) use ($analystID) {
+            $query->whereHas('process.manufacturer', function ($manufacturerQuery) use ($analystID) {
+                $manufacturerQuery->where('analyst_user_id', $analystID);
+            });
+        })
+            ->when($bdmID, function ($query) use ($bdmID) {
+                $query->whereHas('process.manufacturer', function ($manufacturerQuery) use ($bdmID) {
+                    $manufacturerQuery->where('bdm_user_id', $bdmID);
+                });
+            })
+            ->when($countryCodeID, function ($query) use ($countryCodeID) {
+                $query->whereHas('process', function ($processQuery) use ($countryCodeID) {
+                    $processQuery->where('country_code_id', $countryCodeID);
+                });
+            });
+
+        return $historyQuery;
+    }
+
+    /*
+    |---------------------------------------------------------------------------------
+    | Helper functions for adding processes link for each month of statuses. Table 1-2
+    |---------------------------------------------------------------------------------
+    */
 
     /**
      * Add current processes link for status months based on request parameters.
@@ -276,96 +453,62 @@ class StatisticController extends Controller
         }
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Helper functions for Table 2. Permanent general statuses
-    |--------------------------------------------------------------------------
-    */
-
     /**
-     * Add permanent processes count by months for each statuses.
+     * Add maximum processes link for status months based on request parameters.
      *
-     * Iterates through general statuses and months to add the count of permanent processes for each month of status.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Database\Eloquent\Collection  $generalStatuses
-     * @param  \Illuminate\Support\Collection  $months
+     * @param \Illuminate\Http\Request $request
+     * @param array $generalStatuses
      * @return void
      */
-    private static function addPermanentProcessesCountForStatusMonths($request, $generalStatuses, $months)
+    private static function addMaximumProcessesLinkForStatusMonths($request, $generalStatuses)
     {
-        foreach ($generalStatuses as $status) {
-            foreach ($months as $month) {
-                $query = ProcessStatusHistory::whereMonth('start_date', $month['number'])
-                    ->whereYear('start_date', $request->year);
+        $extensive = $request->extensive;
+        $year = $request->year;
 
-                if ($request->extensive) {
-                    $query = $query->whereHas('status.generalStatus', function ($q) use ($status) {
-                        $q->where('id', $status->id);
-                    });
+        // Filter parameters for the query
+        $query = [
+            'analyst_user_id' => $request->analyst_user_id,
+            'bdm_user_id' => $request->bdm_user_id,
+            'country_code_id' => $request->country_code_id,
+            'filter_by_status_history' => 1,
+        ];
+
+        foreach ($generalStatuses as $status) {
+            foreach ($status->months as $month) {
+                $monthStart = Carbon::createFromFormat('Y-m-d', $year . '-' . $month['number'] . '-01');
+                $nextMonthStart = $monthStart->copy()->addMonth()->startOfMonth();
+
+                // Prepare a copy of the query with status update date range
+                $queryCopy = $query;
+                $queryCopy['status_update_date'] = $monthStart->format('d/m/Y') . ' - ' . $nextMonthStart->format('d/m/Y');
+
+                // Depending on extensive flag, set additional query parameters
+                if ($extensive) {
+                    $queryCopy['general_status_id'] = $status->id;
                 } else {
-                    $query = $query->whereHas('status.generalStatus', function ($q) use ($status) {
-                        $q->where('name_for_analysts', $status->name_for_analysts);
-                    });
+                    $queryCopy['name_for_analysts'] = $status->name_for_analysts;
                 }
 
-                // Additional filtering
-                $query = self::filterPermanentProcessesQuery($request, $query);
+                // Generate the current processes link based on the query
+                $currentProcessesLink = route('processes.index', $queryCopy);
 
-                // Get permanent processes count of the month fot the status
-                $monthProcessesCount = $query->count();
-
-                // Set permanent processes count of the month fot the status
+                // Update the status object with the current processes link
                 $statusMonths = $status->months;
-                $statusMonths[$month['number']]['permanent_processes_count'] = $monthProcessesCount;
+                $statusMonths[$month['number']]['current_processes_link'] = $currentProcessesLink;
                 $status->months = $statusMonths;
             }
         }
     }
 
-    /**
-     * Filter the given process status history query based on request parameters.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $historyQuery
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    private static function filterPermanentProcessesQuery($request, $historyQuery)
-    {
-        // Extract request parameters
-        $analystID = $request->analyst_user_id;
-        $bdmID = $request->bdm_user_id;
-        $countryCodeID = $request->country_code_id;
-
-        // Apply filters based on request parameters
-        $historyQuery->when($analystID, function ($query) use ($analystID) {
-            $query->whereHas('process.manufacturer', function ($manufacturerQuery) use ($analystID) {
-                $manufacturerQuery->where('analyst_user_id', $analystID);
-            });
-        })
-            ->when($bdmID, function ($query) use ($bdmID) {
-                $query->whereHas('process.manufacturer', function ($manufacturerQuery) use ($bdmID) {
-                    $manufacturerQuery->where('bdm_user_id', $bdmID);
-                });
-            })
-            ->when($countryCodeID, function ($query) use ($countryCodeID) {
-                $query->whereHas('process', function ($processQuery) use ($countryCodeID) {
-                    $processQuery->where('country_code_id', $countryCodeID);
-                });
-            });
-
-        return $historyQuery;
-    }
-
     /*
-    |--------------------------------------------------------------------------
+    |------------------------------------------------------------------
     | Helper functions for calculating total processes count. Table 1-2
-    |--------------------------------------------------------------------------
+    |------------------------------------------------------------------
     */
 
     /**
      * Calculate total current processes count
-     * and total permanent processes count for each month.
+     * and total maximum processes count for each month.
      *
      * @param  \Illuminate\Database\Eloquent\Collection  $generalStatuses
      * @param  \Illuminate\Support\Collection  $months
@@ -375,23 +518,23 @@ class StatisticController extends Controller
     {
         foreach ($months as $month) {
             $totalCurrentProcesses = 0;
-            $totalPermanentProcesses = 0;
+            $totalMaximumProcesses = 0;
 
             foreach ($generalStatuses as $status) {
                 $totalCurrentProcesses += $status->months[$month['number']]['current_processes_count'];
-                $totalPermanentProcesses += $status->months[$month['number']]['permanent_processes_count'];
+                $totalMaximumProcesses += $status->months[$month['number']]['maximum_processes_count'];
             }
 
             $month['total_current_processes_count'] = $totalCurrentProcesses;
-            $month['total_permanent_processes_count'] = $totalPermanentProcesses;
+            $month['total_maximum_processes_count'] = $totalMaximumProcesses;
         }
     }
 
     /**
      * Calculate total current processes count
-     * and total permanent processes count for each status.
+     * and total maximum processes count for each status.
      *
-     * Iterates through general statuses and calculates the total current and permanent processes count
+     * Iterates through general statuses and calculates the total current and maximum processes count
      * based on the counts for each month.
      *
      * @param  \Illuminate\Database\Eloquent\Collection  $generalStatuses
@@ -401,15 +544,15 @@ class StatisticController extends Controller
     {
         foreach ($generalStatuses as $status) {
             $totalCurrentProcesses = 0;
-            $totalPermanentProcesses = 0;
+            $totalMaximumProcesses = 0;
 
             foreach ($status->months as $month) {
                 $totalCurrentProcesses += $month['current_processes_count'];
-                $totalPermanentProcesses += $month['permanent_processes_count'];
+                $totalMaximumProcesses += $month['maximum_processes_count'];
             }
 
             $status->total_current_processes_count = $totalCurrentProcesses;
-            $status->total_permanent_processes_count = $totalPermanentProcesses;
+            $status->total_maximum_processes_count = $totalMaximumProcesses;
         }
     }
 }

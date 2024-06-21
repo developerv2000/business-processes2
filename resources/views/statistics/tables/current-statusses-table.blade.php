@@ -30,6 +30,10 @@
                         <td>
                             <a href="{{ $month['current_processes_link'] }}">
                                 {{ $month['current_processes_count'] }}
+
+                                @if ($status->stage == 5)
+                                    ({{ $month['year_based_current_processes_count'] }})
+                                @endif
                             </a>
                         </td>
                     @endforeach

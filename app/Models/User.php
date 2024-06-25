@@ -164,6 +164,12 @@ class User extends Authenticatable
     | Scopes
     |--------------------------------------------------------------------------
     */
+
+    public function scopeOnlyAdmins()
+    {
+        return $this->whereRelation('roles', 'name', Role::ADMIN_NAME);
+    }
+
     public function scopeOnlyBdms()
     {
         return $this->whereRelation('roles', 'name', Role::BDM_NAME);

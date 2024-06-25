@@ -26,6 +26,15 @@
                 </div>
             </div>
 
+            {{-- Notifications --}}
+            <a class="header__notifications" href="{{ route('notifications.index') }}">
+                @if (request()->user()->unreadNotifications->count() == 0)
+                    <span class="material-symbols-outlined header__notifications-icon">notifications</span>
+                @else
+                    <span class="material-symbols-outlined header__notifications-icon header__notifications-icon--unread">notifications_unread</span>
+                @endif
+            </a>
+
             {{-- Profile dropdown --}}
             <div class="dropdown profile-dropdown">
                 <div class="dropdown__button">

@@ -388,6 +388,14 @@ body::-webkit-scrollbar-thumb,
     margin-left: auto;
 }
 
+.header__notifications {
+    display: flex;
+    text-decoration: none;
+}
+
+.header__notifications-icon--unread {
+    font-variation-settings: var(--material-symbols-filled);
+}
 /* ------------ /END Header ------------ */
 
 

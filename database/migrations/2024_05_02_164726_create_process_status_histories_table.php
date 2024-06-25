@@ -17,10 +17,10 @@ return new class extends Migration
             $table->unsignedSmallInteger('status_id');
             $table->timestamp('start_date');
             $table->timestamp('end_date')->nullable();
-            $table->unsignedSmallInteger('duration_days')->nullable();
+            $table->unsignedMediumInteger('duration_days')->nullable();
         });
     }
-    
+
     /**
      * Reverse the migrations.
      */

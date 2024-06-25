@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\ProcessContractStage;
 use App\Support\Abstracts\CommentableModel;
 use App\Support\Contracts\PreparesRecordsForExportInterface;
 use App\Support\Helper;
@@ -584,13 +585,26 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
      *
      * If the status has changed, this method closes the current status history,
      * creates a new status history, and updates the status_update_date.
+     *
+     * Also sends notification for admins, if status changes to stage 5 (Kk).
      */
     private function handleStatusUpdate()
     {
+        // handle status history
         if ($this->isDirty('status_id')) {
             $this->currentStatusHistory->close();
             $this->status_update_date = now();
             $this->createNewStatusHistory();
+
+            // send notifications for admins
+            $status = ProcessStatus::find($this->status_id);
+            if ($status->generalStatus->stage == 5) {
+                $notification = new ProcessContractStage($this, $status->name);
+
+                User::onlyAdmins()->each(function ($user) use ($notification) {
+                    $user->notify($notification);
+                });
+            }
         }
     }
 

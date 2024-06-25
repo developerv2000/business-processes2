@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\KvppController;
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProcessStatusHistoryController;
 use App\Http\Controllers\ProductController;
@@ -91,5 +92,11 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::post('{modelName}/store', 'store')->name('store');
         Route::patch('{modelName}/update/{id}', 'update')->name('update');
         Route::delete('{modelName}/destroy', 'destroy')->name('destroy');
+    });
+
+    Route::prefix('notifications')->controller(NotificationController::class)->name('notifications.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::patch('/mark-as-read', 'markAsRead')->name('mark-as-read');
+        Route::delete('/destroy', 'destroy')->name('destroy');
     });
 });

@@ -198,5 +198,14 @@
     "December": "Декабрь",
 
     "meetings": "встреч",
+
+    "Notifications": "Уведомления",
+    "Date": "Дата",
+    "Text": "Текст",
+    "Mark as read": "Пометить как прочитанное",
+    "Read": "Прочитано",
+    "Status of process": "Статус процесса",
+    "has been updated to": "был изменен на",
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

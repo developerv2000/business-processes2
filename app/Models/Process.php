@@ -268,6 +268,13 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             'marketing_authorization_holder_id',
         ];
 
+        $whereNotInAttributes = [
+            [
+                'attributeName' => 'country_code_id',
+                'inputName' => 'not_country_code_ids',
+            ]
+        ];
+
         $dateRangeAttributes = [
             'status_update_date',
             'created_at',
@@ -351,6 +358,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         ];
 
         $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Helper::filterQueryWhereNotInStatements($request, $query, $whereNotInAttributes);
         $query = Helper::filterQueryLikeStatements($request, $query, $whereLikeAttributes);
         $query = Helper::filterQueryDateRangeStatements($request, $query, $dateRangeAttributes);
         $query = Helper::filterBelongsToManyRelations($request, $query, $belongsToManyRelations);

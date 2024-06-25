@@ -301,6 +301,7 @@ class StatisticController extends Controller
         $analystID = $request->analyst_user_id;
         $bdmID = $request->bdm_user_id;
         $countryCodeID = $request->country_code_id;
+        $notCountryCodeIDs = $request->not_country_code_ids;
 
         // Apply filters based on request parameters
         $processesQuery->when($analystID, function ($query) use ($analystID) {
@@ -315,6 +316,9 @@ class StatisticController extends Controller
             })
             ->when($countryCodeID, function ($query) use ($countryCodeID) {
                 $query->where('country_code_id', $countryCodeID);
+            })
+            ->when($notCountryCodeIDs, function ($query) use ($notCountryCodeIDs) {
+                $query->whereNotIn('country_code_id', $notCountryCodeIDs);
             });
 
         return $processesQuery;
@@ -380,6 +384,7 @@ class StatisticController extends Controller
         $analystID = $request->analyst_user_id;
         $bdmID = $request->bdm_user_id;
         $countryCodeID = $request->country_code_id;
+        $notCountryCodeIDs = $request->not_country_code_ids;
 
         // Apply filters based on request parameters
         $historyQuery->when($analystID, function ($query) use ($analystID) {
@@ -395,6 +400,11 @@ class StatisticController extends Controller
             ->when($countryCodeID, function ($query) use ($countryCodeID) {
                 $query->whereHas('process', function ($processQuery) use ($countryCodeID) {
                     $processQuery->where('country_code_id', $countryCodeID);
+                });
+            })
+            ->when($notCountryCodeIDs, function ($query) use ($notCountryCodeIDs) {
+                $query->whereHas('process', function ($processQuery) use ($notCountryCodeIDs) {
+                    $processQuery->whereNotIn('country_code_id', $notCountryCodeIDs);
                 });
             });
 
@@ -424,6 +434,7 @@ class StatisticController extends Controller
             'analyst_user_id' => $request->analyst_user_id,
             'bdm_user_id' => $request->bdm_user_id,
             'country_code_id' => $request->country_code_id,
+            'not_country_code_ids' => $request->not_country_code_ids,
         ];
 
         foreach ($generalStatuses as $status) {

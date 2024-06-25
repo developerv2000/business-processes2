@@ -309,7 +309,8 @@ class Helper
      * Helper function to format dosage & pack of records
      * as a signle format
      */
-    public static function formatSpecificString($value) {
+    public static function formatSpecificString($value)
+    {
         // Add spaces before and after '*', '+', '%' and '/' symbols
         $value = preg_replace('/([+%\/\*])/', ' $1 ', $value);
         // Replace consecutive whitespaces with a single space
@@ -377,6 +378,31 @@ class Helper
 
             // Add a WHERE IN clause to the query using the attribute and its values from the request
             $query = $query->whereIn($attribute, $request->input($attribute));
+        }
+
+        // Return the modified query builder instance
+        return $query;
+    }
+
+    /**
+     * Add WHERE NOT IN clauses to the query based on the specified attributes in the request.
+     *
+     * @param \Illuminate\Http\Request $request   The current request instance.
+     * @param \Illuminate\Database\Eloquent\Builder $query    The query builder instance.
+     * @param array $attributes  The attributes to check in the request and apply to the query.
+     * @return \Illuminate\Database\Eloquent\Builder The modified query builder instance.
+     */
+    public static function filterQueryWhereNotInStatements($request, $query, $attributes)
+    {
+        // Iterate through each attribute provided
+        foreach ($attributes as $attribute) {
+            // Skip to the next attribute if the current attribute does not exist in the request
+            if (!$request->has($attribute['inputName'])) {
+                continue;
+            }
+
+            // Add a WHERE IN clause to the query using the attribute and its values from the request
+            $query = $query->whereNotIn($attribute['attributeName'], $request->input($attribute['inputName']));
         }
 
         // Return the modified query builder instance
@@ -547,7 +573,6 @@ class Helper
         // Return the modified query builder instance
         return $query;
     }
-
 
     /**
      * Filter the Eloquent query by WHERE relation LIKE statements based on request attributes.

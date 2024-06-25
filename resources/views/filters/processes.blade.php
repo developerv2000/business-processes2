@@ -10,6 +10,11 @@
         name="country_code_id"
         :options="$countryCodes" />
 
+    <x-forms.id-based-multiple-select.request-based-select
+        :label="__('Search country') . ' ' . __('not equal')"
+        name="not_country_code_ids[]"
+        :options="$countryCodes" />
+
     <x-forms.id-based-single-select.request-based-select
         label="Manufacturer"
         name="manufacturer_id"

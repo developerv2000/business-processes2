@@ -365,6 +365,11 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         $query = self::filterRecordsByRoles($request, $query);
         $query = self::filterSpecificManufacturerCountry($request, $query);
 
+        // If redirected from statitics index page & stage 5 (Kk) requested
+        if ($request->contracted_on_requested_month_and_year) {
+            $query = self::filterRecordsContractedOnRequestedMonthAndYear($query, $request->contracted_year, $request->contracted_month);
+        }
+
         return $query;
     }
 
@@ -433,16 +438,19 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
      * 1. Current status stage == 5 (Kk) for the requested month and year.
      * 2. Current status stage > 5 (6КД - 10Отмена) and had contract (stage == 5 (Kk)) in the requested year.
      *
+     * This function is used in both statistics index page & processes index page.
+     * !!! Be very careful when changing this function !!!
+     *
      * @param Illuminate\Database\Eloquent\Builder $query
-     * @param Illuminate\Http\Request $request
-     * @param array $month
+     * @param int $year
+     * @param int $month
      * @return Illuminate\Database\Eloquent\Builder
      */
-    public static function filterRecordsContractedRequestedMonthAndYear($query, $request, $month)
+    public static function filterRecordsContractedOnRequestedMonthAndYear($query, $year, $month)
     {
-        return $query->whereMonth('status_update_date', $month['number'])
-            ->whereYear('status_update_date', $request->year)
-            ->where(function ($subQuery) use ($request, $month) {
+        return $query->whereMonth('status_update_date', $month)
+            ->whereYear('status_update_date', $year)
+            ->where(function ($subQuery) use ($year, $month) {
                 // Current status stage == 5 (Kk) for the requested month and year
                 $subQuery->where(function ($processesQuery) {
                     $processesQuery->whereHas('status.generalStatus', function ($statusesQuery) {
@@ -450,13 +458,13 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
                     });
                 })
                     // Current status stage > 5 (6КД - 10Отмена) and had contract (stage == 5 (Kk)) in the requested year.
-                    ->orWhere(function ($processesQuery) use ($request, $month) {
+                    ->orWhere(function ($processesQuery) use ($year, $month) {
                         $processesQuery->whereHas('status.generalStatus', function ($statusesQuery) {
                             $statusesQuery->where('stage', '>', 5);
                         })
-                            ->whereHas('statusHistory', function ($historyQuery) use ($request, $month) {
-                                $historyQuery->whereMonth('start_date', $month['number'])
-                                    ->whereYear('start_date', $request->year)
+                            ->whereHas('statusHistory', function ($historyQuery) use ($year, $month) {
+                                $historyQuery->whereMonth('start_date', $month)
+                                    ->whereYear('start_date', $year)
                                     ->whereHas('status.generalStatus', function ($statusesQuery) {
                                         $statusesQuery->where('stage', 5);
                                     });

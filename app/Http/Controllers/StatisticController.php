@@ -44,6 +44,8 @@ class StatisticController extends Controller
 
         // Calculate Table 1 - Current processes count
         self::addCurrentProcessesCountForStatusMonths($request, $generalStatuses, $months);
+        // Add current processes link for each month of statuses. Table 1
+        self::addCurrentProcessesLinkForStatusMonths($request, $generalStatuses);
 
         // Calculate Table 2 - Maximum processes count
         self::addMaximumProcessesCountForStatusMonths($request, $generalStatuses, $months);
@@ -174,7 +176,7 @@ class StatisticController extends Controller
                 } else {
                     // Specific query for Stage 5 (Kk) of minified version
                     if ($status->stage == 5) {
-                        $query = Process::filterRecordsContractedRequestedMonthAndYear($query, $request, $month);
+                        $query = Process::filterRecordsContractedOnRequestedMonthAndYear($query, $request->year, $month['number']);
                     } else {
                         // Query for stages < 5 (1ВП - 4СЦ) of minified version
                         $query = $query->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
@@ -227,6 +229,59 @@ class StatisticController extends Controller
         $query = Process::filterSpecificManufacturerCountry($request, $query);
 
         return $query;
+    }
+
+    /**
+     * Add current processes link for status months based on request parameters.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param array $generalStatuses
+     * @return void
+     */
+    private static function addCurrentProcessesLinkForStatusMonths($request, $generalStatuses)
+    {
+        // Filter parameters for the query
+        $query = [
+            'analyst_user_id' => $request->analyst_user_id,
+            'bdm_user_id' => $request->bdm_user_id,
+            'country_code_id' => $request->country_code_id,
+            'specific_manufacturer_country' => $request->specific_manufacturer_country,
+        ];
+
+        foreach ($generalStatuses as $status) {
+            foreach ($status->months as $month) {
+                $monthStart = Carbon::createFromFormat('Y-m-d', $request->year . '-' . $month['number'] . '-01');
+                $nextMonthStart = $monthStart->copy()->addMonth()->startOfMonth();
+
+                // Prepare a copy of the query with 'status_update_date' range
+                $queryCopy = $query;
+                $queryCopy['status_update_date'] = $monthStart->format('d/m/Y') . ' - ' . $nextMonthStart->format('d/m/Y');
+
+                // Extensive version
+                if ($request->extensive_version) {
+                    $queryCopy['general_status_id'] = $status->id;
+                } else {
+                    // Minified version
+                    if ($status->stage == 5) {
+                        // Special links are used for stage 5 (Kk) on minified version
+                        $queryCopy['contracted_on_requested_month_and_year'] = true;
+                        $queryCopy['contracted_month'] = $month['number'];
+                        $queryCopy['contracted_year'] = $request->year;
+                    } else {
+                        // Stages 1 - 4 (1ВП - 4СЦ)
+                        $queryCopy['name_for_analysts'] = $status->name_for_analysts;
+                    }
+                }
+
+                // Generate the current processes link based on the query
+                $currentProcessesLink = route('processes.index', $queryCopy);
+
+                // Update the status object with the current processes link
+                $statusMonths = $status->months;
+                $statusMonths[$month['number']]['current_processes_link'] = $currentProcessesLink;
+                $status->months = $statusMonths;
+            }
+        }
     }
 
     /*

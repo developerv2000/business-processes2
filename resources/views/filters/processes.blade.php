@@ -5,6 +5,16 @@
         label="Status date"
         name="status_update_date" />
 
+    {{-- Notify if redirected from statistics index page & stage 5 (Kk) requested --}}
+    @if ($request->contracted_on_requested_month_and_year)
+        <x-forms.input.request-based-input
+            type="text"
+            label="Special filter"
+            name="_"
+            value="Contracted"
+            readonly />
+    @endif
+
     <x-forms.id-based-single-select.request-based-select
         label="Search country"
         name="country_code_id"

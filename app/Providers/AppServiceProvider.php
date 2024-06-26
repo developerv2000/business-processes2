@@ -14,6 +14,7 @@ use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\PortfolioManager;
+use App\Models\Process;
 use App\Models\ProcessGeneralStatus;
 use App\Models\ProcessResponsiblePerson;
 use App\Models\ProcessStatus;
@@ -112,6 +113,7 @@ class AppServiceProvider extends ServiceProvider
                 'bdmUsers' => User::getBdmsMinifed(),
                 'calendarMonths' => Helper::collectCalendarMonths(),
                 'countryCodes' => CountryCode::getAll(),
+                'specificManufacturerCountries' => Process::getSpecificManufacturerCountryOptions(),
             ]);
         });
 
@@ -147,6 +149,7 @@ class AppServiceProvider extends ServiceProvider
                 'statuses' => ProcessStatus::getAll(), // important
                 'generalStatuses' => ProcessGeneralStatus::getAll(),
                 'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueStatusNamesForAnalysts(),
+                'specificManufacturerCountries' => Process::getSpecificManufacturerCountryOptions(),
             ]);
 
             $view->with($mergedData);

@@ -54,7 +54,6 @@
     "Close": "Закрыть",
     "Error": "Ошибка",
     "Please correct the errors and try again": "Пожалуйста, исправьте ошибки и попробуйте заново",
-    "not equal": "не равно",
 
     "Filter": "Фильтр",
     "Reset": "Сбросить",
@@ -119,6 +118,7 @@
     "KVPP coincidents": "Совпадение с КВПП",
     "Similar records": "Похожие записи",
     "No similar records found": "Похожих записей не найдено",
+    "meetings": "встреч",
 
     "Priority": "Приоритет",
     "VPS coincidents": "Совпадение с ВПЦ",
@@ -148,6 +148,7 @@
     "General status": "Общий Статус",
     "Manufacturer category": "Категория Пр*",
     "Manufacturer country": "Страна Пр*",
+    "Manufacturer countries": "Страны Пр*",
     "Manufacturer price 1": "Цена Пр* 1",
     "Manufacturer price 2": "Цена Пр* 2",
     "Currency": "Валюта",
@@ -196,8 +197,6 @@
     "October": "Октябрь",
     "November": "Ноябрь",
     "December": "Декабрь",
-
-    "meetings": "встреч",
 
     "Notifications": "Уведомления",
     "Date": "Дата",

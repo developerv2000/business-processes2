@@ -256,6 +256,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
         $query = self::filterRecords($request, $query);
         $query = self::filterRecordsByRoles($request, $query);
+        $query = self::filterSpecificConditions($request, $query);
 
         // Get the finalized records based on the specified finaly option
         $records = self::finalizeRecords($request, $query, $finaly);
@@ -270,13 +271,6 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             'country_code_id',
             'status_id',
             'marketing_authorization_holder_id',
-        ];
-
-        $whereNotInAttributes = [
-            [
-                'attributeName' => 'country_code_id',
-                'inputName' => 'not_country_code_ids',
-            ]
         ];
 
         $dateRangeAttributes = [
@@ -362,7 +356,6 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         ];
 
         $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
-        $query = Helper::filterQueryWhereNotInStatements($request, $query, $whereNotInAttributes);
         $query = Helper::filterQueryLikeStatements($request, $query, $whereLikeAttributes);
         $query = Helper::filterQueryDateRangeStatements($request, $query, $dateRangeAttributes);
         $query = Helper::filterBelongsToManyRelations($request, $query, $belongsToManyRelations);
@@ -390,6 +383,41 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             $query = $query->whereHas('manufacturer', function ($subquery) use ($user) {
                 $subquery->where('analyst_user_id', $user->id);
             });
+        }
+
+        return $query;
+    }
+
+    /**
+     * Filter the query based on some specific conditions.
+     *
+     * @param Illuminate\Http\Request $request
+     * @param Illuminate\Database\Eloquent\Builder $query
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    private static function filterSpecificConditions($request, $query)
+    {
+        // Filter by specific Manufacturer countries
+        $manufacturerCountry = $request->specific_manufacturer_country;
+
+        if ($manufacturerCountry) {
+            // Get the ID of the country 'INDIA'
+            $indiaCountryId = Country::getIndiaCountryID();
+
+            // Apply conditions based on the specific manufacturer country
+            switch ($manufacturerCountry) {
+                case 'EUROPE':
+                    $query = $query->whereHas('manufacturer', function ($subquery) use ($indiaCountryId) {
+                        $subquery->where('country_id', '!=', $indiaCountryId);
+                    });
+                    break;
+
+                case 'INDIA':
+                    $query = $query->whereHas('manufacturer', function ($subquery) use ($indiaCountryId) {
+                        $subquery->where('country_id', $indiaCountryId);
+                    });
+                    break;
+            }
         }
 
         return $query;
@@ -952,5 +980,16 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
     public function getTitle(): string
     {
         return trans('Process') . ' #' . $this->id . ' / ' . $this->searchCountry->name;
+    }
+
+    /**
+     * Get the options for specific Manufacturer country filter.
+     */
+    public static function getSpecificManufacturerCountryOptions(): array
+    {
+        return [
+            'EUROPE',
+            'INDIA',
+        ];
     }
 }

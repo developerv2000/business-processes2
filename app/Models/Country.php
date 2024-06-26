@@ -28,4 +28,12 @@ class Country extends Model implements TemplatedModelInterface
     {
         return $this->manufacturers()->count();
     }
+
+    /**
+     * Used on processes specific Manufacturer ountry filter.
+     */
+    public static function getIndiaCountryID(): int
+    {
+       return self::where('name', 'INDIA')->value('id');
+    }
 }

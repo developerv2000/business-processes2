@@ -8,19 +8,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ProcessContractStage extends Notification
+class ProcessOnContractStage extends Notification
 {
     use Queueable;
-
-    public $process;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Process $process, $newStatusName)
+    public function __construct(Process $process, $statusName)
     {
         $this->process = $process;
-        $this->status_name = $newStatusName;
+        $this->status_name = $statusName;
     }
 
     /**

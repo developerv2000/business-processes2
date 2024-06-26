@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Notifications\ProcessContractStage;
+use App\Notifications\ProcessOnContractStage;
 use App\Support\Abstracts\CommentableModel;
 use App\Support\Contracts\PreparesRecordsForExportInterface;
 use App\Support\Helper;
@@ -165,6 +165,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
         static::updating(function ($instance) {
             $instance->handleStatusUpdate();
+            $instance->notifyAdminsOnStatusUpdate();
         });
 
         static::updated(function ($instance) {
@@ -585,8 +586,6 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
      *
      * If the status has changed, this method closes the current status history,
      * creates a new status history, and updates the status_update_date.
-     *
-     * Also sends notification for admins, if status changes to stage 5 (Kk).
      */
     private function handleStatusUpdate()
     {
@@ -595,15 +594,23 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             $this->currentStatusHistory->close();
             $this->status_update_date = now();
             $this->createNewStatusHistory();
-
-            // send notifications for admins
+        }
+    }
+    /**
+     * Sends notifications to admins when the status of the model changes to stage 5 (Kk).
+     * Notifications are triggered only if the 'status_id' attribute of the model is dirty (changed).
+     *
+     * @return void
+     */
+    private function notifyAdminsOnStatusUpdate()
+    {
+        if ($this->isDirty('status_id')) {
             $status = ProcessStatus::find($this->status_id);
-            if ($status->generalStatus->stage == 5) {
-                $notification = new ProcessContractStage($this, $status->name);
 
-                User::onlyAdmins()->each(function ($user) use ($notification) {
-                    $user->notify($notification);
-                });
+            if ($status->generalStatus->stage == 5) {
+                $notification = new ProcessOnContractStage($this, $status->name);
+
+                User::onlyAdmins()->get()->each->notify($notification);
             }
         }
     }
@@ -620,7 +627,6 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         } else {
             // Compare the current responsible people IDs with the requested responsible people IDs
             $requestedIDs = request()->input('responsiblePeople', []);
-            // dd($requestedIDs);
             $instanceIDs = $this->responsiblePeople->pluck('id')->toArray();
 
             // Check for differences between the current and requested responsible people IDs

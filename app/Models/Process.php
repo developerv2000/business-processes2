@@ -173,6 +173,8 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         });
 
         static::saving(function ($instance) {
+            $instance->trademark_en = $instance->trademark_en ? strtoupper($instance->trademark_en) : null;
+            $instance->trademark_ru = $instance->trademark_ru ? strtoupper($instance->trademark_ru) : null;
             $instance->validateManufacturerFollowedPrice();
             $instance->syncRelatedProductUpdates();
             $instance->validateForecastUpdateDate();

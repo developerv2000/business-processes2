@@ -25,13 +25,6 @@ class ProcessController extends Controller
      */
     public function index(Request $request)
     {
-        App\Models\Process::withOnly([])->get()->each(function ($instance) {
-            $instance->timestamps = false;
-            $instance->trademark_en = $instance->trademark_en ? strtoupper($instance->trademark_en) : null;
-            $instance->trademark_ru = $instance->trademark_ru ? strtoupper($instance->trademark_ru) : null;
-            $instance->saveQuietly();
-        });
-
         Process::mergeQueryingParamsToRequest($request);
         $records = Process::getRecordsFinalized($request, finaly: 'paginate');
         Process::addGeneralStatusPeriodsForRecords($records);

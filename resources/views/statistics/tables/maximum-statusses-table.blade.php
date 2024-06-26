@@ -30,7 +30,7 @@
                         <td>{{ $month['maximum_processes_count'] }}</td>
                     @endforeach
 
-                    <td>{{ $status->total_maximum_processes_count }}</td>
+                    <td>{{ $status->year_maximum_processes_count }}</td>
                 </tr>
             @endforeach
 
@@ -39,10 +39,10 @@
                 <td>{{ __('Total') }}</td>
 
                 @foreach ($months as $month)
-                    <td>{{ $month['total_maximum_processes_count'] }}</td>
+                    <td>{{ $month['all_maximum_process_count'] }}</td>
                 @endforeach
 
-                <td>{{ $sumOfTotalMaximumProcessesCount }}</td>
+                <td>{{ $yearTotalMaximumProcessesCount }}</td>
             </tr>
         </tbody> {{-- Body end --}}
     </table>

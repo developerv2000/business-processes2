@@ -30,15 +30,11 @@
                         <td>
                             <a href="{{ $month['current_processes_link'] }}">
                                 {{ $month['current_processes_count'] }}
-
-                                @if (!$request->extensive && $status->stage == 5)
-                                    ({{ $month['year_based_current_processes_count'] }})
-                                @endif
                             </a>
                         </td>
                     @endforeach
 
-                    <td>{{ $status->total_current_processes_count }}</td>
+                    <td>{{ $status->year_current_processes_count }}</td>
                 </tr>
             @endforeach
 
@@ -47,10 +43,10 @@
                 <td>{{ __('Total') }}</td>
 
                 @foreach ($months as $month)
-                    <td>{{ $month['total_current_processes_count'] }}</td>
+                    <td>{{ $month['all_current_process_count'] }}</td>
                 @endforeach
 
-                <td>{{ $sumOfTotalCurrentProcessesCount }}</td>
+                <td>{{ $yearTotalCurrentProcessesCount }}</td>
             </tr>
         </tbody> {{-- Body end --}}
     </table>

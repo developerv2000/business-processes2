@@ -255,8 +255,6 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         $query = $query ?: self::query();
 
         $query = self::filterRecords($request, $query);
-        $query = self::filterRecordsByRoles($request, $query);
-        $query = self::filterSpecificConditions($request, $query);
 
         // Get the finalized records based on the specified finaly option
         $records = self::finalizeRecords($request, $query, $finaly);
@@ -355,12 +353,17 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ],
         ];
 
+        // Templated filtering
         $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
         $query = Helper::filterQueryLikeStatements($request, $query, $whereLikeAttributes);
         $query = Helper::filterQueryDateRangeStatements($request, $query, $dateRangeAttributes);
         $query = Helper::filterBelongsToManyRelations($request, $query, $belongsToManyRelations);
         $query = Helper::filterWhereRelationEqualStatements($request, $query, $whereRelationEqualStatements);
         $query = Helper::filterWhereRelationEqualAmbiguousStatements($request, $query, $whereRelationEqualAmbigiousStatements);
+
+        // Additional specific filters
+        $query = self::filterRecordsByRoles($request, $query);
+        $query = self::filterSpecificManufacturerCountry($request, $query);
 
         return $query;
     }
@@ -389,13 +392,13 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
     }
 
     /**
-     * Filter the query based on some specific conditions.
+     * Filter the query based on some specific condition.
      *
      * @param Illuminate\Http\Request $request
      * @param Illuminate\Database\Eloquent\Builder $query
      * @return Illuminate\Database\Eloquent\Builder
      */
-    private static function filterSpecificConditions($request, $query)
+    public static function filterSpecificManufacturerCountry($request, $query)
     {
         // Filter by specific Manufacturer countries
         $manufacturerCountry = $request->specific_manufacturer_country;
@@ -421,6 +424,45 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         }
 
         return $query;
+    }
+
+    /**
+     * Filter processes which had contract (stage 5 (Kk)) requested month and year.
+     *
+     * Queries processes with the following conditions:
+     * 1. Current status stage == 5 (Kk) for the requested month and year.
+     * 2. Current status stage > 5 (6КД - 10Отмена) and had contract (stage == 5 (Kk)) in the requested year.
+     *
+     * @param Illuminate\Database\Eloquent\Builder $query
+     * @param Illuminate\Http\Request $request
+     * @param array $month
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public static function filterRecordsContractedRequestedMonthAndYear($query, $request, $month)
+    {
+        return $query->whereMonth('status_update_date', $month['number'])
+            ->whereYear('status_update_date', $request->year)
+            ->where(function ($subQuery) use ($request, $month) {
+                // Current status stage == 5 (Kk) for the requested month and year
+                $subQuery->where(function ($processesQuery) {
+                    $processesQuery->whereHas('status.generalStatus', function ($statusesQuery) {
+                        $statusesQuery->where('stage', 5);
+                    });
+                })
+                    // Current status stage > 5 (6КД - 10Отмена) and had contract (stage == 5 (Kk)) in the requested year.
+                    ->orWhere(function ($processesQuery) use ($request, $month) {
+                        $processesQuery->whereHas('status.generalStatus', function ($statusesQuery) {
+                            $statusesQuery->where('stage', '>', 5);
+                        })
+                            ->whereHas('statusHistory', function ($historyQuery) use ($request, $month) {
+                                $historyQuery->whereMonth('start_date', $month['number'])
+                                    ->whereYear('start_date', $request->year)
+                                    ->whereHas('status.generalStatus', function ($statusesQuery) {
+                                        $statusesQuery->where('stage', 5);
+                                    });
+                            });
+                    });
+            });
     }
 
     /**

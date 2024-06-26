@@ -30,7 +30,7 @@
 
         <x-forms.boolean-select.request-based-select
             label="Extensive statistics"
-            name="extensive" />
+            name="extensive_version" />
     @endif
 
     <x-forms.id-based-single-select.request-based-select

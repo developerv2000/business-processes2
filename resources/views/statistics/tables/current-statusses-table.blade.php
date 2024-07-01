@@ -1,7 +1,7 @@
 <div class="statistics-index__table1-container styled-box">
     <div class="pre-content">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Количество процессов, у которых текущий статус соответствует указанному статусу')],
+            'crumbs' => [__('Number of processes whose current status matches the specified status')],
             'fullScreen' => false,
         ])
     </div>

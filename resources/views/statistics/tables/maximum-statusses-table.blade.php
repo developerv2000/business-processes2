@@ -1,7 +1,7 @@
 <div class="statistics-index__table2-container styled-box">
     <div class="pre-content">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Максимальное количество процессов, которое определённый статус имел в течении месяца')],
+            'crumbs' => [__('The maximum number of processes that a certain status had during a month')],
             'fullScreen' => false,
         ])
     </div>
@@ -27,7 +27,11 @@
                     <td>{{ $status->name }}</td>
 
                     @foreach ($status->months as $month)
-                        <td>{{ $month['maximum_processes_count'] }}</td>
+                        <td>
+                            <a href="{{ $month['maximum_processes_link'] }}">
+                                {{ $month['maximum_processes_count'] }}
+                            </a>
+                        </td>
                     @endforeach
 
                     <td>{{ $status->year_maximum_processes_count }}</td>

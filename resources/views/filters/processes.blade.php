@@ -10,9 +10,35 @@
         <x-forms.input.request-based-input
             type="text"
             label="Special filter"
-            name="_"
-            value="Contracted"
+            name="special_filter"
+            :value="__('Contracted on') . ' ' . $request->contracted_year"
             readonly />
+
+        <input type="hidden" name="contracted_on_requested_month_and_year" value="1">
+        <input type="hidden" name="contracted_year" value="{{ $request->contracted_year }}">
+        <input type="hidden" name="contracted_month" value="{{ $request->contracted_month }}">
+    @endif
+
+    {{-- Notify if redirected from statistics index page & has_status_history requested --}}
+    @if ($request->has_status_history)
+        <x-forms.input.request-based-input
+            type="text"
+            label="Special filter"
+            name="special_filter"
+            :value="__('Has status history')"
+            readonly />
+
+        <input type="hidden" name="has_status_history" value="1">
+        <input type="hidden" name="has_status_history_on_month" value="{{ $request->has_status_history_on_month }}">
+        <input type="hidden" name="has_status_history_on_year" value="{{ $request->has_status_history_on_year }}">
+
+        @if ($request->has_status_history_based_on_id)
+            <input type="hidden" name="has_status_history_based_on_id" value="1">
+            <input type="hidden" name="has_status_history_general_status_id" value="{{ $request->has_status_history_general_status_id }}">
+        @elseif ($request->has_status_history_based_on_name_for_analysts)
+            <input type="hidden" name="has_status_history_based_on_name_for_analysts" value="1">
+            <input type="hidden" name="has_status_history_general_status_name_for_analysts" value="{{ $request->has_status_history_general_status_name_for_analysts }}">
+        @endif
     @endif
 
     <x-forms.id-based-single-select.request-based-select

@@ -49,6 +49,8 @@ class StatisticController extends Controller
 
         // Calculate Table 2 - Maximum processes count
         self::addMaximumProcessesCountForStatusMonths($request, $generalStatuses, $months);
+        // Add maximum processes link for each month of statuses. Table 2
+        self::addMaximumProcessesLinkForStatusMonths($request, $generalStatuses);
 
         // Calculate general statuses 'year_current_processes_count' and 'year_maximum_processes_count' (Table 1 and Table 2)
         self::calculateStatusesYearProcessesCount($generalStatuses);
@@ -241,40 +243,32 @@ class StatisticController extends Controller
     private static function addCurrentProcessesLinkForStatusMonths($request, $generalStatuses)
     {
         // Filter parameters for the query
-        $query = [
-            'analyst_user_id' => $request->analyst_user_id,
-            'bdm_user_id' => $request->bdm_user_id,
-            'country_code_id' => $request->country_code_id,
-            'specific_manufacturer_country' => $request->specific_manufacturer_country,
-        ];
+        $queryParams = self::getFilterQueryParameters($request);
 
         foreach ($generalStatuses as $status) {
             foreach ($status->months as $month) {
-                $monthStart = Carbon::createFromFormat('Y-m-d', $request->year . '-' . $month['number'] . '-01');
-                $nextMonthStart = $monthStart->copy()->addMonth()->startOfMonth();
-
                 // Prepare a copy of the query with 'status_update_date' range
-                $queryCopy = $query;
-                $queryCopy['status_update_date'] = $monthStart->format('d/m/Y') . ' - ' . $nextMonthStart->format('d/m/Y');
+                $queryParamsCopy = $queryParams;
+                $queryParamsCopy['status_update_date'] = self::generateStatusUpdateRangeForLinks($request->year, $month['number']);
 
                 // Extensive version
                 if ($request->extensive_version) {
-                    $queryCopy['general_status_id'] = $status->id;
+                    $queryParamsCopy['general_status_id'] = $status->id;
                 } else {
                     // Minified version
                     if ($status->stage == 5) {
                         // Special links are used for stage 5 (Kk) on minified version
-                        $queryCopy['contracted_on_requested_month_and_year'] = true;
-                        $queryCopy['contracted_month'] = $month['number'];
-                        $queryCopy['contracted_year'] = $request->year;
+                        $queryParamsCopy['contracted_on_requested_month_and_year'] = true;
+                        $queryParamsCopy['contracted_month'] = $month['number'];
+                        $queryParamsCopy['contracted_year'] = $request->year;
                     } else {
                         // Stages 1 - 4 (1ВП - 4СЦ)
-                        $queryCopy['name_for_analysts'] = $status->name_for_analysts;
+                        $queryParamsCopy['name_for_analysts'] = $status->name_for_analysts;
                     }
                 }
 
                 // Generate the current processes link based on the query
-                $currentProcessesLink = route('processes.index', $queryCopy);
+                $currentProcessesLink = route('processes.index', $queryParamsCopy);
 
                 // Update the status object with the current processes link
                 $statusMonths = $status->months;
@@ -323,6 +317,9 @@ class StatisticController extends Controller
                 // Additional filtering
                 $query = self::filterMaximumProcessesQuery($request, $query);
 
+                // Unique by process_id
+                $query = $query->distinct('process_id');
+
                 // Get maximum processes count of the month fot the status
                 $monthProcessesCount = $query->count();
 
@@ -369,11 +366,83 @@ class StatisticController extends Controller
         return $query;
     }
 
+    /**
+     * Add current processes link for status months based on request parameters.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param array $generalStatuses
+     * @return void
+     */
+    private static function addMaximumProcessesLinkForStatusMonths($request, $generalStatuses)
+    {
+        // Filter parameters for the query
+        $queryParams = self::getFilterQueryParameters($request);
+
+        foreach ($generalStatuses as $status) {
+            foreach ($status->months as $month) {
+                // Prepare a copy of the query with 'status_update_date' range
+                $queryParamsCopy = $queryParams;
+                $queryParamsCopy['has_status_history'] = true;
+                $queryParamsCopy['has_status_history_on_year'] = $request->year;
+                $queryParamsCopy['has_status_history_on_month'] = $month['number'];
+
+                // Extensive version
+                if ($request->extensive_version) {
+                    $queryParamsCopy['has_status_history_based_on_id'] = true;
+                    $queryParamsCopy['has_status_history_general_status_id'] = $status->id;
+                } else {
+                    $queryParamsCopy['has_status_history_based_on_name_for_analysts'] = true;
+                    $queryParamsCopy['has_status_history_general_status_name_for_analysts'] = $status->name;
+                }
+
+                // Generate the current processes link based on the query
+                $maximumProcessesLink = route('processes.index', $queryParamsCopy);
+
+                // Update the status object with the maximum processes link
+                $statusMonths = $status->months;
+                $statusMonths[$month['number']]['maximum_processes_link'] = $maximumProcessesLink;
+                $status->months = $statusMonths;
+            }
+        }
+    }
+
     /*
     |---------------------------------------
     | Helper functions for Table 1 - Table 2
     |---------------------------------------
     */
+
+    /**
+     * Get filter query parameters from the request.
+     *
+     * @param Illuminate\Http\Request $request
+     * @return array
+     */
+    private static function getFilterQueryParameters($request)
+    {
+        return [
+            'analyst_user_id' => $request->analyst_user_id,
+            'bdm_user_id' => $request->bdm_user_id,
+            'country_code_id' => $request->country_code_id,
+            'specific_manufacturer_country' => $request->specific_manufacturer_country,
+        ];
+    }
+
+    /**
+     * Generate status update date range for links based on the given month.
+     *
+     * @param int $year
+     * @param int $month
+     * @return string
+     */
+    private static function generateStatusUpdateRangeForLinks($year, $month)
+    {
+        $monthStart = Carbon::createFromFormat('Y-m-d', $year . '-' . $month . '-01');
+        $nextMonthStart = $monthStart->copy()->addMonth()->startOfMonth();
+
+        return $monthStart->format('d/m/Y') . ' - ' . $nextMonthStart->format('d/m/Y');
+    }
+
     /**
      * Iterates through general statuses and calculates the total current and maximum processes count
      * based on the counts for each month.

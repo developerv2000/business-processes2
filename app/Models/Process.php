@@ -365,9 +365,14 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         $query = self::filterRecordsByRoles($request, $query);
         $query = self::filterSpecificManufacturerCountry($request, $query);
 
-        // If redirected from statitics index page & stage 5 (Kk) requested
+        // If redirected from statitics index page & stage 5 (Kk) requested (Table 1)
         if ($request->contracted_on_requested_month_and_year) {
             $query = self::filterRecordsContractedOnRequestedMonthAndYear($query, $request->contracted_year, $request->contracted_month);
+        }
+
+        // If redirected from statitics index page & has status history requested (Table 2)
+        if ($request->has_status_history) {
+            $query = self::filterRecordsByStatusHistory($query, $request);
         }
 
         return $query;
@@ -471,6 +476,40 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
                             });
                     });
             });
+    }
+
+    /**
+     * Filter records based on status history criteria.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Illuminate\Http\Request $request
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private static function filterRecordsByStatusHistory($query, $request)
+    {
+        $idBased = $request->has_status_history_based_on_id;
+        $nameForAnalysts = $request->has_status_history_based_on_name_for_analysts;
+
+        $query = $query->whereHas('statusHistory', function ($historyQuery) use ($request, $idBased, $nameForAnalysts) {
+            $historyQuery->whereMonth('start_date', $request->has_status_history_on_month)
+                ->whereYear('start_date', $request->has_status_history_on_year);
+
+            // Apply filter based on ID if requested
+            if ($idBased) {
+                $historyQuery->whereHas('status.generalStatus', function ($statusesQuery) use ($request) {
+                    $statusesQuery->where('id', $request->has_status_history_general_status_id);
+                });
+            }
+
+            // Apply filter based on name for analysts if requested
+            if ($nameForAnalysts) {
+                $historyQuery->whereHas('status.generalStatus', function ($statusesQuery) use ($request) {
+                    $statusesQuery->where('name_for_analysts', $request->has_status_history_general_status_name_for_analysts);
+                });
+            }
+        });
+
+        return $query;
     }
 
     /**

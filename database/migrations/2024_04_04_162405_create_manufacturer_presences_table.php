@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('manufacturer_presences', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
-            $table->unsignedInteger('manufacturer_id');
+
+            $table->unsignedInteger('manufacturer_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('manufacturers');
+
             $table->string('name');
         });
     }

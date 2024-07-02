@@ -17,8 +17,16 @@ return new class extends Migration
         });
 
         Schema::create('manufacturer_product_class', function (Blueprint $table) {
-            $table->unsignedInteger('manufacturer_id');
-            $table->unsignedSmallInteger('product_class_id');
+            $table->unsignedInteger('manufacturer_id')
+                ->foreign()
+                ->references('id')
+                ->on('manufacturers');
+
+            $table->unsignedSmallInteger('product_class_id')
+                ->foreign()
+                ->references('id')
+                ->on('product_classes');
+
             $table->primary(['manufacturer_id', 'product_class_id']);
         });
     }

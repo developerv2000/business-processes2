@@ -13,9 +13,15 @@ return new class extends Migration
     {
         Schema::create('meetings', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
-            $table->unsignedInteger('manufacturer_id');
+
+            $table->unsignedInteger('manufacturer_id')
+                ->foreign()
+                ->references('id')
+                ->on('manufacturers');
+
             $table->unsignedSmallInteger('year');
             $table->unique(['manufacturer_id', 'year']);
+
             $table->string('who_met', 600)->nullable();
             $table->string('plan', 2000)->nullable();
             $table->string('topic', 2000)->nullable();

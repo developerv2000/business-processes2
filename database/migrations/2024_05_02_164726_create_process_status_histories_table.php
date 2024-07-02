@@ -13,8 +13,19 @@ return new class extends Migration
     {
         Schema::create('process_status_histories', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
-            $table->unsignedInteger('process_id');
-            $table->unsignedSmallInteger('status_id');
+
+            $table->unsignedInteger('process_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('processes');
+
+            $table->unsignedSmallInteger('status_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('process_statuses');
+
             $table->timestamp('start_date');
             $table->timestamp('end_date')->nullable();
             $table->unsignedMediumInteger('duration_days')->nullable();

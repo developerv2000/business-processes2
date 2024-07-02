@@ -17,14 +17,30 @@ return new class extends Migration
         });
 
         Schema::create('manufacturer_zone', function (Blueprint $table) {
-            $table->unsignedInteger('manufacturer_id');
-            $table->unsignedSmallInteger('zone_id');
+            $table->unsignedInteger('manufacturer_id')
+                ->foreign()
+                ->references('id')
+                ->on('manufacturers');
+
+            $table->unsignedSmallInteger('zone_id')
+                ->foreign()
+                ->references('id')
+                ->on('zones');
+
             $table->primary(['manufacturer_id', 'zone_id']);
         });
 
         Schema::create('product_zone', function (Blueprint $table) {
-            $table->unsignedInteger('product_id');
-            $table->unsignedSmallInteger('zone_id');
+            $table->unsignedInteger('product_id')
+                ->foreign()
+                ->references('id')
+                ->on('products');
+
+            $table->unsignedSmallInteger('zone_id')
+                ->foreign()
+                ->references('id')
+                ->on('zones');
+
             $table->primary(['product_id', 'zone_id']);
         });
     }

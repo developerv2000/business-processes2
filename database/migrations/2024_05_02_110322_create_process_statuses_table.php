@@ -13,8 +13,13 @@ return new class extends Migration
     {
         Schema::create('process_statuses', function (Blueprint $table) {
             $table->unsignedSmallInteger('id')->autoIncrement();
-            $table->string('name');
-            $table->unsignedSmallInteger('general_status_id');
+            $table->string('name')->unique();
+
+            $table->unsignedSmallInteger('general_status_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('process_general_statuses');
         });
     }
 

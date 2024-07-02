@@ -17,8 +17,16 @@ return new class extends Migration
         });
 
         Schema::create('manufacturer_manufacturer_blacklist', function (Blueprint $table) {
-            $table->unsignedInteger('manufacturer_id');
-            $table->unsignedSmallInteger('manufacturer_blacklist_id');
+            $table->unsignedInteger('manufacturer_id')
+                ->foreign()
+                ->references('id')
+                ->on('manufacturers');
+
+            $table->unsignedSmallInteger('manufacturer_blacklist_id')
+                ->foreign()
+                ->references('id')
+                ->on('manufacturer_blacklists');
+
             $table->primary(['manufacturer_id', 'manufacturer_blacklist_id']);
         });
     }

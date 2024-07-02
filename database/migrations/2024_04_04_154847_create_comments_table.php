@@ -14,9 +14,16 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->string('body', 4000);
-            $table->unsignedInteger('commentable_id');
-            $table->string('commentable_type');
-            $table->unsignedSmallInteger('user_id');
+
+            $table->unsignedInteger('commentable_id')->index();
+            $table->string('commentable_type')->index();
+
+            $table->unsignedSmallInteger('user_id')
+                // ->index() // non-index because used rarely
+                ->foreign()
+                ->references('id')
+                ->on('users');
+
             $table->timestamp('created_at');
         });
     }

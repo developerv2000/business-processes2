@@ -14,12 +14,31 @@ return new class extends Migration
         Schema::create('processes', function (Blueprint $table) {
             // Globals
             $table->unsignedInteger('id')->autoIncrement(); // auto
-            $table->unsignedInteger('product_id'); // auto
-            $table->unsignedSmallInteger('status_id'); // required
+
+            // auto
+            $table->unsignedInteger('product_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('products');
+
+            // required
+            $table->unsignedSmallInteger('status_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('process_statuses');
+
             $table->timestamp('status_update_date'); // auto, but also can be set manually only on create
 
             // Stage 1 (ВП)
-            $table->unsignedSmallInteger('country_code_id'); // required and immutable after stage 1
+            // required and immutable after stage 1
+            $table->unsignedSmallInteger('country_code_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('country_codes');
+
             $table->date('responsible_people_update_date'); // auto
 
             // Stage 2 (ПО)
@@ -36,14 +55,28 @@ return new class extends Migration
             $table->string('down_payment_condition')->nullable(); // nullable until the end
 
             // Stage 3 (АЦ)
-            $table->unsignedSmallInteger('currency_id')->nullable(); // required
+            // required
+            $table->unsignedSmallInteger('currency_id')
+                ->nullable()
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('currencies');
+
             $table->decimal('manufacturer_first_offered_price', 8, 2)->nullable(); // required
             $table->decimal('manufacturer_followed_offered_price', 8, 2)->nullable(); // required
             $table->decimal('manufacturer_followed_offered_price_in_usd', 8, 2)->nullable(); // auto
             $table->decimal('our_first_offered_price', 8, 2)->nullable(); // required
             $table->decimal('our_followed_offered_price', 8, 2)->nullable(); // required
 
-            $table->unsignedSmallInteger('marketing_authorization_holder_id')->nullable(); // nullable at stages (3, 4) and became required at stage 5
+            // nullable at stages (3, 4) and became required at stage 5
+            $table->unsignedSmallInteger('marketing_authorization_holder_id')
+                ->nullable()
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('marketing_authorization_holders');
+
             $table->string('trademark_en')->nullable(); // nullable at stages (3, 4) and became required at stage 5
             $table->string('trademark_ru')->nullable(); // nullable at stages (3, 4) and became required at stage 5
 

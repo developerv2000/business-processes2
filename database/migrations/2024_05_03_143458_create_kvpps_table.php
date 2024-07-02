@@ -13,22 +13,71 @@ return new class extends Migration
     {
         Schema::create('kvpps', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
-            $table->unsignedSmallInteger('status_id');
-            $table->unsignedSmallInteger('country_code_id');
-            $table->unsignedSmallInteger('priority_id');
-            $table->unsignedSmallInteger('source_id');
-            $table->unsignedSmallInteger('inn_id');
-            $table->unsignedSmallInteger('form_id');
             $table->string('dosage', 300)->nullable();
             $table->string('pack')->nullable();
-            $table->unsignedSmallInteger('marketing_authorization_holder_id');
+
             $table->string('information', 1000)->nullable();
             $table->date('date_of_forecast')->nullable();
             $table->unsignedInteger('forecast_year_1')->nullable();
             $table->unsignedInteger('forecast_year_2')->nullable();
             $table->unsignedInteger('forecast_year_3')->nullable();
-            $table->unsignedSmallInteger('portfolio_manager_id')->nullable();
-            $table->unsignedSmallInteger('analyst_user_id')->nullable();
+
+            $table->unsignedSmallInteger('status_id')
+                // ->index() // non-index because already 4 indexes used for this table
+                ->foreign()
+                ->references('id')
+                ->on('kvpp_statuses');
+
+            $table->unsignedSmallInteger('country_code_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('country_codes');
+
+            $table->unsignedSmallInteger('priority_id')
+                // ->index() // non-index because already 4 indexes used for this table
+                ->foreign()
+                ->references('id')
+                ->on('kvpp_priorities');
+
+            $table->unsignedSmallInteger('source_id')
+                // ->index() // non-index because already 4 indexes used for this table
+                ->foreign()
+                ->references('id')
+                ->on('kvpp_sources');
+
+            $table->unsignedSmallInteger('inn_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('inns');
+
+            $table->unsignedSmallInteger('form_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('product_forms');
+
+            $table->unsignedSmallInteger('marketing_authorization_holder_id')
+                // ->index() // non-index because already 4 indexes used for this table
+                ->foreign()
+                ->references('id')
+                ->on('marketing_authorization_holders');
+
+            $table->unsignedSmallInteger('portfolio_manager_id')
+                ->nullable()
+                // ->index() // non-index because already 4 indexes used for this table
+                ->foreign()
+                ->references('id')
+                ->on('portfolio_managers');
+
+            $table->unsignedSmallInteger('analyst_user_id')
+                ->nullable()
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('users');
+
             $table->timestamps();
             $table->softDeletes();
         });

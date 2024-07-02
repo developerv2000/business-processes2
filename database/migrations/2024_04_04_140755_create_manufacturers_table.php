@@ -19,10 +19,31 @@ return new class extends Migration
             $table->string('relationship', 6000)->nullable();
             $table->boolean('is_active');
             $table->boolean('is_important');
-            $table->unsignedSmallInteger('bdm_user_id');
-            $table->unsignedSmallInteger('analyst_user_id');
-            $table->unsignedSmallInteger('country_id');
-            $table->unsignedSmallInteger('category_id');
+
+            $table->unsignedSmallInteger('bdm_user_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('users');
+
+            $table->unsignedSmallInteger('analyst_user_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('users');
+
+            $table->unsignedSmallInteger('country_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('countries');
+
+            $table->unsignedSmallInteger('category_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('manufacturer_categories');
+
             $table->timestamps();
             $table->softDeletes();
         });

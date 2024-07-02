@@ -17,8 +17,16 @@ return new class extends Migration
         });
 
         Schema::create('clinical_trial_country_process', function (Blueprint $table) {
-            $table->unsignedInteger('process_id');
-            $table->unsignedSmallInteger('country_id');
+            $table->unsignedInteger('process_id')
+                ->foreign()
+                ->references('id')
+                ->on('processes');
+
+            $table->unsignedSmallInteger('country_id')
+                ->foreign()
+                ->references('id')
+                ->on('countries');
+
             $table->primary(['process_id', 'country_id']);
         });
     }

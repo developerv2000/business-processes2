@@ -17,8 +17,16 @@ return new class extends Migration
         });
 
         Schema::create('role_user', function (Blueprint $table) {
-            $table->unsignedSmallInteger('role_id');
-            $table->unsignedSmallInteger('user_id');
+            $table->unsignedSmallInteger('role_id')
+                ->foreign()
+                ->references('id')
+                ->on('roles');
+
+            $table->unsignedSmallInteger('user_id')
+                ->foreign()
+                ->references('id')
+                ->on('users');
+
             $table->primary(['role_id', 'user_id']);
         });
     }

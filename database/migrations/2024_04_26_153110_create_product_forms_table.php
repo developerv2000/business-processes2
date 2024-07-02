@@ -14,7 +14,13 @@ return new class extends Migration
         Schema::create('product_forms', function (Blueprint $table) {
             $table->unsignedSmallInteger('id')->autoIncrement();
             $table->string('name')->unique();
-            $table->unsignedSmallInteger('parent_id')->nullable();
+
+            $table->unsignedSmallInteger('parent_id')
+                ->nullable()
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('product_forms');
         });
     }
 

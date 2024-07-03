@@ -37,7 +37,7 @@ class StatisticController extends Controller
     public function index(Request $request)
     {
         self::mergeDefaultParamsToRequest($request);
-        $months = Helper::collectCalendarMonths();
+        $months = self::getFilteredMonths($request);
 
         $generalStatuses = self::getFilteredGeneralStatuses($request);
         self::addRequiredAttributesForGeneralStatuses($generalStatuses, $months);
@@ -90,6 +90,27 @@ class StatisticController extends Controller
                 'analyst_user_id' => $user->id,
             ]);
         }
+    }
+
+    /**
+     * Get filtered months based on the request parameters.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    private static function getFilteredMonths($request)
+    {
+        // Define the array of months
+        $months = Helper::collectCalendarMonths();
+
+        // If specific months are requested, filter the months array
+        if ($request->months) {
+            $months = $months->whereIn('number', $request->months)
+                ->sortBy('number')
+                ->values();
+        }
+
+        return $months->all();
     }
 
     /**

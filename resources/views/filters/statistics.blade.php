@@ -6,7 +6,7 @@
         label="Year"
         name="year" />
 
-    {{-- <x-forms.groups.default-group label="{{ __('Months') }}">
+    <x-forms.groups.default-group label="{{ __('Months') }}">
         <select multiple name="months[]" class="multiple-selectize @if ($request->has('months')) multiple-selectize--highlight @endif">
             @foreach ($calendarMonths as $month)
                 <option value="{{ $month['number'] }}"
@@ -15,7 +15,7 @@
                 </option>
             @endforeach
         </select>
-    </x-forms.groups.default-group> --}}
+    </x-forms.groups.default-group>
 
     <x-forms.id-based-single-select.request-based-select
         label="BDM"

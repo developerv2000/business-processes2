@@ -1157,6 +1157,12 @@ body::-webkit-scrollbar-thumb,
     align-self: flex-start;
 }
 
+.statistics-index .main__conent-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .statistics-counter {
     display: flex;
     flex-wrap: wrap;
@@ -1186,12 +1192,13 @@ body::-webkit-scrollbar-thumb,
     font-size: 15px;
 }
 
-.statistics-index__table1-container {
-    margin: 20px 0;
-}
-
 .statistics-index .main-table a {
     text-decoration: none;
+}
+
+/* Charts */
+.chart1 {
+    height: 520px;
 }
 
 /* Statuses */

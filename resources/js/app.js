@@ -8,11 +8,17 @@ const GET_PROCESSES_CREATE_FORECAST_INPUTS_URL = '/processes/get-create-form-for
 const GET_PROCESSES_EDIT_STAGE_INPUTS_URL = '/processes/get-edit-form-stage-inputs';
 const bodyInner = document.querySelector('.body__inner');
 
+// Colors
+const rootStyles = getComputedStyle(document.documentElement);
+const mainColor = rootStyles.getPropertyValue('--main-color').trim();
+const textColor = rootStyles.getPropertyValue('--text-color').trim();
+
 let countryCodesSelectize; // used as global to access it locally (used only on processes create form)
 
 window.addEventListener('load', () => {
     bootstrapComponents();
     bootstrapForms();
+    bootstrapECharts();
 });
 
 function bootstrapComponents() {
@@ -499,4 +505,150 @@ function bootstrapForms() {
                 hideSpinner();
             });
     }
+}
+
+function bootstrapECharts() {
+    const statisticsPage = document.querySelector('.statistics-index');
+
+    if (statisticsPage) {
+        boostrapChart1();
+        // boostrapChart2();
+    }
+
+    // var dom = document.getElementById('chart1');
+    // var myChart = echarts.init(dom, null, {
+    //     renderer: 'canvas',
+    //     useDirtyRect: false
+    // });
+    // var app = {};
+
+    // var option;
+
+    // option = {
+    //     title: {
+    //         text: 'World Population'
+    //     },
+    //     tooltip: {
+    //         trigger: 'axis',
+    //         axisPointer: {
+    //             type: 'shadow'
+    //         }
+    //     },
+    //     legend: {},
+    //     grid: {
+    //         left: '3%',
+    //         right: '4%',
+    //         bottom: '3%',
+    //         containLabel: true
+    //     },
+    //     xAxis: {
+    //         type: 'value',
+    //         boundaryGap: [0, 0.01]
+    //     },
+    //     yAxis: {
+    //         type: 'category',
+    //         data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']
+    //     },
+    //     series: [
+    //         {
+    //             name: '2011',
+    //             type: 'bar',
+    //             data: [18203, 23489, 29034, 104970, 131744, 630230],
+    //             label: {
+    //                 show: true, // Show labels on data points
+    //                 position: 'right', // Position of the labels (top, right, bottom, left)
+    //                 color: 'black' // Color of the labels
+    //             }
+    //         },
+    //         {
+    //             name: '2012',
+    //             type: 'bar',
+    //             data: [19325, 23438, 31000, 121594, 134141, 681807],
+    //             label: {
+    //                 show: true, // Show labels on data points
+    //                 position: 'right', // Position of the labels (top, right, bottom, left)
+    //                 color: 'black' // Color of the labels
+    //             }
+    //         }
+    //     ]
+    // };
+
+    // if (option && typeof option === 'object') {
+    //     myChart.setOption(option);
+    // }
+
+    // window.addEventListener('resize', myChart.resize);
+}
+
+function boostrapChart1() {
+    const container = document.querySelector('.chart1');
+
+    const chart = echarts.init(container, null, {
+        renderer: 'canvas',
+        useDirtyRect: false,
+        backgroundColor: 'white'
+    });
+
+    const option = {
+        backgroundColor: '#ffffff',
+        title: {
+            text: 'Chart 1',
+            padding: [28, 60, 24, 30],
+        },
+        grid: {
+            left: '60px',
+            right: '60px',
+            top: '80px',
+            bottom: '40px',
+        },
+        xAxis: {
+            type: 'category',
+            data: months.map(obj => obj.name)
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: months.map(obj => obj.all_current_process_count),
+                type: 'line',
+                symbol: 'circle',
+                symbolSize: 10,
+                color: mainColor,
+                label: {
+                    show: true,
+                    position: 'top', // top, right, bottom, left
+                    color: textColor,
+                    rich: {
+                        labelBox: {
+                            backgroundColor: '#fff', // Background color of the box
+                            borderRadius: 4, // Border radius of the box
+                            padding: [6, 10], // Padding inside the box [top, right, bottom, left]
+                            shadowBlur: 5, // Shadow blur radius
+                            shadowOffsetX: 3, // Shadow offset X
+                            shadowOffsetY: 3, // Shadow offset Y
+                            shadowColor: 'rgba(0, 0, 0, 0.3)' // Shadow color
+                        },
+                        value: {
+                            color: textColor // Color of the text inside the box
+                        }
+                    },
+                    // Formatter function to customize label content and style
+                    formatter: function (params) {
+                        return '{labelBox|' + params.value + '}';
+                    },
+                    // Align label text to center inside the symbol
+                    align: 'center',
+                    // Vertical alignment of label text
+                    verticalAlign: 'bottom'
+                }
+            }
+        ]
+    };
+
+    chart.setOption(option);
+
+    window.addEventListener('resize', function () {
+        chart.resize();
+    });
 }

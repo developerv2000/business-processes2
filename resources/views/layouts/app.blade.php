@@ -60,6 +60,9 @@
     {{-- JQuery Nested Sortable --}}
     <script src="{{ asset('plugins/jq-nested-sortable/jq-nested-sortable.js') }}"></script>
 
+    {{-- Apache ECharts --}}
+    <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+
     @vite('resources/js/app.js')
 </body>
 

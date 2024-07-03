@@ -63,7 +63,23 @@ class StatisticController extends Controller
         // Calculate sum of all 'year_maximum_processes_count' of general statuses (Table 2)
         $yearTotalMaximumProcessesCount = $generalStatuses->sum('year_maximum_processes_count');
 
-        return view('statistics.index', compact('request', 'months', 'generalStatuses', 'yearTotalCurrentProcessesCount', 'yearTotalMaximumProcessesCount'));
+        $chart2Sources = [];
+
+        foreach($months as $month) {
+            $source = [$month['name']];
+            $processesCount = [];
+
+            foreach($generalStatuses as $status) {
+                $monthCollection = collect($status['months']);
+                $requiredMonth = $monthCollection->firstWhere('number', $month['number']);
+                array_push($processesCount, $requiredMonth['current_processes_count']);
+            }
+
+            array_push($source, ...$processesCount);
+            array_push($chart2Sources, $source);
+        }
+
+        return view('statistics.index', compact('request', 'months', 'generalStatuses', 'yearTotalCurrentProcessesCount', 'yearTotalMaximumProcessesCount', 'chart2Sources'));
     }
 
     /**

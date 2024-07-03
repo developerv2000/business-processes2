@@ -508,76 +508,14 @@ function bootstrapForms() {
 }
 
 function bootstrapECharts() {
+    // generalStatuses & months are defined in blade
+
     const statisticsPage = document.querySelector('.statistics-index');
 
     if (statisticsPage) {
         boostrapChart1();
-        // boostrapChart2();
+        boostrapChart2();
     }
-
-    // var dom = document.getElementById('chart1');
-    // var myChart = echarts.init(dom, null, {
-    //     renderer: 'canvas',
-    //     useDirtyRect: false
-    // });
-    // var app = {};
-
-    // var option;
-
-    // option = {
-    //     title: {
-    //         text: 'World Population'
-    //     },
-    //     tooltip: {
-    //         trigger: 'axis',
-    //         axisPointer: {
-    //             type: 'shadow'
-    //         }
-    //     },
-    //     legend: {},
-    //     grid: {
-    //         left: '3%',
-    //         right: '4%',
-    //         bottom: '3%',
-    //         containLabel: true
-    //     },
-    //     xAxis: {
-    //         type: 'value',
-    //         boundaryGap: [0, 0.01]
-    //     },
-    //     yAxis: {
-    //         type: 'category',
-    //         data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']
-    //     },
-    //     series: [
-    //         {
-    //             name: '2011',
-    //             type: 'bar',
-    //             data: [18203, 23489, 29034, 104970, 131744, 630230],
-    //             label: {
-    //                 show: true, // Show labels on data points
-    //                 position: 'right', // Position of the labels (top, right, bottom, left)
-    //                 color: 'black' // Color of the labels
-    //             }
-    //         },
-    //         {
-    //             name: '2012',
-    //             type: 'bar',
-    //             data: [19325, 23438, 31000, 121594, 134141, 681807],
-    //             label: {
-    //                 show: true, // Show labels on data points
-    //                 position: 'right', // Position of the labels (top, right, bottom, left)
-    //                 color: 'black' // Color of the labels
-    //             }
-    //         }
-    //     ]
-    // };
-
-    // if (option && typeof option === 'object') {
-    //     myChart.setOption(option);
-    // }
-
-    // window.addEventListener('resize', myChart.resize);
 }
 
 function boostrapChart1() {
@@ -630,16 +568,14 @@ function boostrapChart1() {
                             shadowColor: 'rgba(0, 0, 0, 0.3)' // Shadow color
                         },
                         value: {
-                            color: textColor // Color of the text inside the box
+                            color: textColor
                         }
                     },
                     // Formatter function to customize label content and style
                     formatter: function (params) {
                         return '{labelBox|' + params.value + '}';
                     },
-                    // Align label text to center inside the symbol
                     align: 'center',
-                    // Vertical alignment of label text
                     verticalAlign: 'bottom'
                 }
             }
@@ -651,4 +587,51 @@ function boostrapChart1() {
     window.addEventListener('resize', function () {
         chart.resize();
     });
+}
+
+function boostrapChart2() {
+    const container = document.querySelector('.chart2');
+    const generalStatusNames = generalStatuses.map(obj => obj.name);
+
+    let series = [];
+
+    generalStatusNames.forEach(element => {
+        series.push({ type: 'bar' });
+    });
+
+    const chart = echarts.init(container, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+    });
+
+    const option = {
+        backgroundColor: '#ffffff',
+        title: {
+            text: 'Chart 2',
+            padding: [28, 60, 24, 30],
+        },
+        grid: {
+            left: '60px',
+            right: '60px',
+            top: '80px',
+            bottom: '40px',
+        },
+        legend: {},
+        tooltip: {},
+        dataset: {
+            source: [
+                ['month', ...generalStatusNames],
+                ...chart2Sources
+            ]
+        },
+        xAxis: { type: 'category' },
+        yAxis: {},
+        // Declare several bar series, each will be mapped
+        // to a column of dataset.source by default.
+        series: series
+    };
+
+    chart.setOption(option);
+
+    window.addEventListener('resize', chart.resize);
 }

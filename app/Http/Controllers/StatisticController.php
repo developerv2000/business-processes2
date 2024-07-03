@@ -8,6 +8,7 @@ use App\Models\ProcessStatusHistory;
 use App\Support\Helper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Js;
 
 /**
  * There are extensive and minified versions of statistics.

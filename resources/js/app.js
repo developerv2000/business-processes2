@@ -591,11 +591,16 @@ function bootstrapStatisticCharts() {
             title: {
                 text: 'Chart title', // Chart title
                 padding: [28, 60, 24, 30], // Padding around the title
+                textStyle: {
+                    fontSize: 14, // Font size in pixels
+                    fontWeight: 'bold', // Optional: Font weight (e.g., 'normal', 'bold', '600')
+                    color: textColor // Optional: Font color
+                }
             },
             grid: {
                 left: '80px',
                 right: '80px',
-                top: '100px',
+                top: '80px',
                 bottom: '40px',
             },
             tooltip: {

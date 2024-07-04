@@ -1197,53 +1197,49 @@ body::-webkit-scrollbar-thumb,
 }
 
 /* Charts */
-.chart1 {
-    height: 520px;
-}
-
-.chart2 {
-    height: 520px;
+.statistics-chart1 {
+    height: 600px;
 }
 
 /* Statuses */
 .general-status-1 {
-    background-color: var(--text-color);
+    background-color: #5470C6;
 }
 
 .general-status-2 {
-    background-color: var(--secondary-color);
+    background-color: #91CC75;
 }
 
 .general-status-3 {
-    background-color: var(--success-color);
+    background-color: #FAC858;
 }
 
 .general-status-4 {
-    background-color: var(--danger-color);
+    background-color: #EE6666;
 }
 
 .general-status-5 {
-    background-color: var(--main-color);
+    background-color: #73C0DE;
 }
 
 .general-status-6 {
-    background-color: #A66999;
+    background-color: #3BA272;
 }
 
 .general-status-7 {
-    background-color: #7d59f3;
+    background-color: #FC8452;
 }
 
 .general-status-8 {
-    background-color: #ff00fa;
+    background-color: #9A60B4;
 }
 
 .general-status-9 {
-    background-color: #00c7ff;
+    background-color: #EA7CCC;
 }
 
 .general-status-10 {
-    background-color: #8b9597;
+    background-color: #5470C6;
 }
 
 /* ------------ /end Statistics pages ------------ */

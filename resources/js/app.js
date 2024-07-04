@@ -508,130 +508,143 @@ function bootstrapForms() {
 }
 
 function bootstrapECharts() {
-    // generalStatuses & months are defined in blade
-
-    const statisticsPage = document.querySelector('.statistics-index');
-
-    if (statisticsPage) {
-        boostrapChart1();
-        boostrapChart2();
-    }
+    bootstrapStatisticCharts();
 }
 
-function boostrapChart1() {
-    const container = document.querySelector('.chart1');
+/**
+ * Initializes and renders statistic charts based on global data.
+ * Charts are rendered using ECharts library on the statistics index page.
+ *
+ * @function bootstrapStatisticCharts
+ */
+function bootstrapStatisticCharts() {
+    // Check if we are on the statistics index page
+    if (document.querySelector('.statistics-index')) {
+        // Find the container element for the chart
+        const container = document.querySelector('.statistics-chart1');
 
-    const chart = echarts.init(container, null, {
-        renderer: 'canvas',
-        useDirtyRect: false,
-        backgroundColor: 'white'
-    });
-
-    const option = {
-        backgroundColor: '#ffffff',
-        title: {
-            text: 'Chart 1',
-            padding: [28, 60, 24, 30],
-        },
-        grid: {
-            left: '60px',
-            right: '60px',
-            top: '80px',
-            bottom: '40px',
-        },
-        xAxis: {
-            type: 'category',
-            data: months.map(obj => obj.name)
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
-                data: months.map(obj => obj.all_current_process_count),
-                type: 'line',
-                symbol: 'circle',
-                symbolSize: 10,
-                color: mainColor,
-                label: {
-                    show: true,
-                    position: 'top', // top, right, bottom, left
-                    color: textColor,
-                    rich: {
-                        labelBox: {
-                            backgroundColor: '#fff', // Background color of the box
-                            borderRadius: 4, // Border radius of the box
-                            padding: [6, 10], // Padding inside the box [top, right, bottom, left]
-                            shadowBlur: 5, // Shadow blur radius
-                            shadowOffsetX: 3, // Shadow offset X
-                            shadowOffsetY: 3, // Shadow offset Y
-                            shadowColor: 'rgba(0, 0, 0, 0.3)' // Shadow color
-                        },
-                        value: {
-                            color: textColor
+        // Prepare series data for bars based on general statuses
+        let series = [];
+        generalStatuses.forEach(status => {
+            series.push({
+                name: status.name,
+                type: 'bar',
+                data: Object.keys(status.months).map(key => ({
+                    value: status.months[key].current_processes_count,
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: textColor,
+                        formatter: function (params) {
+                            return params.value;
                         }
+                    }
+                })),
+            });
+        });
+
+        // Add a line series for 'Total' data
+        series.push({
+            name: 'Total',
+            data: months.map(obj => obj.all_current_process_count),
+            type: 'line',
+            symbol: 'circle',
+            symbolSize: 10,
+            color: mainColor,
+            label: {
+                show: true,
+                position: 'top', // Label position
+                color: textColor,
+                rich: {
+                    labelBox: {
+                        backgroundColor: '#fff', // Background color of the label box
+                        borderRadius: 4, // Border radius
+                        padding: [6, 10], // Padding inside the box
+                        shadowBlur: 5, // Shadow blur radius
+                        shadowOffsetX: 3, // Shadow offset X
+                        shadowOffsetY: 3, // Shadow offset Y
+                        shadowColor: 'rgba(0, 0, 0, 0.3)' // Shadow color
                     },
-                    // Formatter function to customize label content and style
-                    formatter: function (params) {
-                        return '{labelBox|' + params.value + '}';
-                    },
-                    align: 'center',
-                    verticalAlign: 'bottom'
-                }
+                    value: {
+                        color: textColor
+                    }
+                },
+                // Formatter function for customizing label content and style
+                formatter: function (params) {
+                    return '{labelBox|' + params.value + '}';
+                },
+                align: 'center',
+                verticalAlign: 'bottom'
             }
-        ]
-    };
+        });
 
-    chart.setOption(option);
+        // Initialize ECharts instance with specified options
+        const chart = echarts.init(container, null, {
+            renderer: 'canvas', // Use canvas renderer for better performance
+            useDirtyRect: false, // Disable dirty rectangle optimization
+            backgroundColor: 'white' // Set chart background color
+        });
 
-    window.addEventListener('resize', function () {
-        chart.resize();
-    });
-}
+        // Define the main configuration options for the chart
+        const option = {
+            backgroundColor: '#ffffff', // Overall background color
+            title: {
+                text: 'Chart title', // Chart title
+                padding: [28, 60, 24, 30], // Padding around the title
+            },
+            grid: {
+                left: '80px',
+                right: '80px',
+                top: '100px',
+                bottom: '40px',
+            },
+            tooltip: {
+                trigger: 'axis', // Tooltip trigger type
+                axisPointer: {
+                    type: 'cross', // Cross style for axis pointer
+                    crossStyle: {
+                        color: '#999' // Color of the cross style
+                    }
+                }
+            },
+            toolbox: {
+                feature: {
+                    dataView: { show: true, readOnly: false }, // Enable data view tool
+                    magicType: { show: true, type: ['line', 'bar'] }, // Enable switch between line and bar
+                    restore: { show: true }, // Enable restore button
+                    saveAsImage: { show: true } // Enable save as image button
+                }
+            },
+            legend: {
+                padding: [20, 0, 20], // Padding around legend
+                itemGap: 20, // Gap between legend items
+                itemWidth: 20, // Width of legend item symbol
+                itemHeight: 14, // Height of legend item symbol
+            },
+            xAxis: [
+                {
+                    type: 'category', // Category axis type
+                    data: months.map(obj => obj.name), // Data for x-axis categories
+                    axisPointer: {
+                        type: 'shadow' // Pointer type for axis
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value' // Value axis type
+                },
+                {}, // Empty placeholder for secondary y-axis if needed
+            ],
+            series: series, // Assign prepared series data to chart
+        };
 
-function boostrapChart2() {
-    const container = document.querySelector('.chart2');
-    const generalStatusNames = generalStatuses.map(obj => obj.name);
+        // Set chart configuration options
+        chart.setOption(option);
 
-    let series = [];
-
-    generalStatusNames.forEach(element => {
-        series.push({ type: 'bar' });
-    });
-
-    const chart = echarts.init(container, null, {
-        renderer: 'canvas',
-        useDirtyRect: false
-    });
-
-    const option = {
-        backgroundColor: '#ffffff',
-        title: {
-            text: 'Chart 2',
-            padding: [28, 60, 24, 30],
-        },
-        grid: {
-            left: '60px',
-            right: '60px',
-            top: '80px',
-            bottom: '40px',
-        },
-        legend: {},
-        tooltip: {},
-        dataset: {
-            source: [
-                ['month', ...generalStatusNames],
-                ...chart2Sources
-            ]
-        },
-        xAxis: { type: 'category' },
-        yAxis: {},
-        // Declare several bar series, each will be mapped
-        // to a column of dataset.source by default.
-        series: series
-    };
-
-    chart.setOption(option);
-
-    window.addEventListener('resize', chart.resize);
+        // Resize chart when window is resized
+        window.addEventListener('resize', function () {
+            chart.resize();
+        });
+    }
 }

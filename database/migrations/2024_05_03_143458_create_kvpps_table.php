@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('kvpps', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
+
+            $table->boolean('source_eu');
+            $table->boolean('source_in');
+
             $table->string('dosage', 300)->nullable();
             $table->string('pack')->nullable();
 
-            $table->string('information', 1000)->nullable();
-            $table->date('date_of_forecast')->nullable();
+            $table->string('additional_search_information', 1000)->nullable();
             $table->unsignedInteger('forecast_year_1')->nullable();
             $table->unsignedInteger('forecast_year_2')->nullable();
             $table->unsignedInteger('forecast_year_3')->nullable();
@@ -39,12 +42,6 @@ return new class extends Migration
                 ->foreign()
                 ->references('id')
                 ->on('kvpp_priorities');
-
-            $table->unsignedSmallInteger('source_id')
-                // ->index() // non-index because already 4 indexes used for this table
-                ->foreign()
-                ->references('id')
-                ->on('kvpp_sources');
 
             $table->unsignedSmallInteger('inn_id')
                 ->index()

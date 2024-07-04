@@ -7,7 +7,6 @@ use App\Models\CountryCode;
 use App\Models\Currency;
 use App\Models\Inn;
 use App\Models\KvppPriority;
-use App\Models\KvppSource;
 use App\Models\KvppStatus;
 use App\Models\Manufacturer;
 use App\Models\ManufacturerBlacklist;
@@ -166,10 +165,10 @@ class AppServiceProvider extends ServiceProvider
     private static function getKvppShareData()
     {
         return [
+            'booleanOptions' => Helper::getBooleanOptionsArray(),
             'statuses' => KvppStatus::getAll(),
             'countryCodes' => CountryCode::getAll(),
             'priorities' => KvppPriority::getAll(),
-            'sources' => KvppSource::getAll(),
             'inns' => Inn::getAll(),
             'productForms' => ProductForm::getAllMinified(),
             'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),

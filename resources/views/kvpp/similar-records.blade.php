@@ -12,7 +12,7 @@
                     <span>{{ __('Dosage') }}: {{ $kvpp->dosage }}</span>
                     <span>{{ __('Pack') }}: {{ $kvpp->pack }}</span>
                     <span>{{ __('Country') }}: {{ $kvpp->country->name }}</span>
-                    <span>{{ __('MAH') }}: {{ $kvpp->marketingAuthorizationHolder->name }}</span>
+                    <span>{{ __('PC') }}: {{ $kvpp->marketingAuthorizationHolder->name }}</span>
                 </div>
             </div>
         @endforeach

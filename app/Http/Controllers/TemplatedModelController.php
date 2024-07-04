@@ -27,7 +27,6 @@ class TemplatedModelController extends Controller
             collect(['name' => 'CountryCode', 'display_name' => 'Country codes', 'attributes' => ['name']]),
             collect(['name' => 'ProductShelfLife', 'display_name' => 'Product shelf lives', 'attributes' => ['name']]),
             collect(['name' => 'KvppPriority', 'display_name' => 'KVPP priorities', 'attributes' => ['name']]),
-            collect(['name' => 'KvppSource', 'display_name' => 'KVPP sources', 'attributes' => ['name']]),
             collect(['name' => 'KvppStatus', 'display_name' => 'KVPP statusses', 'attributes' => ['name']]),
             collect(['name' => 'ManufacturerCategory', 'display_name' => 'Manufacturer categories', 'attributes' => ['name']]),
             collect(['name' => 'Inn', 'display_name' => 'Inns', 'attributes' => ['name']]),

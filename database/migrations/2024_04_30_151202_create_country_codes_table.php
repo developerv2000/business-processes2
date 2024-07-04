@@ -15,6 +15,20 @@ return new class extends Migration
             $table->unsignedSmallInteger('id')->autoIncrement();
             $table->string('name')->unique();
         });
+
+        Schema::create('country_code_kvpp', function (Blueprint $table) {
+            $table->unsignedInteger('country_code_id')
+                ->foreign()
+                ->references('id')
+                ->on('country_codes');
+
+            $table->unsignedSmallInteger('kvpp_id')
+                ->foreign()
+                ->references('id')
+                ->on('kvpps');
+
+            $table->primary(['country_code_id', 'kvpp_id']);
+        });
     }
 
     /**
@@ -23,5 +37,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('country_codes');
+        Schema::dropIfExists('country_code_kvpp');
     }
 };

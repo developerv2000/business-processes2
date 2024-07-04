@@ -26,10 +26,18 @@
                 :options="$priorities"
                 required />
 
-            <x-forms.id-based-single-select.default-select
-                label="Source"
-                name="source_id"
-                :options="$sources"
+            <x-forms.radiogroup.default-radiogroup
+                label="Source EU"
+                name="source_eu"
+                :options="$booleanOptions"
+                default-value="0"
+                required />
+
+            <x-forms.radiogroup.default-radiogroup
+                label="Source IN"
+                name="source_in"
+                :options="$booleanOptions"
+                default-value="0"
                 required />
         </div>
 
@@ -68,14 +76,20 @@
 
         <div class="form__section">
             <x-forms.id-based-multiple-select.default-select
-                label="MAH"
+                label="PC"
                 name="marketing_authorization_holder_ids[]"
                 :options="$marketingAuthorizationHolders"
                 required />
 
             <x-forms.input.default-input
-                label="Information"
-                name="information" />
+                label="Additional search info"
+                name="additional_search_information" />
+
+            <x-forms.id-based-multiple-select.default-select
+                label="Additional search countries"
+                name="additionalSearchCountries[]"
+                :options="$countryCodes"
+                required />
 
             <x-forms.id-based-single-select.default-select
                 label="Portfolio manager"
@@ -89,11 +103,6 @@
         </div>
 
         <div class="form__section">
-            <x-forms.input.default-input
-                label="Date of forecast"
-                name="date_of_forecast"
-                type="date" />
-
             <x-forms.input.default-input
                 label="Forecast 1 year"
                 name="forecast_year_1"

@@ -919,9 +919,9 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ['name' => 'Brand Rus', 'order' => $order++, 'width' => 100, 'visible' => 1],
 
             ['name' => 'Date of forecast', 'order' => $order++, 'width' => 136, 'visible' => 1],
-            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 148, 'visible' => 1],
-            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 148, 'visible' => 1],
-            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 148, 'visible' => 1],
+            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
 
             ['name' => 'Dossier status', 'order' => $order++, 'width' => 124, 'visible' => 1],
             ['name' => 'Year Cr/Be', 'order' => $order++, 'width' => 102, 'visible' => 1],

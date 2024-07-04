@@ -6,15 +6,24 @@
         name="country_code_id"
         :options="$countryCodes" />
 
+    <x-forms.boolean-select.request-based-select
+        label="Source EU"
+        name="source_eu" />
+
+    <x-forms.boolean-select.request-based-select
+        label="Source IN"
+        name="source_in" />
+
+    <x-forms.boolean-select.request-based-select
+        label="Status"
+        name="is_active"
+        true-option-label="Active"
+        false-option-label="Stoped" />
+
     <x-forms.id-based-single-select.request-based-select
         label="Priority"
         name="priority_id"
         :options="$priorities" />
-
-    <x-forms.id-based-single-select.request-based-select
-        label="Source"
-        name="source_id"
-        :options="$sources" />
 
     <x-forms.id-based-single-select.request-based-select
         label="Generic"
@@ -37,7 +46,7 @@
         name="pack" />
 
     <x-forms.id-based-single-select.request-based-select
-        label="MAH"
+        label="PC"
         name="marketing_authorization_holder_id"
         :options="$marketingAuthorizationHolders" />
 

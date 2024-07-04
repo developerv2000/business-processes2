@@ -28,26 +28,14 @@ class Kvpp extends CommentableModel
         'status',
         'country',
         'priority',
-        'source',
         'inn',
         'form',
         'marketingAuthorizationHolder',
         'portfolioManager',
         'analyst',
+        'additionalSearchCountries',
         'lastComment',
     ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'date_of_forecast' => 'date:m-Y-d',
-        ];
-    }
 
     /*
     |--------------------------------------------------------------------------
@@ -68,11 +56,6 @@ class Kvpp extends CommentableModel
     public function priority()
     {
         return $this->belongsTo(KvppPriority::class, 'priority_id');
-    }
-
-    public function source()
-    {
-        return $this->belongsTo(KvppSource::class, 'source_id');
     }
 
     public function inn()
@@ -98,6 +81,11 @@ class Kvpp extends CommentableModel
     public function analyst()
     {
         return $this->belongsTo(User::class, 'analyst_user_id');
+    }
+
+    public function additionalSearchCountries()
+    {
+        return $this->belongsToMany(CountryCode::class, 'country_code_kvpp');
     }
 
     /*
@@ -138,6 +126,8 @@ class Kvpp extends CommentableModel
     protected static function booted(): void
     {
         static::forceDeleting(function ($instance) {
+            $instance->additionalSearchCountries()->detach();
+
             foreach ($instance->comments as $comment) {
                 $comment->delete();
             }
@@ -174,9 +164,10 @@ class Kvpp extends CommentableModel
     private static function filterRecords($request, $query)
     {
         $whereEqualAttributes = [
+            'source_eu',
+            'source_in',
             'country_code_id',
             'priority_id',
-            'source_id',
             'inn_id',
             'form_id',
             'marketing_authorization_holder_id',
@@ -286,6 +277,9 @@ class Kvpp extends CommentableModel
 
             // Store HasMany relations
             $instance->storeComment($request->comment);
+
+            // BelongsToMany relations
+            $instance->additionalSearchCountries()->attach($request->input('additionalSearchCountries'));
         }
     }
 
@@ -295,6 +289,9 @@ class Kvpp extends CommentableModel
 
         // HasMany relations
         $this->storeComment($request->comment);
+
+        // BelongsToMany relations
+        $this->additionalSearchCountries()->sync($request->input('additionalSearchCountries'));
     }
 
     /*
@@ -317,31 +314,32 @@ class Kvpp extends CommentableModel
 
         return [
             ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
-            ['name' => 'Status', 'order' => $order++, 'width' => 82, 'visible' => 1],
+            ['name' => 'ID', 'order' => $order++, 'width' => 60, 'visible' => 1],
+            ['name' => 'Source EU', 'order' => $order++, 'width' => 118, 'visible' => 1],
+            ['name' => 'Source IN', 'order' => $order++, 'width' => 118, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Portfolio manager', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 86, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 92, 'visible' => 1],
             ['name' => 'Priority', 'order' => $order++, 'width' => 106, 'visible' => 1],
             ['name' => 'VPS coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'IVP coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'Source', 'order' => $order++, 'width' => 98, 'visible' => 1],
             ['name' => 'Generic', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Basic form', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
-            ['name' => 'Information', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'PC', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Additional search info', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Additional search countries', 'order' => $order++, 'width' => 192, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
-            ['name' => 'Date of forecast', 'order' => $order++, 'width' => 136, 'visible' => 1],
             ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Portfolio manager', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 160, 'visible' => 1],
         ];
     }
 
@@ -357,28 +355,29 @@ class Kvpp extends CommentableModel
     {
         return [
             $this->id,
-            $this->status->name,
+            $this->source_eu ? 'EU' : '',
+            $this->source_in ? 'IN' : '',
+            $this->created_at,
+            $this->portfolioManager?->name,
             $this->country->name,
+            $this->status->name,
             $this->priority->name,
             $this->coincident_processes->count(),
             $this->coincident_products_count,
-            $this->source->name,
             $this->inn->name,
             $this->form->name,
             $this->form->parent_name,
             $this->dosage,
             $this->pack,
             $this->marketingAuthorizationHolder->name,
-            $this->information,
+            $this->additional_search_information,
+            $this->additionalSearchCountries()->pluck('name')->implode(' '),
             $this->comments->pluck('body')->implode(' / '),
             $this->lastComment?->created_at,
-            $this->date_of_forecast,
             $this->forecast_year_1,
             $this->forecast_year_2,
             $this->forecast_year_3,
-            $this->portfolioManager?->name,
             $this->analyst?->name,
-            $this->created_at,
             $this->updated_at,
         ];
     }

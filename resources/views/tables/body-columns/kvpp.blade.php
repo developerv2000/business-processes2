@@ -3,12 +3,36 @@
         @include('tables.components.td.edit-button', ['href' => route('kvpp.edit', $instance->id)])
     @break
 
-    @case('Status')
-        {{ $instance->status->name }}
+    @case('ID')
+        {{ $instance->id }}
+    @break
+
+    @case('Source EU')
+        @if ($instance->source_eu)
+            EU
+        @endif
+    @break
+
+    @case('Source IN')
+        @if ($instance->source_in)
+            IN
+        @endif
+    @break
+
+    @case('Date of creation')
+        {{ $instance->created_at->isoformat('DD MMM Y') }}
+    @break
+
+    @case('Portfolio manager')
+        {{ $instance->portfolioManager?->name }}
     @break
 
     @case('Country')
         {{ $instance->country->name }}
+    @break
+
+    @case('Status')
+        {{ $instance->status->name }}
     @break
 
     @case('Priority')
@@ -36,10 +60,6 @@
         </a><br>
     @break
 
-    @case('Source')
-        {{ $instance->source->name }}
-    @break
-
     @case('Generic')
         @include('tables.components.td.limited-text', ['text' => $instance->inn->name])
     @break
@@ -60,12 +80,18 @@
         {{ $instance->pack }}
     @break
 
-    @case('MAH')
+    @case('PC')
         {{ $instance->marketingAuthorizationHolder->name }}
     @break
 
-    @case('Information')
-        @include('tables.components.td.limited-text', ['text' => $instance->information])
+    @case('Additional search info')
+        @include('tables.components.td.limited-text', ['text' => $instance->additional_search_information])
+    @break
+
+    @case('Additional search countries')
+        @foreach ($instance->additionalSearchCountries as $country)
+            {{ $country->name }}<br>
+        @endforeach
     @break
 
     @case('Comments')
@@ -80,10 +106,6 @@
         {{ $instance->lastComment?->created_at->isoformat('DD MMM Y') }}
     @break
 
-    @case('Date of forecast')
-        {{ $instance->date_of_forecast?->isoformat('DD MMM Y') }}
-    @break
-
     @case('Forecast 1 year')
         @include('tables.components.td.formatted-price', ['attribute' => 'forecast_year_1'])
     @break
@@ -96,26 +118,14 @@
         @include('tables.components.td.formatted-price', ['attribute' => 'forecast_year_3'])
     @break
 
-    @case('Portfolio manager')
-        {{ $instance->portfolioManager?->name }}
-    @break
-
     @case('Analyst')
         @if ($instance->analyst)
             <x-different.ava image="{{ $instance->analyst->photo_asset_path }}" title="{{ $instance->analyst->name }}" />
         @endif
     @break
 
-    @case('Date of creation')
-        {{ $instance->created_at->isoformat('DD MMM Y') }}
-    @break
-
     @case('Update date')
         {{ $instance->updated_at->isoformat('DD MMM Y') }}
-    @break
-
-    @case('ID')
-        {{ $instance->id }}
     @break
 
 @endswitch

@@ -35,7 +35,6 @@ class DatabaseSeeder extends Seeder
             ProcessSeeder::class,
             KvppStatusSeeder::class,
             KvppPrioritySeeder::class,
-            KvppSourceSeeder::class,
             PortfolioManagerSeeder::class,
             KvppSeeder::class,
             MeetingSeeder::class,

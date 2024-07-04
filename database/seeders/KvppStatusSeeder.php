@@ -13,7 +13,7 @@ class KvppStatusSeeder extends Seeder
      */
     public function run(): void
     {
-        $name = ['Active', 'НОИ', 'НОЕ', 'СТОП'];
+        $name = ['Поиск', 'Нашли от Е', 'Нашли от И', 'Отменено'];
 
         for ($i = 0; $i < count($name); $i++) {
             $instance = new KvppStatus();

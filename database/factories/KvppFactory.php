@@ -6,7 +6,6 @@ use App\Models\Comment;
 use App\Models\CountryCode;
 use App\Models\Inn;
 use App\Models\KvppPriority;
-use App\Models\KvppSource;
 use App\Models\KvppStatus;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\PortfolioManager;
@@ -30,14 +29,14 @@ class KvppFactory extends Factory
             'status_id' => KvppStatus::inRandomOrder()->first()->id,
             'country_code_id' => CountryCode::inRandomOrder()->first()->id,
             'priority_id' => KvppPriority::inRandomOrder()->first()->id,
-            'source_id' => KvppSource::inRandomOrder()->first()->id,
+            'source_eu' => fake()->boolean(),
+            'source_in' => fake()->boolean(),
             'inn_id' => Inn::inRandomOrder()->first()->id,
             'form_id' => ProductForm::inRandomOrder()->first()->id,
             'marketing_authorization_holder_id' => MarketingAuthorizationHolder::inRandomOrder()->first()->id,
             'dosage' => fake()->numberBetween(10, 100),
             'pack' => fake()->numberBetween(10, 100) . ' ML',
-            'information' => fake()->sentences(2, true),
-            'date_of_forecast' => fake()->date(),
+            'additional_search_information' => fake()->sentences(2, true),
             'forecast_year_1' => fake()->numberBetween(10, 5000),
             'forecast_year_2' => fake()->numberBetween(10, 5000),
             'forecast_year_3' => fake()->numberBetween(10, 5000),
@@ -49,6 +48,9 @@ class KvppFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function ($kvpp) {
+            $kvpp->additionalSearchCountries()->attach(rand(1, 10));
+            $kvpp->additionalSearchCountries()->attach(rand(11, 20));
+
             $kvpp->comments()->saveMany([
                 new Comment([
                     'body' => fake()->sentences(2, true),

@@ -28,10 +28,17 @@
                 :instance="$instance"
                 required />
 
-            <x-forms.id-based-single-select.instance-edit-select
-                label="Source"
-                name="source_id"
-                :options="$sources"
+            <x-forms.radiogroup.instance-edit-radiogroup
+                label="Source EU"
+                name="source_eu"
+                :options="$booleanOptions"
+                :instance="$instance"
+                required />
+
+            <x-forms.radiogroup.instance-edit-radiogroup
+                label="Source IN"
+                name="source_in"
+                :options="$booleanOptions"
                 :instance="$instance"
                 required />
         </div>
@@ -76,15 +83,22 @@
 
         <div class="form__section">
             <x-forms.id-based-single-select.instance-edit-select
-                label="MAH"
+                label="PC"
                 name="marketing_authorization_holder_id"
                 :options="$marketingAuthorizationHolders"
                 :instance="$instance" />
 
             <x-forms.input.instance-edit-input
-                label="Information"
-                name="information"
+                label="Additional search info"
+                name="additional_search_information"
                 :instance="$instance" />
+
+            <x-forms.id-based-multiple-select.instance-edit-select
+                label="Additional search countries"
+                name="additionalSearchCountries[]"
+                :options="$countryCodes"
+                :instance="$instance"
+                required />
 
             <x-forms.id-based-single-select.instance-edit-select
                 label="Portfolio manager"
@@ -100,12 +114,6 @@
         </div>
 
         <div class="form__section">
-            <x-forms.input.instance-edit-input
-                label="Date of forecast"
-                name="date_of_forecast"
-                type="datetime-local"
-                :instance="$instance" />
-
             <x-forms.input.instance-edit-input
                 label="Forecast 1 year"
                 name="forecast_year_1"

@@ -88,8 +88,7 @@
             <x-forms.id-based-multiple-select.default-select
                 label="Additional search countries"
                 name="additionalSearchCountries[]"
-                :options="$countryCodes"
-                required />
+                :options="$countryCodes" />
 
             <x-forms.id-based-single-select.default-select
                 label="Portfolio manager"

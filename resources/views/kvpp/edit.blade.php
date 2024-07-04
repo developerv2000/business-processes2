@@ -97,8 +97,7 @@
                 label="Additional search countries"
                 name="additionalSearchCountries[]"
                 :options="$countryCodes"
-                :instance="$instance"
-                required />
+                :instance="$instance" />
 
             <x-forms.id-based-single-select.instance-edit-select
                 label="Portfolio manager"

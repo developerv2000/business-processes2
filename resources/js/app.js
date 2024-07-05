@@ -14,6 +14,7 @@ const mainColor = rootStyles.getPropertyValue('--main-color').trim();
 const textColor = rootStyles.getPropertyValue('--text-color').trim();
 
 let countryCodesSelectize; // used as global to access it locally (used only on processes create form)
+let statisticsChart1; // used as global to access it locally (while storing graph as image)
 
 window.addEventListener('load', () => {
     bootstrapComponents();
@@ -393,7 +394,6 @@ function bootstrapForms() {
 
         const inputContainer = document.querySelector('.historical-process-date-container');
         const input = inputContainer.querySelector('input[name="historical_date"]');
-        console.log(isHistorical);
 
         // If the process is historical, make the input container visible and remove the required attribute
         if (isHistorical == true) {
@@ -579,7 +579,7 @@ function bootstrapStatisticCharts() {
         });
 
         // Initialize ECharts instance with specified options
-        const chart = echarts.init(container, null, {
+        statisticsChart1 = echarts.init(container, null, {
             renderer: 'canvas', // Use canvas renderer for better performance
             useDirtyRect: false, // Disable dirty rectangle optimization
             backgroundColor: 'white' // Set chart background color
@@ -614,7 +614,7 @@ function bootstrapStatisticCharts() {
             },
             toolbox: {
                 feature: {
-                    dataView: { show: true, readOnly: false }, // Enable data view tool
+                    // dataView: { show: true, readOnly: false }, // Enable data view tool
                     magicType: { show: true, type: ['line', 'bar'] }, // Enable switch between line and bar
                     restore: { show: true }, // Enable restore button
                     saveAsImage: { show: true } // Enable save as image button
@@ -645,11 +645,36 @@ function bootstrapStatisticCharts() {
         };
 
         // Set chart configuration options
-        chart.setOption(option);
+        statisticsChart1.setOption(option);
 
         // Resize chart when window is resized
         window.addEventListener('resize', function () {
-            chart.resize();
+            statisticsChart1.resize();
         });
+
+        // Custom saving chart as image
+        document.querySelector('.statistics-chart1-download-btn').addEventListener('click', downloadStatisticsChart1);
+    }
+
+    // Function to handle download on button click
+    function downloadStatisticsChart1() {
+        // Get the chart image data URL
+        const imageDataURL = statisticsChart1.getConnectedDataURL({
+            type: 'image/png',   // Can also be 'image/jpeg' or 'image/svg+xml'
+            pixelRatio: 2,       // Adjust pixel ratio for higher quality if needed
+            // backgroundColor: '#fff'  // Set background color if needed
+        });
+
+        // Create a temporary anchor element for download
+        let downloadLink = document.createElement('a');
+        downloadLink.href = imageDataURL;
+        downloadLink.download = 'chart.png';  // Filename when downloaded
+
+        // Append anchor to body and trigger the download
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+
+        // Clean up
+        document.body.removeChild(downloadLink);
     }
 }

@@ -598,8 +598,8 @@ function bootstrapStatisticCharts() {
                 }
             },
             grid: {
-                left: '80px',
-                right: '80px',
+                left: '50px',
+                right: '50px',
                 top: '80px',
                 bottom: '40px',
             },

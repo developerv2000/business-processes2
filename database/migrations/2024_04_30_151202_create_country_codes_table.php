@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('country_codes', function (Blueprint $table) {
             $table->unsignedSmallInteger('id')->autoIncrement();
             $table->string('name')->unique();
+            $table->unsignedMediumInteger('usage_count')->default(0);
         });
 
         Schema::create('country_code_kvpp', function (Blueprint $table) {

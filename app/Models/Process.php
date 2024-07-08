@@ -453,26 +453,28 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
      */
     public static function filterRecordsContractedOnRequestedMonthAndYear($query, $year, $month)
     {
-        return $query->whereMonth('status_update_date', $month)
-            ->whereYear('status_update_date', $year)
+        return $query
+            // Current status stage == 5 (Kk) for the requested month and year
             ->where(function ($subQuery) use ($year, $month) {
-                // Current status stage == 5 (Kk) for the requested month and year
-                $subQuery->where(function ($processesQuery) {
-                    $processesQuery->whereHas('status.generalStatus', function ($statusesQuery) {
-                        $statusesQuery->where('stage', 5);
-                    });
-                })
-                    // Current status stage > 5 (6КД - 10Отмена) and had contract (stage == 5 (Kk)) in the requested year.
-                    ->orWhere(function ($processesQuery) use ($year, $month) {
+                $subQuery
+                    ->whereMonth('status_update_date', $month)
+                    ->whereYear('status_update_date', $year)
+                    ->where(function ($processesQuery) {
                         $processesQuery->whereHas('status.generalStatus', function ($statusesQuery) {
-                            $statusesQuery->where('stage', '>', 5);
-                        })
-                            ->whereHas('statusHistory', function ($historyQuery) use ($year, $month) {
-                                $historyQuery->whereMonth('start_date', $month)
-                                    ->whereYear('start_date', $year)
-                                    ->whereHas('status.generalStatus', function ($statusesQuery) {
-                                        $statusesQuery->where('stage', 5);
-                                    });
+                            $statusesQuery->where('stage', 5);
+                        });
+                    });
+            })
+            // Current status stage > 5 (6КД - 10Отмена) and had contract (stage == 5 (Kk)) in the requested date.
+            ->orWhere(function ($processesQuery) use ($year, $month) {
+                $processesQuery->whereHas('status.generalStatus', function ($statusesQuery) {
+                    $statusesQuery->where('stage', '>', 5);
+                })
+                    ->whereHas('statusHistory', function ($historyQuery) use ($year, $month) {
+                        $historyQuery->whereMonth('start_date', $month)
+                            ->whereYear('start_date', $year)
+                            ->whereHas('status.generalStatus', function ($statusesQuery) {
+                                $statusesQuery->where('stage', 5);
                             });
                     });
             });

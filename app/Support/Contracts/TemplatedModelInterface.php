@@ -5,7 +5,7 @@ namespace App\Support\Contracts;
 /**
  * Usage Countable Model Interface
  *
- * All templated models should implement this interface
+ * All templated models without 'usage_count' attribute should implement this interface
  *
  * @package App\Support\Contracts
  */

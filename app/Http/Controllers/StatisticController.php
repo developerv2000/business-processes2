@@ -183,14 +183,15 @@ class StatisticController extends Controller
     {
         foreach ($generalStatuses as $status) {
             foreach ($months as $month) {
-                $query = Process::whereMonth('status_update_date', $month['number'])
-                    ->whereYear('status_update_date', $request->year);
+                $query = Process::query();
 
                 // Extensive version
                 if ($request->extensive_version) {
-                    $query = $query->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
-                        $statusesQuery->where('id', $status->id);
-                    });
+                    $query = $query->whereMonth('status_update_date', $month['number'])
+                        ->whereYear('status_update_date', $request->year)
+                        ->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
+                            $statusesQuery->where('id', $status->id);
+                        });
                     // Minified version
                 } else {
                     // Specific query for Stage 5 (Kk) of minified version
@@ -198,9 +199,11 @@ class StatisticController extends Controller
                         $query = Process::filterRecordsContractedOnRequestedMonthAndYear($query, $request->year, $month['number']);
                     } else {
                         // Query for stages < 5 (1ВП - 4СЦ) of minified version
-                        $query = $query->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
-                            $statusesQuery->where('id', $status->id);
-                        });
+                        $query = $query->whereMonth('status_update_date', $month['number'])
+                            ->whereYear('status_update_date', $request->year)
+                            ->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
+                                $statusesQuery->where('id', $status->id);
+                            });
                     }
                 }
 

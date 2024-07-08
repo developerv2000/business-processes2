@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use App\Support\Contracts\TemplatedModelInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CountryCode extends Model implements TemplatedModelInterface
+class CountryCode extends Model
 {
     use HasFactory;
 
@@ -28,9 +27,10 @@ class CountryCode extends Model implements TemplatedModelInterface
         return self::orderBy('name')->get();
     }
 
-    // Implement the method declared in the TemplatedModelInterface
-    public function getUsageCountAttribute(): int
+    public function refreshUsageCounts()
     {
-        return $this->processes()->count() + $this->kvpps()->count();
+        $this->update([
+            'usage_count' => $this->processes()->count() + $this->kvpps()->count(),
+        ]);
     }
 }

@@ -21,7 +21,7 @@ class CountryCode extends UsageCountableModel
 
     public static function getAll()
     {
-        return self::orderBy('name')->get();
+        return self::orderBy('usage_count', 'desc')->orderBy('name')->get();
     }
 
     // Implement method declared in UsageCountableModel abstract class

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CountryCode;
 use App\Models\Currency;
 use App\Models\Kvpp;
 use App\Models\Process;
@@ -14,6 +15,9 @@ Schedule::command('telescope:prune')->daily();
 Schedule::call(function () {
     Currency::updateExchangeRatesExceptUSD();
     Process::updateAllManufacturerPricesInUSD();
+
+    // Recalculate required models 'usage_count'
+    CountryCode::recalculateAllUsageCounts();
 })->daily();
 
 Artisan::command('users:reset-settings', function () {

@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Support\Abstracts\UsageCountableModel;
 
-class CountryCode extends Model
+class CountryCode extends UsageCountableModel
 {
-    use HasFactory;
-
     protected $guarded = ['id'];
     public $timestamps = false;
 
@@ -27,7 +24,8 @@ class CountryCode extends Model
         return self::orderBy('name')->get();
     }
 
-    public function refreshUsageCounts()
+    // Implement method declared in UsageCountableModel abstract class
+    public function recalculateUsageCount(): void
     {
         $this->update([
             'usage_count' => $this->processes()->count() + $this->kvpps()->count(),

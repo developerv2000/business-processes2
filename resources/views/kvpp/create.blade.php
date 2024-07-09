@@ -95,7 +95,7 @@
                 name="portfolio_manager_id"
                 :options="$portfolioManagers" />
 
-            <x-forms.id-based-single-select.default-select
+            <x-forms.id-based-single-select.current-user-select
                 label="Analyst"
                 name="analyst_user_id"
                 :options="$analystUsers" />

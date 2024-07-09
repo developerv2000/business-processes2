@@ -42,6 +42,7 @@ class ProcessController extends Controller
     {
         Process::mergeQueryingParamsToRequest($request);
         $records = Process::getRecordsFinalized($request, Process::onlyTrashed(), finaly: 'paginate');
+        Process::addGeneralStatusPeriodsForRecords($records);
 
         $allTableColumns = $request->user()->collectAllTableColumns('processes_table_columns');
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);

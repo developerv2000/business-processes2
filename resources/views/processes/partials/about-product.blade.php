@@ -42,6 +42,13 @@
                 <td>{{ __('BDM') }}:</td>
                 <td>{{ $product->manufacturer->bdm->name }}</td>
             </tr>
+
+            @if (request()->routeIs('processes.edit'))
+                <tr>
+                    <td>{{ __('Search country') }}:</td>
+                    <td>{{ $instance->searchCountry->name }}</td>
+                </tr>
+            @endif
         </tbody>
     </table>
 </div>

@@ -372,7 +372,13 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
         // If redirected from statitics index page & has status history requested (Table 2)
         if ($request->has_status_history) {
-            $query = self::filterRecordsByStatusHistory($query, $request);
+            $query = self::filterRecordsByStatusHistory(
+                $query,
+                $request->has_status_history_on_year,
+                $request->has_status_history_on_month,
+                $request->has_status_history_based_on,
+                $request->has_status_history_based_on_value,
+            );
         }
 
         return $query;
@@ -402,31 +408,33 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
     }
 
     /**
-     * Filter the query based on some specific condition.
+     * Apply filters to the query based on the manufacturer's country.
      *
-     * @param Illuminate\Http\Request $request
-     * @param Illuminate\Database\Eloquent\Builder $query
-     * @return Illuminate\Database\Eloquent\Builder
+     * @param Illuminate\Http\Request $request The HTTP request object containing filter parameters.
+     * @param Illuminate\Database\Eloquent\Builder $query The query builder instance to apply filters to.
+     * @return Illuminate\Database\Eloquent\Builder The modified query builder instance.
      */
     public static function filterSpecificManufacturerCountry($request, $query)
     {
-        // Filter by specific Manufacturer countries
+        // Retrieve the specific manufacturer country from the request
         $manufacturerCountry = $request->specific_manufacturer_country;
 
         if ($manufacturerCountry) {
-            // Get the ID of the country 'INDIA'
+            // Get the ID of the country 'INDIA' for comparison
             $indiaCountryId = Country::getIndiaCountryID();
 
             // Apply conditions based on the specific manufacturer country
             switch ($manufacturerCountry) {
                 case 'EUROPE':
-                    $query = $query->whereHas('manufacturer', function ($subquery) use ($indiaCountryId) {
+                    // Exclude manufacturers from India
+                    $query->whereHas('manufacturer', function ($subquery) use ($indiaCountryId) {
                         $subquery->where('country_id', '!=', $indiaCountryId);
                     });
                     break;
 
                 case 'INDIA':
-                    $query = $query->whereHas('manufacturer', function ($subquery) use ($indiaCountryId) {
+                    // Include only manufacturers from India
+                    $query->whereHas('manufacturer', function ($subquery) use ($indiaCountryId) {
                         $subquery->where('country_id', $indiaCountryId);
                     });
                     break;
@@ -437,14 +445,9 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
     }
 
     /**
-     * Filter processes which had contract (stage 5 (Kk)) requested month and year.
-     *
-     * Queries processes with the following conditions:
-     * 1. Current status stage == 5 (Kk) for the requested month and year.
-     * 2. Current status stage > 5 (6КД - 10Отмена) and had contract (stage == 5 (Kk)) in the requested year.
+     * Filter processes which have contract history (stage 5 (Kk)) for the requested month and year.
      *
      * This function is used in both statistics index page & processes index page.
-     * !!! Be very careful when changing this function !!!
      *
      * @param Illuminate\Database\Eloquent\Builder $query
      * @param int $year
@@ -453,45 +456,29 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
      */
     public static function filterRecordsContractedOnRequestedMonthAndYear($query, $year, $month)
     {
-        return $query
-            ->whereHas('statusHistory', function ($historyQuery) use ($year, $month) {
-                $historyQuery->whereMonth('start_date', $month)
-                    ->whereYear('start_date', $year)
-                    ->whereHas('status.generalStatus', function ($statusesQuery) {
-                        $statusesQuery->where('stage', 5);
-                    });
-            });
+        return $query->whereHas('statusHistory', function ($historyQuery) use ($year, $month) {
+            $historyQuery->whereMonth('start_date', $month)
+                ->whereYear('start_date', $year)
+                ->whereHas('status.generalStatus', function ($statusesQuery) {
+                    $statusesQuery->where('stage', 5);
+                });
+        });
     }
 
     /**
      * Filter records based on status history criteria.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param Illuminate\Http\Request $request
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param \Illuminate\Database\Eloquent\Builder $query The query builder instance to apply filters to.
+     * @param string $basedOn 'id' | 'name_for_analysts'
      */
-    private static function filterRecordsByStatusHistory($query, $request)
+    public static function filterRecordsByStatusHistory($query, $year, $month, $basedOn, $basedOnValue)
     {
-        $idBased = $request->has_status_history_based_on_id;
-        $nameForAnalysts = $request->has_status_history_based_on_name_for_analysts;
-
-        $query = $query->whereHas('statusHistory', function ($historyQuery) use ($request, $idBased, $nameForAnalysts) {
-            $historyQuery->whereMonth('start_date', $request->has_status_history_on_month)
-                ->whereYear('start_date', $request->has_status_history_on_year);
-
-            // Apply filter based on ID if requested
-            if ($idBased) {
-                $historyQuery->whereHas('status.generalStatus', function ($statusesQuery) use ($request) {
-                    $statusesQuery->where('id', $request->has_status_history_general_status_id);
+        $query = $query->whereHas('statusHistory', function ($historyQuery) use ($year, $month, $basedOn, $basedOnValue) {
+            $historyQuery->whereMonth('start_date', $month)
+                ->whereYear('start_date', $year)
+                ->whereHas('status.generalStatus', function ($statusesQuery) use ($basedOn, $basedOnValue) {
+                    $statusesQuery->where($basedOn, $basedOnValue);
                 });
-            }
-
-            // Apply filter based on name for analysts if requested
-            if ($nameForAnalysts) {
-                $historyQuery->whereHas('status.generalStatus', function ($statusesQuery) use ($request) {
-                    $statusesQuery->where('name_for_analysts', $request->has_status_history_general_status_name_for_analysts);
-                });
-            }
         });
 
         return $query;

@@ -4,31 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Process;
 use App\Models\ProcessGeneralStatus;
-use App\Models\ProcessStatusHistory;
 use App\Support\Helper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Js;
 
 /**
  * There are extensive and minified versions of statistics.
  * Minified version is always used for non-admins.
  * Extensive / minified version switcher is available for admins,
- * and extensive version is used as default admins.
+ * and minified version is used as default admins.
  *
  * Table 1 - Current processes count for each month of general status
  * Table 2 - Maximum processes count for each month of general status
  *
  * On minified version only first 5 stages of general statuses are shown,
  * and specific query is used for stage 5 (Kk) for the 'Current processes count table' (Table 1).
- * On extensive version all stages of general statuses are shown,
+ * On extensive version all stages of general statuses are shown
  *
  * Specific query in Table 1 for stage 5 (Kk) gets:
- * count of all processes which have current status stage == 5 (Kk) for the requested month and year
- * + count of all processes which have current status stage > 5 (6КД - 10Отмена)
- * and had contract (status stage == 5 (Kk)) requested year.
+ * Count of all processes which have contract history (stage 5 (Kk)) for the requested month and year.
  *
- * Some tricky methods are used to calculate processes count for both of tables (Table 1 / Table 2):
+ * Some tricky methods are used to calculate processes count for Table 2:
  * On minified version general statuses 'name' is compared with processes general statuses 'name_for_analysts',
  * because 'name_for_analysts' of stages > 5 are the same as 'name' of stage 5 (Kk).
  * On extensive version general statuses 'id' is compared with processes general statuses 'id'
@@ -192,8 +188,10 @@ class StatisticController extends Controller
                         ->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
                             $statusesQuery->where('id', $status->id);
                         });
-                    // Minified version
-                } else {
+                }
+
+                // Minified version
+                if (!$request->extensive_version) {
                     // Specific query for Stage 5 (Kk) of minified version
                     if ($status->stage == 5) {
                         $query = Process::filterRecordsContractedOnRequestedMonthAndYear($query, $request->year, $month['number']);
@@ -208,7 +206,7 @@ class StatisticController extends Controller
                 }
 
                 // Additional filtering
-                $query = self::filterCurrentProcessesQuery($request, $query);
+                $query = self::filterProcessesQuery($request, $query);
 
                 // Get current processes count of the month for the status
                 $monthProcessesCount = $query->count();
@@ -220,37 +218,6 @@ class StatisticController extends Controller
                 $status->months = $statusMonths;
             }
         }
-    }
-
-    /**
-     * Filter the given processes query based on request parameters.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    private static function filterCurrentProcessesQuery($request, $query)
-    {
-        $whereEqualAttributes = [
-            'country_code_id',
-        ];
-
-        $whereRelationEqualStatements = [
-            [
-                'name' => 'manufacturer',
-                'attribute' => 'bdm_user_id',
-            ],
-            [
-                'name' => 'manufacturer',
-                'attribute' => 'analyst_user_id',
-            ],
-        ];
-
-        $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
-        $query = Helper::filterWhereRelationEqualStatements($request, $query, $whereRelationEqualStatements);
-        $query = Process::filterSpecificManufacturerCountry($request, $query);
-
-        return $query;
     }
 
     /**
@@ -274,10 +241,12 @@ class StatisticController extends Controller
                 // Extensive version
                 if ($request->extensive_version) {
                     $queryParamsCopy['general_status_id'] = $status->id;
-                } else {
-                    // Minified version
+                }
+
+                // Minified version
+                if (!$request->extensive_version) {
+                    // Special links for stage 5 (Kk)
                     if ($status->stage == 5) {
-                        // Special links are used for stage 5 (Kk) on minified version
                         $queryParamsCopy['status_update_date'] = null; // status_update_date is not required
                         $queryParamsCopy['contracted_on_requested_month_and_year'] = true;
                         $queryParamsCopy['contracted_month'] = $month['number'];
@@ -320,26 +289,32 @@ class StatisticController extends Controller
     {
         foreach ($generalStatuses as $status) {
             foreach ($months as $month) {
-                $query = ProcessStatusHistory::whereMonth('start_date', $month['number'])
-                    ->whereYear('start_date', $request->year);
+                $query = Process::query();
 
                 // Extensive version
                 if ($request->extensive_version) {
-                    $query = $query->whereHas('status.generalStatus', function ($q) use ($status) {
-                        $q->where('id', $status->id);
-                    });
-                    // Minified version
-                } else {
-                    $query = $query->whereHas('status.generalStatus', function ($q) use ($status) {
-                        $q->where('name_for_analysts', $status->name);
-                    });
+                    $query = Process::filterRecordsByStatusHistory(
+                        $query,
+                        $request->year,
+                        $month['number'],
+                        'id',
+                        $status->id,
+                    );
+                }
+
+                // Minified version
+                if (!$request->extensive_version) {
+                    $query = Process::filterRecordsByStatusHistory(
+                        $query,
+                        $request->year,
+                        $month['number'],
+                        'name_for_analysts',
+                        $status->name,
+                    );
                 }
 
                 // Additional filtering
-                $query = self::filterMaximumProcessesQuery($request, $query);
-
-                // Unique by process_id
-                $query = $query->distinct('process_id');
+                $query = self::filterProcessesQuery($request, $query);
 
                 // Get maximum processes count of the month fot the status
                 $monthProcessesCount = $query->count();
@@ -350,41 +325,6 @@ class StatisticController extends Controller
                 $status->months = $statusMonths;
             }
         }
-    }
-
-    /**
-     * Filter the given process status history query based on request parameters.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $historyQuery
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    private static function filterMaximumProcessesQuery($request, $query)
-    {
-        $whereRelationEqualStatements = [
-            [
-                'name' => 'process.manufacturer',
-                'attribute' => 'analyst_user_id',
-            ],
-
-            [
-                'name' => 'process.manufacturer',
-                'attribute' => 'bdm_user_id',
-            ],
-
-            [
-                'name' => 'process',
-                'attribute' => 'country_code_id',
-            ],
-        ];
-
-        $query = Helper::filterWhereRelationEqualStatements($request, $query, $whereRelationEqualStatements);
-
-        $query = $query->whereHas('process', function ($processesQuery) use ($request) {
-            return Process::filterSpecificManufacturerCountry($request, $processesQuery);
-        });
-
-        return $query;
     }
 
     /**
@@ -409,11 +349,11 @@ class StatisticController extends Controller
 
                 // Extensive version
                 if ($request->extensive_version) {
-                    $queryParamsCopy['has_status_history_based_on_id'] = true;
-                    $queryParamsCopy['has_status_history_general_status_id'] = $status->id;
+                    $queryParamsCopy['has_status_history_based_on'] = 'id';
+                    $queryParamsCopy['has_status_history_based_on_value'] = $status->id;
                 } else {
-                    $queryParamsCopy['has_status_history_based_on_name_for_analysts'] = true;
-                    $queryParamsCopy['has_status_history_general_status_name_for_analysts'] = $status->name;
+                    $queryParamsCopy['has_status_history_based_on'] = 'name_for_analysts';
+                    $queryParamsCopy['has_status_history_based_on_value'] = $status->name;
                 }
 
                 // Generate the current processes link based on the query
@@ -432,6 +372,37 @@ class StatisticController extends Controller
     | Helper functions for Table 1 - Table 2
     |---------------------------------------
     */
+
+    /**
+     * Filter the given processes query based on request parameters.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private static function filterProcessesQuery($request, $query)
+    {
+        $whereEqualAttributes = [
+            'country_code_id',
+        ];
+
+        $whereRelationEqualStatements = [
+            [
+                'name' => 'manufacturer',
+                'attribute' => 'bdm_user_id',
+            ],
+            [
+                'name' => 'manufacturer',
+                'attribute' => 'analyst_user_id',
+            ],
+        ];
+
+        $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Helper::filterWhereRelationEqualStatements($request, $query, $whereRelationEqualStatements);
+        $query = Process::filterSpecificManufacturerCountry($request, $query);
+
+        return $query;
+    }
 
     /**
      * Get filter query parameters from the request.

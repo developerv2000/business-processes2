@@ -29,16 +29,10 @@
             readonly />
 
         <input type="hidden" name="has_status_history" value="1">
-        <input type="hidden" name="has_status_history_on_month" value="{{ $request->has_status_history_on_month }}">
         <input type="hidden" name="has_status_history_on_year" value="{{ $request->has_status_history_on_year }}">
-
-        @if ($request->has_status_history_based_on_id)
-            <input type="hidden" name="has_status_history_based_on_id" value="1">
-            <input type="hidden" name="has_status_history_general_status_id" value="{{ $request->has_status_history_general_status_id }}">
-        @elseif ($request->has_status_history_based_on_name_for_analysts)
-            <input type="hidden" name="has_status_history_based_on_name_for_analysts" value="1">
-            <input type="hidden" name="has_status_history_general_status_name_for_analysts" value="{{ $request->has_status_history_general_status_name_for_analysts }}">
-        @endif
+        <input type="hidden" name="has_status_history_on_month" value="{{ $request->has_status_history_on_month }}">
+        <input type="hidden" name="has_status_history_based_on" value="{{ $request->has_status_history_based_on }}">
+        <input type="hidden" name="has_status_history_based_on_value" value="{{ $request->has_status_history_based_on_value }}">
     @endif
 
     <x-forms.id-based-single-select.request-based-select

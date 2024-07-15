@@ -278,6 +278,7 @@ class StatisticController extends Controller
                     // Minified version
                     if ($status->stage == 5) {
                         // Special links are used for stage 5 (Kk) on minified version
+                        $queryParamsCopy['status_update_date'] = null; // status_update_date is not required
                         $queryParamsCopy['contracted_on_requested_month_and_year'] = true;
                         $queryParamsCopy['contracted_month'] = $month['number'];
                         $queryParamsCopy['contracted_year'] = $request->year;

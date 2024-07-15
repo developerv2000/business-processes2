@@ -11,7 +11,7 @@
             type="text"
             label="Special filter"
             name="special_filter"
-            :value="__('Contracted on') . ' ' . $request->contracted_year"
+            :value="__('Contracted on') . ' ' . str_pad($request->contracted_month, 2, '0', STR_PAD_LEFT) . '.' . $request->contracted_year"
             readonly />
 
         <input type="hidden" name="contracted_on_requested_month_and_year" value="1">

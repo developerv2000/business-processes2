@@ -15,7 +15,8 @@ const textColor = rootStyles.getPropertyValue('--text-color').trim();
 
 // Globals
 let countryCodesSelectize; // used only on processes create form
-let processesCountChart;
+let processesCountChart, activeManufacturersChart;
+
 
 window.addEventListener('load', () => {
     bootstrapComponents();
@@ -515,14 +516,16 @@ function bootstrapECharts() {
 function bootstrapStatisticCharts() {
     if (document.querySelector('.statistics-index')) {
         bootstrapProcessesCountChart();
-        // bootstrapStatisticChart2();
+        bootstrapActiveManufacturersChart();
 
-        // Custom saving of chart1 as image
-        document.querySelector('.processes-count-chart__download-btn').addEventListener('click', downloadStatisticsChart1);
+        // Custom saving of charts as image
+        document.querySelector('.processes-count-chart__download-btn').addEventListener('click', downloadProcessesCountChart);
+        document.querySelector('.active-manufacturers-chart__download-btn').addEventListener('click', downloadActiveManufacturersChart);
 
         // Resize chart when window is resized
         window.addEventListener('resize', function () {
             processesCountChart.resize();
+            activeManufacturersChart.resize();
         });
     }
 }
@@ -656,7 +659,124 @@ function bootstrapProcessesCountChart() {
     processesCountChart.setOption(option);
 }
 
-function downloadStatisticsChart1() {
+function downloadProcessesCountChart() {
+    // Get the chart image data URL
+    const imageDataURL = processesCountChart.getConnectedDataURL({
+        type: 'image/png',   // Can also be 'image/jpeg' or 'image/svg+xml'
+        pixelRatio: 2,       // Adjust pixel ratio for higher quality if needed
+        // backgroundColor: '#fff'  // Set background color if needed
+    });
+
+    // Create a temporary anchor element for download
+    let downloadLink = document.createElement('a');
+    downloadLink.href = imageDataURL;
+    downloadLink.download = 'chart.png';  // Filename when downloaded
+
+    // Append anchor to body and trigger the download
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+
+    // Clean up
+    document.body.removeChild(downloadLink);
+}
+
+function bootstrapActiveManufacturersChart() {
+    // Find the container element for the chart
+    const container = document.querySelector('.active-manufacturers-chart');
+
+    // Initialize ECharts instance with specified options
+    activeManufacturersChart = echarts.init(container, null, {
+        renderer: 'canvas', // Use canvas renderer for better performance
+        useDirtyRect: false, // Disable dirty rectangle optimization
+        backgroundColor: 'white' // Set chart background color
+    });
+
+    // Define the main configuration options for the chart
+    const option = {
+        backgroundColor: '#ffffff', // Overall background color
+        title: {
+            text: 'Active manufacturers', // Chart title
+            padding: [28, 60, 24, 30], // Padding around the title
+            textStyle: {
+                fontSize: 14, // Font size in pixels
+                fontWeight: 'bold', // Optional: Font weight (e.g., 'normal', 'bold', '600')
+                color: textColor // Optional: Font color
+            }
+        },
+        grid: {
+            left: '60px',
+            right: '60px',
+            top: '80px',
+            bottom: '40px',
+        },
+        tooltip: {
+            trigger: 'axis', // Tooltip trigger type
+            axisPointer: {
+                type: 'cross', // Cross style for axis pointer
+                crossStyle: {
+                    color: '#999' // Color of the cross style
+                }
+            }
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: { show: true } // Enable save as image button
+            }
+        },
+        legend: {
+            padding: [20, 0, 20], // Padding around legend
+            itemGap: 20, // Gap between legend items
+            itemWidth: 20, // Width of legend item symbol
+            itemHeight: 14, // Height of legend item symbol
+        },
+        xAxis: {
+            type: 'category',
+            data: months.map(obj => obj.name), // Data for x-axis categories
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: months.map(obj => obj.active_manufacturers_count), // Data for x-axis categories
+                type: 'line',
+                symbol: 'circle',
+                symbolSize: 10,
+                color: mainColor,
+                label: {
+                    show: true,
+                    position: 'top', // Label position
+                    color: textColor,
+                    rich: {
+                        labelBox: {
+                            backgroundColor: '#fff', // Background color of the label box
+                            borderRadius: 4, // Border radius
+                            padding: [6, 10], // Padding inside the box
+                            shadowBlur: 5, // Shadow blur radius
+                            shadowOffsetX: 3, // Shadow offset X
+                            shadowOffsetY: 3, // Shadow offset Y
+                            shadowColor: 'rgba(0, 0, 0, 0.3)' // Shadow color
+                        },
+                        value: {
+                            color: textColor
+                        }
+                    },
+                    // Formatter function for customizing label content and style
+                    formatter: function (params) {
+                        return '{labelBox|' + params.value + '}';
+                    },
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        ]
+    };
+
+    // Set chart configuration options
+    activeManufacturersChart.setOption(option);
+}
+
+function downloadActiveManufacturersChart() {
     // Get the chart image data URL
     const imageDataURL = processesCountChart.getConnectedDataURL({
         type: 'image/png',   // Can also be 'image/jpeg' or 'image/svg+xml'

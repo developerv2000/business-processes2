@@ -5,8 +5,10 @@
         @include('statistics.partials.counter')
         @include('statistics.tables.current-statusses-table')
         @include('statistics.tables.maximum-statusses-table')
-        @include('statistics.partials.charts')
+        @include('statistics.charts.processes-count-chart')
+        
         @include('statistics.tables.active-manufacturers-table')
+        @include('statistics.charts.active-manufacturers-chart')
     </div>
 @endsection
 

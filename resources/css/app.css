@@ -396,6 +396,7 @@ body::-webkit-scrollbar-thumb,
 .header__notifications-icon--unread {
     font-variation-settings: var(--material-symbols-filled);
 }
+
 /* ------------ /END Header ------------ */
 
 
@@ -1197,7 +1198,8 @@ body::-webkit-scrollbar-thumb,
 }
 
 /* Charts */
-.processes-count-chart-container {
+.processes-count-chart-container,
+.active-manufacturers-chart-container {
     position: relative;
 }
 
@@ -1205,7 +1207,12 @@ body::-webkit-scrollbar-thumb,
     height: 600px;
 }
 
-.processes-count-chart__download-btn {
+.active-manufacturers-chart {
+    height: 460px;
+}
+
+.processes-count-chart__download-btn,
+.active-manufacturers-chart__download-btn {
     position: absolute;
     top: 3px;
     right: 4px;

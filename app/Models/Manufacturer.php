@@ -228,7 +228,99 @@ class Manufacturer extends CommentableModel
         $query = Helper::filterQueryDateRangeStatements($request, $query, $dateRangeAttributes);
         $query = Helper::filterBelongsToManyRelations($request, $query, $belongsToManyRelations);
 
+        // Specific country filter
+        $query = self::filterSpecificCountry($request, $query);
+
+        // Filter by process country_code_id
+        $query = self::filterByProcessesCountryCode($request, $query);
+
+        // If redirected from statitics index page & active manufacturers requested (Table 3)
+        if ($request->was_active_on_requested_month_and_year) {
+            $query = self::filterActiveRecords($query, $request->was_active_on_year, $request->was_active_on_month);
+        }
+
         return $query;
+    }
+
+    /**
+     * Apply filters to the query based on the specific manufacturer country.
+     *
+     * @param Illuminate\Http\Request $request The HTTP request object containing filter parameters.
+     * @param Illuminate\Database\Eloquent\Builder $query The query builder instance to apply filters to.
+     * @return Illuminate\Database\Eloquent\Builder The modified query builder instance.
+     */
+    public static function filterSpecificCountry($request, $query)
+    {
+        // Retrieve the specific manufacturer country from the request
+        $specificCountry = $request->specific_manufacturer_country;
+
+        if ($specificCountry) {
+            // Get the ID of the country 'INDIA' for comparison
+            $indiaCountryId = Country::getIndiaCountryID();
+
+            // Apply conditions based on the specific manufacturer country
+            switch ($specificCountry) {
+                case 'EUROPE':
+                    // Exclude manufacturers from India
+                    $query->where('country_id', '!=', $indiaCountryId);
+                    break;
+
+                case 'INDIA':
+                    // Include only manufacturers from India
+                    $query->where('country_id', $indiaCountryId);
+                    break;
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * Apply filters to the query based on the country code ID of related processes.
+     *
+     * This function filters the manufacturers based on the country code ID of their associated processes.
+     * If the country code ID is present in the request, it filters the manufacturers that have processes
+     * with the specified country code ID.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request object containing filter parameters.
+     * @param \Illuminate\Database\Eloquent\Builder $query The query builder instance to apply filters to.
+     * @return \Illuminate\Database\Eloquent\Builder The modified query builder instance.
+     */
+    public static function filterByProcessesCountryCode($request, $query)
+    {
+        // Retrieve the country code ID from the request
+        $countryCodeID = $request->country_code_id;
+
+        // Check if the country code ID is present in the request
+        if ($countryCodeID) {
+            // Filter the manufacturers based on the country code ID of their related processes
+            $query->whereHas('processes', function ($processQuery) use ($countryCodeID) {
+                $processQuery->where('country_code_id', $countryCodeID);
+            });
+        }
+
+        return $query;
+    }
+
+    /**
+     * Filter active records based on the specified year and month.
+     *
+     * This function filters the query to include only records that have
+     * associated processes with status history starting in the specified month and year.
+     *
+     * This function is used in both statistics index page & manufacturers index page.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query The query builder instance to apply filters to.
+     * @param int $year The year to filter the status history by.
+     * @param int $month The month to filter the status history by.
+     * @return \Illuminate\Database\Eloquent\Builder The modified query builder instance.
+     */
+    public static function filterActiveRecords($query, $year, $month)
+    {
+        return $query->whereHas('processes.statusHistory', function ($historyQuery) use ($year, $month) {
+            $historyQuery->whereMonth('start_date', $month)
+                ->whereYear('start_date', $year);
+        });
     }
 
     /**
@@ -446,5 +538,16 @@ class Manufacturer extends CommentableModel
     public function getTitle(): string
     {
         return Helper::truncateString($this->name, 90);
+    }
+
+    /**
+     * Get the options for specific Manufacturer country filter.
+     */
+    public static function getSpecificCountryOptions(): array
+    {
+        return [
+            'EUROPE',
+            'INDIA',
+        ];
     }
 }

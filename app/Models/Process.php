@@ -410,35 +410,21 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
     /**
      * Apply filters to the query based on the manufacturer's country.
      *
+     * This function filters the processes based on the manufacturer’s country,
+     * delegating the filtering logic to the Manufacturer model.
+     *
      * @param Illuminate\Http\Request $request The HTTP request object containing filter parameters.
      * @param Illuminate\Database\Eloquent\Builder $query The query builder instance to apply filters to.
      * @return Illuminate\Database\Eloquent\Builder The modified query builder instance.
      */
     public static function filterSpecificManufacturerCountry($request, $query)
     {
-        // Retrieve the specific manufacturer country from the request
-        $manufacturerCountry = $request->specific_manufacturer_country;
-
-        if ($manufacturerCountry) {
-            // Get the ID of the country 'INDIA' for comparison
-            $indiaCountryId = Country::getIndiaCountryID();
-
-            // Apply conditions based on the specific manufacturer country
-            switch ($manufacturerCountry) {
-                case 'EUROPE':
-                    // Exclude manufacturers from India
-                    $query->whereHas('manufacturer', function ($subquery) use ($indiaCountryId) {
-                        $subquery->where('country_id', '!=', $indiaCountryId);
-                    });
-                    break;
-
-                case 'INDIA':
-                    // Include only manufacturers from India
-                    $query->whereHas('manufacturer', function ($subquery) use ($indiaCountryId) {
-                        $subquery->where('country_id', $indiaCountryId);
-                    });
-                    break;
-            }
+        // Check if the request includes a specific manufacturer country filter
+        if ($request->specific_manufacturer_country) {
+            // Apply the manufacturer country filter using the Manufacturer model's filter function
+            $query->whereHas('manufacturer', function ($manufacturersQuery) use ($request) {
+                return Manufacturer::filterSpecificCountry($request, $manufacturersQuery);
+            });
         }
 
         return $query;
@@ -1041,16 +1027,5 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
     public function getTitle(): string
     {
         return trans('Process') . ' #' . $this->id . ' / ' . $this->searchCountry->name;
-    }
-
-    /**
-     * Get the options for specific Manufacturer country filter.
-     */
-    public static function getSpecificManufacturerCountryOptions(): array
-    {
-        return [
-            'EUROPE',
-            'INDIA',
-        ];
     }
 }

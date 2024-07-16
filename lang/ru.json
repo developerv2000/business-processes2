@@ -93,6 +93,7 @@
     "About company": "О компании",
     "Relationship": "Отношения",
     "Stop/pause": "Стоп/пауза",
+    "Was active on": "Был активным в",
 
     "Process": "Процесс",
     "Processes": "Процессы",
@@ -144,6 +145,7 @@
     "Statuses": "Статусы",
     "Status date": "Дата Статуса",
     "Search country": "Страна поиска",
+    "Process search country": "Страна поиска в ВПЦ",
     "Historical process": "Исторический процесс",
     "Historical process date": "Дата исторического процесса",
     "Product status": "Статус Пд",
@@ -205,6 +207,7 @@
     "December": "Декабрь",
     "Number of processes whose current status matches the specified status": "Количество процессов, у которых текущий статус соответствует указанному статусу",
     "The maximum number of processes that a certain status had during a month": "Максимальное количество процессов, которое определённый статус имел в течении месяца",
+    "Active manufacturers count for the given month": "Количество активных производителей в течении месяца",
 
     "Notifications": "Уведомления",
     "Date": "Дата",

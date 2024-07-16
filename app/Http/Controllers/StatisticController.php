@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Manufacturer;
 use App\Models\Process;
 use App\Models\ProcessGeneralStatus;
 use App\Support\Helper;
@@ -9,17 +10,21 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
- * There are extensive and minified versions of statistics.
- * Minified version is always used for non-admins.
- * Extensive / minified version switcher is available for admins,
- * and minified version is used as default admins.
- *
- * Table 1 - Current processes count for each month of general status
- * Table 2 - Maximum processes count for each month of general status
+ * There are extensive and minified versions of statistics,
+ * for processes count tables and charts based on general statuses.
+ * Minified version is used as default for all users.
+ * Extensive version is available only for admins
  *
  * On minified version only first 5 stages of general statuses are shown,
  * and specific query is used for stage 5 (Kk) for the 'Current processes count table' (Table 1).
  * On extensive version all stages of general statuses are shown
+ *
+ * Table 1 - Current processes count for each month of general status
+ * Table 2 - Maximum processes count for each month of general status
+ * Chart 1 - Current processes count for each month of general status
+ *
+ * Table 3 - Active factories count of each month
+ * Chart 2 - Active factories count of each month
  *
  * Specific query in Table 1 for stage 5 (Kk) gets:
  * Count of all processes which have contract history (stage 5 (Kk)) for the requested month and year.
@@ -58,6 +63,11 @@ class StatisticController extends Controller
         $yearTotalCurrentProcessesCount = $generalStatuses->sum('year_current_processes_count');
         // Calculate sum of all 'year_maximum_processes_count' of general statuses (Table 2)
         $yearTotalMaximumProcessesCount = $generalStatuses->sum('year_maximum_processes_count');
+
+        // Calculate Table 3 - Active factories count of each month
+        self::calculateMonthsActiveManufacturersCount($request, $months);
+        // Add active manufacturers link for each months. Table 3
+        self::addActiveManufacturersLinkForMonths($request, $months);
 
         return view('statistics.index', compact('request', 'months', 'generalStatuses', 'yearTotalCurrentProcessesCount', 'yearTotalMaximumProcessesCount'));
     }
@@ -479,6 +489,64 @@ class StatisticController extends Controller
 
             $month['all_current_process_count'] = $totalCurrentProcesses;
             $month['all_maximum_process_count'] = $totalMaximumProcesses;
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------
+    | Helper functions for Table 3 - Active factories count of each month
+    |--------------------------------------------------------------------
+    */
+
+    private static function calculateMonthsActiveManufacturersCount($request, $months)
+    {
+        foreach ($months as $month) {
+            $query = Manufacturer::query();
+            $query = self::filterManufacturersQuery($request, $query);
+            $query = Manufacturer::filterActiveRecords($query, $request->year, $month['number']);
+
+            $month['active_manufacturers_count'] = $query->count();
+        }
+    }
+
+    /**
+     * Filter the given manufacturers query based on request parameters.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private static function filterManufacturersQuery($request, $query)
+    {
+        $whereEqualAttributes = [
+            'analyst_user_id',
+            'bdm_user_id',
+        ];
+
+        $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Manufacturer::filterSpecificCountry($request, $query);
+        $query = Manufacturer::filterByProcessesCountryCode($request, $query);
+
+        return $query;
+    }
+
+    private static function addActiveManufacturersLinkForMonths($request, $months)
+    {
+        // Filter parameters for the query
+        $queryParams = self::getFilterQueryParameters($request);
+
+        foreach ($months as $month) {
+            // Prepare a copy of the query with 'status_update_date' range
+            $queryParamsCopy = $queryParams;
+            $queryParamsCopy['was_active_on_requested_month_and_year'] = true;
+            $queryParamsCopy['was_active_on_year'] = $request->year;
+            $queryParamsCopy['was_active_on_month'] = $month['number'];
+
+            // Generate the current processes link based on the query
+            $activeManufacturersLink = route('manufacturers.index', $queryParamsCopy);
+
+            // Update the status object with the maximum processes link
+            $month['active_manufacturers_link'] = $activeManufacturersLink;
         }
     }
 }

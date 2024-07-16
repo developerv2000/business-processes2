@@ -59,6 +59,8 @@ class AppServiceProvider extends ServiceProvider
                 'analystUsers' => User::getAnalystsMinified(),
                 'bdmUsers' => User::getBdmsMinifed(),
                 'countries' => Country::getAll(),
+                'countryCodes' => CountryCode::getAll(),
+                'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
                 'manufacturers' => Manufacturer::getAllMinified(),
                 'categories' => ManufacturerCategory::getAll(),
                 'zones' => Zone::getAll(),
@@ -112,7 +114,7 @@ class AppServiceProvider extends ServiceProvider
                 'bdmUsers' => User::getBdmsMinifed(),
                 'calendarMonths' => Helper::collectCalendarMonths(),
                 'countryCodes' => CountryCode::getAll(),
-                'specificManufacturerCountries' => Process::getSpecificManufacturerCountryOptions(),
+                'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
             ]);
         });
 
@@ -148,7 +150,7 @@ class AppServiceProvider extends ServiceProvider
                 'statuses' => ProcessStatus::getAll(), // important
                 'generalStatuses' => ProcessGeneralStatus::getAll(),
                 'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueStatusNamesForAnalysts(),
-                'specificManufacturerCountries' => Process::getSpecificManufacturerCountryOptions(),
+                'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
             ]);
 
             $view->with($mergedData);

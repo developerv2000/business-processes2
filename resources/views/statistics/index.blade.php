@@ -6,6 +6,7 @@
         @include('statistics.tables.current-statusses-table')
         @include('statistics.tables.maximum-statusses-table')
         @include('statistics.partials.charts')
+        @include('statistics.tables.active-manufacturers-table')
     </div>
 @endsection
 

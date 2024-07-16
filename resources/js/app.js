@@ -13,8 +13,9 @@ const rootStyles = getComputedStyle(document.documentElement);
 const mainColor = rootStyles.getPropertyValue('--main-color').trim();
 const textColor = rootStyles.getPropertyValue('--text-color').trim();
 
-let countryCodesSelectize; // used as global to access it locally (used only on processes create form)
-let statisticsChart1; // used as global to access it locally (while storing graph as image)
+// Globals
+let countryCodesSelectize; // used only on processes create form
+let processesCountChart;
 
 window.addEventListener('load', () => {
     bootstrapComponents();
@@ -511,170 +512,167 @@ function bootstrapECharts() {
     bootstrapStatisticCharts();
 }
 
-/**
- * Initializes and renders statistic charts based on global data.
- * Charts are rendered using ECharts library on the statistics index page.
- *
- * @function bootstrapStatisticCharts
- */
 function bootstrapStatisticCharts() {
-    // Check if we are on the statistics index page
     if (document.querySelector('.statistics-index')) {
-        // Find the container element for the chart
-        const container = document.querySelector('.statistics-chart1');
+        bootstrapProcessesCountChart();
+        // bootstrapStatisticChart2();
 
-        // Prepare series data for bars based on general statuses
-        let series = [];
-        generalStatuses.forEach(status => {
-            series.push({
-                name: status.name,
-                type: 'bar',
-                data: Object.keys(status.months).map(key => ({
-                    value: status.months[key].current_processes_count,
-                    label: {
-                        show: true,
-                        position: 'top',
-                        color: textColor,
-                        formatter: function (params) {
-                            return params.value;
-                        }
-                    }
-                })),
-            });
-        });
-
-        // Add a line series for 'Total' data
-        series.push({
-            name: 'Total',
-            data: months.map(obj => obj.all_current_process_count),
-            type: 'line',
-            symbol: 'circle',
-            symbolSize: 10,
-            color: mainColor,
-            label: {
-                show: true,
-                position: 'top', // Label position
-                color: textColor,
-                rich: {
-                    labelBox: {
-                        backgroundColor: '#fff', // Background color of the label box
-                        borderRadius: 4, // Border radius
-                        padding: [6, 10], // Padding inside the box
-                        shadowBlur: 5, // Shadow blur radius
-                        shadowOffsetX: 3, // Shadow offset X
-                        shadowOffsetY: 3, // Shadow offset Y
-                        shadowColor: 'rgba(0, 0, 0, 0.3)' // Shadow color
-                    },
-                    value: {
-                        color: textColor
-                    }
-                },
-                // Formatter function for customizing label content and style
-                formatter: function (params) {
-                    return '{labelBox|' + params.value + '}';
-                },
-                align: 'center',
-                verticalAlign: 'bottom'
-            }
-        });
-
-        // Initialize ECharts instance with specified options
-        statisticsChart1 = echarts.init(container, null, {
-            renderer: 'canvas', // Use canvas renderer for better performance
-            useDirtyRect: false, // Disable dirty rectangle optimization
-            backgroundColor: 'white' // Set chart background color
-        });
-
-        // Define the main configuration options for the chart
-        const option = {
-            backgroundColor: '#ffffff', // Overall background color
-            title: {
-                text: 'Chart title', // Chart title
-                padding: [28, 60, 24, 30], // Padding around the title
-                textStyle: {
-                    fontSize: 14, // Font size in pixels
-                    fontWeight: 'bold', // Optional: Font weight (e.g., 'normal', 'bold', '600')
-                    color: textColor // Optional: Font color
-                }
-            },
-            grid: {
-                left: '60px',
-                right: '60px',
-                top: '80px',
-                bottom: '40px',
-            },
-            tooltip: {
-                trigger: 'axis', // Tooltip trigger type
-                axisPointer: {
-                    type: 'cross', // Cross style for axis pointer
-                    crossStyle: {
-                        color: '#999' // Color of the cross style
-                    }
-                }
-            },
-            toolbox: {
-                feature: {
-                    // dataView: { show: true, readOnly: false }, // Enable data view tool
-                    magicType: { show: true, type: ['line', 'bar'] }, // Enable switch between line and bar
-                    restore: { show: true }, // Enable restore button
-                    saveAsImage: { show: true } // Enable save as image button
-                }
-            },
-            legend: {
-                padding: [20, 0, 20], // Padding around legend
-                itemGap: 20, // Gap between legend items
-                itemWidth: 20, // Width of legend item symbol
-                itemHeight: 14, // Height of legend item symbol
-            },
-            xAxis: [
-                {
-                    type: 'category', // Category axis type
-                    data: months.map(obj => obj.name), // Data for x-axis categories
-                    axisPointer: {
-                        type: 'shadow' // Pointer type for axis
-                    }
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value' // Value axis type
-                },
-                {}, // Empty placeholder for secondary y-axis if needed
-            ],
-            series: series, // Assign prepared series data to chart
-        };
-
-        // Set chart configuration options
-        statisticsChart1.setOption(option);
+        // Custom saving of chart1 as image
+        document.querySelector('.processes-count-chart__download-btn').addEventListener('click', downloadStatisticsChart1);
 
         // Resize chart when window is resized
         window.addEventListener('resize', function () {
-            statisticsChart1.resize();
+            processesCountChart.resize();
         });
-
-        // Custom saving chart as image
-        document.querySelector('.statistics-chart1-download-btn').addEventListener('click', downloadStatisticsChart1);
     }
+}
 
-    // Function to handle download on button click
-    function downloadStatisticsChart1() {
-        // Get the chart image data URL
-        const imageDataURL = statisticsChart1.getConnectedDataURL({
-            type: 'image/png',   // Can also be 'image/jpeg' or 'image/svg+xml'
-            pixelRatio: 2,       // Adjust pixel ratio for higher quality if needed
-            // backgroundColor: '#fff'  // Set background color if needed
+function bootstrapProcessesCountChart() {
+    // Find the container element for the chart
+    const container = document.querySelector('.processes-count-chart');
+
+    // Prepare series data for bars based on general statuses
+    let series = [];
+    generalStatuses.forEach(status => {
+        series.push({
+            name: status.name,
+            type: 'bar',
+            data: Object.keys(status.months).map(key => ({
+                value: status.months[key].current_processes_count,
+                label: {
+                    show: true,
+                    position: 'top',
+                    color: textColor,
+                    formatter: function (params) {
+                        return params.value;
+                    }
+                }
+            })),
         });
+    });
 
-        // Create a temporary anchor element for download
-        let downloadLink = document.createElement('a');
-        downloadLink.href = imageDataURL;
-        downloadLink.download = 'chart.png';  // Filename when downloaded
+    // Add a line series for 'Total' data
+    series.push({
+        name: 'Total',
+        data: months.map(obj => obj.all_current_process_count),
+        type: 'line',
+        symbol: 'circle',
+        symbolSize: 10,
+        color: mainColor,
+        label: {
+            show: true,
+            position: 'top', // Label position
+            color: textColor,
+            rich: {
+                labelBox: {
+                    backgroundColor: '#fff', // Background color of the label box
+                    borderRadius: 4, // Border radius
+                    padding: [6, 10], // Padding inside the box
+                    shadowBlur: 5, // Shadow blur radius
+                    shadowOffsetX: 3, // Shadow offset X
+                    shadowOffsetY: 3, // Shadow offset Y
+                    shadowColor: 'rgba(0, 0, 0, 0.3)' // Shadow color
+                },
+                value: {
+                    color: textColor
+                }
+            },
+            // Formatter function for customizing label content and style
+            formatter: function (params) {
+                return '{labelBox|' + params.value + '}';
+            },
+            align: 'center',
+            verticalAlign: 'bottom'
+        }
+    });
 
-        // Append anchor to body and trigger the download
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
+    // Initialize ECharts instance with specified options
+    processesCountChart = echarts.init(container, null, {
+        renderer: 'canvas', // Use canvas renderer for better performance
+        useDirtyRect: false, // Disable dirty rectangle optimization
+        backgroundColor: 'white' // Set chart background color
+    });
 
-        // Clean up
-        document.body.removeChild(downloadLink);
-    }
+    // Define the main configuration options for the chart
+    const option = {
+        backgroundColor: '#ffffff', // Overall background color
+        title: {
+            text: 'Chart title', // Chart title
+            padding: [28, 60, 24, 30], // Padding around the title
+            textStyle: {
+                fontSize: 14, // Font size in pixels
+                fontWeight: 'bold', // Optional: Font weight (e.g., 'normal', 'bold', '600')
+                color: textColor // Optional: Font color
+            }
+        },
+        grid: {
+            left: '60px',
+            right: '60px',
+            top: '80px',
+            bottom: '40px',
+        },
+        tooltip: {
+            trigger: 'axis', // Tooltip trigger type
+            axisPointer: {
+                type: 'cross', // Cross style for axis pointer
+                crossStyle: {
+                    color: '#999' // Color of the cross style
+                }
+            }
+        },
+        toolbox: {
+            feature: {
+                // dataView: { show: true, readOnly: false }, // Enable data view tool
+                magicType: { show: true, type: ['line', 'bar'] }, // Enable switch between line and bar
+                restore: { show: true }, // Enable restore button
+                saveAsImage: { show: true } // Enable save as image button
+            }
+        },
+        legend: {
+            padding: [20, 0, 20], // Padding around legend
+            itemGap: 20, // Gap between legend items
+            itemWidth: 20, // Width of legend item symbol
+            itemHeight: 14, // Height of legend item symbol
+        },
+        xAxis: [
+            {
+                type: 'category', // Category axis type
+                data: months.map(obj => obj.name), // Data for x-axis categories
+                axisPointer: {
+                    type: 'shadow' // Pointer type for axis
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value' // Value axis type
+            },
+            {}, // Empty placeholder for secondary y-axis if needed
+        ],
+        series: series, // Assign prepared series data to chart
+    };
+
+    // Set chart configuration options
+    processesCountChart.setOption(option);
+}
+
+function downloadStatisticsChart1() {
+    // Get the chart image data URL
+    const imageDataURL = processesCountChart.getConnectedDataURL({
+        type: 'image/png',   // Can also be 'image/jpeg' or 'image/svg+xml'
+        pixelRatio: 2,       // Adjust pixel ratio for higher quality if needed
+        // backgroundColor: '#fff'  // Set background color if needed
+    });
+
+    // Create a temporary anchor element for download
+    let downloadLink = document.createElement('a');
+    downloadLink.href = imageDataURL;
+    downloadLink.download = 'chart.png';  // Filename when downloaded
+
+    // Append anchor to body and trigger the download
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+
+    // Clean up
+    document.body.removeChild(downloadLink);
 }

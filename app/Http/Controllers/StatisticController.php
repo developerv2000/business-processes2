@@ -69,7 +69,10 @@ class StatisticController extends Controller
         // Add active manufacturers link for each months. Table 3
         self::addActiveManufacturersLinkForMonths($request, $months);
 
-        return view('statistics.index', compact('request', 'months', 'generalStatuses', 'yearTotalCurrentProcessesCount', 'yearTotalMaximumProcessesCount'));
+        // Calculate sum of all 'active_manufacturers_count' of monthes (Table 3)
+        $yearActiveManufacturersCount = collect($months)->sum('active_manufacturers_count');
+
+        return view('statistics.index', compact('request', 'months', 'generalStatuses', 'yearTotalCurrentProcessesCount', 'yearTotalMaximumProcessesCount', 'yearActiveManufacturersCount'));
     }
 
     /**

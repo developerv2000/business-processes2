@@ -13,6 +13,8 @@
                 @foreach ($months as $month)
                     <th>{{ __($month['name']) }}</th>
                 @endforeach
+
+                <th>{{ __('Total') }}</th>
             </tr>
         </thead> {{-- Head end --}}
 
@@ -27,6 +29,8 @@
                         </a>
                     </td>
                 @endforeach
+
+                <td>{{ $yearActiveManufacturersCount }}</td>
             </tr>
         </tbody> {{-- Body end --}}
     </table>

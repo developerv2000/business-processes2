@@ -670,7 +670,7 @@ function downloadProcessesCountChart() {
     // Create a temporary anchor element for download
     let downloadLink = document.createElement('a');
     downloadLink.href = imageDataURL;
-    downloadLink.download = 'chart.png';  // Filename when downloaded
+    downloadLink.download = 'processes-count-chart.png';  // Filename when downloaded
 
     // Append anchor to body and trigger the download
     document.body.appendChild(downloadLink);
@@ -778,7 +778,7 @@ function bootstrapActiveManufacturersChart() {
 
 function downloadActiveManufacturersChart() {
     // Get the chart image data URL
-    const imageDataURL = processesCountChart.getConnectedDataURL({
+    const imageDataURL = activeManufacturersChart.getConnectedDataURL({
         type: 'image/png',   // Can also be 'image/jpeg' or 'image/svg+xml'
         pixelRatio: 2,       // Adjust pixel ratio for higher quality if needed
         // backgroundColor: '#fff'  // Set background color if needed
@@ -787,7 +787,7 @@ function downloadActiveManufacturersChart() {
     // Create a temporary anchor element for download
     let downloadLink = document.createElement('a');
     downloadLink.href = imageDataURL;
-    downloadLink.download = 'chart.png';  // Filename when downloaded
+    downloadLink.download = 'active-manufacturers-chart.png';  // Filename when downloaded
 
     // Append anchor to body and trigger the download
     document.body.appendChild(downloadLink);

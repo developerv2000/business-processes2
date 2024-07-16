@@ -306,7 +306,8 @@ class Manufacturer extends CommentableModel
      * Filter active records based on the specified year and month.
      *
      * This function filters the query to include only records that have
-     * associated processes with status history starting in the specified month and year.
+     * associated processes with status history starting in the specified month and year
+     * and have stage <= 5.
      *
      * This function is used in both statistics index page & manufacturers index page.
      *
@@ -319,7 +320,10 @@ class Manufacturer extends CommentableModel
     {
         return $query->whereHas('processes.statusHistory', function ($historyQuery) use ($year, $month) {
             $historyQuery->whereMonth('start_date', $month)
-                ->whereYear('start_date', $year);
+                ->whereYear('start_date', $year)
+                ->whereHas('status.generalStatus', function ($statusQuery) {
+                    $statusQuery->where('stage', '<=', 5);
+                });
         });
     }
 

@@ -720,6 +720,8 @@ function bootstrapActiveManufacturersChart() {
         },
         toolbox: {
             feature: {
+                magicType: { show: true, type: ['line', 'bar'] }, // Enable switch between line and bar
+                restore: { show: true }, // Enable restore button
                 saveAsImage: { show: true } // Enable save as image button
             }
         },

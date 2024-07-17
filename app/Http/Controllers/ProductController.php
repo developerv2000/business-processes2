@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
-use App\Models\Manufacturer;
 use App\Models\User;
 use App\Support\Traits\DestroysModelRecords;
 use App\Support\Traits\RestoresModelRecords;
@@ -106,19 +105,5 @@ class ProductController extends Controller
         $records = Product::getRecordsFinalized($request, finaly: 'query');
 
         return Product::exportRecordsAsExcel($records);
-    }
-
-    /**
-     * Export VP as excel file
-     *
-     * Available only if only 1 Manufacturer is selected on filter
-     */
-    public function exportVp(Request $request)
-    {
-        $manufacturerName = Manufacturer::find($request->manufacturer_id)->name;
-        Product::mergeExportQueryingParamsToRequest($request);
-        $records = Product::getRecordsFinalized($request, finaly: 'query');
-
-        return Product::exportVpRecordsAsExcel($records, $manufacturerName);
     }
 }

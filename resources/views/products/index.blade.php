@@ -18,12 +18,8 @@
 
                 @unless ($request->user()->isTrainee())
                     <x-different.export-form action="{{ route('products.export') }}" />
+                    <x-different.products-selection-form model="Product" />
                 @endunless
-
-                {{-- Export VP --}}
-                @if (!$request->user()->isTrainee() && $request->manufacturer_id && count($request->manufacturer_id) == 1)
-                    <x-different.export-products-vp-form :manufacturer-id="($request->manufacturer_id)[0]" />
-                @endif
             </div>
         </div>
 

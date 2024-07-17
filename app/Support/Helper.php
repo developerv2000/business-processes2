@@ -330,6 +330,28 @@ class Helper
         return $value;
     }
 
+    /**
+     * Merge URL query parameters into the given request.
+     *
+     * This function takes a URL, extracts its query parameters,
+     * and merges them into the provided request object.
+     *
+     * @param \Illuminate\Http\Request $request The request object to merge parameters into.
+     * @param string $url The URL from which to extract query parameters.
+     * @return void
+     */
+    public static function mergeUrlParamsToRequest($request, $url)
+    {
+        // Extract the query string from the given URL
+        $queryString = parse_url($url, PHP_URL_QUERY);
+
+        // Parse the query string into an associative array
+        parse_str($queryString, $queryParams);
+
+        // Merge the parsed query parameters into the request object
+        $request->merge($queryParams);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Query filtering

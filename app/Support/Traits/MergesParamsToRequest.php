@@ -48,11 +48,9 @@ trait MergesParamsToRequest
      */
     public static function mergeExportQueryingParamsToRequest(Request $request)
     {
-        // Parse then merge referer URL query parameters into the request
+        // Merge referer URL query parameters into the request
         $url = $request->header('referer');
-        $queryString = parse_url($url, PHP_URL_QUERY);
-        parse_str($queryString, $queryParams);
-        $request->merge($queryParams);
+        Helper::mergeUrlParamsToRequest($request, $url);
 
         // Also merge default querying parameters to escape querying errors
         static::mergeQueryingParamsToRequest($request);

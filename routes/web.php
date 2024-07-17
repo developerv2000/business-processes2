@@ -9,6 +9,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProcessStatusHistoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductSelectionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StatisticController;
@@ -50,8 +51,11 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
-        Route::post('/export-vp', 'exportVp')->name('export-vp');
         Route::post('/get-similar-records', 'getSimilarRecords');  // ajax request on create form for uniqness
+    });
+
+    Route::prefix('products-selection')->controller(ProductSelectionController::class)->name('products-selection.')->group(function () {
+        RouteGenerator::defineDefaultCrudRoutesOnly(['export']);
     });
 
     Route::prefix('processes')->controller(ProcessController::class)->name('processes.')->group(function () {

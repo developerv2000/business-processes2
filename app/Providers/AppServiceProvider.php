@@ -46,58 +46,65 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //Pagination limits
-        View::composer(['filters.partials.pagination-limit'], function ($view) {
+        // Pagination limits
+        View::composer('filters.partials.pagination-limit', function ($view) {
             $view->with([
                 'paginationLimits' => Helper::DEFAULT_MODEL_PAGINATION_LIMITS,
             ]);
         });
 
-        // Manufacturers
-        View::composer(['filters.manufacturers', 'manufacturers.create', 'manufacturers.edit'], function ($view) {
-            $view->with([
-                'analystUsers' => User::getAnalystsMinified(),
-                'bdmUsers' => User::getBdmsMinifed(),
-                'countries' => Country::getAll(),
+        // ----------------------- Manufacturers -----------------------
+
+        View::composer(['manufacturers.create', 'manufacturers.edit'], function ($view) {
+            $view->with(self::getDefaultManufacturersShareData());
+        });
+
+        View::composer('filters.manufacturers', function ($view) {
+            $shareData = self::getDefaultManufacturersShareData();
+
+            $mergedData = array_merge($shareData, [
                 'countryCodes' => CountryCode::getAll(),
                 'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
-                'manufacturers' => Manufacturer::getAllMinified(),
-                'categories' => ManufacturerCategory::getAll(),
-                'zones' => Zone::getAll(),
-                'productClasses' => ProductClass::getAll(),
-                'blacklists' => ManufacturerBlacklist::getAll(),
-                'statusOptions' => Manufacturer::getStatusOptions(),
-                'booleanOptions' => Helper::getBooleanOptionsArray(),
             ]);
+
+            $view->with($mergedData);
         });
 
-        // Products
-        View::composer(['filters.products', 'products.create', 'products.edit'], function ($view) {
-            $view->with([
-                'manufacturers' => Manufacturer::getAllMinified(),
-                'analystUsers' => User::getAnalystsMinified(),
-                'bdmUsers' => User::getBdmsMinifed(),
-                'productClasses' => ProductClass::getAll(),
-                'productsDefaultClassID' => Product::getDefaultClassID(), // used only on create
-                'productForms' => ProductForm::getAllMinified(),
-                'shelfLifes' => ProductShelfLife::getAll(),
-                'zones' => Zone::getAll(),
-                'productsDefaultZonesIDs' => Product::getDefaultZoneIDs(), // used only on create
-                'inns' => Inn::getAll(),
-                'countries' => Country::getAll(),
-                'manufacturerCategories' => ManufacturerCategory::getAll(),
-                'booleanOptions' => Helper::getBooleanOptionsArray(),
-            ]);
+        // ----------------------- Products -----------------------
+
+        View::composer('products.edit', function ($view) {
+            $view->with(self::getDefaultProductsShareData());
         });
 
-        // KVPP
+        View::composer('products.create', function ($view) {
+            $shareData = self::getDefaultProductsShareData();
+
+            $mergedData = array_merge($shareData, [
+                'productsDefaultClassID' => Product::getDefaultClassID(),
+                'productsDefaultZonesIDs' => Product::getDefaultZoneIDs(),
+            ]);
+
+            $view->with($mergedData);
+        });
+
+        View::composer('filters.products', function ($view) {
+            $shareData = self::getDefaultProductsShareData();
+
+            $mergedData = array_merge($shareData, [
+                'brands' => Product::getAllUniqueBrands(),
+            ]);
+
+            $view->with($mergedData);
+        });
+
+        // ----------------------- Kvpp -----------------------
+
         View::composer(['kvpp.create', 'kvpp.edit'], function ($view) {
-            $view->with(self::getKvppShareData());
+            $view->with(self::getDefaultKvppShareData());
         });
 
-        // Kvpp filter
-        View::composer(['filters.kvpp'], function ($view) {
-            $shareData = self::getKvppShareData();
+        View::composer('filters.kvpp', function ($view) {
+            $shareData = self::getDefaultKvppShareData();
 
             $mergedData = array_merge($shareData, [
                 'inns' => Inn::getOnlyKvppInns(),
@@ -107,30 +114,10 @@ class AppServiceProvider extends ServiceProvider
             $view->with($mergedData);
         });
 
-        // Statistics
-        View::composer(['filters.statistics'], function ($view) {
-            $view->with([
-                'analystUsers' => User::getAnalystsMinified(),
-                'bdmUsers' => User::getBdmsMinifed(),
-                'calendarMonths' => Helper::collectCalendarMonths(),
-                'countryCodes' => CountryCode::getAll(),
-                'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
-            ]);
-        });
+        // ----------------------- Processes -----------------------
 
-        // Meetings
-        View::composer(['filters.meetings', 'meetings.create', 'meetings.edit'], function ($view) {
-            $view->with([
-                'manufacturers' => Manufacturer::getAllMinified(),
-                'analystUsers' => User::getAnalystsMinified(),
-                'bdmUsers' => User::getBdmsMinifed(),
-                'countries' => Country::getAll(),
-            ]);
-        });
-
-        // Processes create/edit
         View::composer(['processes.create', 'processes.edit', 'processes.partials.create-form-stage-inputs', 'processes.partials.edit-form-stage-inputs'], function ($view) {
-            $shareData = self::getProcessesShareData();
+            $shareData = self::getDefaultProcessesShareData();
 
             $mergedData = array_merge($shareData, [
                 'statuses' => ProcessStatus::getAllFilteredByRoles(), // important
@@ -142,21 +129,45 @@ class AppServiceProvider extends ServiceProvider
             $view->with($mergedData);
         });
 
-        // Processes filter
         View::composer('filters.processes', function ($view) {
-            $shareData = self::getProcessesShareData();
+            $shareData = self::getDefaultProcessesShareData();
 
             $mergedData = array_merge($shareData, [
                 'statuses' => ProcessStatus::getAll(), // important
                 'generalStatuses' => ProcessGeneralStatus::getAll(),
                 'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueStatusNamesForAnalysts(),
                 'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
+                'brands' => Product::getAllUniqueBrands(),
             ]);
 
             $view->with($mergedData);
         });
 
-        // Users
+        // ----------------------- Statistics -----------------------
+
+        View::composer(['filters.statistics'], function ($view) {
+            $view->with([
+                'analystUsers' => User::getAnalystsMinified(),
+                'bdmUsers' => User::getBdmsMinifed(),
+                'calendarMonths' => Helper::collectCalendarMonths(),
+                'countryCodes' => CountryCode::getAll(),
+                'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
+            ]);
+        });
+
+        // ----------------------- Meetings -----------------------
+
+        View::composer(['filters.meetings', 'meetings.create', 'meetings.edit'], function ($view) {
+            $view->with([
+                'manufacturers' => Manufacturer::getAllMinified(),
+                'analystUsers' => User::getAnalystsMinified(),
+                'bdmUsers' => User::getBdmsMinifed(),
+                'countries' => Country::getAll(),
+            ]);
+        });
+
+        // ----------------------- Users -----------------------
+
         View::composer(['users.create', 'users.edit'], function ($view) {
             $view->with([
                 'roles' => Role::getAll(),
@@ -164,7 +175,42 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 
-    private static function getKvppShareData()
+    // ----------------------- Defaults -----------------------
+
+    private static function getDefaultManufacturersShareData()
+    {
+        return [
+            'analystUsers' => User::getAnalystsMinified(),
+            'bdmUsers' => User::getBdmsMinifed(),
+            'countries' => Country::getAll(),
+            'manufacturers' => Manufacturer::getAllMinified(),
+            'categories' => ManufacturerCategory::getAll(),
+            'zones' => Zone::getAll(),
+            'productClasses' => ProductClass::getAll(),
+            'blacklists' => ManufacturerBlacklist::getAll(),
+            'statusOptions' => Manufacturer::getStatusOptions(),
+            'booleanOptions' => Helper::getBooleanOptionsArray(),
+        ];
+    }
+
+    private static function getDefaultProductsShareData()
+    {
+        return [
+            'manufacturers' => Manufacturer::getAllMinified(),
+            'analystUsers' => User::getAnalystsMinified(),
+            'bdmUsers' => User::getBdmsMinifed(),
+            'productClasses' => ProductClass::getAll(),
+            'productForms' => ProductForm::getAllMinified(),
+            'shelfLifes' => ProductShelfLife::getAll(),
+            'zones' => Zone::getAll(),
+            'inns' => Inn::getAll(),
+            'countries' => Country::getAll(),
+            'manufacturerCategories' => ManufacturerCategory::getAll(),
+            'booleanOptions' => Helper::getBooleanOptionsArray(),
+        ];
+    }
+
+    private static function getDefaultKvppShareData()
     {
         return [
             'booleanOptions' => Helper::getBooleanOptionsArray(),
@@ -179,7 +225,7 @@ class AppServiceProvider extends ServiceProvider
         ];
     }
 
-    private static function getProcessesShareData()
+    private static function getDefaultProcessesShareData()
     {
         return [
             'countryCodes' => CountryCode::getAll(),

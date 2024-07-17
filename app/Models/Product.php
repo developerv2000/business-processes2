@@ -222,6 +222,7 @@ class Product extends CommentableModel
             'form_id',
             'class_id',
             'shelf_life_id',
+            'brand',
         ];
 
         $whereInAttributes = [
@@ -599,5 +600,10 @@ class Product extends CommentableModel
     public function getTitle(): string
     {
         return Helper::truncateString($this->manufacturer->name, 50) . ' / ' . Helper::truncateString($this->inn->name, 50);
+    }
+
+    public static function getAllUniqueBrands()
+    {
+        return self::whereNotNull('brand')->distinct()->pluck('brand');
     }
 }

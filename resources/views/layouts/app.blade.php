@@ -41,6 +41,7 @@
 
     {{-- Selectize --}}
     <script src="{{ asset('plugins/selectize/selectize.min.js') }}"></script>
+    <script src="{{ asset('plugins/selectize/preserve-on-blur-plugin/preserve-on-blur.js') }}"></script>
 
     {{-- Moment.js (required in Date range picker) --}}
     <script src="{{ asset('plugins/moment.min.js') }}"></script>

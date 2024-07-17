@@ -20,7 +20,6 @@
 
         {{-- Body Start --}}
         <tbody>
-            {{-- Sum of total statuses --}}
             <tr>
                 @foreach ($months as $month)
                     <td>

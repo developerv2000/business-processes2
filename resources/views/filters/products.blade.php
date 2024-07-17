@@ -51,6 +51,11 @@
         name="bdm_user_id"
         :options="$bdmUsers" />
 
+    <x-forms.single-select.request-based-select
+        label="Brand"
+        name="brand"
+        :options="$brands" />
+
     <x-forms.id-based-single-select.request-based-select
         label="Shelf life"
         name="shelf_life_id"

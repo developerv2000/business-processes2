@@ -73,12 +73,12 @@ export function debounce(callback, timeoutDelay = 500) {
 export function initializeNewSelectizes() {
     // singular Selectizes
     $('select.singular-selectize:not(.selectize--manually-initializable):not(.selectized)').selectize({
-        plugins: ["auto_position"],
+        plugins: ["auto_position", "preserve_on_blur"],
     });
 
     // Multiple Selectizes
     $('select.multiple-selectize:not(.selectize--manually-initializable):not(.selectized)').selectize({
-        plugins: ["auto_position"],
+        plugins: ["auto_position", "preserve_on_blur"],
     });
 }
 
@@ -132,7 +132,7 @@ function bootstrapDefaultComponents() {
     // ********** Selectize **********
     // singular Selectize
     $('.singular-selectize:not(.selectize--manually-initializable)').selectize({
-        plugins: ["auto_position"],
+        plugins: ["auto_position", "preserve_on_blur"],
     });
 
     // singular Linked Selectize
@@ -145,7 +145,7 @@ function bootstrapDefaultComponents() {
 
     // multiple Selectize
     $('.multiple-selectize:not(.selectize--manually-initializable)').selectize({
-        plugins: ["auto_position"],
+        plugins: ["auto_position", "preserve_on_blur"],
     });
 
     // multiple Selectize taggable

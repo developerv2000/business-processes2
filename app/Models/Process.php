@@ -318,6 +318,11 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ],
 
             [
+                'name' => 'product',
+                'attribute' => 'brand',
+            ],
+
+            [
                 'name' => 'manufacturer',
                 'attribute' => 'analyst_user_id',
             ],

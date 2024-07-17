@@ -112,6 +112,11 @@
         name="marketing_authorization_holder_id"
         :options="$marketingAuthorizationHolders" />
 
+    <x-forms.single-select.request-based-select
+        label="Brand"
+        name="brand"
+        :options="$brands" />
+
     <x-forms.input.request-based-input
         type="text"
         label="Brand Eng"

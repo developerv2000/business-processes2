@@ -23,7 +23,7 @@ yarn-error.log
 /public/img/users/*
 
 /storage/app/excel/exports/ivp/*
-/storage/app/excel/exports/ivp-vp/*
+/storage/app/excel/exports/products-selection/*
 /storage/app/excel/exports/epp/*
 /storage/app/excel/exports/vps/*
 /storage/app/excel/exports/kvpp/*

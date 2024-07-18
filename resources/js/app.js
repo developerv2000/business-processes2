@@ -600,18 +600,19 @@ function bootstrapProcessesCountChart() {
     const option = {
         backgroundColor: '#ffffff', // Overall background color
         title: {
-            text: 'Chart title', // Chart title
-            padding: [28, 60, 24, 30], // Padding around the title
+            text: 'Ключевые показатели по тщательной обработке продуктов по месяцам', // Chart title
+            padding: [24, 60, 24, 30], // Padding around the title
             textStyle: {
                 fontSize: 14, // Font size in pixels
-                fontWeight: 'bold', // Optional: Font weight (e.g., 'normal', 'bold', '600')
+                fontFamily: ['Fira Sans', 'sans-serif'],
+                fontWeight: '500', // Optional: Font weight (e.g., 'normal', 'bold', '600')
                 color: textColor // Optional: Font color
             }
         },
         grid: {
             left: '60px',
             right: '60px',
-            top: '80px',
+            top: '92px',
             bottom: '40px',
         },
         tooltip: {
@@ -632,8 +633,8 @@ function bootstrapProcessesCountChart() {
             }
         },
         legend: {
-            padding: [20, 0, 20], // Padding around legend
-            itemGap: 20, // Gap between legend items
+            padding: [52, 0, 20], // Padding around legend
+            itemGap: 12, // Gap between legend items
             itemWidth: 20, // Width of legend item symbol
             itemHeight: 14, // Height of legend item symbol
         },
@@ -695,18 +696,19 @@ function bootstrapActiveManufacturersChart() {
     const option = {
         backgroundColor: '#ffffff', // Overall background color
         title: {
-            text: 'Active manufacturers', // Chart title
-            padding: [28, 60, 24, 30], // Padding around the title
+            text: 'Количество активных производителей по месяцам', // Chart title
+            padding: [24, 60, 24, 30], // Padding around the title
             textStyle: {
                 fontSize: 14, // Font size in pixels
-                fontWeight: 'bold', // Optional: Font weight (e.g., 'normal', 'bold', '600')
+                fontFamily: ['Fira Sans', 'sans-serif'],
+                fontWeight: '500', // Optional: Font weight (e.g., 'normal', 'bold', '600')
                 color: textColor // Optional: Font color
             }
         },
         grid: {
             left: '60px',
             right: '60px',
-            top: '80px',
+            top: '68px',
             bottom: '40px',
         },
         tooltip: {
@@ -724,12 +726,6 @@ function bootstrapActiveManufacturersChart() {
                 restore: { show: true }, // Enable restore button
                 saveAsImage: { show: true } // Enable save as image button
             }
-        },
-        legend: {
-            padding: [20, 0, 20], // Padding around legend
-            itemGap: 20, // Gap between legend items
-            itemWidth: 20, // Width of legend item symbol
-            itemHeight: 14, // Height of legend item symbol
         },
         xAxis: {
             type: 'category',

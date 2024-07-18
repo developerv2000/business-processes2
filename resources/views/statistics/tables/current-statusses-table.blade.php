@@ -1,7 +1,7 @@
 <div class="statistics-index__table1-container styled-box">
     <div class="pre-content">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Number of processes whose current status matches the specified status')],
+            'crumbs' => [__('Key indicators for thorough processing of products by month (unique indicator by stage)')],
             'fullScreen' => false,
         ])
     </div>

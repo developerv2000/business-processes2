@@ -206,9 +206,9 @@
     "October": "Октябрь",
     "November": "Ноябрь",
     "December": "Декабрь",
-    "Number of processes whose current status matches the specified status": "Количество процессов, у которых текущий статус соответствует указанному статусу",
-    "The maximum number of processes that a certain status had during a month": "Максимальное количество процессов, которое определённый статус имел в течении месяца",
-    "Active manufacturers count for the given month": "Количество активных производителей в течении месяца",
+    "Key indicators for thorough processing of products by month (unique indicator by stage)": "Ключевые показатели по тщательной обработке продуктов по месяцам (уникальный показатель по этапам)",
+    "Key indicators on the number of works completed at each stage by month": "Ключевые показатели по количеству выполненных работ на каждом этапе по месяцам",
+    "Number of active manufacturers by month": "Количество активных производителей по месяцам",
 
     "Notifications": "Уведомления",
     "Date": "Дата",

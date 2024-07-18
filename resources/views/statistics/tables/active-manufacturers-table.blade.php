@@ -1,7 +1,7 @@
 <div class="statistics-index__table3-container styled-box">
     <div class="pre-content">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Active manufacturers count for the given month')],
+            'crumbs' => [__('Number of active manufacturers by month')],
             'fullScreen' => false,
         ])
     </div>

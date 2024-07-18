@@ -1,7 +1,7 @@
 <div class="statistics-index__table2-container styled-box">
     <div class="pre-content">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('The maximum number of processes that a certain status had during a month')],
+            'crumbs' => [__('Key indicators on the number of works completed at each stage by month')],
             'fullScreen' => false,
         ])
     </div>

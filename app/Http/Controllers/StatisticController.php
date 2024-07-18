@@ -115,7 +115,19 @@ class StatisticController extends Controller
                 ->values();
         }
 
+        self::translateMonthNames($months);
+
         return $months->all();
+    }
+
+    /**
+     * Translate month names
+     */
+    private static function translateMonthNames($months)
+    {
+        $months->each(function ($month) {
+            $month['name'] = trans($month['name']);
+        });
     }
 
     /**

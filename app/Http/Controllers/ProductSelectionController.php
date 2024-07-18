@@ -62,10 +62,10 @@ class ProductSelectionController extends Controller
         });
 
         // Prepare records before export
-        self::prepareRecordsForExport($records, $model);
+        self::loadRecordsCoincidentKvpps($records);
 
         // Get additional country names
-        $additionalCountries = self::insertAdditionalCountriesIntoSheet($sheet, $records, $model);
+        $additionalCountries = self::insertAdditionalCountriesIntoSheet($sheet, $records);
 
         // insert records into sheet
         self::fillSheetWithRecords($sheet, $records, $model, $additionalCountries);
@@ -76,21 +76,17 @@ class ProductSelectionController extends Controller
         return $filepath;
     }
 
-    private static function prepareRecordsForExport($records, $model)
+    private static function loadRecordsCoincidentKvpps($records)
     {
-        switch ($model) {
-            case 'App\Models\Product':
-                // Append coincident_kvpps manually, so it won`t load many times
-                $records->each(function ($record) {
-                    $record->loaded_coincident_kvpps = $record->coincident_kvpps;
-                });
-                break;
-        }
+        // Append coincident_kvpps manually, so it won`t load many times
+        $records->each(function ($record) {
+            $record->loaded_coincident_kvpps = $record->coincident_kvpps;
+        });
     }
 
-    private static function insertAdditionalCountriesIntoSheet($sheet, $records, $model)
+    private static function insertAdditionalCountriesIntoSheet($sheet, $records)
     {
-        $additionalCountries = self::getAdditionalCountries($records, $model);
+        $additionalCountries = self::getAdditionalCountries($records);
 
         // insert additional country titles between last default country and ZONE 4B columns
         $lastCountryColumnLetter = self::LAST_DEFAULT_COUNTRY_COLUMN_LETTER;
@@ -99,7 +95,7 @@ class ProductSelectionController extends Controller
         foreach ($additionalCountries as $country) {
             // Insert new country column
             $nextColumnIndex = $lastCountryColumnIndex + 1;
-            $nextColumnLetter = Coordinate::stringFromColumnIndex($nextColumnIndex); // Convert numeric index to column letter
+            $nextColumnLetter = Coordinate::stringFromColumnIndex($nextColumnIndex);
             $sheet->insertNewColumnBefore($nextColumnLetter, 1);
 
             $insertedColumnIndex = $nextColumnIndex;
@@ -118,14 +114,10 @@ class ProductSelectionController extends Controller
         return $additionalCountries;
     }
 
-    private static function getAdditionalCountries($records, $model)
+    private static function getAdditionalCountries($records)
     {
         // Collect unique additional countries
-        switch ($model) {
-            case 'App\Models\Product':
-                $uniqueCountries = $records->flatMap->loaded_coincident_kvpps->pluck('country.name')->unique();
-                break;
-        }
+        $uniqueCountries = $records->flatMap->loaded_coincident_kvpps->pluck('country.name')->unique();
 
         // Remove countries which already present in default countries
         $additionalCountries = $uniqueCountries->diff(self::DEFAULT_COUNTRIES);
@@ -145,12 +137,11 @@ class ProductSelectionController extends Controller
             $columnIndex = 1;
 
             $sheet->setCellValue([$columnIndex++, $row], $recordsCounter);
-            $sheet->setCellValue([$columnIndex++, $row], $record->inn->name);
-            $sheet->setCellValue([$columnIndex++, $row], $record->form->name);
-            $sheet->setCellValue([$columnIndex++, $row], $record->dosage);
-            $sheet->setCellValue([$columnIndex++, $row], $record->pack);
-            $sheet->setCellValue([$columnIndex++, $row], $record->moq);
-            $sheet->setCellValue([$columnIndex++, $row], $record->shelfLife->name);
+
+            $columnValues = self::getRecordColumnValues($record, $model);
+            foreach ($columnValues as $value) {
+                $sheet->setCellValue([$columnIndex++, $row], $value);
+            }
 
             $firstCountryColumnLetter = self::FIRST_DEFAULT_COUNTRY_COLUMN_LETTER;  // Reset value for each row
             $firstCountryColumnIndex = Coordinate::columnIndexFromString($firstCountryColumnLetter);
@@ -180,6 +171,32 @@ class ProductSelectionController extends Controller
         }
 
         self::removeRedundantRow($sheet, $records, $row);
+    }
+
+    private static function getRecordColumnValues($record, $model)
+    {
+        switch ($model) {
+            case 'App\Models\Product':
+                return [
+                    $record->inn->name,
+                    $record->form->name,
+                    $record->dosage,
+                    $record->pack,
+                    $record->moq,
+                    $record->shelfLife->name,
+                ];
+                break;
+
+            case 'App\Models\Process':
+                return [
+                    $record->product->inn->name,
+                    $record->product->form->name,
+                    $record->product->dosage,
+                    $record->product->pack,
+                    $record->product->moq,
+                    $record->product->shelfLife->name,
+                ];
+        }
     }
 
     private static function removeRedundantRow($sheet, $records, $row)

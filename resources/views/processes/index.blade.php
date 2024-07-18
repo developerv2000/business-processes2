@@ -17,6 +17,7 @@
 
                 @unless ($request->user()->isTrainee())
                     <x-different.export-form action="{{ route('processes.export') }}" />
+                    <x-different.products-selection-form model="Process" />
                 @endunless
             </div>
         </div>

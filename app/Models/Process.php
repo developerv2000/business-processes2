@@ -146,6 +146,19 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         return null;
     }
 
+    public function getCoincidentKvppsAttribute()
+    {
+        return Kvpp::where([
+            'inn_id' => $this->product->inn_id,
+            'form_id' => $this->product->form_id,
+            'dosage' => $this->product->dosage,
+            'country_code_id' => $this->country_code_id,
+        ])
+            ->select('id', 'country_code_id')
+            ->withOnly('country')
+            ->get();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Events

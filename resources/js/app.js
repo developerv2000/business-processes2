@@ -741,7 +741,7 @@ function bootstrapActiveManufacturersChart() {
         series: [
             {
                 data: months.map(obj => obj.active_manufacturers_count), // Data for x-axis categories
-                type: 'line',
+                type: 'bar',
                 symbol: 'circle',
                 symbolSize: 10,
                 color: mainColor,

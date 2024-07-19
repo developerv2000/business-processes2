@@ -87,9 +87,9 @@ class Product extends CommentableModel
     public function getProcessesIndexFilteredLinkAttribute()
     {
         return route('processes.index', [
-            'manufacturer_id' => $this->manufacturer_id,
-            'inn_id' => $this->inn_id,
-            'form_id' => $this->form_id,
+            'manufacturer_id[]' => $this->manufacturer_id,
+            'inn_id[]' => $this->inn_id,
+            'form_id[]' => $this->form_id,
             'dosage' => $this->dosage,
             'pack' => $this->pack,
         ]);
@@ -187,16 +187,13 @@ class Product extends CommentableModel
 
     private static function filterRecords($request, $query)
     {
-        $whereEqualAttributes = [
+        $whereInAttributes = [
             'id',
+            'inn_id',
             'form_id',
             'class_id',
             'shelf_life_id',
             'brand',
-        ];
-
-        $whereInAttributes = [
-            'inn_id',
             'manufacturer_id',
         ];
 
@@ -241,7 +238,6 @@ class Product extends CommentableModel
             ],
         ];
 
-        $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
         $query = Helper::filterQueryWhereInStatements($request, $query, $whereInAttributes);
         $query = Helper::filterQueryLikeStatements($request, $query, $whereLikeAttributes);
         $query = Helper::filterQueryDateRangeStatements($request, $query, $dateRangeAttributes);

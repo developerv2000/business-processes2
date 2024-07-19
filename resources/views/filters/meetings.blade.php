@@ -6,9 +6,9 @@
         label="Year"
         name="year" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Manufacturer"
-        name="manufacturer_id"
+        name="manufacturer_id[]"
         :options="$manufacturers" />
 
     <x-forms.id-based-single-select.request-based-select
@@ -21,9 +21,9 @@
         name="bdm_user_id"
         :options="$bdmUsers" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Country"
-        name="country_id"
+        name="country_id[]"
         :options="$countries" />
 
     <x-forms.input.request-based-input

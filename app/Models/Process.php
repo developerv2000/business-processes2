@@ -277,7 +277,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
     private static function filterRecords($request, $query)
     {
-        $whereEqualAttributes = [
+        $whereInAttributes = [
             'id',
             'country_code_id',
             'status_id',
@@ -301,6 +301,36 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
         $whereRelationEqualStatements = [
             [
+                'name' => 'product',
+                'attribute' => 'dosage',
+            ],
+
+            [
+                'name' => 'product',
+                'attribute' => 'pack',
+            ],
+
+            [
+                'name' => 'manufacturer',
+                'attribute' => 'analyst_user_id',
+            ],
+
+            [
+                'name' => 'manufacturer',
+                'attribute' => 'bdm_user_id',
+            ],
+        ];
+
+        $whereRelationEqualAmbigiousStatements = [
+            [
+                'name' => 'manufacturer',
+                'attribute' => 'manufacturer_category_id',
+                'ambiguousAttribute' => 'manufacturers.category_id',
+            ],
+        ];
+
+        $whereRelationInStatements = [
+            [
                 'name' => 'status.generalStatus',
                 'attribute' => 'name_for_analysts',
             ],
@@ -322,27 +352,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
             [
                 'name' => 'product',
-                'attribute' => 'dosage',
-            ],
-
-            [
-                'name' => 'product',
-                'attribute' => 'pack',
-            ],
-
-            [
-                'name' => 'product',
                 'attribute' => 'brand',
-            ],
-
-            [
-                'name' => 'manufacturer',
-                'attribute' => 'analyst_user_id',
-            ],
-
-            [
-                'name' => 'manufacturer',
-                'attribute' => 'bdm_user_id',
             ],
 
             [
@@ -351,7 +361,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ],
         ];
 
-        $whereRelationEqualAmbigiousStatements = [
+        $whereRelationInAmbigiousStatements = [
             [
                 'name' => 'manufacturer',
                 'attribute' => 'manufacturer_id',
@@ -363,21 +373,17 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
                 'attribute' => 'product_class_id',
                 'ambiguousAttribute' => 'products.class_id',
             ],
-
-            [
-                'name' => 'manufacturer',
-                'attribute' => 'manufacturer_category_id',
-                'ambiguousAttribute' => 'manufacturers.category_id',
-            ],
         ];
 
         // Templated filtering
-        $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Helper::filterQueryWhereInStatements($request, $query, $whereInAttributes);
         $query = Helper::filterQueryLikeStatements($request, $query, $whereLikeAttributes);
         $query = Helper::filterQueryDateRangeStatements($request, $query, $dateRangeAttributes);
         $query = Helper::filterBelongsToManyRelations($request, $query, $belongsToManyRelations);
         $query = Helper::filterWhereRelationEqualStatements($request, $query, $whereRelationEqualStatements);
         $query = Helper::filterWhereRelationEqualAmbiguousStatements($request, $query, $whereRelationEqualAmbigiousStatements);
+        $query = Helper::filterWhereRelationInStatements($request, $query, $whereRelationInStatements);
+        $query = Helper::filterWhereRelationInAmbigiousStatements($request, $query, $whereRelationInAmbigiousStatements);
 
         // Additional specific filters
         $query = self::filterRecordsByRoles($request, $query);

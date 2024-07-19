@@ -166,13 +166,16 @@ class Kvpp extends CommentableModel
         $whereEqualAttributes = [
             'source_eu',
             'source_in',
-            'country_code_id',
             'priority_id',
+            'analyst_user_id',
+        ];
+
+        $whereInAttributes = [
+            'country_code_id',
             'inn_id',
             'form_id',
             'marketing_authorization_holder_id',
             'portfolio_manager_id',
-            'analyst_user_id',
             'id',
         ];
 
@@ -187,6 +190,7 @@ class Kvpp extends CommentableModel
         ];
 
         $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Helper::filterQueryWhereInStatements($request, $query, $whereInAttributes);
         $query = Helper::filterQueryLikeStatements($request, $query, $whereLikeAttributes);
         $query = Helper::filterQueryDateRangeStatements($request, $query, $dateRangeAttributes);
 

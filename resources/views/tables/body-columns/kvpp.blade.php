@@ -48,14 +48,14 @@
 
     @case('VPS coincidents')
         @foreach ($instance->coincident_processes as $coincidentProcess)
-            <a class="td__link" @if ($request->user()->isAdminOrModerator()) href="{{ route('processes.index', ['id' => $coincidentProcess->id]) }}" @endif>
+            <a class="td__link" @if ($request->user()->isAdminOrModerator()) href="{{ route('processes.index', ['id[]' => $coincidentProcess->id]) }}" @endif>
                 # {{ $coincidentProcess->id }} - {{ $coincidentProcess->status->name }}
             </a><br>
         @endforeach
     @break
 
     @case('IVP coincidents')
-        <a class="td__link" href="{{ route('products.index', ['inn_id[]' => $instance->inn_id, 'form_id' => $instance->form_id]) }}">
+        <a class="td__link" href="{{ route('products.index', ['inn_id[]' => $instance->inn_id, 'form_id[]' => $instance->form_id]) }}">
             {{ $instance->coincident_products_count }} {{ __('products') }}
         </a><br>
     @break

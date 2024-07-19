@@ -1,9 +1,9 @@
 @extends('filters.template')
 
 @section('elements')
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Country"
-        name="country_code_id"
+        name="country_code_id[]"
         :options="$countryCodes" />
 
     <x-forms.boolean-select.request-based-select
@@ -25,14 +25,14 @@
         name="priority_id"
         :options="$priorities" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Generic"
-        name="inn_id"
+        name="inn_id[]"
         :options="$inns" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Form"
-        name="form_id"
+        name="form_id[]"
         :options="$productForms" />
 
     <x-forms.input.request-based-input
@@ -45,14 +45,14 @@
         label="Pack"
         name="pack" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="PC"
-        name="marketing_authorization_holder_id"
+        name="marketing_authorization_holder_id[]"
         :options="$marketingAuthorizationHolders" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Portfolio manager"
-        name="portfolio_manager_id"
+        name="portfolio_manager_id[]"
         :options="$portfolioManagers" />
 
     <x-forms.id-based-single-select.request-based-select

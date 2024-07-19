@@ -35,39 +35,39 @@
         <input type="hidden" name="has_status_history_based_on_value" value="{{ $request->has_status_history_based_on_value }}">
     @endif
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Search country"
-        name="country_code_id"
+        name="country_code_id[]"
         :options="$countryCodes" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Manufacturer"
-        name="manufacturer_id"
+        name="manufacturer_id[]"
         :options="$manufacturers" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Product status"
-        name="status_id"
+        name="status_id[]"
         :options="$statuses" />
 
-    <x-forms.single-select.request-based-select
+    <x-forms.multiple-select.request-based-select
         label="Product status An*"
-        name="name_for_analysts"
+        name="name_for_analysts[]"
         :options="$generalStatusNamesForAnalysts" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="General status"
-        name="general_status_id"
+        name="general_status_id[]"
         :options="$generalStatuses" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Generic"
-        name="inn_id"
+        name="inn_id[]"
         :options="$inns" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Form"
-        name="form_id"
+        name="form_id[]"
         :options="$productForms" />
 
     <x-forms.input.request-based-input
@@ -97,9 +97,9 @@
         name="responsiblePeople[]"
         :options="$responsiblePeople" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Manufacturer country"
-        name="country_id"
+        name="country_id[]"
         :options="$countries" />
 
     <x-forms.single-select.request-based-select
@@ -107,14 +107,14 @@
         name="specific_manufacturer_country"
         :options="$specificManufacturerCountries" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="MAH"
-        name="marketing_authorization_holder_id"
+        name="marketing_authorization_holder_id[]"
         :options="$marketingAuthorizationHolders" />
 
-    <x-forms.single-select.request-based-select
+    <x-forms.multiple-select.request-based-select
         label="Brand"
-        name="brand"
+        name="brand[]"
         :options="$brands" />
 
     <x-forms.input.request-based-input
@@ -127,9 +127,9 @@
         label="Brand Rus"
         name="trademark_ru" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Product class"
-        name="product_class_id"
+        name="product_class_id[]"
         :options="$productClasses" />
 
     <x-forms.id-based-single-select.request-based-select

@@ -265,7 +265,7 @@ class StatisticController extends Controller
 
                 // Extensive version
                 if ($request->extensive_version) {
-                    $queryParamsCopy['general_status_id'] = $status->id;
+                    $queryParamsCopy['general_status_id[]'] = $status->id;
                 }
 
                 // Minified version
@@ -278,7 +278,7 @@ class StatisticController extends Controller
                         $queryParamsCopy['contracted_year'] = $request->year;
                     } else {
                         // Stages 1 - 4 (1ВП - 4СЦ)
-                        $queryParamsCopy['name_for_analysts'] = $status->name_for_analysts;
+                        $queryParamsCopy['name_for_analysts[]'] = $status->name_for_analysts;
                     }
                 }
 
@@ -407,7 +407,7 @@ class StatisticController extends Controller
      */
     private static function filterProcessesQuery($request, $query)
     {
-        $whereEqualAttributes = [
+        $whereInAttributes = [
             'country_code_id',
         ];
 
@@ -422,7 +422,7 @@ class StatisticController extends Controller
             ],
         ];
 
-        $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Helper::filterQueryWhereInStatements($request, $query, $whereInAttributes);
         $query = Helper::filterWhereRelationEqualStatements($request, $query, $whereRelationEqualStatements);
         $query = Process::filterSpecificManufacturerCountry($request, $query);
 

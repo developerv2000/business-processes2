@@ -131,7 +131,7 @@
 
     @case('KVPP coincidents')
         @foreach ($instance->coincident_kvpps as $coincidentKvpp)
-            <a class="td__link" href="{{ route('kvpp.index', ['id' => $coincidentKvpp->id]) }}">
+            <a class="td__link" href="{{ route('kvpp.index', ['id[]' => $coincidentKvpp->id]) }}">
                 # {{ $coincidentKvpp->id }} {{ $coincidentKvpp->country->name }}
             </a><br>
         @endforeach

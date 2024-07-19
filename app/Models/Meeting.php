@@ -93,6 +93,10 @@ class Meeting extends CommentableModel
     {
         $whereEqualAttributes = [
             'year',
+        ];
+
+        $whereInAttributes = [
+            'id',
             'manufacturer_id',
         ];
 
@@ -110,7 +114,9 @@ class Meeting extends CommentableModel
                 'name' => 'manufacturer',
                 'attribute' => 'bdm_user_id',
             ],
+        ];
 
+        $whereRelationInStatements = [
             [
                 'name' => 'manufacturer',
                 'attribute' => 'country_id',
@@ -118,8 +124,10 @@ class Meeting extends CommentableModel
         ];
 
         $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Helper::filterQueryWhereInStatements($request, $query, $whereInAttributes);
         $query = Helper::filterQueryLikeStatements($request, $query, $whereLikeAttributes);
         $query = Helper::filterWhereRelationEqualStatements($request, $query, $whereRelationEqualStatements);
+        $query = Helper::filterWhereRelationInStatements($request, $query, $whereRelationInStatements);
 
         return $query;
     }

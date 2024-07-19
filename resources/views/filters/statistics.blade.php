@@ -33,9 +33,9 @@
             name="extensive_version" />
     @endif
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Search country"
-        name="country_code_id"
+        name="country_code_id[]"
         :options="$countryCodes" />
 
     <x-forms.single-select.request-based-select

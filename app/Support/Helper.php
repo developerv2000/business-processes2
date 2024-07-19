@@ -649,4 +649,32 @@ class Helper
 
         return $query;
     }
+
+    /**
+     * Add WHERE IN clauses to the query based on the specified relations and their attributes
+     * in the request escaping ambigious statements.
+     *
+     * @param \Illuminate\Http\Request $request   The current request instance.
+     * @param \Illuminate\Database\Eloquent\Builder $query    The query builder instance.
+     * @param array $relations  The relations and their attributes to check in the request and apply to the query.
+     * @return \Illuminate\Database\Eloquent\Builder The modified query builder instance.
+     */
+    public static function filterWhereRelationInAmbigiousStatements($request, $query, $relations)
+    {
+        // Iterate through each relation provided
+        foreach ($relations as $relation) {
+            // Skip to the next relation if the request does not have the attribute for the current relation
+            if (!$request->has($relation['attribute'])) {
+                continue;
+            }
+
+            // Add a WHERE clause to the query using whereHas and whereIn for the relation
+            $query = $query->whereHas($relation['name'], function ($q) use ($request, $relation) {
+                $q->whereIn($relation['ambiguousAttribute'], $request->input($relation['attribute']));
+            });
+        }
+
+        // Return the modified query builder instance
+        return $query;
+    }
 }

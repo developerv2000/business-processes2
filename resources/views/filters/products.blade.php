@@ -6,9 +6,9 @@
         name="inn_id[]"
         :options="$inns" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Form"
-        name="form_id"
+        name="form_id[]"
         :options="$productForms" />
 
     <x-forms.input.request-based-input
@@ -36,9 +36,9 @@
         name="manufacturer_category_id"
         :options="$manufacturerCategories" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Product class"
-        name="class_id"
+        name="class_id[]"
         :options="$productClasses" />
 
     <x-forms.id-based-single-select.request-based-select
@@ -51,14 +51,14 @@
         name="bdm_user_id"
         :options="$bdmUsers" />
 
-    <x-forms.single-select.request-based-select
+    <x-forms.multiple-select.request-based-select
         label="Brand"
-        name="brand"
+        name="brand[]"
         :options="$brands" />
 
-    <x-forms.id-based-single-select.request-based-select
+    <x-forms.id-based-multiple-select.request-based-select
         label="Shelf life"
-        name="shelf_life_id"
+        name="shelf_life_id[]"
         :options="$shelfLifes" />
 
     <x-forms.id-based-multiple-select.request-based-select

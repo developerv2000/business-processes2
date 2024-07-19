@@ -288,16 +288,14 @@ class Manufacturer extends CommentableModel
      */
     public static function filterByProcessesCountryCode($request, $query)
     {
-        // Retrieve the country code ID from the request
-        $countryCodeID = $request->country_code_id;
+        $whereRelationInStatements = [
+            [
+                'name' => 'processes',
+                'attribute' => 'country_code_id',
+            ],
+        ];
 
-        // Check if the country code ID is present in the request
-        if ($countryCodeID) {
-            // Filter the manufacturers based on the country code ID of their related processes
-            $query->whereHas('processes', function ($processQuery) use ($countryCodeID) {
-                $processQuery->where('country_code_id', $countryCodeID);
-            });
-        }
+        $query = Helper::filterWhereRelationInStatements($request, $query, $whereRelationInStatements);
 
         return $query;
     }

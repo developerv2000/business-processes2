@@ -43,6 +43,7 @@
                 'stage' => $instance->status->generalStatus->stage,
                 'instance' => $instance,
                 'product' => $product,
+                'duplicating' => false,
             ])
         </div>
 

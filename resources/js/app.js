@@ -357,10 +357,13 @@ function bootstrapForms() {
                 });
         }
     }
-    // ========== Handling processes create ==========
-    const processesCreateForm = document.querySelector('.processes-create');
 
-    if (processesCreateForm) {
+    // ========== Handling processes CRUID ==========
+    const processesCreatePage = document.querySelector('.processes-create');
+    const processesEditPage = document.querySelector('.processes-edit');
+    const processesDuplicatePage = document.querySelector('.processes-duplicate');
+
+    if (processesCreatePage) {
         // Update historical process inputs on value change
         $('.historical-process-selectize').selectize({
             plugins: ["auto_position"],
@@ -386,8 +389,30 @@ function bootstrapForms() {
         });
     }
 
+    // Update stage inputs on status single select change
+    if (processesEditPage || processesDuplicatePage) {
+        $('.statuses-selectize').selectize({
+            plugins: ["auto_position"],
+            onChange(value) {
+                updateProcessesEditStageInputs(value);
+            }
+        });
+    }
+
+    // Update historical process inputs on value change
+    if (processesDuplicatePage) {
+        $('.historical-process-selectize').selectize({
+            plugins: ["auto_position"],
+            onChange(value) {
+                validateHistoricalProcessDateInput(value);
+            }
+        });
+    }
+
     /**
      * Validates and toggles the visibility and required attribute of the historical process date input.
+     *
+     * Used on processes create and duplicate
      *
      * @param {boolean} isHistorical - Determines if the process is historical.
      */
@@ -415,7 +440,7 @@ function bootstrapForms() {
 
         // Prepare data to be sent in the AJAX request
         const data = {
-            'product_id': processesCreateForm.querySelector('input[name="product_id"]').value,
+            'product_id': document.querySelector('input[name="product_id"]').value,
             'status_id': status_id,
         }
 
@@ -427,7 +452,7 @@ function bootstrapForms() {
         })
             .then(response => {
                 // Replace old inputs with the new ones received from the server
-                const stageInputsContainer = processesCreateForm.querySelector('.processes-create__stage-inputs-container')
+                const stageInputsContainer = document.querySelector('.processes-create__stage-inputs-container')
                 stageInputsContainer.innerHTML = response.data;
 
                 // Initialize the new selectize inputs
@@ -448,7 +473,7 @@ function bootstrapForms() {
         // Prepare data to be sent in the AJAX request
         const data = {
             'country_code_ids': values,
-            'status_id': processesCreateForm.querySelector('select[name="status_id"]').value,
+            'status_id': document.querySelector('select[name="status_id"]').value,
         }
 
         // Send a POST request to the server to get updated forecast inputs
@@ -466,26 +491,14 @@ function bootstrapForms() {
             });
     }
 
-    // ========== Handling processes create ==========
-    const processesEditForm = document.querySelector('.processes-edit');
-
-    if (processesEditForm) {
-        // Update stage inputs on status single select change
-        $('.statuses-selectize').selectize({
-            plugins: ["auto_position"],
-            onChange(value) {
-                updateProcessesEditStageInputs(value);
-            }
-        });
-    }
-
     function updateProcessesEditStageInputs(status_id) {
         showSpinner();
 
         // Prepare data to be sent in the AJAX request
         const data = {
-            'process_id': processesEditForm.querySelector('input[name="process_id"]').value,
-            'product_id': processesEditForm.querySelector('input[name="product_id"]').value,
+            'process_id': document.querySelector('input[name="process_id"]').value,
+            'product_id': document.querySelector('input[name="product_id"]').value,
+            'duplicating': document.querySelector('input[name="duplicating"]').value, // duplicating page
             'status_id': status_id,
         }
 
@@ -497,7 +510,9 @@ function bootstrapForms() {
         })
             .then(response => {
                 // Replace old inputs with the new ones received from the server
-                const stageInputsContainer = processesEditForm.querySelector('.processes-edit__stage-inputs-container')
+                const stageInputsContainer =
+                    document.querySelector('.processes-edit__stage-inputs-container, .processes-duplicate__stage-inputs-container');
+
                 stageInputsContainer.innerHTML = response.data;
 
                 // Initialize the new selectize inputs

@@ -3,6 +3,10 @@
         @include('tables.components.td.edit-button', ['href' => route('processes.edit', $instance->id)])
     @break
 
+    @case('Duplicate')
+        @include('tables.components.td.duplicate-button', ['href' => route('processes.duplication', $instance->id)])
+    @break
+
     @case('Status date')
         {{ $instance->status_update_date->isoformat('DD MMM Y') }}
     @break

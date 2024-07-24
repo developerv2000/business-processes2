@@ -539,7 +539,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
     /*
     |--------------------------------------------------------------------------
-    | Create and Update
+    | Create, Update and Duplicate
     |--------------------------------------------------------------------------
     */
 
@@ -590,6 +590,18 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
         // HasMany relations
         $this->storeComment($request->comment);
+    }
+
+    public static function duplicateFromRequest($request)
+    {
+        $instance = self::create($request->all());
+
+        // BelongsToMany relations
+        $instance->clinicalTrialCountries()->attach($request->input('clinicalTrialCountries'));
+        $instance->responsiblePeople()->attach($request->input('responsiblePeople'));
+
+        // HasMany relations
+        $instance->storeComment($request->comment);
     }
 
     /*
@@ -862,6 +874,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         $columns = [
             ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
             ['name' => 'ID', 'order' => $order++, 'width' => 60, 'visible' => 1],
+            ['name' => 'Duplicate', 'order' => $order++, 'width' => 40, 'visible' => 1],
 
             ['name' => 'Status date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Product status', 'order' => $order++, 'width' => 126, 'visible' => 1],

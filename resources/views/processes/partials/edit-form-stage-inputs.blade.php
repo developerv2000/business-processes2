@@ -1,7 +1,10 @@
+<input type="hidden" name="duplicating" value="{{ $duplicating }}"> {{-- Also used on duplication page --}}
+
 {{-- Stage 1 (ВП) inputs --}}
 @if ($stage >= 1)
     <div class="form__section">
-        @if ($stage == 1)
+        {{-- Search country can be edited on duplication at any stages --}}
+        @if ($stage == 1 || $duplicating)
             <x-forms.id-based-single-select.instance-edit-select
                 label="Search country"
                 name="country_code_id"
@@ -115,7 +118,7 @@
 @if ($stage >= 3)
     <div class="form__section">
         {{-- Readonly when Manufacturer price 2 is not null --}}
-        @if ($instance->manufacturer_followed_offered_price)
+        @if ($instance->manufacturer_followed_offered_price && !$duplicating)
             <x-forms.input.default-input
                 label="Manufacturer price 1"
                 :value="$instance->manufacturer_first_offered_price"
@@ -133,7 +136,7 @@
         @endif
 
         {{-- Required when its already not null --}}
-        @if ($instance->manufacturer_followed_offered_price)
+        @if ($instance->manufacturer_followed_offered_price && !$duplicating)
             <x-forms.input.instance-edit-input
                 type="number"
                 step="0.01"
@@ -159,7 +162,7 @@
             required />
 
         {{-- Readonly when Our price 2 is not null --}}
-        @if ($instance->our_followed_offered_price)
+        @if ($instance->our_followed_offered_price && !$duplicating)
             <x-forms.input.default-input
                 label="Our price 1"
                 :value="$instance->our_first_offered_price"
@@ -177,7 +180,7 @@
         @endif
 
         {{-- Required when its already not null --}}
-        @if ($instance->our_followed_offered_price)
+        @if ($instance->our_followed_offered_price && !$duplicating)
             <x-forms.input.instance-edit-input
                 type="number"
                 step="0.01"

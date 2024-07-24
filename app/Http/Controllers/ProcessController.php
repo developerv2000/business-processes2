@@ -110,17 +110,41 @@ class ProcessController extends Controller
     }
 
     /**
+     * Show the form for duplication the specified record.
+     */
+    public function duplication(Process $instance)
+    {
+        $product = $instance->product;
+
+        return view('processes.duplicate', compact('instance', 'product'));
+    }
+
+    /**
+     * Create new updated record from the specified record.
+     */
+    public function duplicate(Request $request)
+    {
+        Process::duplicateFromRequest($request);
+
+        return redirect()->route('processes.index');
+    }
+
+    /**
      * Return required stage inputs for each stage
      * on status select change ajax request
+     *
+     * Used on editing/duplicating of a specified record.
      */
     public function getEditFormStageInputs(Request $request)
     {
         $instance = Process::find($request->process_id);
         $product = Product::find($request->product_id);
+        $duplicating = $request->duplicating;
+
         $status = ProcessStatus::find($request->status_id);
         $stage = $status->generalStatus->stage;
 
-        return view('processes.partials.edit-form-stage-inputs', compact('instance', 'product', 'stage'));
+        return view('processes.partials.edit-form-stage-inputs', compact('instance', 'product', 'duplicating', 'stage'));
     }
 
     /**

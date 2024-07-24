@@ -60,6 +60,10 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     Route::prefix('processes')->controller(ProcessController::class)->name('processes.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
+
+        Route::get('/duplicate/{instance}', 'duplication')->name('duplication');
+        Route::post('/duplicate', 'duplicate')->name('duplicate');
+
         Route::post('/get-create-form-stage-inputs', 'getCreateFormStageInputs');  // ajax request on create form status select change
         Route::post('/get-create-form-forecast-inputs', 'getCreateFormForecastInputs');  // ajax request on create form search countries change
         Route::post('/get-edit-form-stage-inputs', 'getEditFormStageInputs');  // ajax request on edit form status select change

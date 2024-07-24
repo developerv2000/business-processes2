@@ -896,7 +896,8 @@ body::-webkit-scrollbar-thumb,
     margin-bottom: 6px;
 }
 
-.td__edit {
+.td__edit,
+.td__duplicate {
     width: max-content;
     margin-top: 4px;
     color: var(--main-color);

@@ -4,6 +4,10 @@
         @include('tables.components.th.edit')
     @break
 
+    @case('Duplicate')
+        @include('tables.components.th.duplicate')
+    @break
+
     @case('Status date')
         @include('tables.components.th.sort-link', ['orderBy' => 'status_update_date'])
     @break

@@ -6,6 +6,14 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
+    public function toggleTheme(Request $request)
+    {
+        $user = $request->user();
+        $user->updateSetting('theme', $user->settings['theme'] == 'light' ? 'dark' : 'light');
+
+        return redirect()->back();
+    }
+
     public function updateLocale(Request $request)
     {
         $request->user()->updateSetting('locale', $request->locale);

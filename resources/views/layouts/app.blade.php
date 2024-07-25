@@ -11,6 +11,7 @@
     <title>{{ __('Business processes') }}</title>
 
     @vite('resources/css/app.css')
+    @vite('resources/css/themes/' . request()->user()->settings['theme'] . '.css')
 </head>
 
 <body class="body {{ $page }}">

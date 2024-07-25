@@ -5,10 +5,23 @@
                 <span class="material-symbols-outlined">hide</span>
             </button>
 
-            <x-different.logo class="header__logo" />
+            <x-different.logo class="header__logo" :theme="request()->user()->settings['theme']" />
         </div>
 
         <div class="header__right">
+            {{-- Theme toggler --}}
+            <form class="header__theme-toggler-form" action="{{ route('settings.toggle-theme') }}" method="POST">
+                @csrf
+                @method('PATCH')
+
+                <x-different.button
+                    style="transparent"
+                    class="header__theme-toggler-button"
+                    title="Switch Theme"
+                    icon="{{ request()->user()->settings['theme'] == 'light' ? 'dark_mode' : 'light_mode' }}">
+                </x-different.button>
+            </form>
+
             {{-- Locales dropdown --}}
             <div class="dropdown locales-dropdown">
                 <x-different.locales-button class="dropdown__button" :value="app()->getLocale()">

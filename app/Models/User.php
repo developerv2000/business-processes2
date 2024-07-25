@@ -21,6 +21,7 @@ class User extends Authenticatable
     use Notifiable;
     use MergesParamsToRequest;
 
+    const DEFAULT_THEME = 'light';
     const DEFAULT_LOCALE_NAME = 'ru';
     const DEFAULT_SHRINK_BODY_WIDTH = false;
 
@@ -450,8 +451,9 @@ class User extends Authenticatable
         }
 
         $settings = [
-            'shrink_body_width' => User::DEFAULT_SHRINK_BODY_WIDTH,
+            'theme' => User::DEFAULT_THEME,
             'locale' => User::DEFAULT_LOCALE_NAME,
+            'shrink_body_width' => User::DEFAULT_SHRINK_BODY_WIDTH,
         ];
 
         $settings['manufacturers_table_columns'] = Manufacturer::getDefaultTableColumns();

@@ -35,6 +35,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     Route::controller(SettingController::class)->name('settings.')->group(function () {
+        Route::patch('theme', 'toggleTheme')->name('toggle-theme');
         Route::patch('locale', 'updateLocale')->name('update-locale');
         Route::patch('body-width', 'updateBodyWidth')->name('update-body-width'); // ajax request
         Route::patch('table-columns', 'updateTableColumns')->name('update-table-columns'); // ajax request

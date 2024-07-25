@@ -49,7 +49,7 @@
 }
 
 .label__required {
-    color: var(--danger-color);
+    color: var(--theme-danger-color);
 }
 
 /* Form Group */
@@ -64,7 +64,7 @@
     right: 8px;
     display: none;
     font-size: 20px;
-    color: var(--danger-color);
+    color: var(--theme-danger-color);
 }
 
 .form-group--error .form-group__error-icon {
@@ -78,7 +78,7 @@
 .form-group__error-message {
     margin: 8px 0 0;
     font-size: 12px;
-    color: var(--danger-color);
+    color: var(--theme-danger-color);
 }
 
 /* Horizontal Form Group */
@@ -133,12 +133,12 @@
 
 .input:focus,
 .textarea:focus {
-    border-color: var(--main-color-lighter);
+    border-color: var(--theme-main-color-lighter);
     box-shadow: var(--input-box-shadow);
 }
 
 .input--highlight {
-    border-color: var(--main-color);
+    border-color: var(--theme-main-color);
 }
 
 .input:read-only,
@@ -157,7 +157,7 @@
 
 .form-group--error .input,
 .form-group--error .textarea {
-    border-color: var(--danger-color);
+    border-color: var(--theme-danger-color);
 }
 
 /* File input */
@@ -184,10 +184,10 @@
 }
 
 .switch:checked {
-    border-color: var(--main-color);
+    border-color: var(--theme-main-color);
     background-image: url(/img/main/switch-checked.svg);
     background-position: right center;
-    background-color: var(--main-color);
+    background-color: var(--theme-main-color);
 }
 
 /* Checkbox */
@@ -208,8 +208,8 @@
 }
 
 .checkbox:checked {
-    background-color: var(--main-color);
-    border-color: var(--main-color);
+    background-color: var(--theme-main-color);
+    border-color: var(--theme-main-color);
     background-image: url(/img/main/checkbox-checked.svg);
 }
 
@@ -225,7 +225,7 @@
 
 .singular-selectize--highlight .selectize-input,
 .multiple-selectize--highlight .selectize-input {
-    border-color: var(--main-color);
+    border-color: var(--theme-main-color);
 }
 
 .selectize-control {
@@ -251,7 +251,7 @@
 
 .radio:checked {
     background-image: url(/img/main/radio-checked.svg);
-    background-color: var(--main-color);
-    border-color: var(--main-color);
+    background-color: var(--theme-main-color);
+    border-color: var(--theme-main-color);
 }
 

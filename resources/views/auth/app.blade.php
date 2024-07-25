@@ -12,6 +12,7 @@
 
     {{-- Styles --}}
     @vite('resources/css/app.css')
+    @vite('resources/css/themes/light.css')
 </head>
 
 <body class="body {{ $page }}">

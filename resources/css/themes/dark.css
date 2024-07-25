@@ -1,0 +1,15 @@
+:root {
+    --theme-body-background-color: #0B1727;
+    --theme-text-color: #EDF2F9;
+
+    --theme-main-color: #2C7BE5;
+    --theme-main-color-lighter: #96BDF2;
+    --theme-secondary-color: #F5803E;
+    --theme-danger-color: #E63757;
+    --theme-success-color: #00D27A;
+
+    --theme-background-color: white;
+    --theme-border-radius: 6px;
+    --theme-box-shadow: 0 0 8px 0px #102a4e17;
+    --theme-transition: 0.3s;
+}

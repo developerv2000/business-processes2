@@ -8,18 +8,6 @@
 @import 'form.css';
 
 :root {
-    --text-color: #344050;
-    --main-color: #2C7BE5;
-    --main-color-lighter: #96BDF2;
-    --secondary-color: #F5803E;
-    --danger-color: #E63757;
-    --success-color: #00D27A;
-
-    --theme-background-color: white;
-    --theme-border-radius: 6px;
-    --theme-box-shadow: 0 0 8px 0px #102a4e17;
-    --theme-transition: 0.3s;
-
     --material-symbols-filled: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
     --material-symbols-lighter: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48;
 
@@ -36,8 +24,8 @@ body {
     font-size: 16px;
     line-height: 1.5;
     font-family: 'Fira Sans', sans-serif;
-    color: var(--text-color);
-    background-color: #EDF2F9;
+    color: var(--theme-text-color);
+    background-color: var(--theme-body-background-color);
 }
 
 
@@ -128,7 +116,7 @@ body::-webkit-scrollbar-thumb,
 
 /* ------------ Main theme ------------ */
 .main-title {
-    color: var(--secondary-color);
+    color: var(--theme-secondary-color);
     font-size: 18px;
     font-weight: 500;
 }
@@ -143,13 +131,17 @@ body::-webkit-scrollbar-thumb,
 
 
 /* ------------ Buttons ------------ */
+button {
+    color: var(--theme-text-color);
+}
+
 .button {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     padding: 12px 48px;
-    color: white;
+    color: var(--theme-text-color);
     text-decoration: none;
     border: none;
     border-radius: 4px;
@@ -174,7 +166,7 @@ body::-webkit-scrollbar-thumb,
 }
 
 .button--main {
-    background-color: var(--main-color);
+    background-color: var(--theme-main-color);
 }
 
 .button--main:hover {
@@ -190,7 +182,7 @@ body::-webkit-scrollbar-thumb,
 }
 
 .button--danger {
-    background-color: var(--danger-color);
+    background-color: var(--theme-danger-color);
 }
 
 .button--danger:hover {
@@ -198,7 +190,7 @@ body::-webkit-scrollbar-thumb,
 }
 
 .button--success {
-    background-color: var(--success-color);
+    background-color: var(--theme-success-color);
 }
 
 .button--success:hover {
@@ -207,7 +199,6 @@ body::-webkit-scrollbar-thumb,
 
 .button--transparent {
     background-color: transparent;
-    color: var(--text-color);
     padding: 0;
 }
 
@@ -221,7 +212,6 @@ body::-webkit-scrollbar-thumb,
     justify-content: flex-start;
     gap: 12px;
     padding: 6px 16px;
-    color: var(--text-color);
     background-color: transparent;
     border: none;
     font-size: 15px;
@@ -235,7 +225,6 @@ body::-webkit-scrollbar-thumb,
 .button--action {
     padding: 4px 12px;
     background-color: transparent;
-    color: var(--text-color);
     border: 1px solid #cdcdcd;
 }
 
@@ -258,7 +247,7 @@ body::-webkit-scrollbar-thumb,
 
 .arrowed-link .button__icon {
     font-size: 20px;
-    color: var(--success-color);
+    color: var(--theme-success-color);
 }
 
 .arrowed-link .button__text {
@@ -397,6 +386,9 @@ body::-webkit-scrollbar-thumb,
     font-variation-settings: var(--material-symbols-filled);
 }
 
+.header__theme-toggler-button {
+    font-variation-settings: var(--material-symbols-filled);
+}
 /* ------------ /END Header ------------ */
 
 
@@ -467,7 +459,7 @@ body::-webkit-scrollbar-thumb,
 }
 
 .navbar-link--active {
-    color: var(--main-color) !important;
+    color: var(--theme-main-color) !important;
 }
 
 .navbar-link:hover,
@@ -670,7 +662,7 @@ body::-webkit-scrollbar-thumb,
 .sortable-columns__title {
     margin: 0;
     font-size: 15px;
-    color: var(--success-color);
+    color: var(--theme-success-color);
 }
 
 .sortable-columns .form-group--horizontal .label {
@@ -680,7 +672,7 @@ body::-webkit-scrollbar-thumb,
 .sortable-columns__width {
     margin: 8px 0;
     height: 3px;
-    background-color: var(--secondary-color);
+    background-color: var(--theme-secondary-color);
 }
 
 /* ------------ /END Sortable columns ------------ */
@@ -748,13 +740,12 @@ body::-webkit-scrollbar-thumb,
     font-size: 14px;
     text-decoration: none;
     line-height: 1;
-    color: var(--text-color);
     border: 1px solid #0000001f;
     transition: var(--theme-transition);
 }
 
 .pagination__link:hover {
-    border-color: var(--main-color);
+    border-color: var(--theme-main-color);
 }
 
 .pagination__item--disabled .pagination__link:hover {
@@ -763,7 +754,7 @@ body::-webkit-scrollbar-thumb,
 
 .pagination__link--active {
     color: #fff;
-    background-color: var(--main-color);
+    background-color: var(--theme-main-color);
 }
 
 .pagination__link span {
@@ -882,7 +873,7 @@ body::-webkit-scrollbar-thumb,
 }
 
 .td__link {
-    color: var(--main-color);
+    color: var(--theme-main-color);
     text-decoration: none;
 }
 
@@ -900,7 +891,7 @@ body::-webkit-scrollbar-thumb,
 .td__duplicate {
     width: max-content;
     margin-top: 4px;
-    color: var(--main-color);
+    color: var(--theme-main-color);
 }
 
 .td__image {
@@ -1019,7 +1010,7 @@ body::-webkit-scrollbar-thumb,
     margin: 8px 0;
     padding: 12px 20px;
     font-size: 16px;
-    color: var(--danger-color);
+    color: var(--theme-danger-color);
     background-color: #fce7eb;
     border-radius: var(--theme-border-radius);
 }
@@ -1072,7 +1063,7 @@ body::-webkit-scrollbar-thumb,
 }
 
 .comments-create-form__submit {
-    color: var(--main-color);
+    color: var(--theme-main-color);
     font-variation-settings: var(--material-symbols-filled);
 }
 
@@ -1183,7 +1174,7 @@ body::-webkit-scrollbar-thumb,
 .statistics-counter__count {
     margin-bottom: 0;
     padding: 4px 10px;
-    background-color: var(--main-color);
+    background-color: var(--theme-main-color);
     font-size: 16px;
     font-weight: 600;
     color: white;

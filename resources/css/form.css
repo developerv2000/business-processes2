@@ -1,8 +1,3 @@
-:root {
-    --input-box-shadow: inset 0 1px 2px #00000013, 0 0 0 0.25rem #2c7be540;
-    --input-border: 1px solid #c2ccd9;
-}
-
 /* Form */
 .form {
     display: flex;
@@ -45,7 +40,7 @@
     margin: 0;
     font-size: 15px;
     font-weight: 500;
-    color: #5E6E82;
+    color: var(--theme-label-text-color);
 }
 
 .label__required {
@@ -118,8 +113,8 @@
     display: block;
     padding: 8px 16px;
     font-size: 15px;
-    background-color: white;
-    border: var(--input-border);
+    background-color: var(--theme-input-background-color);
+    border: var(--theme-input-border);
     border-radius: 4px;
     transition: var(--theme-transition);
     outline: none;
@@ -134,7 +129,7 @@
 .input:focus,
 .textarea:focus {
     border-color: var(--theme-main-color-lighter);
-    box-shadow: var(--input-box-shadow);
+    box-shadow: var(--theme-input-box-shadow);
 }
 
 .input--highlight {
@@ -219,8 +214,45 @@
 
 /* Selectize */
 .selectize-input {
-    border: var(--input-border);
+    color: var(--theme-text-color);
+    border: var(--theme-input-border);
     box-shadow: none;
+    background-color: var(--theme-input-background-color);
+}
+
+/* Selectize Input color */
+.selectize-input input {
+    color: var(--theme-text-color);
+}
+
+/* Selectize on input focus/open */
+.selectize-input.input-active {
+    background-color: var(--theme-input-background-color) !important;
+}
+
+/* Selectize while input value is not null */
+.selectize-input.full {
+    background-color: var(--theme-input-background-color);
+}
+
+.selectize-dropdown {
+    color: var(--theme-text-color);
+    border: var(--theme-input-border);
+    box-shadow: var(--theme-box-shadow);
+    background-color: var(--theme-input-background-color);
+}
+
+/* Selected and active (hovered) option of selects */
+.selectize-dropdown-content .option.selected,
+.selectize-dropdown-content .option.active {
+    color: var(--theme-selectize-active-option-text-color);
+    background-color: var(--theme-selectize-active-option-background-color);
+}
+
+/* Multiple selects selected options */
+.multiple-selectize .selectize-input .item {
+    color: var(--theme-multiselectize-selected-option-text-color) !important;
+    background-color: var(--theme-multiselectize-selected-option-background-color) !important;
 }
 
 .singular-selectize--highlight .selectize-input,
@@ -254,4 +286,3 @@
     background-color: var(--theme-main-color);
     border-color: var(--theme-main-color);
 }
-

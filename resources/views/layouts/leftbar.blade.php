@@ -1,6 +1,6 @@
 <aside class="leftbar">
     <div class="leftbar__inner">
-        <nav class="navbar">
+        <nav class="navbar navbar--vertical">
             {{-- Main --}}
             <x-navbar.title class="navbar-title--first">{{ __('Main') }}</x-navbar.title>
 

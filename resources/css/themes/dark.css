@@ -1,6 +1,12 @@
 :root {
     --theme-body-background-color: #0B1727;
-    --theme-text-color: #EDF2F9;
+    --theme-text-color: #d8e2ef;
+    --theme-reversed-text-color: #344050;
+
+    --theme-scrollbar-color: #5b6776;
+
+    --theme-default-hover-background-color: #061120;
+    --theme-default-button-text-color: #d8e2ef;
 
     --theme-main-color: #2C7BE5;
     --theme-main-color-lighter: #96BDF2;
@@ -8,8 +14,63 @@
     --theme-danger-color: #E63757;
     --theme-success-color: #00D27A;
 
-    --theme-background-color: white;
+    --theme-background-color: #121E2D;
     --theme-border-radius: 6px;
     --theme-box-shadow: 0 0 8px 0px #102a4e17;
     --theme-transition: 0.3s;
+
+    --theme-navbar-text-color: #9da9bb;
+    --theme-navbar-title-color: #5e6e82;
+
+    --theme-thead-background-color: #232e3c;
+    --theme-thead-text-color: #b6c1d2;
+    --theme-tbody-tr-border-color: #383838;
+    --theme-tbody-tr-hover-background-color: var(--theme-default-hover-background-color);
+
+    --theme-filter-header-background-color: var(--theme-thead-background-color);
+
+    --theme-label-text-color: #9da9bb;
+    --theme-input-box-shadow: inset 0 1px 2px #00000013, 0 0 0 0.25rem #2c7be540;
+    --theme-input-border: 1px solid #344050;
+    --theme-input-background-color: #0B1727;
+
+    --theme-selectize-active-option-text-color: var(--theme-text-color);
+    --theme-selectize-active-option-background-color: #2a3746;
+    --theme-multiselectize-selected-option-text-color: var(--theme-selectize-active-option-text-color);
+    --theme-multiselectize-selected-option-background-color: var(--theme-selectize-active-option-background-color);
+}
+
+.badge--yellow {
+    color: #d7e522;
+    background-color: #333332;
+}
+
+.badge--pink {
+    color: #ed3aa4;
+    background-color: #330d34;
+}
+
+.badge--orange {
+    background-color: #311a0c;
+    color: #f9ae83;
+}
+
+.badge--blue {
+    color: #75d4fe;
+    background-color: #082633;
+}
+
+.badge--red {
+    background-color: #2e0b11;
+    color: #ef7f93;
+}
+
+.badge--grey {
+    color: #6d798b;
+    background-color: #171a1e;
+}
+
+.badge--green {
+    color: #5ce2aa;
+    background-color: #002a18;
 }

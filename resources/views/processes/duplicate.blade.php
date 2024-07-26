@@ -1,7 +1,7 @@
 @extends('layouts.app', ['page' => 'processes-duplicate'])
 
 @section('main')
-    <div class="pre-content pre-content--intended styled-box">
+    <div class="pre-content styled-box">
         @include('layouts.breadcrumbs', [
             'crumbs' => [__('VPS'), __('Duplicate'), '# ' . $instance->id],
             'fullScreen' => false,

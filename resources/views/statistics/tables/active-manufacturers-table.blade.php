@@ -1,5 +1,5 @@
 <div class="statistics-index__table3-container styled-box">
-    <div class="pre-content">
+    <div class="pre-content pre-content--transparent">
         @include('layouts.breadcrumbs', [
             'crumbs' => [__('Number of active manufacturers by month')],
             'fullScreen' => false,

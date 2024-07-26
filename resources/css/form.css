@@ -16,7 +16,7 @@
     gap: 20px;
     padding: 20px;
     border-radius: var(--theme-border-radius);
-    background-color: #f9fafd;
+    background-color: var(--theme-background-color);
     box-shadow: var(--theme-box-shadow);
 }
 
@@ -113,6 +113,7 @@
     display: block;
     padding: 8px 16px;
     font-size: 15px;
+    color: var(--theme-text-color);
     background-color: var(--theme-input-background-color);
     border: var(--theme-input-border);
     border-radius: 4px;
@@ -136,7 +137,7 @@
     border-color: var(--theme-main-color);
 }
 
-.input:read-only,
+.input:not(.input[type="file"]):read-only,
 .textarea:read-only {
     background-color: #f1f1f1;
 }

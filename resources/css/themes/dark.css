@@ -1,45 +1,73 @@
 :root {
+        /* Body */
     --theme-body-background-color: #0B1727;
-    --theme-text-color: #d8e2ef;
+    --theme-scrollbar-color: #5b6776;
+    --theme-transition: 0.3s;
+
+    /* Text colors */
+    --theme-text-color: #bac4d1;
     --theme-reversed-text-color: #344050;
 
-    --theme-scrollbar-color: #5b6776;
+    /* Defaults */
+    --theme-default-text-hover-color: #edf2f9;
+    --theme-default-background-hover-color: #061120;
+    --theme-default-button-text-color: white;
 
-    --theme-default-hover-background-color: #061120;
-    --theme-default-button-text-color: #d8e2ef;
-
+    /* Colors */
     --theme-main-color: #2C7BE5;
     --theme-main-color-lighter: #96BDF2;
     --theme-secondary-color: #F5803E;
     --theme-danger-color: #E63757;
     --theme-success-color: #00D27A;
+    --theme-cancel-color: #748194;
 
+    /* Box */
     --theme-background-color: #121E2D;
     --theme-border-radius: 6px;
     --theme-box-shadow: 0 0 8px 0px #102a4e17;
-    --theme-transition: 0.3s;
 
+    /* Navbar */
     --theme-navbar-text-color: #9da9bb;
+    --theme-navbar-text-hover-color: var(--theme-default-text-hover-color);
     --theme-navbar-title-color: #5e6e82;
 
-    --theme-thead-background-color: #232e3c;
+    /* pre-content pre-content--transparent */
+    --theme-pre-content-background-color: #232e3c;
+
+    /* Table */
+    --theme-thead-background-color: var(--theme-pre-content-background-color);
     --theme-thead-text-color: #b6c1d2;
     --theme-tbody-tr-border-color: #383838;
-    --theme-tbody-tr-hover-background-color: var(--theme-default-hover-background-color);
+    --theme-tbody-tr-hover-background-color: var(--theme-default-background-hover-color);
 
+    /* Filter */
     --theme-filter-header-background-color: var(--theme-thead-background-color);
 
+    /* Form Input & Label */
     --theme-label-text-color: #9da9bb;
     --theme-input-box-shadow: inset 0 1px 2px #00000013, 0 0 0 0.25rem #2c7be540;
     --theme-input-border: 1px solid #344050;
     --theme-input-background-color: #0B1727;
 
+    /* Selectize */
     --theme-selectize-active-option-text-color: var(--theme-text-color);
     --theme-selectize-active-option-background-color: #2a3746;
     --theme-multiselectize-selected-option-text-color: var(--theme-selectize-active-option-text-color);
     --theme-multiselectize-selected-option-background-color: var(--theme-selectize-active-option-background-color);
+
+    /* Pagination */
+    --theme-pagination-item-background-color: var(--theme-background-color);
+    --theme-pagination-link-border: var(--theme-input-border);
+    --theme-pagination-link-hover-border-color: var(--theme-main-color);
+    --theme-pagination-active-link-background-color: var(--theme-main-color);
+    --theme-pagination-arrows-color: #a6b0bd;
+
+    /* Modal */
+    --theme-modal-header-bottom-border: 1px solid #344050;
+    --theme-modal-header-background-color: #232e3c;
 }
 
+/* ------------ Badges ------------ */
 .badge--yellow {
     color: #d7e522;
     background-color: #333332;
@@ -74,3 +102,79 @@
     color: #5ce2aa;
     background-color: #002a18;
 }
+/* ------------ /end Badges ------------ */
+
+
+/* ------------ Daterangepicker ------------ */
+.daterangepicker {
+    background-color: var(--theme-background-color);
+    border: var(--theme-input-border);
+}
+
+/* Tables */
+.daterangepicker .calendar-table {
+    background-color: var(--theme-background-color);
+    border: var(--theme-input-border);
+    border-radius: var(--theme-border-radius);
+}
+
+/* Non current month days */
+.daterangepicker td.off,
+.daterangepicker td.off.in-range,
+.daterangepicker td.off.start-date,
+.daterangepicker td.off.end-date {
+    background-color: black;
+    color: var(--theme-text-color);
+}
+
+/* On hovering of active items */
+.daterangepicker td.available:hover,
+.daterangepicker th.available:hover {
+    background-color: var(--theme-main-color-lighter);
+    color: var(--theme-reversed-text-color);
+}
+
+/* Selected items */
+.daterangepicker td.in-range {
+    background-color: var(--theme-main-color-lighter);
+    color: var(--theme-reversed-text-color);
+}
+
+/* Selected range start date and end dates */
+.daterangepicker td.active,
+.daterangepicker td.active:hover {
+    background-color: var(--theme-main-color);
+    color: var(--theme-default-button-text-color);
+}
+
+/* Buttons container */
+.daterangepicker .drp-buttons {
+    border-color: #344050;
+}
+
+/* Buttons */
+.daterangepicker .drp-buttons .btn {
+    color: var(--theme-default-button-text-color);
+    background-color: var(--theme-main-color);
+    border-color: var(--theme-main-color);
+}
+/* ------------ /end Daterangepicker ------------ */
+
+
+/* ------------ Button hovers ------------ */
+.button--main:hover {
+    background-color: #2362b7;
+}
+
+.button--cancel:hover {
+    background-color: #636e7e;
+}
+
+.button--danger:hover {
+    background-color: #c42f4a;
+}
+
+.button--success:hover {
+    background-color: #05b96d;
+}
+/* ------------ /end Button hovers ------------ */

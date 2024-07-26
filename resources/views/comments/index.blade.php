@@ -1,7 +1,7 @@
 @extends('layouts.app', ['page' => 'comments-index'])
 
 @section('main')
-    <div class="pre-content pre-content--intended styled-box">
+    <div class="pre-content styled-box">
         @include('layouts.breadcrumbs', [
             'crumbs' => [$title, __('All comments')],
             'fullScreen' => false,

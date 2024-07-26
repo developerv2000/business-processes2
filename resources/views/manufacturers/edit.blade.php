@@ -1,7 +1,7 @@
 @extends('layouts.app', ['page' => 'manufacturers-edit'])
 
 @section('main')
-    <div class="pre-content pre-content--intended styled-box">
+    <div class="pre-content styled-box">
         @include('layouts.breadcrumbs', [
             'crumbs' => [__('EPP'), __('Edit'), $instance->name],
             'fullScreen' => false,

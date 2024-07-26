@@ -1,5 +1,5 @@
 <div class="statistics-index__table2-container styled-box">
-    <div class="pre-content">
+    <div class="pre-content pre-content--transparent">
         @include('layouts.breadcrumbs', [
             'crumbs' => [__('Key indicators on the number of works completed at each stage by month')],
             'fullScreen' => false,

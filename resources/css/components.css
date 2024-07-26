@@ -73,8 +73,8 @@
     padding: 16px 20px;
     justify-content: space-between;
     align-items: flex-start;
-    border-bottom: 1px solid #dee2e6;
-    background-color: #F9FAFD;
+    border-bottom: var(--theme-modal-header-bottom-border);
+    background-color: var(--theme-modal-header-background-color);
 }
 
 .modal__title {
@@ -83,16 +83,8 @@
     font-weight: 500;
 }
 
-.modal__dismiss {
-    display: flex;
-    padding: 0;
-    color: #a9a9a9;
-    border: none;
-    background-color: transparent;
-}
-
-.modal__dismiss span {
-    pointer-events: none;
+.button.modal__dismiss-button {
+    color: var(--theme-text-color);
 }
 
 .modal__body {

@@ -1,7 +1,7 @@
 @extends('layouts.app', ['page' => 'kvpp-edit'])
 
 @section('main')
-    <div class="pre-content pre-content--intended styled-box">
+    <div class="pre-content styled-box">
         @include('layouts.breadcrumbs', [
             'crumbs' => [__('KVPP'), __('Edit'), '# ' . $instance->id],
             'fullScreen' => false,

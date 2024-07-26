@@ -1,45 +1,74 @@
 :root {
+    /* Body */
     --theme-body-background-color: #EDF2F9;
+    --theme-scrollbar-color: #ABABAB;
+    --theme-transition: 0.3s;
+
+    /* Text colors */
     --theme-text-color: #344050;
     --theme-reversed-text-color: white;
 
-    --theme-scrollbar-color: #ABABAB;
-
-    --theme-default-hover-background-color: #F9FAFD;
+    /* Defaults */
+    --theme-default-text-hover-color: #232e3c;
+    --theme-default-background-hover-color: #f6f7fb;
     --theme-default-button-text-color: white;
 
+    /* Colors */
     --theme-main-color: #2C7BE5;
     --theme-main-color-lighter: #96BDF2;
     --theme-secondary-color: #F5803E;
     --theme-danger-color: #E63757;
     --theme-success-color: #00D27A;
+    --theme-cancel-color: #748194;
 
+    /* Box */
     --theme-background-color: white;
     --theme-border-radius: 6px;
     --theme-box-shadow: 0 0 8px 0px #102a4e17;
-    --theme-transition: 0.3s;
 
+    /* Navbar */
     --theme-navbar-text-color: #5e6e82;
+    --theme-navbar-text-hover-color: var(--theme-default-text-hover-color);
     --theme-navbar-title-color: #9da9bb;
 
-    --theme-thead-background-color: #f9fafd;
+    /* Pre content */
+    --theme-pre-content-background-color: #f9fafd;
+
+    /* Table */
+    --theme-thead-background-color: var(--theme-pre-content-background-color);
     --theme-thead-text-color: #4d5969;
     --theme-tbody-tr-border-color: #edf2f9;
-    --theme-tbody-tr-hover-background-color: var(--theme-default-hover-background-color);
+    --theme-tbody-tr-hover-background-color: var(--theme-default-background-hover-color);
 
+    /* Filter */
     --theme-filter-header-background-color: var(--theme-thead-background-color);
 
+    /* Form Input & Label */
     --theme-label-text-color: #5e6e82;
     --theme-input-box-shadow: inset 0 1px 2px #00000013, 0 0 0 0.25rem #2c7be540;
     --theme-input-border: 1px solid #c2ccd9;
     --theme-input-background-color: white;
 
+    /* Selectize */
     --theme-selectize-active-option-text-color: var(--theme-text-color);
     --theme-selectize-active-option-background-color: #f2f2f2;
     --theme-multiselectize-selected-option-text-color: var(--theme-selectize-active-option-text-color);
     --theme-multiselectize-selected-option-background-color: var(--theme-selectize-active-option-background-color);
+
+    /* Pagination */
+    --theme-pagination-item-background-color: var(--theme-background-color);
+    --theme-pagination-link-border: var(--theme-input-border);
+    --theme-pagination-link-hover-border-color: var(--theme-main-color);
+    --theme-pagination-active-link-background-color: var(--theme-main-color);
+    --theme-pagination-arrows-color: #a7a7a7de;
+
+    /* Modal */
+    --theme-modal-header-bottom-border: 1px solid #dee2e6;
+    --theme-modal-header-background-color: #f9fafd;
+    --theme-modal-dismiss-button-color: #a9a9a9;
 }
 
+/* ------------ Badges ------------ */
 .badge--yellow {
     color: #66662c;
     background-color: #FFFFCC;
@@ -74,3 +103,41 @@
     color: rgb(0, 134, 78);
     background-color: rgb(204, 246, 228);
 }
+
+/* ------------ /end Badges ------------ */
+
+
+/* ------------ Daterangepicker ------------ */
+/* Selected range start date and end dates */
+.daterangepicker td.active,
+.daterangepicker td.active:hover {
+    background-color: var(--theme-main-color);
+    color: var(--theme-default-button-text-color);
+}
+
+/* Buttons */
+.daterangepicker .drp-buttons .btn {
+    color: var(--theme-default-button-text-color);
+    background-color: var(--theme-main-color);
+    border-color: var(--theme-main-color);
+}
+/* ------------ /end Daterangepicker ------------ */
+
+
+/* ------------ Button hovers ------------ */
+.button--main:hover {
+    background-color: #2362b7;
+}
+
+.button--cancel:hover {
+    background-color: #636e7e;
+}
+
+.button--danger:hover {
+    background-color: #c42f4a;
+}
+
+.button--success:hover {
+    background-color: #05b96d;
+}
+/* ------------ /end Button hovers ------------ */

@@ -1,7 +1,7 @@
 @extends('layouts.app', ['page' => 'process-status-history-edit'])
 
 @section('main')
-    <div class="pre-content pre-content--intended styled-box">
+    <div class="pre-content styled-box">
         @include('layouts.breadcrumbs', [
             'crumbs' => [__('Process') . ' #' . $process->id, __('Status history'), __('Edit'), '#' . $instance->id],
             'fullScreen' => false,

@@ -1,7 +1,7 @@
 @extends('layouts.app', ['page' => 'templated-models-edit'])
 
 @section('main')
-    <div class="pre-content pre-content--intended styled-box">
+    <div class="pre-content styled-box">
         @include('layouts.breadcrumbs', [
             'crumbs' => [
                 '<a href="' . route('templated-models.show', $model['name']) . '">' . $model['name'] . '</a>',

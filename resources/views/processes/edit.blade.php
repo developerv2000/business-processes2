@@ -1,7 +1,7 @@
 @extends('layouts.app', ['page' => 'processes-edit'])
 
 @section('main')
-    <div class="pre-content pre-content--intended styled-box">
+    <div class="pre-content styled-box">
         @include('layouts.breadcrumbs', [
             'crumbs' => [__('VPS'), __('Edit'), '# ' . $instance->id],
             'fullScreen' => false,

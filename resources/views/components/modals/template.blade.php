@@ -8,7 +8,7 @@
             {{-- Header --}}
             <div class="modal__header">
                 <p class="modal__title">{{ $title }}</p>
-                <x-different.button style="transparent" icon="close" data-click-action="hide-active-modals"></x-different.button>
+                <x-different.button class="modal__dismiss-button" style="transparent" icon="close" data-click-action="hide-active-modals"></x-different.button>
             </div>
 
             {{-- Body --}}

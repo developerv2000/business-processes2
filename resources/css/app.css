@@ -240,6 +240,7 @@ button {
 .arrowed-link .button__text {
     font-size: 14px;
     font-weight: 400;
+    color: var(--theme-text-color);
 }
 
 /* ------------ /END Buttons ------------ */
@@ -895,7 +896,7 @@ button {
 
 .secondary-table td {
     padding: 6px 12px;
-    border: 1px solid #c2ccd9;
+    border: var(--theme-input-border);
 }
 
 /* ------------ /END Table ------------ */
@@ -996,9 +997,9 @@ button {
     display: flex;
     align-items: center;
     padding: 8px 16px 8px 8px;
-    border: 1px solid #e0e0e0;
+    border: var(--theme-input-border);
     border-radius: 40px;
-    background-color: #f9fafd;
+    background-color: var(--theme-background-color);
 }
 
 .comments-create-form .ava__title {
@@ -1013,6 +1014,7 @@ button {
     border: none;
     background-color: transparent;
     outline: none;
+    color: var(--theme-text-color);
 }
 
 .comments-create-form__submit {
@@ -1120,8 +1122,9 @@ button {
     display: flex;
     align-items: center;
     gap: 16px;
-    background-color: white;
+    background-color: var(--theme-background-color);
     border-radius: var(--theme-border-radius);
+    border: var(--theme-statistics-counter-item-border);
 }
 
 .statistics-counter__count {
@@ -1143,8 +1146,7 @@ button {
 }
 
 /* Charts */
-.processes-count-chart-container,
-.active-manufacturers-chart-container {
+.chart-container {
     position: relative;
 }
 
@@ -1156,13 +1158,12 @@ button {
     height: 460px;
 }
 
-.processes-count-chart__download-btn,
-.active-manufacturers-chart__download-btn {
+.chart-download-btn {
     position: absolute;
     top: 3px;
     right: 4px;
-    background: white;
-    color: #959595;
+    background: var(--theme-background-color);
+    color: var(--theme-chart-toolbox-icons-color);
     font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
     cursor: pointer;
 }

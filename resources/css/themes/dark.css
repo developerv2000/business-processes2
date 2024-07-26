@@ -1,5 +1,7 @@
 :root {
-        /* Body */
+    --theme-name: 'dark';
+
+    /* Body */
     --theme-body-background-color: #0B1727;
     --theme-scrollbar-color: #5b6776;
     --theme-transition: 0.3s;
@@ -44,16 +46,19 @@
     --theme-filter-header-background-color: var(--theme-thead-background-color);
 
     /* Form Input & Label */
-    --theme-label-text-color: #9da9bb;
+    --theme-label-text-color: #bbc6d7;
     --theme-input-box-shadow: inset 0 1px 2px #00000013, 0 0 0 0.25rem #2c7be540;
     --theme-input-border: 1px solid #344050;
     --theme-input-background-color: #0B1727;
+    --theme-readonly-input-background-color: #233650;
 
     /* Selectize */
     --theme-selectize-active-option-text-color: var(--theme-text-color);
     --theme-selectize-active-option-background-color: #2a3746;
     --theme-multiselectize-selected-option-text-color: var(--theme-selectize-active-option-text-color);
     --theme-multiselectize-selected-option-background-color: var(--theme-selectize-active-option-background-color);
+    --theme-taggable-selectize-selected-option-text-color: var(--theme-selectize-active-option-text-color);
+    --theme-taggable-selectize-selected-option-background-color: var(--theme-selectize-active-option-background-color);
 
     /* Pagination */
     --theme-pagination-item-background-color: var(--theme-background-color);
@@ -65,6 +70,15 @@
     /* Modal */
     --theme-modal-header-bottom-border: 1px solid #344050;
     --theme-modal-header-background-color: #232e3c;
+
+    /* Ava */
+    --theme-ava-description-color: #9199a3;
+
+    /* Statistics */
+    --theme-statistics-counter-item-border: var(--theme-input-border);
+    --theme-chart-label-background-color: #2f3d4e;
+    --theme-chart-toolbox-icons-color: #56595e;
+    --theme-chart-splitlines-color: #666d76;
 }
 
 /* ------------ Badges ------------ */
@@ -102,6 +116,7 @@
     color: #5ce2aa;
     background-color: #002a18;
 }
+
 /* ------------ /end Badges ------------ */
 
 
@@ -158,6 +173,7 @@
     background-color: var(--theme-main-color);
     border-color: var(--theme-main-color);
 }
+
 /* ------------ /end Daterangepicker ------------ */
 
 
@@ -177,4 +193,5 @@
 .button--success:hover {
     background-color: #05b96d;
 }
+
 /* ------------ /end Button hovers ------------ */

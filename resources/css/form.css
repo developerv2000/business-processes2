@@ -139,7 +139,7 @@
 
 .input:not(.input[type="file"]):read-only,
 .textarea:read-only {
-    background-color: #f1f1f1;
+    background-color: var(--theme-readonly-input-background-color);
 }
 
 .form-group--error .input:focus,
@@ -254,6 +254,12 @@
 .multiple-selectize .selectize-input .item {
     color: var(--theme-multiselectize-selected-option-text-color) !important;
     background-color: var(--theme-multiselectize-selected-option-background-color) !important;
+}
+
+/* Taggable selectize selected options */
+.selectize-control.multi .selectize-input>div {
+    background: var(--theme-taggable-selectize-selected-option-background-color);
+    color: var(--theme-taggable-selectize-selected-option-text-color);
 }
 
 .singular-selectize--highlight .selectize-input,

@@ -10,13 +10,16 @@ const bodyInner = document.querySelector('.body__inner');
 
 // Colors
 const rootStyles = getComputedStyle(document.documentElement);
-const mainColor = rootStyles.getPropertyValue('--main-color').trim();
-const textColor = rootStyles.getPropertyValue('--text-color').trim();
+const theme = rootStyles.getPropertyValue('--theme-name').trim();
+const mainColor = rootStyles.getPropertyValue('--theme-main-color').trim();
+const textColor = rootStyles.getPropertyValue('--theme-text-color').trim();
+const boxBackgroundColor = rootStyles.getPropertyValue('--theme-background-color').trim();
+const chartLabelBackgroundColor = rootStyles.getPropertyValue('--theme-chart-label-background-color').trim();
+const chartSplitlinesColor = rootStyles.getPropertyValue('--theme-chart-splitlines-color').trim();
 
 // Globals
 let countryCodesSelectize; // used only on processes create form
 let processesCountChart, activeManufacturersChart;
-
 
 window.addEventListener('load', () => {
     bootstrapComponents();
@@ -583,7 +586,7 @@ function bootstrapProcessesCountChart() {
             color: textColor,
             rich: {
                 labelBox: {
-                    backgroundColor: '#fff', // Background color of the label box
+                    backgroundColor: chartLabelBackgroundColor, // Background color of the label box
                     borderRadius: 4, // Border radius
                     padding: [6, 10], // Padding inside the box
                     shadowBlur: 5, // Shadow blur radius
@@ -605,15 +608,15 @@ function bootstrapProcessesCountChart() {
     });
 
     // Initialize ECharts instance with specified options
-    processesCountChart = echarts.init(container, null, {
+    processesCountChart = echarts.init(container, theme, {
         renderer: 'canvas', // Use canvas renderer for better performance
         useDirtyRect: false, // Disable dirty rectangle optimization
-        backgroundColor: 'white' // Set chart background color
+        backgroundColor: boxBackgroundColor // Set chart background color
     });
 
     // Define the main configuration options for the chart
     const option = {
-        backgroundColor: '#ffffff', // Overall background color
+        backgroundColor: boxBackgroundColor, // Overall background color
         title: {
             text: 'Ключевые показатели по тщательной обработке продуктов по месяцам', // Chart title
             padding: [24, 60, 24, 30], // Padding around the title
@@ -627,7 +630,7 @@ function bootstrapProcessesCountChart() {
         grid: {
             left: '60px',
             right: '60px',
-            top: '92px',
+            top: '112px',
             bottom: '40px',
         },
         tooltip: {
@@ -652,6 +655,12 @@ function bootstrapProcessesCountChart() {
             itemGap: 12, // Gap between legend items
             itemWidth: 20, // Width of legend item symbol
             itemHeight: 14, // Height of legend item symbol
+            textStyle: {
+                fontSize: 14, // Font size in pixels
+                fontFamily: ['Fira Sans', 'sans-serif'],
+                fontWeight: '400', // Optional: Font weight (e.g., 'normal', 'bold', '600')
+                color: textColor // Optional: Font color
+            }
         },
         xAxis: [
             {
@@ -659,12 +668,17 @@ function bootstrapProcessesCountChart() {
                 data: months.map(obj => obj.name), // Data for x-axis categories
                 axisPointer: {
                     type: 'shadow' // Pointer type for axis
-                }
+                },
             }
         ],
         yAxis: [
             {
-                type: 'value' // Value axis type
+                type: 'value', // Value axis type
+                splitLine: {
+                    lineStyle: {
+                        color: chartSplitlinesColor, // Color of the horizontal grid lines
+                    }
+                }
             },
             {}, // Empty placeholder for secondary y-axis if needed
         ],
@@ -701,15 +715,15 @@ function bootstrapActiveManufacturersChart() {
     const container = document.querySelector('.active-manufacturers-chart');
 
     // Initialize ECharts instance with specified options
-    activeManufacturersChart = echarts.init(container, null, {
+    activeManufacturersChart = echarts.init(container, theme, {
         renderer: 'canvas', // Use canvas renderer for better performance
         useDirtyRect: false, // Disable dirty rectangle optimization
-        backgroundColor: 'white' // Set chart background color
+        backgroundColor: boxBackgroundColor // Set chart background color
     });
 
     // Define the main configuration options for the chart
     const option = {
-        backgroundColor: '#ffffff', // Overall background color
+        backgroundColor: boxBackgroundColor, // Overall background color
         title: {
             text: 'Количество активных производителей по месяцам', // Chart title
             padding: [24, 60, 24, 30], // Padding around the title
@@ -747,7 +761,12 @@ function bootstrapActiveManufacturersChart() {
             data: months.map(obj => obj.name), // Data for x-axis categories
         },
         yAxis: {
-            type: 'value'
+            type: 'value',
+            splitLine: {
+                lineStyle: {
+                    color: chartSplitlinesColor, // Color of the horizontal grid lines
+                }
+            }
         },
         series: [
             {
@@ -762,7 +781,7 @@ function bootstrapActiveManufacturersChart() {
                     color: textColor,
                     rich: {
                         labelBox: {
-                            backgroundColor: '#fff', // Background color of the label box
+                            backgroundColor: chartLabelBackgroundColor, // Background color of the label box
                             borderRadius: 4, // Border radius
                             padding: [6, 10], // Padding inside the box
                             shadowBlur: 5, // Shadow blur radius

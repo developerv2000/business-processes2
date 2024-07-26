@@ -2,7 +2,7 @@
 
 @section('main')
     <div class="main__conent-box styled-box">
-        <div class="pre-content">
+        <div class="pre-content pre-content--transparent">
             @include('layouts.breadcrumbs', [
                 'crumbs' => [$model['name'], __('Filtered records') . ' - ' . $model['items_count']],
                 'fullScreen' => false,

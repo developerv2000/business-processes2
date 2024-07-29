@@ -99,7 +99,7 @@
     justify-content: flex-end;
     gap: 8px;
     padding: 20px;
-    border-top: 1px solid #dee2e6;
+    border-top: var(--theme-input-border);
 }
 
 /* ------------ /END Modal ------------ */

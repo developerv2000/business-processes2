@@ -571,7 +571,7 @@ button {
 
 .ava__description {
     font-size: 15px;
-    color: #c5c5c5;
+    color: var(--theme-ava-description-color);
 }
 
 .ava__description:empty {

@@ -18,7 +18,7 @@
                     <x-different.button
                         style="transparent"
                         class="header__navbar-button header__theme-toggler-button"
-                        title="Switch Theme"
+                        :title="__('Switch theme')"
                         icon="{{ request()->user()->settings['theme'] == 'light' ? 'dark_mode' : 'light_mode' }}">
                     </x-different.button>
                 </form>

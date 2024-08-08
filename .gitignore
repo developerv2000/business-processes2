@@ -27,3 +27,6 @@ yarn-error.log
 /storage/app/excel/exports/epp/*
 /storage/app/excel/exports/vps/*
 /storage/app/excel/exports/kvpp/*
+
+/public/attachments/Manufacturer/*
+/public/attachments/Product/*

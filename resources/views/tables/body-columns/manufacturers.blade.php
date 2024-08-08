@@ -119,4 +119,20 @@
         {{ $instance->id }}
     @break
 
+    @case('Attachments')
+        @foreach ($instance->attachments as $attachment)
+            <a class="td__link" href="{{ asset($attachment->file_path) }}">
+                {{ $attachment->file_name }} <br>
+            </a>
+        @endforeach
+    @break
+
+    @case('Edit attachments')
+        <x-different.linked-button
+            style="transparent"
+            class="td__edit"
+            icon="ink_pen"
+            href="{{ route('attachments.index', ['modelName' => 'Manufacturer', 'modelID' => $instance->id]) }}" />
+    @break
+
 @endswitch

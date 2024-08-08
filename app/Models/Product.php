@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Support\Abstracts\CommentableModel;
 use App\Support\Helper;
 use App\Support\Traits\ExportsRecords;
+use App\Support\Traits\HasAttachments;
 use App\Support\Traits\MergesParamsToRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -13,6 +14,7 @@ class Product extends CommentableModel
     use SoftDeletes;
     use MergesParamsToRequest;
     use ExportsRecords;
+    use HasAttachments;
 
     const DEFAULT_ORDER_BY = 'updated_at';
     const DEFAULT_ORDER_TYPE = 'desc';
@@ -29,6 +31,7 @@ class Product extends CommentableModel
         'shelfLife',
         'class',
         'zones',
+        'attachments',
         'lastComment',
     ];
 
@@ -330,6 +333,7 @@ class Product extends CommentableModel
 
         // HasMany relations
         $instance->storeComment($request->comment);
+        $instance->storeAttachments($request);
     }
 
     public function updateFromRequest($request)
@@ -341,6 +345,7 @@ class Product extends CommentableModel
 
         // HasMany relations
         $this->storeComment($request->comment);
+        $this->storeAttachments($request);
     }
 
     /*
@@ -412,6 +417,8 @@ class Product extends CommentableModel
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'KVPP coincidents', 'order' => $order++, 'width' => 146, 'visible' => 1],
             ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
+            ['name' => 'Attachments', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Edit attachments', 'order' => $order++, 'width' => 192, 'visible' => 1],
         ];
     }
 

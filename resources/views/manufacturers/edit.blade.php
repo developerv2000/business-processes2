@@ -112,5 +112,6 @@
         </div>
 
         @include('comments.model-form-partials.edit-form-fields')
+        @include('attachments.partials.form-add-input')
     </x-forms.template.edit-template>
 @endsection

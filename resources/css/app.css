@@ -805,7 +805,7 @@ button {
 
 .main-table thead a.active {
     font-weight: 500;
-    color: #232e3c;
+    color: var(--theme-default-text-hover-color);
 }
 
 .main-table thead .material-symbols-outlined {
@@ -877,6 +877,7 @@ button {
 }
 
 .td__edit,
+.td__attachments,
 .td__duplicate {
     width: max-content;
     margin-top: 4px;

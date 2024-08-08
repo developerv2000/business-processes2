@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\KvppController;
@@ -105,6 +106,12 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     Route::prefix('notifications')->controller(NotificationController::class)->name('notifications.')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::patch('/mark-as-read', 'markAsRead')->name('mark-as-read');
+        Route::delete('/destroy', 'destroy')->name('destroy');
+    });
+
+    Route::prefix('model-attachments')->controller(AttachmentController::class)->name('attachments.')->group(function () {
+        Route::get('/{modelName}/{modelID}', 'index')->name('index');
         Route::patch('/mark-as-read', 'markAsRead')->name('mark-as-read');
         Route::delete('/destroy', 'destroy')->name('destroy');
     });

@@ -417,4 +417,22 @@ class Kvpp extends CommentableModel
     {
         return __('KVPP') . ' # ' . $this->id . ' / ' . Helper::truncateString($this->inn->name, 90);
     }
+
+    /**
+     * Get KVPP default status_id
+     * Used on KVPP create
+     */
+    public static function getDefaultStatusID()
+    {
+        return KvppStatus::where('name', 'Поиск')->first()->id;
+    }
+
+    /**
+     * Get KVPP default priority_id
+     * Used on KVPP create
+     */
+    public static function getDefaultPriorityID()
+    {
+        return KvppPriority::where('name', 'B')->first()->id;
+    }
 }

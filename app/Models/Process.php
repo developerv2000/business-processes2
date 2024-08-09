@@ -188,7 +188,6 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         static::saving(function ($instance) {
             $instance->trademark_en = $instance->trademark_en ? strtoupper($instance->trademark_en) : null;
             $instance->trademark_ru = $instance->trademark_ru ? strtoupper($instance->trademark_ru) : null;
-            $instance->validateManufacturerFollowedPrice();
             $instance->syncRelatedProductUpdates();
             $instance->validateForecastUpdateDate();
             $instance->validateIncreasedPrice();
@@ -647,20 +646,6 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
         if ($product->isDirty()) {
             $product->save();
-        }
-    }
-
-    /**
-     * Validate and set the manufacturer_followed_offered_price attribute
-     * on the saving event of the model instance.
-     */
-    private function validateManufacturerFollowedPrice()
-    {
-        $firstOfferedPrice = $this->manufacturer_first_offered_price;
-        $followedOfferedPrice = $this->manufacturer_followed_offered_price;
-
-        if ($firstOfferedPrice && !$followedOfferedPrice) {
-            $this->manufacturer_followed_offered_price = $firstOfferedPrice;
         }
     }
 

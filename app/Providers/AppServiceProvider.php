@@ -6,6 +6,7 @@ use App\Models\Country;
 use App\Models\CountryCode;
 use App\Models\Currency;
 use App\Models\Inn;
+use App\Models\Kvpp;
 use App\Models\KvppPriority;
 use App\Models\KvppStatus;
 use App\Models\Manufacturer;
@@ -99,8 +100,19 @@ class AppServiceProvider extends ServiceProvider
 
         // ----------------------- Kvpp -----------------------
 
-        View::composer(['kvpp.create', 'kvpp.edit'], function ($view) {
+        View::composer('kvpp.edit', function ($view) {
             $view->with(self::getDefaultKvppShareData());
+        });
+
+        View::composer('kvpp.create', function ($view) {
+            $shareData = self::getDefaultKvppShareData();
+
+            $mergedData = array_merge($shareData, [
+                'kvppDefaultStatusID' => Kvpp::getDefaultStatusID(),
+                'kvppDefaultPriorityID' => Kvpp::getDefaultPriorityID(),
+            ]);
+            
+            $view->with($mergedData);
         });
 
         View::composer('filters.kvpp', function ($view) {

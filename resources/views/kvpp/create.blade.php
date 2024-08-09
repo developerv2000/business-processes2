@@ -18,26 +18,28 @@
                 label="Status"
                 name="status_id"
                 :options="$statuses"
+                :default-value="$kvppDefaultStatusID"
                 required />
 
             <x-forms.id-based-single-select.default-select
                 label="Priority"
                 name="priority_id"
                 :options="$priorities"
+                :default-value="$kvppDefaultPriorityID"
                 required />
 
             <x-forms.radiogroup.default-radiogroup
                 label="Source EU"
                 name="source_eu"
                 :options="$booleanOptions"
-                default-value="0"
+                default-value="1"
                 required />
 
             <x-forms.radiogroup.default-radiogroup
                 label="Source IN"
                 name="source_in"
                 :options="$booleanOptions"
-                default-value="0"
+                default-value="1"
                 required />
         </div>
 

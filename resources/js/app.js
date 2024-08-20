@@ -1,12 +1,15 @@
 import { hideSpinner, showSpinner, showModal, debounce, initializeNewSelectizes } from './bootstrap';
 
+const bodyInner = document.querySelector('.body__inner');
+
 const UPDATE_BODY_WIDTH_SETTINGS_URL = '/body-width';
 const GET_PRODUCTS_SIMILAR_RECORDS_URL = '/products/get-similar-records';
 const GET_KVPP_SIMILAR_RECORDS_URL = '/kvpp/get-similar-records';
 const GET_PROCESSES_CREATE_STAGE_INPUTS_URL = '/processes/get-create-form-stage-inputs';
 const GET_PROCESSES_CREATE_FORECAST_INPUTS_URL = '/processes/get-create-form-forecast-inputs';
 const GET_PROCESSES_EDIT_STAGE_INPUTS_URL = '/processes/get-edit-form-stage-inputs';
-const bodyInner = document.querySelector('.body__inner');
+const UPDATE_PROCESSES_CONTRACTED_IN_PLAN_URL = '/processes/update-contracted-in-plan-value';
+const UPDATE_PROCESSES_REGISTERED_IN_PLAN_URL = '/processes/update-registered-in-plan-value';
 
 // Colors
 const rootStyles = getComputedStyle(document.documentElement);
@@ -25,6 +28,7 @@ window.addEventListener('load', () => {
     bootstrapComponents();
     bootstrapForms();
     bootstrapECharts();
+    boostrapProcessesPlanCheckboxes();
 });
 
 function bootstrapComponents() {
@@ -527,6 +531,7 @@ function bootstrapForms() {
     }
 }
 
+// ========== ECharts ==========
 function bootstrapECharts() {
     bootstrapStatisticCharts();
 }
@@ -828,3 +833,64 @@ function downloadActiveManufacturersChart() {
     // Clean up
     document.body.removeChild(downloadLink);
 }
+
+
+// ========== Processes plan (SPG) boolean togglers ==========
+function boostrapProcessesPlanCheckboxes() {
+    // Contacted toggling
+    document.querySelectorAll('[data-toggle-action="toggle-process-contracted-boolean"]')
+        .forEach((chbs) => chbs.addEventListener('change', function (evt) {
+            showSpinner();
+
+            const chb = evt.target;
+            const processID = chb.dataset.processId;
+
+            const data = {
+                'contracted': chb.checked,
+                'process_id': processID,
+            };
+
+            axios.post(UPDATE_PROCESSES_CONTRACTED_IN_PLAN_URL, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    // console.log(response)
+                })
+                .finally(function () {
+                    // Hide any loading spinner after the request is complete
+                    hideSpinner();
+                });
+        }));
+
+    // Registered toggling
+
+    document.querySelectorAll('[data-toggle-action="toggle-process-registered-boolean"]')
+        .forEach((chbs) => chbs.addEventListener('change', function (evt) {
+            showSpinner();
+
+            const chb = evt.target;
+            const processID = chb.dataset.processId;
+
+            const data = {
+                'registered': chb.checked,
+                'process_id': processID,
+            };
+
+            axios.post(UPDATE_PROCESSES_REGISTERED_IN_PLAN_URL, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    // console.log(response)
+                })
+                .finally(function () {
+                    // Hide any loading spinner after the request is complete
+                    hideSpinner();
+                });
+        }));
+}
+
+

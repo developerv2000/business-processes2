@@ -878,7 +878,8 @@ button {
 
 .td__edit,
 .td__attachments,
-.td__duplicate {
+.td__duplicate,
+.td__view {
     width: max-content;
     margin-top: 4px;
     color: var(--theme-main-color);
@@ -1271,3 +1272,11 @@ button {
 }
 
 /* ------------ /end Processes status history pages ------------ */
+
+
+/* ------------ Plan pages ------------ */
+.plan-country-codes-create .main,
+.plan-country-codes-edit .main {
+    overflow: unset;
+}
+/* ------------ /end Plan pages ------------ */

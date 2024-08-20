@@ -862,6 +862,18 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ['name' => 'Duplicate', 'order' => $order++, 'width' => 40, 'visible' => 1],
 
             ['name' => 'Status date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+        ];
+
+        if ($user->isAdminOrModerator()) {
+            array_push(
+                $columns,
+                ['name' => '5Кк', 'order' => $order++, 'width' => 40, 'visible' => 1],
+                ['name' => '7НПР', 'order' => $order++, 'width' => 50, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
             ['name' => 'Product status', 'order' => $order++, 'width' => 126, 'visible' => 1],
             ['name' => 'Product status An*', 'order' => $order++, 'width' => 136, 'visible' => 1],
             ['name' => 'General status', 'order' => $order++, 'width' => 110, 'visible' => 1],
@@ -922,7 +934,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
-        ];
+        );
 
         if ($user->isAdminOrModerator()) {
             array_push(

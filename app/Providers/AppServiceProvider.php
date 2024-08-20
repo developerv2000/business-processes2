@@ -111,7 +111,7 @@ class AppServiceProvider extends ServiceProvider
                 'kvppDefaultStatusID' => Kvpp::getDefaultStatusID(),
                 'kvppDefaultPriorityID' => Kvpp::getDefaultPriorityID(),
             ]);
-            
+
             $view->with($mergedData);
         });
 
@@ -189,6 +189,14 @@ class AppServiceProvider extends ServiceProvider
         View::composer(['users.create', 'users.edit'], function ($view) {
             $view->with([
                 'roles' => Role::getAll(),
+            ]);
+        });
+
+        // ----------------------- Plan -----------------------
+        View::composer(['plan.country-codes.create', 'plan.country-codes.edit'], function ($view) {
+            $view->with([
+                'countryCodes' => CountryCode::getAll(),
+                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
             ]);
         });
     }

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('processes', function (Blueprint $table) {
             // Globals
             $table->unsignedInteger('id')->autoIncrement(); // auto
+            $table->boolean('contracted_in_plan')->default(false); // SPG
+            $table->boolean('registered_in_plan')->default(false); // SPG
 
             // auto
             $table->unsignedInteger('product_id')

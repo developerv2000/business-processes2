@@ -7,6 +7,7 @@ use App\Http\Controllers\KvppController;
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProcessStatusHistoryController;
 use App\Http\Controllers\ProductController;
@@ -69,6 +70,9 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::post('/get-create-form-stage-inputs', 'getCreateFormStageInputs');  // ajax request on create form status select change
         Route::post('/get-create-form-forecast-inputs', 'getCreateFormForecastInputs');  // ajax request on create form search countries change
         Route::post('/get-edit-form-stage-inputs', 'getEditFormStageInputs');  // ajax request on edit form status select change
+
+        Route::post('/update-contracted-in-plan-value', 'updateContractedInPlanValue');  // ajax request on checkbox toggle
+        Route::post('/update-registered-in-plan-value', 'updateRegisteredInPlanValue');  // ajax request on checkbox toggle
     });
 
     Route::prefix('process/{process}/status-history')
@@ -114,5 +118,22 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::get('/{modelName}/{modelID}', 'index')->name('index');
         Route::patch('/mark-as-read', 'markAsRead')->name('mark-as-read');
         Route::delete('/destroy', 'destroy')->name('destroy');
+    });
+
+    Route::prefix('plan')->controller(PlanController::class)->name('plan.')->group(function () {
+        RouteGenerator::defineDefaultCrudRoutesExcept(['trash', 'restore', 'export']);
+
+        Route::get('/view/{instance}', 'view')->name('view');
+
+        // Country codes
+        Route::prefix('/{plan}/country-codes')->name('country.codes.')->group(function () {
+            Route::get('/index', 'countryCodesIndex')->name('index');
+            Route::get('/create', 'countryCodesCreate')->name('create');
+            Route::get('/edit/{countryCode}', 'countryCodesEdit')->name('edit');
+
+            Route::post('/store', 'countryCodesStore')->name('store');
+            Route::patch('/update/{countryCode}', 'countryCodesUpdate')->name('update');
+            Route::delete('/destroy', 'countryCodesDestroy')->name('destroy');
+        });
     });
 });

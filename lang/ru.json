@@ -7,6 +7,8 @@
     "VPS": "ВПЦ",
     "KVPP": "КВПП",
     "Meetings": "Встречи",
+    "KPE": "КПЭ",
+    "SPG": "СПГ",
     "Users": "Пользователи",
     "Different": "Разное",
 
@@ -217,6 +219,8 @@
     "Key indicators for thorough processing of products by month (unique indicator by stage)": "Ключевые показатели по тщательной обработке продуктов по месяцам (уникальный показатель по этапам)",
     "Key indicators on the number of works completed at each stage by month": "Ключевые показатели по количеству выполненных работ на каждом этапе по месяцам",
     "Number of active manufacturers by month": "Количество активных производителей по месяцам",
+
+    "Countries": "Страны",
 
     "Notifications": "Уведомления",
     "Date": "Дата",

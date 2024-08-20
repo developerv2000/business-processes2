@@ -11,6 +11,14 @@
         {{ $instance->status_update_date->isoformat('DD MMM Y') }}
     @break
 
+    @case('5Кк')
+        <input class="checkbox td__checkbox" type="checkbox" name="contracted" data-toggle-action="toggle-process-contracted-boolean" data-process-id={{ $instance->id }} @checked($instance->contracted_in_plan)>
+    @break
+
+    @case('7НПР')
+        <input class="checkbox td__checkbox" type="checkbox" name="registered" data-toggle-action="toggle-process-registered-boolean" data-process-id={{ $instance->id }} @checked($instance->registered_in_plan)>
+    @break
+
     @case('Search country')
         {{ $instance->searchCountry->name }}
     @break

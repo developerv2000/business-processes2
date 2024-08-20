@@ -26,7 +26,11 @@
 
             <x-navbar.link icon="bar_chart" href="{{ route('statistics.index') }}" @class([
                 'navbar-link--active' => request()->routeIs('statistics.*'),
-            ])>{{ __('КПЭ') }}</x-navbar.link>
+            ])>{{ __('KPE') }}</x-navbar.link>
+
+            <x-navbar.link icon="pie_chart" href="{{ route('plan.index') }}" @class([
+                'navbar-link--active' => request()->routeIs('plan.*'),
+            ])>{{ __('SPG') }}</x-navbar.link>
 
             {{-- Dashboard --}}
             @if (request()->user()->isAdmin())

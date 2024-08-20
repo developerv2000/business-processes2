@@ -167,4 +167,30 @@ class ProcessController extends Controller
 
         return Process::exportRecordsAsExcel($records);
     }
+
+    /**
+     * AJAX request
+     */
+    public function updateContractedInPlanValue(Request $request)
+    {
+        $process = Process::find($request->process_id);
+        $process->contracted_in_plan = $request->contracted ?: false;
+        $process->timestamps = false;
+        $process->saveQuietly();
+
+        return $process;
+    }
+
+    /**
+     * AJAX request
+     */
+    public function updateRegisteredInPlanValue(Request $request)
+    {
+        $process = Process::find($request->process_id);
+        $process->registered_in_plan = $request->registered ?: false;
+        $process->timestamps = false;
+        $process->saveQuietly();
+
+        return $process;
+    }
 }

@@ -13,6 +13,12 @@ class MarketingAuthorizationHolder extends Model implements TemplatedModelInterf
     public $timestamps = false;
     protected $guarded = ['id'];
 
+    /*
+    |--------------------------------------------------------------------------
+    | Relations
+    |--------------------------------------------------------------------------
+    */
+
     public function processes()
     {
         return $this->hasMany(Process::class);
@@ -23,10 +29,27 @@ class MarketingAuthorizationHolder extends Model implements TemplatedModelInterf
         return $this->hasMany(Kvpp::class);
     }
 
+    public function planCountryCodeMarketingAuthorizationHolders()
+    {
+        return $this->belongsToMany(Plan::class, 'plan_country_code_marketing_authorization_holder');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Querying
+    |--------------------------------------------------------------------------
+    */
+
     public static function getAll()
     {
         return self::orderBy('id')->get();
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Miscellaneous
+    |--------------------------------------------------------------------------
+    */
 
     // Implement the method declared in the TemplatedModelInterface
     public function getUsageCountAttribute(): int

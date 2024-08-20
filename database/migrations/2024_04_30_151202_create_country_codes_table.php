@@ -30,6 +30,22 @@ return new class extends Migration
 
             $table->primary(['country_code_id', 'kvpp_id']);
         });
+
+        Schema::create('country_code_plan', function (Blueprint $table) {
+            $table->unsignedInteger('country_code_id')
+                ->foreign()
+                ->references('id')
+                ->on('country_codes');
+
+            $table->unsignedSmallInteger('plan_id')
+                ->foreign()
+                ->references('id')
+                ->on('plans');
+
+            $table->text('comment')->nullable();
+
+            $table->primary(['country_code_id', 'plan_id']);
+        });
     }
 
     /**

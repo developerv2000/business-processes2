@@ -3,7 +3,7 @@
 @section('main')
     <div class="pre-content styled-box">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('SPG'), $plan->year, '<a href="' . route('plan.country.codes.index', $plan->id) . '">' . __('Countries') . '</a>', __('Create new')],
+            'crumbs' => [__('SPG'), $plan->year, __('Countries'), __('Create new')],
             'fullScreen' => false,
         ])
 

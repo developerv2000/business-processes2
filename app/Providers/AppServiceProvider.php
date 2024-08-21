@@ -199,6 +199,18 @@ class AppServiceProvider extends ServiceProvider
                 'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
             ]);
         });
+
+        View::composer([
+            'plan.marketing-authorization-holders.index',
+            'plan.marketing-authorization-holders.create',
+            'plan.marketing-authorization-holders.edit'
+        ], function ($view) {
+            $view->with([
+                'countryCodes' => CountryCode::getAll(),
+                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+                'calendarMonths' => Helper::collectCalendarMonths(),
+            ]);
+        });
     }
 
     // ----------------------- Defaults -----------------------

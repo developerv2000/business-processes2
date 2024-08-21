@@ -135,5 +135,16 @@ Route::middleware('auth', 'auth.session')->group(function () {
             Route::patch('/update/{countryCode}', 'countryCodesUpdate')->name('update');
             Route::delete('/destroy', 'countryCodesDestroy')->name('destroy');
         });
+
+        // Maarketing authorization holders
+        Route::prefix('/{plan}/country-codes/{countryCode}/marketing-authorization-holders')->name('marketing.authorization.holders.')->group(function () {
+            Route::get('/index', 'marketingAuthorizationHoldersIndex')->name('index');
+            Route::get('/create', 'marketingAuthorizationHoldersCreate')->name('create');
+            Route::get('/edit/{marketingAuthorizationHolder}', 'marketingAuthorizationHoldersEdit')->name('edit');
+
+            Route::post('/store', 'marketingAuthorizationHoldersStore')->name('store');
+            Route::patch('/update/{countryCode}', 'marketingAuthorizationHoldersUpdate')->name('update');
+            Route::delete('/destroy', 'marketingAuthorizationHoldersDestroy')->name('destroy');
+        });
     });
 });

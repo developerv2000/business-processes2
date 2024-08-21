@@ -34,20 +34,7 @@ class Plan extends CommentableModel
     {
         return $this->belongsToMany(MarketingAuthorizationHolder::class, 'plan_country_code_marketing_authorization_holder')
             ->wherePivot('country_code_id', $countryCodeID)
-            ->withPivot(
-                'January',
-                'February',
-                'March',
-                'April',
-                'May',
-                'June',
-                'July',
-                'August',
-                'September',
-                'October',
-                'November',
-                'December',
-            );
+            ->withPivot(self::getPivotColumnNames());
     }
 
     /*
@@ -95,5 +82,60 @@ class Plan extends CommentableModel
     public function getTitle(): string
     {
         return $this->year;
+    }
+
+    public function storeCountryCodeFromRequest($request)
+    {
+        $countryCode = CountryCode::find($request->country_code_id);
+
+        $this->countryCodes()->attach($countryCode, [
+            'comment' => $request->comment,
+        ]);
+
+        return $countryCode;
+    }
+
+    public static function getPivotColumnNames(): array
+    {
+        return [
+            'January_contract_plan',
+            'February_contract_plan',
+            'March_contract_plan',
+            'April_contract_plan',
+            'May_contract_plan',
+            'June_contract_plan',
+            'July_contract_plan',
+            'August_contract_plan',
+            'September_contract_plan',
+            'October_contract_plan',
+            'November_contract_plan',
+            'December_contract_plan',
+
+            'January_register_plan',
+            'February_register_plan',
+            'March_register_plan',
+            'April_register_plan',
+            'May_register_plan',
+            'June_register_plan',
+            'July_register_plan',
+            'August_register_plan',
+            'September_register_plan',
+            'October_register_plan',
+            'November_register_plan',
+            'December_register_plan',
+
+            'January_comment',
+            'February_comment',
+            'March_comment',
+            'April_comment',
+            'May_comment',
+            'June_comment',
+            'July_comment',
+            'August_comment',
+            'September_comment',
+            'October_comment',
+            'November_comment',
+            'December_comment',
+        ];
     }
 }

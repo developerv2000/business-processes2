@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Abstracts\UsageCountableModel;
+use Illuminate\Support\Facades\DB;
 
 class CountryCode extends UsageCountableModel
 {
@@ -34,20 +35,7 @@ class CountryCode extends UsageCountableModel
     {
         return $this->belongsToMany(MarketingAuthorizationHolder::class, 'plan_country_code_marketing_authorization_holder')
             ->wherePivot('plan_id', $planID)
-            ->withPivot(
-                'January',
-                'February',
-                'March',
-                'April',
-                'May',
-                'June',
-                'July',
-                'August',
-                'September',
-                'October',
-                'November',
-                'December',
-            );
+            ->withPivot(Plan::getPivotColumnNames());
     }
 
     /*
@@ -75,10 +63,25 @@ class CountryCode extends UsageCountableModel
         ]);
     }
 
-    public static function loadMarketingAuthorizationHoldersForPlan($records, $planID)
+    public static function loadMarketingAuthorizationHoldersForPlan($records, $plan)
     {
+        $planID = $plan->id;
+
         foreach ($records as $instance) {
             $instance->plan_marketing_authorization_holders = $instance->marketingAuthorizationHoldersForPlan($planID)->get();
+        }
+    }
+
+    public function attachMarketingAuthorizationHoldersForPlan($plan, $marketingAuthorizationHolderIDs = [])
+    {
+        $planID = $plan->id;
+
+        foreach ($marketingAuthorizationHolderIDs as $mahID) {
+            DB::table('plan_country_code_marketing_authorization_holder')->insert([
+                'plan_id' => $planID,
+                'country_code_id' => $this->id,
+                'marketing_authorization_holder_id' => $mahID,
+            ]);
         }
     }
 }

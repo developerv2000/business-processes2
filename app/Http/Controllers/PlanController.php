@@ -9,6 +9,7 @@ use App\Models\Plan;
 use App\Support\Traits\DestroysModelRecords;
 use App\Support\Traits\RestoresModelRecords;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PlanController extends Controller
 {
@@ -79,7 +80,7 @@ class PlanController extends Controller
     public function countryCodesIndex(Plan $plan)
     {
         $records = $plan->countryCodes;
-        CountryCode::loadMarketingAuthorizationHoldersForPlan($records, $plan->id);
+        CountryCode::loadMarketingAuthorizationHoldersForPlan($records, $plan);
 
         return view('plan.country-codes.index', compact('plan', 'records'));
     }
@@ -87,5 +88,71 @@ class PlanController extends Controller
     public function countryCodesCreate(Plan $plan)
     {
         return view('plan.country-codes.create', compact('plan'));
+    }
+
+    public function countryCodesStore(Request $request, Plan $plan)
+    {
+        $countryCode = $plan->storeCountryCodeFromRequest($request);
+        $countryCode->attachMarketingAuthorizationHoldersForPlan($plan, $request->marketing_authorization_holder_ids);
+
+        return to_route('plan.country.codes.index', ['plan' => $plan->id]);
+    }
+
+    public function countryCodesEdit(Plan $plan, CountryCode $countryCode)
+    {
+        $instance = $plan->countryCodes()->where('id', $countryCode->id)->first();
+
+        return view('plan.country-codes.edit', compact('plan', 'instance'));
+    }
+
+    public function countryCodesUpdate(Request $request, Plan $plan, CountryCode $countryCode)
+    {
+        $plan->countryCodes()->updateExistingPivot($countryCode->id, [
+            'comment' => $request->comment,
+        ]);
+
+        return redirect($request->input('previous_url'));
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Marketing authorization holders routes
+    |--------------------------------------------------------------------------
+    */
+
+    public function marketingAuthorizationHoldersIndex(Plan $plan, CountryCode $countryCode)
+    {
+        $records = $countryCode->marketingAuthorizationHoldersForPlan($plan->id)->get();
+
+        return view('plan.marketing-authorization-holders.index', compact('plan', 'countryCode', 'records'));
+    }
+
+    public function marketingAuthorizationHoldersCreate(Plan $plan)
+    {
+        return view('plan.marketing-authorization-holders.create', compact('plan'));
+    }
+
+    public function marketingAuthorizationHoldersStore(Request $request, Plan $plan)
+    {
+        $countryCode = $plan->storeCountryCodeFromRequest($request);
+        $countryCode->attachMarketingAuthorizationHoldersForPlan($plan, $request->marketing_authorization_holder_ids);
+
+        return to_route('plan.marketing.authorization.holders.index', ['plan' => $plan->id]);
+    }
+
+    public function marketingAuthorizationHoldersEdit(Plan $plan, CountryCode $countryCode)
+    {
+        $instance = $plan->countryCodes()->where('id', $countryCode->id)->first();
+
+        return view('plan.marketing-authorization-holders.edit', compact('plan', 'instance'));
+    }
+
+    public function marketingAuthorizationHoldersUpdate(Request $request, Plan $plan, CountryCode $countryCode)
+    {
+        $plan->countryCodes()->updateExistingPivot($countryCode->id, [
+            'comment' => $request->comment,
+        ]);
+
+        return redirect($request->input('previous_url'));
     }
 }

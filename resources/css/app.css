@@ -521,6 +521,10 @@ button {
     gap: 4px;
 }
 
+.breadcrumbs__item a {
+    color: var(--theme-main-color);
+}
+
 .breadcrumbs__item::before {
     content: '\e5df';
     color: #b0bbc9;

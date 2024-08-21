@@ -32,18 +32,44 @@ return new class extends Migration
                 ->references('id')
                 ->on('marketing_authorization_holders');
 
-            $table->unsignedSmallInteger('January');
-            $table->unsignedSmallInteger('February');
-            $table->unsignedSmallInteger('March');
-            $table->unsignedSmallInteger('April');
-            $table->unsignedSmallInteger('May');
-            $table->unsignedSmallInteger('June');
-            $table->unsignedSmallInteger('July');
-            $table->unsignedSmallInteger('August');
-            $table->unsignedSmallInteger('September');
-            $table->unsignedSmallInteger('October');
-            $table->unsignedSmallInteger('November');
-            $table->unsignedSmallInteger('December');
+            $table->unsignedSmallInteger('January_contract_plan')->default(0);
+            $table->unsignedSmallInteger('February_contract_plan')->default(0);
+            $table->unsignedSmallInteger('March_contract_plan')->default(0);
+            $table->unsignedSmallInteger('April_contract_plan')->default(0);
+            $table->unsignedSmallInteger('May_contract_plan')->default(0);
+            $table->unsignedSmallInteger('June_contract_plan')->default(0);
+            $table->unsignedSmallInteger('July_contract_plan')->default(0);
+            $table->unsignedSmallInteger('August_contract_plan')->default(0);
+            $table->unsignedSmallInteger('September_contract_plan')->default(0);
+            $table->unsignedSmallInteger('October_contract_plan')->default(0);
+            $table->unsignedSmallInteger('November_contract_plan')->default(0);
+            $table->unsignedSmallInteger('December_contract_plan')->default(0);
+
+            $table->unsignedSmallInteger('January_register_plan')->default(0);
+            $table->unsignedSmallInteger('February_register_plan')->default(0);
+            $table->unsignedSmallInteger('March_register_plan')->default(0);
+            $table->unsignedSmallInteger('April_register_plan')->default(0);
+            $table->unsignedSmallInteger('May_register_plan')->default(0);
+            $table->unsignedSmallInteger('June_register_plan')->default(0);
+            $table->unsignedSmallInteger('July_register_plan')->default(0);
+            $table->unsignedSmallInteger('August_register_plan')->default(0);
+            $table->unsignedSmallInteger('September_register_plan')->default(0);
+            $table->unsignedSmallInteger('October_register_plan')->default(0);
+            $table->unsignedSmallInteger('November_register_plan')->default(0);
+            $table->unsignedSmallInteger('December_register_plan')->default(0);
+
+            $table->unsignedSmallInteger('January_comment')->nullable();
+            $table->unsignedSmallInteger('February_comment')->nullable();
+            $table->unsignedSmallInteger('March_comment')->nullable();
+            $table->unsignedSmallInteger('April_comment')->nullable();
+            $table->unsignedSmallInteger('May_comment')->nullable();
+            $table->unsignedSmallInteger('June_comment')->nullable();
+            $table->unsignedSmallInteger('July_comment')->nullable();
+            $table->unsignedSmallInteger('August_comment')->nullable();
+            $table->unsignedSmallInteger('September_comment')->nullable();
+            $table->unsignedSmallInteger('October_comment')->nullable();
+            $table->unsignedSmallInteger('November_comment')->nullable();
+            $table->unsignedSmallInteger('December_comment')->nullable();
 
             $table->primary(['country_code_id', 'plan_id', 'marketing_authorization_holder_id']);
         });

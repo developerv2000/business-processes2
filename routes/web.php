@@ -143,7 +143,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
             Route::get('/edit/{marketingAuthorizationHolder}', 'marketingAuthorizationHoldersEdit')->name('edit');
 
             Route::post('/store', 'marketingAuthorizationHoldersStore')->name('store');
-            Route::patch('/update/{countryCode}', 'marketingAuthorizationHoldersUpdate')->name('update');
+            Route::patch('/update/{marketingAuthorizationHolder}', 'marketingAuthorizationHoldersUpdate')->name('update');
             Route::delete('/destroy', 'marketingAuthorizationHoldersDestroy')->name('destroy');
         });
     });

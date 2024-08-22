@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Abstracts\UsageCountableModel;
+use App\Support\Helper;
 use Illuminate\Support\Facades\DB;
 
 class CountryCode extends UsageCountableModel
@@ -72,16 +73,17 @@ class CountryCode extends UsageCountableModel
         }
     }
 
-    public function attachMarketingAuthorizationHoldersForPlan($plan, $marketingAuthorizationHolderIDs = [])
+    /**
+     * Used in route plan.country.codes.store
+     */
+    public static function attachToPlanFromRequest($request, $plan)
     {
-        $planID = $plan->id;
+        $countryCode = self::find($request->country_code_id);
 
-        foreach ($marketingAuthorizationHolderIDs as $mahID) {
-            DB::table('plan_country_code_marketing_authorization_holder')->insert([
-                'plan_id' => $planID,
-                'country_code_id' => $this->id,
-                'marketing_authorization_holder_id' => $mahID,
-            ]);
-        }
+        $plan->countryCodes()->attach($countryCode, [
+            'comment' => $request->comment,
+        ]);
+
+        return $countryCode;
     }
 }

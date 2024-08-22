@@ -58,18 +58,18 @@ return new class extends Migration
             $table->unsignedSmallInteger('November_register_plan')->default(0);
             $table->unsignedSmallInteger('December_register_plan')->default(0);
 
-            $table->unsignedSmallInteger('January_comment')->nullable();
-            $table->unsignedSmallInteger('February_comment')->nullable();
-            $table->unsignedSmallInteger('March_comment')->nullable();
-            $table->unsignedSmallInteger('April_comment')->nullable();
-            $table->unsignedSmallInteger('May_comment')->nullable();
-            $table->unsignedSmallInteger('June_comment')->nullable();
-            $table->unsignedSmallInteger('July_comment')->nullable();
-            $table->unsignedSmallInteger('August_comment')->nullable();
-            $table->unsignedSmallInteger('September_comment')->nullable();
-            $table->unsignedSmallInteger('October_comment')->nullable();
-            $table->unsignedSmallInteger('November_comment')->nullable();
-            $table->unsignedSmallInteger('December_comment')->nullable();
+            $table->text('January_comment')->nullable();
+            $table->text('February_comment')->nullable();
+            $table->text('March_comment')->nullable();
+            $table->text('April_comment')->nullable();
+            $table->text('May_comment')->nullable();
+            $table->text('June_comment')->nullable();
+            $table->text('July_comment')->nullable();
+            $table->text('August_comment')->nullable();
+            $table->text('September_comment')->nullable();
+            $table->text('October_comment')->nullable();
+            $table->text('November_comment')->nullable();
+            $table->text('December_comment')->nullable();
 
             $table->primary(['country_code_id', 'plan_id', 'marketing_authorization_holder_id']);
         });

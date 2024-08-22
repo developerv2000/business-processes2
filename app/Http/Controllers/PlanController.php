@@ -8,14 +8,11 @@ use App\Models\CountryCode;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\Plan;
 use App\Support\Traits\DestroysModelRecords;
-use App\Support\Traits\RestoresModelRecords;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class PlanController extends Controller
 {
     use DestroysModelRecords;
-    use RestoresModelRecords;
 
     public $model = Plan::class; // used in multiple destroy/restore traits
 
@@ -115,6 +112,17 @@ class PlanController extends Controller
         return redirect($request->input('previous_url'));
     }
 
+    public function countryCodesDestroy(Request $request, Plan $plan)
+    {
+        $countryCodeIDs = $request->ids;
+
+        foreach ($countryCodeIDs as $countryCodeID) {
+            $plan->detachCountryCodeByID($countryCodeID);
+        }
+
+        return to_route('plan.country.codes.index', ['plan' => $plan->id]);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Marketing authorization holders routes
@@ -153,5 +161,14 @@ class PlanController extends Controller
         $marketingAuthorizationHolder->updateForPlanFromRequest($plan, $countryCode, $request);
 
         return redirect($request->input('previous_url'));
+    }
+
+    public function marketingAuthorizationHoldersDestroy(Request $request, Plan $plan, CountryCode $countryCode)
+    {
+        $marketingAuthorizationHolderIDs = $request->ids;
+
+        $plan->detachMarketingAuthorizationHolders($countryCode, $marketingAuthorizationHolderIDs);
+
+        return to_route('plan.marketing.authorization.holders.index', ['plan' => $plan->id, 'countryCode' => $countryCode->id]);
     }
 }

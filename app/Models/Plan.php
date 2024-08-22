@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Support\Abstracts\CommentableModel;
 use App\Support\Traits\MergesParamsToRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 
 class Plan extends CommentableModel
 {
@@ -35,6 +36,20 @@ class Plan extends CommentableModel
         return $this->belongsToMany(MarketingAuthorizationHolder::class, 'plan_country_code_marketing_authorization_holder')
             ->wherePivot('country_code_id', $countryCodeID)
             ->withPivot(self::getPivotColumnNames());
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Events
+    |--------------------------------------------------------------------------
+    */
+    protected static function booted(): void
+    {
+        static::deleting(function ($instance) {
+            foreach ($instance->countryCodes as $countryCode) {
+                $instance->detachCountryCodeByID($countryCode->id);
+            }
+        });
     }
 
     /*
@@ -84,15 +99,35 @@ class Plan extends CommentableModel
         return $this->year;
     }
 
-    public function storeCountryCodeFromRequest($request)
+    /**
+     * Used in route plan.country.codes.destroy
+     */
+    public function detachCountryCodeByID($countryCodeID)
     {
-        $countryCode = CountryCode::find($request->country_code_id);
+        $countryCode = CountryCode::find($countryCodeID);
+        $marketingAuthorizationHolders = $countryCode->marketingAuthorizationHoldersForPlan($this->id)->get();
+        $marketingAuthorizationHolderIDs = $marketingAuthorizationHolders->pluck('id');
 
-        $this->countryCodes()->attach($countryCode, [
-            'comment' => $request->comment,
-        ]);
+        // Detach marketing authorization holders first
+        $this->detachMarketingAuthorizationHolders($countryCode, $marketingAuthorizationHolderIDs);
 
-        return $countryCode;
+        // Then detach country code
+        $this->countryCodes()->detach([$countryCodeID]);
+    }
+
+    /**
+     * Used in route plan.marketing.authorization.holders.destroy
+     * and plan.country.codes.destroy
+     */
+    public function detachMarketingAuthorizationHolders($countryCode, $marketingAuthorizationHolderIDs)
+    {
+        foreach ($marketingAuthorizationHolderIDs as $mahID) {
+            DB::table('plan_country_code_marketing_authorization_holder')->where([
+                'plan_id' => $this->id,
+                'country_code_id' => $countryCode->id,
+                'marketing_authorization_holder_id' => $mahID,
+            ])->delete();
+        }
     }
 
     public static function getPivotColumnNames(): array

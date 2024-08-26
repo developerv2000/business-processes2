@@ -142,11 +142,15 @@ class MarketingAuthorizationHolder extends Model implements TemplatedModelInterf
     {
         // Get all months and the requested year
         $months = Helper::collectCalendarMonths();
-        $year = $request->input('year');
+        $year = $request->input('year', date('Y'));
 
         // Prepare the base query for filtering records
-        $baseQuery = Process::query();
-        $baseQuery = Process::filterSpecificManufacturerCountry($request, $baseQuery);
+        $baseQuery = Process::where([
+            'marketing_authorization_holder_id' => $this->id,
+            'country_code_id' => $this->pivot->country_code_id,
+        ]);
+
+        $baseQuery = Process::filterSpecificManufacturerCountry($request, $baseQuery); // India & Europe
 
         // Prepare contracted and registered queries based on plan status
         $contractedQuery = Process::filterRecordsByPlanStatus(clone $baseQuery, true, null);
@@ -168,6 +172,53 @@ class MarketingAuthorizationHolder extends Model implements TemplatedModelInterf
             $registeredQueryClone = Process::filterRecordsRegisteredOnRequestedMonthAndYear($registeredQueryClone, $year, $monthNumber);
             $registeredProcessesCount = $registeredQueryClone->count();
             $this->pivot->{$monthName . '_register_fact'} = $registeredProcessesCount;
+        }
+    }
+
+    /**
+     * Generate and add plan processes links (contracted and registered) for each month
+     * based on the request
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    public function addPlanProcesseslinkFromRequest($request)
+    {
+        // Get all months and the requested year
+        $months = Helper::collectCalendarMonths();
+        $year = $request->input('year', date('Y'));
+
+        // Default query params from the request
+        $baseQueryParams = [
+            'marketing_authorization_holder_id[]' => $this->id,
+            'country_code_id[]' => $this->pivot->country_code_id,
+            'specific_manufacturer_country' => $request->input('specific_manufacturer_country'),
+        ];
+
+        // Loop through each month and generate links
+        foreach ($months as $month) {
+            $monthNumber = $month['number'];
+            $monthName = $month['name'];
+
+            // Generate contracted processes link
+            $contractedParams = array_merge($baseQueryParams, [
+                'contracted_in_plan' => true,
+                'contracted_on_requested_month_and_year' => true,
+                'contracted_month' => $monthNumber,
+                'contracted_year' => $year,
+            ]);
+            $contractedProcessesLink = route('processes.index', $contractedParams);
+            $this->pivot->{$monthName . '_contract_fact_link'} = $contractedProcessesLink;
+
+            // Generate registered processes link
+            $registeredParams = array_merge($baseQueryParams, [
+                'registered_in_plan' => true,
+                'registered_on_requested_month_and_year' => true,
+                'registered_month' => $monthNumber,
+                'registered_year' => $year,
+            ]);
+            $registeredProcessesLink = route('processes.index', $registeredParams);
+            $this->pivot->{$monthName . '_register_fact_link'} = $registeredProcessesLink;
         }
     }
 }

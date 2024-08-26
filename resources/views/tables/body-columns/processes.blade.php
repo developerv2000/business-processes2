@@ -12,11 +12,15 @@
     @break
 
     @case('5Кк')
-        <input class="checkbox td__checkbox" type="checkbox" name="contracted" data-toggle-action="toggle-process-contracted-boolean" data-process-id={{ $instance->id }} @checked($instance->contracted_in_plan)>
+        @if ($instance->shouldDisplaySPGCheckboxes())
+            <input class="checkbox td__checkbox" type="checkbox" name="contracted" data-toggle-action="toggle-process-contracted-boolean" data-process-id={{ $instance->id }} @checked($instance->contracted_in_plan)>
+        @endif
     @break
 
     @case('7НПР')
-        <input class="checkbox td__checkbox" type="checkbox" name="registered" data-toggle-action="toggle-process-registered-boolean" data-process-id={{ $instance->id }} @checked($instance->registered_in_plan)>
+        @if ($instance->shouldDisplaySPGCheckboxes())
+            <input class="checkbox td__checkbox" type="checkbox" name="registered" data-toggle-action="toggle-process-registered-boolean" data-process-id={{ $instance->id }} @checked($instance->registered_in_plan)>
+        @endif
     @break
 
     @case('Search country')

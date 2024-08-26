@@ -35,6 +35,20 @@
         <input type="hidden" name="has_status_history_based_on_value" value="{{ $request->has_status_history_based_on_value }}">
     @endif
 
+    {{-- Notify if redirected from plan index page & stage 7 (НПР) requested --}}
+    @if ($request->registered_on_requested_month_and_year)
+        <x-forms.input.request-based-input
+            type="text"
+            label="Special filter"
+            name="special_filter"
+            :value="__('Registered on') . ' ' . str_pad($request->registered_month, 2, '0', STR_PAD_LEFT) . '.' . $request->registered_year"
+            readonly />
+
+        <input type="hidden" name="registered_on_requested_month_and_year" value="1">
+        <input type="hidden" name="registered_year" value="{{ $request->registered_year }}">
+        <input type="hidden" name="registered_month" value="{{ $request->registered_month }}">
+    @endif
+
     <x-forms.id-based-multiple-select.request-based-select
         label="Search country"
         name="country_code_id[]"
@@ -136,6 +150,17 @@
         label="Manufacturer category"
         name="manufacturer_category_id"
         :options="$manufacturerCategories" />
+
+    {{-- Plan filters --}}
+    @if ($request->user()->isAdminOrModerator())
+        <x-forms.boolean-select.request-based-select
+            label="Contracted on SPG"
+            name="contracted_in_plan" />
+
+        <x-forms.boolean-select.request-based-select
+            label="Registered on SPG"
+            name="registered_in_plan" />
+    @endif
 
     @include('filters.partials.default-elements', [
         'includeIdInput' => true,

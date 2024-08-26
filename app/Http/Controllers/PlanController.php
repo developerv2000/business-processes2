@@ -73,7 +73,7 @@ class PlanController extends Controller
     public function show(Request $request)
     {
         $plan = Plan::getByYearFromRequest($request);
-        $plan->makeAllCalculationsFromRequest($request);
+        $plan->makeAllCalculationsAndAddLinksFromRequest($request);
 
         $months = Helper::collectCalendarMonths();
 

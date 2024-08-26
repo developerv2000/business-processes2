@@ -1112,4 +1112,9 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
     {
         return trans('Process') . ' #' . $this->id . ' / ' . $this->searchCountry->name;
     }
+
+    public function shouldDisplaySPGCheckboxes()
+    {
+        return $this->status->generalStatus->stage >= 5;
+    }
 }

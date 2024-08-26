@@ -149,7 +149,7 @@ class Plan extends CommentableModel
         }
     }
 
-    public function makeAllCalculationsFromRequest($request)
+    public function makeAllCalculationsAndAddLinksFromRequest($request)
     {
         $this->loadMarketingAuthorizationHoldersOfCountries();
 
@@ -157,6 +157,7 @@ class Plan extends CommentableModel
             // Calculate MAH all processes count
             foreach ($countryCode->plan_marketing_authorization_holders as $mah) {
                 $mah->calculatePlanAllProcessesCountFromRequest($request);
+                $mah->addPlanProcesseslinkFromRequest($request);
             }
         }
     }

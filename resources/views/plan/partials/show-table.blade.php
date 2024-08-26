@@ -84,16 +84,28 @@
                             <td>{{ $mah->pivot->{'quoter_' . $quoter . '_contract_plan'} }}</td>
                             <td>{{ $mah->pivot->{'quoter_' . $quoter . '_contract_fact'} }}</td>
                             <td>{{ $mah->pivot->{'quoter_' . $quoter . '_contract_percentage'} }}</td>
-                            <td>{{ $mah->pivot->{'quoter_' . $quoter . '_register_plan'} }}</td>
+                            <td>{{ $mah->pivot->{'quoter_' . $quoter . '_register_fact'} }}</td>
                             <td>{{ $mah->pivot->{'quoter_' . $quoter . '_register_percentage'} }}</td>
 
                             {{-- Monthes 1 - 12 --}}
                             @for ($quoterMonths = 1; $quoterMonths <= 3; $quoterMonths++, $monthIndex++)
                                 {{-- January --}}
                                 <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_contract_plan'} }}</td>
-                                <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_contract_fact'} }}</td>
+
+                                <td>
+                                    <a href="{{ $mah->pivot->{$months[$monthIndex]['name'] . '_contract_fact_link'} }}">
+                                        {{ $mah->pivot->{$months[$monthIndex]['name'] . '_contract_fact'} }}
+                                    </a>
+                                </td>
+
                                 <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_contract_percentage'} }}</td>
-                                <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_register_plan'} }}</td>
+
+                                <td>
+                                    <a href="{{ $mah->pivot->{$months[$monthIndex]['name'] . '_register_fact_link'} }}">
+                                        {{ $mah->pivot->{$months[$monthIndex]['name'] . '_register_fact'} }}
+                                    </a>
+                                </td>
+
                                 <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_register_percentage'} }}</td>
                                 <td>@include('tables.components.td.limited-text', ['text' => $mah->pivot->{$months[$monthIndex]['name'] . '_comment'}])</td>
                             @endfor

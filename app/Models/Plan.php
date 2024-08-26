@@ -51,6 +51,10 @@ class Plan extends CommentableModel
     protected static function booted(): void
     {
         static::deleting(function ($instance) {
+            foreach ($instance->comments as $comment) {
+                $comment->delete();
+            }
+
             foreach ($instance->countryCodes as $countryCode) {
                 $instance->detachCountryCodeByID($countryCode->id);
             }

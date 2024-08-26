@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        @include('plan.partials.table')
+        @include('plan.partials.index-table')
     </div>
 
     <x-modals.multiple-delete action="{{ route('plan.destroy') }}" :force-delete="false" />

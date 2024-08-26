@@ -1283,4 +1283,23 @@ button {
 .plan-country-codes-edit .main {
     overflow: unset;
 }
+
+/* Plan show */
+.plan-table-wrapper {
+    max-height: unset;
+}
+
+.plan-table .main-table thead {
+    height: auto;
+}
+
+.plan-table thead tr:first-child {
+    text-align: center;
+}
+
+.plan-table th,
+.plan-table td {
+    border: var(--theme-input-border);
+}
+
 /* ------------ /end Plan pages ------------ */

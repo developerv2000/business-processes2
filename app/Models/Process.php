@@ -404,6 +404,14 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             );
         }
 
+        // If redirected from plan.index page or manual planned status filter requested
+        $query = self::filterRecordsByPlanStatus($query, $request->contracted_in_plan, $request->registered_in_plan);
+
+        // If redirected from plan index page & stage 7 (НПР) requested
+        if ($request->registered_on_requested_month_and_year) {
+            $query = self::filterRecordsRegisteredOnRequestedMonthAndYear($query, $request->registered_year, $request->registered_month);
+        }
+
         return $query;
     }
 
@@ -475,6 +483,27 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
     }
 
     /**
+     * Filter processes which have registered history (stage 7 (НПР)) for the requested month and year.
+     *
+     * This function is used in both plan index page & processes index page.
+     *
+     * @param Illuminate\Database\Eloquent\Builder $query
+     * @param int $year
+     * @param int $month
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public static function filterRecordsRegisteredOnRequestedMonthAndYear($query, $year, $month)
+    {
+        return $query->whereHas('statusHistory', function ($historyQuery) use ($year, $month) {
+            $historyQuery->whereMonth('start_date', $month)
+                ->whereYear('start_date', $year)
+                ->whereHas('status.generalStatus', function ($statusesQuery) {
+                    $statusesQuery->where('stage', 7);
+                });
+        });
+    }
+
+    /**
      * Filter records based on status history criteria.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query The query builder instance to apply filters to.
@@ -489,6 +518,27 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
                     $statusesQuery->where($basedOn, $basedOnValue);
                 });
         });
+
+        return $query;
+    }
+
+    /**
+     * Filter records based on the 'contracted_in_plan' and 'registered_in_plan' status.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param bool|null $contractedInPlan
+     * @param bool|null $registeredInPlan
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function filterRecordsByPlanStatus($query, $contractedInPlan = null, $registeredInPlan = null)
+    {
+        if (!is_null($contractedInPlan)) {
+            $query->where('contracted_in_plan', $contractedInPlan);
+        }
+
+        if (!is_null($registeredInPlan)) {
+            $query->where('registered_in_plan', $registeredInPlan);
+        }
 
         return $query;
     }

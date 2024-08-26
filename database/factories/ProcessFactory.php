@@ -22,7 +22,7 @@ class ProcessFactory extends Factory
         return [
             'product_id' => Product::inRandomOrder()->first()->id,
             'status_id' => ProcessStatus::inRandomOrder()->first()->id,
-            'status_update_date' => fake()->dateTimeBetween(now()->subMonths(4), now()),
+            'status_update_date' => fake()->dateTimeBetween(now()->subMonths(1), now()),
             'country_code_id' => CountryCode::inRandomOrder()->first()->id,
         ];
     }

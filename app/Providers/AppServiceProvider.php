@@ -211,6 +211,13 @@ class AppServiceProvider extends ServiceProvider
                 'calendarMonths' => Helper::collectCalendarMonths(),
             ]);
         });
+
+        View::composer('plan.show', function ($view) {
+            $view->with([
+                'calendarMonths' => Helper::collectCalendarMonths(),
+                'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
+            ]);
+        });
     }
 
     // ----------------------- Defaults -----------------------

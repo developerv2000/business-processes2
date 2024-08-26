@@ -83,6 +83,7 @@
     "Comments date": "Дата комм",
     "All comments": "Все комментарии",
     "Add new comment": "Добавить новый комментарий",
+    "Comm": "Комм",
 
     "Attachments": "Вложения",
     "File name": "Название файла",
@@ -221,6 +222,10 @@
     "Number of active manufacturers by month": "Количество активных производителей по месяцам",
 
     "Countries": "Страны",
+    "Quoter": "Квартал",
+    "Country code": "Код стр",
+    "plan": "план",
+    "fact": "факт",
 
     "Notifications": "Уведомления",
     "Date": "Дата",

@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use App\Support\Abstracts\UsageCountableModel;
-use App\Support\Helper;
-use Illuminate\Support\Facades\DB;
 
 class CountryCode extends UsageCountableModel
 {
@@ -62,15 +60,6 @@ class CountryCode extends UsageCountableModel
         $this->update([
             'usage_count' => $this->processes()->count() + $this->kvpps()->count(),
         ]);
-    }
-
-    public static function loadMarketingAuthorizationHoldersForPlan($records, $plan)
-    {
-        $planID = $plan->id;
-
-        foreach ($records as $instance) {
-            $instance->plan_marketing_authorization_holders = $instance->marketingAuthorizationHoldersForPlan($planID)->get();
-        }
     }
 
     /**

@@ -125,4 +125,49 @@ class MarketingAuthorizationHolder extends Model implements TemplatedModelInterf
 
         $plan->marketingAuthorizationHoldersForCountryCode($countryCode->id)->updateExistingPivot($this->id, $fields);
     }
+
+    public function calculatePlanAllProcessesCountFromRequest($request)
+    {
+        $this->calculatePlanMonthProcessesCountFromRequest($request);
+    }
+
+    /**
+     * Calculate and update the count of contracted and registered processes for each month
+     * based on the requested year
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    public function calculatePlanMonthProcessesCountFromRequest($request)
+    {
+        // Get all months and the requested year
+        $months = Helper::collectCalendarMonths();
+        $year = $request->input('year');
+
+        // Prepare the base query for filtering records
+        $baseQuery = Process::query();
+        $baseQuery = Process::filterSpecificManufacturerCountry($request, $baseQuery);
+
+        // Prepare contracted and registered queries based on plan status
+        $contractedQuery = Process::filterRecordsByPlanStatus(clone $baseQuery, true, null);
+        $registeredQuery = Process::filterRecordsByPlanStatus(clone $baseQuery, null, true);
+
+        // Loop through each month and calculate the counts
+        foreach ($months as $month) {
+            $monthNumber = $month['number'];
+            $monthName = $month['name'];
+
+            // Clone and apply month/year filters for contracted processes
+            $contractedQueryClone = clone $contractedQuery;
+            $contractedQueryClone = Process::filterRecordsContractedOnRequestedMonthAndYear($contractedQueryClone, $year, $monthNumber);
+            $contractedProcessesCount = $contractedQueryClone->count();
+            $this->pivot->{$monthName . '_contract_fact'} = $contractedProcessesCount;
+
+            // Clone and apply month/year filters for registered processes
+            $registeredQueryClone = clone $registeredQuery;
+            $registeredQueryClone = Process::filterRecordsRegisteredOnRequestedMonthAndYear($registeredQueryClone, $year, $monthNumber);
+            $registeredProcessesCount = $registeredQueryClone->count();
+            $this->pivot->{$monthName . '_register_fact'} = $registeredProcessesCount;
+        }
+    }
 }

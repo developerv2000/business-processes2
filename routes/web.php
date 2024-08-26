@@ -123,7 +123,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     Route::prefix('plan')->controller(PlanController::class)->name('plan.')->group(function () {
         RouteGenerator::defineDefaultCrudRoutesExcept(['trash', 'restore', 'export']);
 
-        Route::get('/view/{instance}', 'view')->name('view');
+        Route::get('/show', 'show')->name('show');
 
         // Country codes
         Route::prefix('/{plan}/country-codes')->name('country.codes.')->group(function () {

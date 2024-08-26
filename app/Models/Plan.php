@@ -19,6 +19,11 @@ class Plan extends CommentableModel
     protected $guarded = ['id'];
     public $timestamps = false;
 
+    protected $with = [
+        'countryCodes',
+        'lastComment',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Relations
@@ -99,6 +104,13 @@ class Plan extends CommentableModel
         return $this->year;
     }
 
+    public static function getByYearFromRequest($request)
+    {
+        $year = $request->input('year', date('Y'));
+
+        return self::where('year', $year)->first();
+    }
+
     /**
      * Used in route plan.country.codes.destroy
      */
@@ -127,6 +139,34 @@ class Plan extends CommentableModel
                 'country_code_id' => $countryCode->id,
                 'marketing_authorization_holder_id' => $mahID,
             ])->delete();
+        }
+    }
+
+    public function loadMarketingAuthorizationHoldersOfCountries()
+    {
+        foreach ($this->countryCodes as $countryCode) {
+            $countryCode->plan_marketing_authorization_holders = $countryCode->marketingAuthorizationHoldersForPlan($this->id)->get();
+        }
+    }
+
+    public function makeAllCalculationsFromRequest($request)
+    {
+        $this->loadMarketingAuthorizationHoldersOfCountries();
+
+        foreach ($this->countryCodes as $countryCode) {
+            // Calculate MAH all processes count
+            foreach ($countryCode->plan_marketing_authorization_holders as $mah) {
+                $mah->calculatePlanAllProcessesCountFromRequest($request);
+            }
+        }
+    }
+
+    public static function calculateMAHProcessesCountForCountries($countryCodes)
+    {
+        foreach ($countryCodes as $countryCode) {
+            foreach ($countryCode->plan_marketing_authorization_holders as $mah) {
+                dd($mah);
+            }
         }
     }
 

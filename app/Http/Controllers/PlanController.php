@@ -7,6 +7,7 @@ use App\Http\Requests\PlanUpdateRequest;
 use App\Models\CountryCode;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\Plan;
+use App\Support\Helper;
 use App\Support\Traits\DestroysModelRecords;
 use Illuminate\Http\Request;
 
@@ -69,6 +70,16 @@ class PlanController extends Controller
         return redirect($request->input('previous_url'));
     }
 
+    public function show(Request $request)
+    {
+        $plan = Plan::getByYearFromRequest($request);
+        $plan->makeAllCalculationsFromRequest($request);
+
+        $months = Helper::collectCalendarMonths();
+
+        return view('plan.show', compact('request', 'plan', 'months'));
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Country code routes
@@ -77,8 +88,8 @@ class PlanController extends Controller
 
     public function countryCodesIndex(Plan $plan)
     {
+        $plan->loadMarketingAuthorizationHoldersOfCountries();
         $records = $plan->countryCodes;
-        CountryCode::loadMarketingAuthorizationHoldersForPlan($records, $plan);
 
         return view('plan.country-codes.index', compact('plan', 'records'));
     }

@@ -17,11 +17,11 @@
 
             <th>{{ __('Year') }}</th>
 
-            <th >{{ __('Кк план') }}</th>
-            <th >{{ __('Кк факт') }}</th>
-            <th >{{ __('Кк %') }}</th>
-            <th >{{ __('НПР факт') }}</th>
-            <th >{{ __('НПР %') }}</th>
+            <th>{{ __('Кк план') }}</th>
+            <th>{{ __('Кк факт') }}</th>
+            <th>{{ __('Кк %') }}</th>
+            <th>{{ __('НПР факт') }}</th>
+            <th>{{ __('НПР %') }}</th>
 
             <th>{{ __('Countries') }}</th>
 
@@ -44,7 +44,7 @@
                     <x-different.linked-button
                         style="transparent"
                         class="td__view"
-                        href="{{ route('plan.edit', $instance->id) }}"
+                        href="{{ route('plan.show') }}?year={{ $instance->year }}"
                         icon="visibility"
                         title="{{ __('View') }}" />
                 </td>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Abstracts\UsageCountableModel;
+use App\Support\Helper;
 
 class CountryCode extends UsageCountableModel
 {
@@ -74,5 +75,19 @@ class CountryCode extends UsageCountableModel
         ]);
 
         return $countryCode;
+    }
+
+    public function calculateQuoterProcessesCountForPlan()
+    {
+        $months = Helper::collectCalendarMonths();
+
+        for ($quoter = 1, $monthIndex = 0; $quoter <= 4; $quoter++) {
+            $contractPlanCount = 0;
+            $registerPlanCount = 0;
+
+            for ($quoterMonths = 1; $quoterMonths <= 3; $quoterMonths++, $monthIndex++) {
+                // $contractPlanCount += 
+            }
+        }
     }
 }

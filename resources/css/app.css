@@ -1285,16 +1285,22 @@ button {
 }
 
 /* Plan show */
-.plan-table-wrapper {
-    max-height: unset;
+.plan-table {
+    --th-country-name-width: 64px;
+    --th-mah-name-width: 60px;
 }
 
-.plan-table .main-table thead {
+.plan-table thead {
     height: auto;
+    z-index: 2;
 }
 
 .plan-table thead tr:first-child {
     text-align: center;
+}
+
+.plan-table tbody {
+    z-index: 1;
 }
 
 .plan-table th,
@@ -1302,4 +1308,27 @@ button {
     border: var(--theme-input-border);
 }
 
+.plan-table a {
+    text-decoration: none;
+}
+
+.plan-table__th--country-name {
+    width: var(--th-country-name-width);
+}
+
+.plan-table__th--mah-name {
+    width: var(--th-mah-name-width);
+}
+
+.plan-table__td--country-name {
+    position: sticky;
+    left: 0;
+    background-color: var(--theme-background-color);
+}
+
+.plan-table__td--mah-name {
+    position: sticky;
+    left: var(--th-country-name-width);
+    background-color: var(--theme-background-color);
+}
 /* ------------ /end Plan pages ------------ */

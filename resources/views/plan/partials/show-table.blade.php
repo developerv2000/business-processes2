@@ -4,14 +4,14 @@
     }
 </style>
 
-<div class="table-wrapper plan-table-wrapper thin-scrollbar">
+<div class="table-wrapper thin-scrollbar">
     <table class="table plan-table main-table">
         {{-- Head start --}}
         <thead>
             {{-- thead row 1 --}}
             <tr>
-                <th width="110">{{ __('Country code') }}</th>
-                <th width="76">{{ __('MAH') }}</th>
+                <th class="plan-table__th--country-name">{{ __('Cтр') }}</th>
+                <th class="plan-table__th--mah-name">{{ __('PC') }}</th>
                 <th width="420" colspan="5">{{ __('Plan') }} {{ $request->year }}</th>
 
                 {{-- Quoters 1-4 --}}
@@ -27,8 +27,8 @@
 
             {{-- thead row 2 --}}
             <tr>
-                <th></th>
-                <th></th>
+                <th class="plan-table__th--country-name"></th>
+                <th class="plan-table__th--mah-name"></th>
 
                 {{-- Plan for the year --}}
                 <th>Кк {{ __('plan') }}</th>
@@ -63,33 +63,33 @@
         {{-- Body Start --}}
         <tbody>
             @foreach ($plan->countryCodes as $country)
-                <tr>
-                    <td>{{ $country->name }}</td>
+                <tr class="plan-table__td--country-name">
+                    <td class="plan-table__td--country-name">{{ $country->name }}</td>
+                    <td class="plan-table__td--mah-name"></td>
                 </tr>
 
                 @foreach ($country->plan_marketing_authorization_holders as $mah)
                     <tr>
-                        <td>{{ $country->name }}</td>
-                        <td>{{ $mah->name }}</td>
+                        <td class="plan-table__td--country-name">{{ $country->name }}</td>
+                        <td class="plan-table__td--mah-name">{{ $mah->name }}</td>
 
-                        {{-- Plan for the year --}}
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        {{-- MAH plan for the year --}}
+                        <td>{{ $mah->pivot->year_contract_plan }}</td>
+                        <td>{{ $mah->pivot->year_contract_fact }}</td>
+                        <td>{{ $mah->pivot->year_contract_fact_percentage }} %</td>
+                        <td>{{ $mah->pivot->year_register_fact }}</td>
+                        <td>{{ $mah->pivot->year_register_fact_percentage }} %</td>
 
                         {{-- Quoters 1 - 4 --}}
                         @for ($quoter = 1, $monthIndex = 0; $quoter <= 4; $quoter++)
                             <td>{{ $mah->pivot->{'quoter_' . $quoter . '_contract_plan'} }}</td>
                             <td>{{ $mah->pivot->{'quoter_' . $quoter . '_contract_fact'} }}</td>
-                            <td>{{ $mah->pivot->{'quoter_' . $quoter . '_contract_percentage'} }}</td>
+                            <td>{{ $mah->pivot->{'quoter_' . $quoter . '_contract_fact_percentage'} }} %</td>
                             <td>{{ $mah->pivot->{'quoter_' . $quoter . '_register_fact'} }}</td>
-                            <td>{{ $mah->pivot->{'quoter_' . $quoter . '_register_percentage'} }}</td>
+                            <td>{{ $mah->pivot->{'quoter_' . $quoter . '_register_fact_percentage'} }} %</td>
 
                             {{-- Monthes 1 - 12 --}}
                             @for ($quoterMonths = 1; $quoterMonths <= 3; $quoterMonths++, $monthIndex++)
-                                {{-- January --}}
                                 <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_contract_plan'} }}</td>
 
                                 <td>
@@ -98,7 +98,7 @@
                                     </a>
                                 </td>
 
-                                <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_contract_percentage'} }}</td>
+                                <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_contract_fact_percentage'} }} %</td>
 
                                 <td>
                                     <a href="{{ $mah->pivot->{$months[$monthIndex]['name'] . '_register_fact_link'} }}">
@@ -106,7 +106,7 @@
                                     </a>
                                 </td>
 
-                                <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_register_percentage'} }}</td>
+                                <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_register_fact_percentage'} }} %</td>
                                 <td>@include('tables.components.td.limited-text', ['text' => $mah->pivot->{$months[$monthIndex]['name'] . '_comment'}])</td>
                             @endfor
                         @endfor

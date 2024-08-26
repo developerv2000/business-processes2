@@ -104,9 +104,16 @@ class Plan extends CommentableModel
         return $this->year;
     }
 
+    public static function mergeDefaultParamsToRequest($request)
+    {
+        $request->mergeIfMissing([
+            'year' => date('Y'),
+        ]);
+    }
+
     public static function getByYearFromRequest($request)
     {
-        $year = $request->input('year', date('Y'));
+        $year = $request->input('year');
 
         return self::where('year', $year)->first();
     }
@@ -158,16 +165,18 @@ class Plan extends CommentableModel
             foreach ($countryCode->plan_marketing_authorization_holders as $mah) {
                 $mah->calculatePlanAllProcessesCountFromRequest($request);
                 $mah->addPlanProcesseslinkFromRequest($request);
-            }
-        }
-    }
+                $mah->calculatePlanAllPercentages($request);
 
-    public static function calculateMAHProcessesCountForCountries($countryCodes)
-    {
-        foreach ($countryCodes as $countryCode) {
-            foreach ($countryCode->plan_marketing_authorization_holders as $mah) {
-                dd($mah);
+                $mah->calculatePlanQuoterProcessesCounts();
+                $mah->calculatePlanQuoterPercentages();
+
+                $mah->calculatePlanYearProcessCounts();
+                $mah->calculatePlanYearPercentages();
             }
+
+            // // Calculate country code quoter & total processes count
+            // $countryCode->calculateQuoterProcessesCountForPlan($request);
+            // $countryCode->calculateTotalProcessesCountForPlan($request);
         }
     }
 

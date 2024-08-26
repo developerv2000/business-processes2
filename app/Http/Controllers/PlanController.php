@@ -72,6 +72,7 @@ class PlanController extends Controller
 
     public function show(Request $request)
     {
+        Plan::mergeDefaultParamsToRequest($request);
         $plan = Plan::getByYearFromRequest($request);
         $plan->makeAllCalculationsAndAddLinksFromRequest($request);
 

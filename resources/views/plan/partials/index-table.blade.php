@@ -51,12 +51,11 @@
 
                 <td>{{ $instance->year }}</td>
 
-                <td>{{ $instance->year }}</td>
-                <td>{{ $instance->year }}</td>
-                <td>{{ $instance->year }}</td>
-
-                <td>{{ $instance->year }}</td>
-                <td>{{ $instance->year }}</td>
+                <td>Not done yet</td>
+                <td>Not done yet</td>
+                <td>Not done yet</td>
+                <td>Not done yet</td>
+                <td>Not done yet</td>
 
                 <td><a class="td__link" href="{{ route('plan.country.codes.index', $instance->id) }}">{{ __('Countries') }}</a></td>
 

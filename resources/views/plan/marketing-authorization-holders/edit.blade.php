@@ -34,7 +34,6 @@
             <div class="form__section">
                 @php
                     $contractInputName = $month['name'] . '_contract_plan';
-                    $registerInputName = $month['name'] . '_register_plan';
                     $commentInputName = $month['name'] . '_comment';
                 @endphp
 
@@ -44,15 +43,6 @@
                         type="number"
                         name="{{ $contractInputName }}"
                         value="{{ old($contractInputName, $instance->pivot->{$contractInputName}) }}"
-                        required>
-                </x-forms.groups.default-group>
-
-                <x-forms.groups.default-group label="{{ __($month['name']) . ' НПР' }}" error-name="{{ $registerInputName }}" required="true">
-                    <input
-                        class="input"
-                        type="number"
-                        name="{{ $registerInputName }}"
-                        value="{{ old($registerInputName, $instance->pivot->{$registerInputName}) }}"
                         required>
                 </x-forms.groups.default-group>
 

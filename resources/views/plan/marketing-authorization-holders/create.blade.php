@@ -35,11 +35,6 @@
                     :name="$month['name'] . '_contract_plan'"
                     type="number" />
 
-                <x-forms.input.default-input
-                    :label="__($month['name']) . ' НПР'"
-                    :name="$month['name'] . '_register_plan'"
-                    type="number" />
-
                 <x-forms.textarea.default-textarea
                     :label="__($month['name']) . ' ' . __('Comment')"
                     :name="$month['name'] . '_comment'"

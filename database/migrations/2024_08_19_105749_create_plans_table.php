@@ -45,19 +45,6 @@ return new class extends Migration
             $table->unsignedSmallInteger('November_contract_plan')->default(0);
             $table->unsignedSmallInteger('December_contract_plan')->default(0);
 
-            $table->unsignedSmallInteger('January_register_plan')->default(0);
-            $table->unsignedSmallInteger('February_register_plan')->default(0);
-            $table->unsignedSmallInteger('March_register_plan')->default(0);
-            $table->unsignedSmallInteger('April_register_plan')->default(0);
-            $table->unsignedSmallInteger('May_register_plan')->default(0);
-            $table->unsignedSmallInteger('June_register_plan')->default(0);
-            $table->unsignedSmallInteger('July_register_plan')->default(0);
-            $table->unsignedSmallInteger('August_register_plan')->default(0);
-            $table->unsignedSmallInteger('September_register_plan')->default(0);
-            $table->unsignedSmallInteger('October_register_plan')->default(0);
-            $table->unsignedSmallInteger('November_register_plan')->default(0);
-            $table->unsignedSmallInteger('December_register_plan')->default(0);
-
             $table->text('January_comment')->nullable();
             $table->text('February_comment')->nullable();
             $table->text('March_comment')->nullable();

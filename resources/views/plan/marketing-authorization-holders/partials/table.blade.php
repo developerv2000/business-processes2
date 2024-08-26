@@ -19,7 +19,6 @@
 
                 @foreach ($calendarMonths as $month)
                     <th width="120">{{ __($month['name']) . ' Кк' }}</th>
-                    <th width="120">{{ __($month['name']) . ' НПР' }}</th>
                     <th width="200">{{ __($month['name']) . ' ' . __('Comment') }}</th>
                 @endforeach
             </tr>
@@ -45,7 +44,6 @@
 
                     @foreach ($calendarMonths as $month)
                         <td>{{ $instance->pivot[$month['name'] . '_contract_plan'] }}</td>
-                        <td>{{ $instance->pivot[$month['name'] . '_register_plan'] }}</td>
 
                         <td>
                             @include('tables.components.td.limited-text', ['text' => $instance->pivot[$month['name'] . '_comment']])

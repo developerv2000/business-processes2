@@ -97,11 +97,6 @@ class MarketingAuthorizationHolder extends Model implements TemplatedModelInterf
                 $instance[$month['name'] . '_contract_plan'] = $request->input($month['name'] . '_contract_plan');
             }
 
-            // Escape column default(0) errors
-            if ($request->input($month['name'] . '_register_plan')) {
-                $instance[$month['name'] . '_register_plan'] = $request->input($month['name'] . '_register_plan');
-            }
-
             $instance[$month['name'] . '_comment'] = $request->input($month['name'] . '_comment');
         }
 
@@ -119,7 +114,6 @@ class MarketingAuthorizationHolder extends Model implements TemplatedModelInterf
 
         foreach ($months as $month) {
             $fields[$month['name'] . '_contract_plan'] = $request->input($month['name'] . '_contract_plan');
-            $fields[$month['name'] . '_register_plan'] = $request->input($month['name'] . '_register_plan');
             $fields[$month['name'] . '_comment'] = $request->input($month['name'] . '_comment');
         }
 

@@ -31,6 +31,10 @@ class PlanController extends Controller
         Plan::mergeQueryingParamsToRequest($request);
         $records = Plan::getAll();
 
+        foreach ($records as $record) {
+            $record->makeAllCalculationsAndAddLinksFromRequest($request);
+        }
+
         return view('plan.index', compact('request', 'records'));
     }
 

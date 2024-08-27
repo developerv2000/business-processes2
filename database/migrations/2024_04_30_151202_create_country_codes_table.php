@@ -42,8 +42,6 @@ return new class extends Migration
                 ->references('id')
                 ->on('plans');
 
-            $table->text('comment')->nullable();
-
             $table->primary(['country_code_id', 'plan_id']);
         });
     }

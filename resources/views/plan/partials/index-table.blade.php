@@ -51,11 +51,11 @@
 
                 <td>{{ $instance->year }}</td>
 
-                <td>Not done yet</td>
-                <td>Not done yet</td>
-                <td>Not done yet</td>
-                <td>Not done yet</td>
-                <td>Not done yet</td>
+                <td>{{ $instance->year_contract_plan }}</td>
+                <td>{{ $instance->year_contract_fact }}</td>
+                <td>{{ $instance->year_contract_fact_percentage }} %</td>
+                <td>{{ $instance->year_register_fact }}</td>
+                <td>{{ $instance->year_register_fact_percentage }} %</td>
 
                 <td><a class="td__link" href="{{ route('plan.country.codes.index', $instance->id) }}">{{ __('Countries') }}</a></td>
 

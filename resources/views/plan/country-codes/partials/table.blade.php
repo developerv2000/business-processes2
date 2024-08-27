@@ -11,7 +11,6 @@
             <th>{{ __('Name') }}</th>
             <th>{{ __('MAH') }}</th>
             <th>{{ __('MAH') }}</th>
-            <th>{{ __('Comments') }}</th>
         </tr>
     </thead> {{-- Head end --}}
 
@@ -49,8 +48,6 @@
                             'countryCode' => $instance->id,
                         ]) }}">{{ __('Edit') }}</a>
                 </td>
-
-                <td>@include('tables.components.td.limited-text', ['text' => $instance->pivot->comment])</td>
             </tr>
         @endforeach
     </tbody> {{-- Body end --}}

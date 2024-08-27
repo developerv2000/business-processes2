@@ -1312,6 +1312,14 @@ button {
     text-decoration: none;
 }
 
+.plan-table__divider {
+    height: 32px;
+}
+
+.plan-table__td--year {
+    color: var(--theme-main-color);
+}
+
 .plan-table__th--country-name {
     width: var(--th-country-name-width);
 }

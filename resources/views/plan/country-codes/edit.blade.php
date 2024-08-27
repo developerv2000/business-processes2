@@ -19,10 +19,6 @@
                 :value="$instance->name"
                 name="readonly"
                 readonly />
-
-            <x-forms.groups.default-group label="{{ __('Comment') }}" error-name="comment">
-                <textarea name="comment" class="textarea" rows="5">{{ old('comment', $instance->pivot->comment) }}</textarea>
-            </x-forms.groups.default-group>
         </div>
 
     </x-forms.template.edit-template>

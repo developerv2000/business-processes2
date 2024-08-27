@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Abstracts\CommentableModel;
+use App\Support\Helper;
 use App\Support\Traits\MergesParamsToRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
@@ -32,8 +33,7 @@ class Plan extends CommentableModel
 
     public function countryCodes()
     {
-        return $this->belongsToMany(CountryCode::class)
-            ->withPivot('comment');
+        return $this->belongsToMany(CountryCode::class);
     }
 
     public function marketingAuthorizationHoldersForCountryCode($countryCodeID)
@@ -167,7 +167,7 @@ class Plan extends CommentableModel
         foreach ($this->countryCodes as $countryCode) {
             // Calculate MAH all processes count
             foreach ($countryCode->plan_marketing_authorization_holders as $mah) {
-                $mah->calculatePlanAllProcessesCountFromRequest($request);
+                $mah->calculatePlanMonthProcessesCountFromRequest($request);
                 $mah->addPlanProcesseslinkFromRequest($request);
                 $mah->calculatePlanAllPercentages($request);
 
@@ -178,10 +178,26 @@ class Plan extends CommentableModel
                 $mah->calculatePlanYearPercentages();
             }
 
-            // // Calculate country code quoter & total processes count
-            // $countryCode->calculateQuoterProcessesCountForPlan($request);
-            // $countryCode->calculateTotalProcessesCountForPlan($request);
+            // Calculate country code processes count
+            $countryCode->calculateMonthProcessesCountForPlan();
+            $countryCode->calculateMonthPercentagesForPlan();
+
+            $countryCode->calculatePlanQuoterProcessesCounts();
+            $countryCode->calculatePlanQuoterPercentages();
+
+            $countryCode->calculatePlanYearProcessCounts();
+            $countryCode->calculatePlanYearPercentages();
         }
+
+        // Calculate plan processes count
+        $this->calculateMonthProcessesCountForPlan();
+        $this->calculateMonthPercentagesForPlan();
+
+        $this->calculatePlanQuoterProcessesCounts();
+        $this->calculatePlanQuoterPercentages();
+
+        $this->calculatePlanYearProcessCounts();
+        $this->calculatePlanYearPercentages();
     }
 
     public static function getPivotColumnNames(): array
@@ -213,5 +229,180 @@ class Plan extends CommentableModel
             'November_comment',
             'December_comment',
         ];
+    }
+
+    public function calculateMonthProcessesCountForPlan()
+    {
+        $months = Helper::collectCalendarMonths();
+
+        foreach ($months as $month) {
+            $monthName = $month['name'];
+            $contractPlanCount = 0;
+            $contractFactCount = 0;
+            $registerFactCount = 0;
+
+            foreach ($this->countryCodes as $country) {
+                $contractPlanCount += $country->{$monthName . '_contract_plan'};
+                $contractFactCount += $country->{$monthName . '_contract_fact'};
+                $registerFactCount += $country->{$monthName . '_register_fact'};
+            }
+
+            $this->{$monthName . '_contract_plan'} = $contractPlanCount;
+            $this->{$monthName . '_contract_fact'} = $contractFactCount;
+            $this->{$monthName . '_register_fact'} = $registerFactCount;
+        }
+    }
+
+    public function calculateMonthPercentagesForPlan()
+    {
+        // Get all calendar months
+        $months = Helper::collectCalendarMonths();
+
+        // Loop through each month and calculate percentages
+        foreach ($months as $month) {
+            $monthName = $month['name'];
+
+            // 1. Calculate contracted processes percentage
+            $monthContractPlan = $this->{$monthName . '_contract_plan'};
+            $monthContractFact = $this->{$monthName . '_contract_fact'};
+
+            // Avoid division by zero error
+            if ($monthContractPlan > 0) {
+                $monthContractPercentage = round(($monthContractFact * 100) / $monthContractPlan, 2);
+            } else {
+                $monthContractPercentage = 0;
+            }
+
+            // Store the calculated percentage in the pivot
+            $this->{$monthName . '_contract_fact_percentage'} = $monthContractPercentage;
+
+            // 2. Calculate registered processes percentage
+            $monthContractPlan = $this->{$monthName . '_contract_plan'};
+            $monthRegisterFact = $this->{$monthName . '_register_fact'};
+
+            // Avoid division by zero error
+            if ($monthContractPlan > 0) {
+                $monthRegisterPercentage = round(($monthRegisterFact * 100) / $monthContractPlan, 2);
+            } else {
+                $monthRegisterPercentage = 0;
+            }
+
+            // Store the calculated percentage in the pivot
+            $this->{$monthName . '_register_fact_percentage'} = $monthRegisterPercentage;
+        }
+    }
+
+    public function calculatePlanQuoterProcessesCounts()
+    {
+        // Get all calendar months
+        $months = Helper::collectCalendarMonths();
+
+        // Iterate through the 4 quoters (quarters of the year)
+        for ($quoter = 1, $monthIndex = 0; $quoter <= 4; $quoter++) {
+            $contractPlanCount = 0;
+            $contractFactCount = 0;
+            $registerFactCount = 0;
+
+            // Loop through 3 months for each quoter (quarter)
+            for ($quoterMonths = 1; $quoterMonths <= 3; $quoterMonths++, $monthIndex++) {
+                $monthName = $months[$monthIndex]['name'];
+
+                // Ensure the properties exist before accessing
+                $contractPlan = $this->{$monthName . '_contract_plan'} ?? 0;
+                $contractFact = $this->{$monthName . '_contract_fact'} ?? 0;
+                $registerFact = $this->{$monthName . '_register_fact'} ?? 0;
+
+                // Accumulate the counts
+                $contractPlanCount += is_numeric($contractPlan) ? $contractPlan : 0;
+                $contractFactCount += is_numeric($contractFact) ? $contractFact : 0;
+                $registerFactCount += is_numeric($registerFact) ? $registerFact : 0;
+            }
+
+            // Store the accumulated counts in the pivot table
+            $this->{'quoter_' . $quoter . '_contract_plan'} = $contractPlanCount;
+            $this->{'quoter_' . $quoter . '_contract_fact'} = $contractFactCount;
+            $this->{'quoter_' . $quoter . '_register_fact'} = $registerFactCount;
+        }
+    }
+
+    public function calculatePlanQuoterPercentages()
+    {
+        for ($quoter = 1; $quoter <= 4; $quoter++) {
+            // 1. Calculate contracted processes percentage
+            $quoterContractPlan = $this->{'quoter_' . $quoter . '_contract_plan'};
+            $quoterContractFact = $this->{'quoter_' . $quoter . '_contract_fact'};
+
+            // Avoid division by zero error
+            if ($quoterContractPlan > 0) {
+                $quoterContractPercentage = round(($quoterContractFact * 100) / $quoterContractPlan, 2);
+            } else {
+                $quoterContractPercentage = 0;
+            }
+
+            // Store the calculated percentage in the pivot
+            $this->{'quoter_' . $quoter . '_contract_fact_percentage'} = $quoterContractPercentage;
+
+            // 2. Calculate registered processes percentage
+            $quoterContractPlan = $this->{'quoter_' . $quoter . '_contract_plan'};
+            $quoterRegisterFact = $this->{'quoter_' . $quoter . '_register_fact'};
+
+            // Avoid division by zero error
+            if ($quoterContractPlan > 0) {
+                $quoterRegisterPercentage = round(($quoterRegisterFact * 100) / $quoterContractPlan, 2);
+            } else {
+                $quoterRegisterPercentage = 0;
+            }
+
+            // Store the calculated percentage in the pivot
+            $this->{'quoter_' . $quoter . '_register_fact_percentage'} = $quoterRegisterPercentage;
+        }
+    }
+
+    public function calculatePlanYearProcessCounts()
+    {
+        $yearContractPlan = 0;
+        $yearContractFact = 0;
+        $yearRegisterFact = 0;
+
+        for ($quoter = 1; $quoter <= 4; $quoter++) {
+            $yearContractPlan += $this->{'quoter_' . $quoter . '_contract_plan'};
+            $yearContractFact += $this->{'quoter_' . $quoter . '_contract_fact'};
+            $yearRegisterFact += $this->{'quoter_' . $quoter . '_register_fact'};
+        }
+
+        $this->year_contract_plan = $yearContractPlan;
+        $this->year_contract_fact = $yearContractFact;
+        $this->year_register_fact = $yearRegisterFact;
+    }
+
+    public function calculatePlanYearPercentages()
+    {
+        // 1. Calculate contracted processes percentage
+        $yearContractPlan = $this->year_contract_plan;
+        $yearContractFact = $this->year_contract_fact;
+
+        // Avoid division by zero error
+        if ($yearContractPlan > 0) {
+            $yearContractPercentage = round(($yearContractFact * 100) / $yearContractPlan, 2);
+        } else {
+            $yearContractPercentage = 0;
+        }
+
+        // Store the calculated percentage in the pivot
+        $this->year_contract_fact_percentage = $yearContractPercentage;
+
+        // 2. Calculate registered processes percentage
+        $yearContractPlan = $this->year_contract_plan;
+        $yearRegisterFact = $this->year_register_fact;
+
+        // Avoid division by zero error
+        if ($yearContractPlan > 0) {
+            $yearRegisterPercentage = round(($yearRegisterFact * 100) / $yearContractPlan, 2);
+        } else {
+            $yearRegisterPercentage = 0;
+        }
+
+        // Store the calculated percentage in the pivot
+        $this->year_register_fact_percentage = $yearRegisterPercentage;
     }
 }

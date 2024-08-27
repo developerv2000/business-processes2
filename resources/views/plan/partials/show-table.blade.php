@@ -62,12 +62,92 @@
 
         {{-- Body Start --}}
         <tbody>
+            {{-- Plan row --}}
+            <tr class="plan-table__td--country-name">
+                <td class="plan-table__td--country-name plan-table__td--year"><strong>{{ $plan->year }}</strong></td>
+                <td class="plan-table__td--mah-name"></td>
+
+                {{-- Plan for the year --}}
+                <td>{{ $plan->year_contract_plan }}</td>
+                <td>{{ $plan->year_contract_fact }}</td>
+                <td>{{ $plan->year_contract_fact_percentage }} %</td>
+                <td>{{ $plan->year_register_fact }}</td>
+                <td>{{ $plan->year_register_fact_percentage }} %</td>
+
+                {{-- Plan quoters 1 - 4 --}}
+                @for ($quoter = 1, $monthIndex = 0; $quoter <= 4; $quoter++)
+                    <td>{{ $plan->{'quoter_' . $quoter . '_contract_plan'} }}</td>
+                    <td>{{ $plan->{'quoter_' . $quoter . '_contract_fact'} }}</td>
+                    <td>{{ $plan->{'quoter_' . $quoter . '_contract_fact_percentage'} }} %</td>
+                    <td>{{ $plan->{'quoter_' . $quoter . '_register_fact'} }}</td>
+                    <td>{{ $plan->{'quoter_' . $quoter . '_register_fact_percentage'} }} %</td>
+
+                    {{-- Plan monthes 1 - 12 --}}
+                    @for ($quoterMonths = 1; $quoterMonths <= 3; $quoterMonths++, $monthIndex++)
+                        <td>{{ $plan->{$months[$monthIndex]['name'] . '_contract_plan'} }}</td>
+
+                        <td>
+                            {{ $plan->{$months[$monthIndex]['name'] . '_contract_fact'} }}
+                        </td>
+
+                        <td>{{ $plan->{$months[$monthIndex]['name'] . '_contract_fact_percentage'} }} %</td>
+
+                        <td>
+                            {{ $plan->{$months[$monthIndex]['name'] . '_register_fact'} }}
+                        </td>
+
+                        <td>{{ $plan->{$months[$monthIndex]['name'] . '_register_fact_percentage'} }} %</td>
+
+                        <td></td> {{-- Comment --}}
+                    @endfor
+                @endfor
+            </tr>
+
+            {{-- Country code rows --}}
             @foreach ($plan->countryCodes as $country)
+                <tr class="plan-table__divider"></tr> {{-- Empty space as divider --}}
+
                 <tr class="plan-table__td--country-name">
-                    <td class="plan-table__td--country-name">{{ $country->name }}</td>
+                    <td class="plan-table__td--country-name"><strong>{{ $country->name }}</strong></td>
                     <td class="plan-table__td--mah-name"></td>
+
+                    {{-- Country codes plan for the year --}}
+                    <td>{{ $country->year_contract_plan }}</td>
+                    <td>{{ $country->year_contract_fact }}</td>
+                    <td>{{ $country->year_contract_fact_percentage }} %</td>
+                    <td>{{ $country->year_register_fact }}</td>
+                    <td>{{ $country->year_register_fact_percentage }} %</td>
+
+                    {{-- Quoters 1 - 4 --}}
+                    @for ($quoter = 1, $monthIndex = 0; $quoter <= 4; $quoter++)
+                        <td>{{ $country->{'quoter_' . $quoter . '_contract_plan'} }}</td>
+                        <td>{{ $country->{'quoter_' . $quoter . '_contract_fact'} }}</td>
+                        <td>{{ $country->{'quoter_' . $quoter . '_contract_fact_percentage'} }} %</td>
+                        <td>{{ $country->{'quoter_' . $quoter . '_register_fact'} }}</td>
+                        <td>{{ $country->{'quoter_' . $quoter . '_register_fact_percentage'} }} %</td>
+
+                        {{-- Monthes 1 - 12 --}}
+                        @for ($quoterMonths = 1; $quoterMonths <= 3; $quoterMonths++, $monthIndex++)
+                            <td>{{ $country->{$months[$monthIndex]['name'] . '_contract_plan'} }}</td>
+
+                            <td>
+                                {{ $country->{$months[$monthIndex]['name'] . '_contract_fact'} }}
+                            </td>
+
+                            <td>{{ $country->{$months[$monthIndex]['name'] . '_contract_fact_percentage'} }} %</td>
+
+                            <td>
+                                {{ $country->{$months[$monthIndex]['name'] . '_register_fact'} }}
+                            </td>
+
+                            <td>{{ $country->{$months[$monthIndex]['name'] . '_register_fact_percentage'} }} %</td>
+
+                            <td></td> {{-- Comment --}}
+                        @endfor
+                    @endfor
                 </tr>
 
+                {{-- MAH rows --}}
                 @foreach ($country->plan_marketing_authorization_holders as $mah)
                     <tr>
                         <td class="plan-table__td--country-name">{{ $country->name }}</td>

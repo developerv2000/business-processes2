@@ -120,11 +120,6 @@ class MarketingAuthorizationHolder extends Model implements TemplatedModelInterf
         $plan->marketingAuthorizationHoldersForCountryCode($countryCode->id)->updateExistingPivot($this->id, $fields);
     }
 
-    public function calculatePlanAllProcessesCountFromRequest($request)
-    {
-        $this->calculatePlanMonthProcessesCountFromRequest($request);
-    }
-
     /**
      * Calculate and update the count of contracted and registered processes for each month
      * based on the requested year

@@ -26,7 +26,5 @@
                 :options="$marketingAuthorizationHolders" />
         </div>
 
-        @include('comments.model-form-partials.create-form-fields')
-
     </x-forms.template.create-template>
 @endsection

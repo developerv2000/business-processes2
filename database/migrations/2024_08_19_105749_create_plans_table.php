@@ -17,6 +17,8 @@ return new class extends Migration
         });
 
         Schema::create('plan_country_code_marketing_authorization_holder', function (Blueprint $table) {
+            $table->unsignedSmallInteger('id')->autoIncrement();
+
             $table->unsignedSmallInteger('plan_id')
                 ->foreign()
                 ->references('id')
@@ -31,6 +33,8 @@ return new class extends Migration
                 ->foreign()
                 ->references('id')
                 ->on('marketing_authorization_holders');
+
+            $table->primary(['id', 'country_code_id', 'plan_id', 'marketing_authorization_holder_id']);
 
             $table->unsignedSmallInteger('January_contract_plan')->default(0);
             $table->unsignedSmallInteger('February_contract_plan')->default(0);
@@ -57,8 +61,6 @@ return new class extends Migration
             $table->text('October_comment')->nullable();
             $table->text('November_comment')->nullable();
             $table->text('December_comment')->nullable();
-
-            $table->primary(['country_code_id', 'plan_id', 'marketing_authorization_holder_id']);
         });
     }
 

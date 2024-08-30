@@ -32,6 +32,8 @@ return new class extends Migration
         });
 
         Schema::create('country_code_plan', function (Blueprint $table) {
+            $table->unsignedSmallInteger('id')->autoIncrement();
+
             $table->unsignedInteger('country_code_id')
                 ->foreign()
                 ->references('id')
@@ -42,7 +44,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('plans');
 
-            $table->primary(['country_code_id', 'plan_id']);
+            $table->primary(['id', 'country_code_id', 'plan_id']);
         });
     }
 

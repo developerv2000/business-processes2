@@ -114,7 +114,7 @@ class PlanController extends Controller
 
     public function countryCodesEdit(Plan $plan, CountryCode $countryCode)
     {
-        $instance = $plan->countryCodes()->where('id', $countryCode->id)->first();
+        $instance = $plan->countryCodes()->where('country_codes.id', $countryCode->id)->first();
 
         return view('plan.country-codes.edit', compact('plan', 'instance'));
     }
@@ -167,7 +167,7 @@ class PlanController extends Controller
     public function marketingAuthorizationHoldersEdit(Plan $plan, CountryCode $countryCode, MarketingAuthorizationHolder $marketingAuthorizationHolder)
     {
         $marketingAuthorizationHolders = $plan->marketingAuthorizationHoldersForCountryCode($countryCode->id);
-        $instance = $marketingAuthorizationHolders->where('id', $marketingAuthorizationHolder->id)->first();
+        $instance = $marketingAuthorizationHolders->where('marketing_authorization_holders.id', $marketingAuthorizationHolder->id)->first();
 
         return view('plan.marketing-authorization-holders.edit', compact('plan', 'countryCode', 'instance'));
     }

@@ -16,11 +16,11 @@
 
                 {{-- Quoters 1-4 --}}
                 @for ($quoter = 1, $monthIndex = 0; $quoter <= 4; $quoter++)
-                    <th width="420" colspan="5">{{ __('Quoter') }} {{ $quoter }}</th>
+                    <th width="270" colspan="3">{{ __('Quoter') }} {{ $quoter }}</th>
 
                     {{-- Monthes 1-12 --}}
                     @for ($quoterMonths = 1; $quoterMonths <= 3; $quoterMonths++)
-                        <th width="500" colspan="6">{{ __($months[$monthIndex++]['name']) }}</th>
+                        <th width="330" colspan="4">{{ __($months[$monthIndex++]['name']) }}</th>
                     @endfor
                 @endfor
             </tr>
@@ -41,18 +41,18 @@
                 @for ($quoter = 1; $quoter <= 4; $quoter++)
                     <th>Кк {{ __('plan') }}</th>
                     <th>Кк {{ __('fact') }}</th>
-                    <th>Кк %</th>
+                    {{-- <th>Кк %</th> --}}
                     <th>НПР {{ __('fact') }}</th>
-                    <th>НПР %</th>
+                    {{-- <th>НПР %</th> --}}
 
                     {{-- Monthes 1 - 12 --}}
                     @for ($quoterMonths = 1; $quoterMonths <= 3; $quoterMonths++)
                         {{-- January --}}
                         <th>Кк {{ __('plan') }}</th>
                         <th>Кк {{ __('fact') }}</th>
-                        <th>Кк %</th>
+                        {{-- <th>Кк %</th> --}}
                         <th>НПР {{ __('fact') }}</th>
-                        <th>НПР %</th>
+                        {{-- <th>НПР %</th> --}}
                         <th>{{ __('Comm') }}</th>
                     @endfor
                 @endfor
@@ -78,9 +78,9 @@
                 @for ($quoter = 1, $monthIndex = 0; $quoter <= 4; $quoter++)
                     <td>{{ $plan->{'quoter_' . $quoter . '_contract_plan'} }}</td>
                     <td>{{ $plan->{'quoter_' . $quoter . '_contract_fact'} }}</td>
-                    <td>{{ $plan->{'quoter_' . $quoter . '_contract_fact_percentage'} }} %</td>
+                    {{-- <td>{{ $plan->{'quoter_' . $quoter . '_contract_fact_percentage'} }} %</td> --}}
                     <td>{{ $plan->{'quoter_' . $quoter . '_register_fact'} }}</td>
-                    <td>{{ $plan->{'quoter_' . $quoter . '_register_fact_percentage'} }} %</td>
+                    {{-- <td>{{ $plan->{'quoter_' . $quoter . '_register_fact_percentage'} }} %</td> --}}
 
                     {{-- Plan monthes 1 - 12 --}}
                     @for ($quoterMonths = 1; $quoterMonths <= 3; $quoterMonths++, $monthIndex++)
@@ -90,13 +90,13 @@
                             {{ $plan->{$months[$monthIndex]['name'] . '_contract_fact'} }}
                         </td>
 
-                        <td>{{ $plan->{$months[$monthIndex]['name'] . '_contract_fact_percentage'} }} %</td>
+                        {{-- <td>{{ $plan->{$months[$monthIndex]['name'] . '_contract_fact_percentage'} }} %</td> --}}
 
                         <td>
                             {{ $plan->{$months[$monthIndex]['name'] . '_register_fact'} }}
                         </td>
 
-                        <td>{{ $plan->{$months[$monthIndex]['name'] . '_register_fact_percentage'} }} %</td>
+                        {{-- <td>{{ $plan->{$months[$monthIndex]['name'] . '_register_fact_percentage'} }} %</td> --}}
 
                         <td></td> {{-- Comment --}}
                     @endfor
@@ -122,9 +122,9 @@
                     @for ($quoter = 1, $monthIndex = 0; $quoter <= 4; $quoter++)
                         <td>{{ $country->{'quoter_' . $quoter . '_contract_plan'} }}</td>
                         <td>{{ $country->{'quoter_' . $quoter . '_contract_fact'} }}</td>
-                        <td>{{ $country->{'quoter_' . $quoter . '_contract_fact_percentage'} }} %</td>
+                        {{-- <td>{{ $country->{'quoter_' . $quoter . '_contract_fact_percentage'} }} %</td> --}}
                         <td>{{ $country->{'quoter_' . $quoter . '_register_fact'} }}</td>
-                        <td>{{ $country->{'quoter_' . $quoter . '_register_fact_percentage'} }} %</td>
+                        {{-- <td>{{ $country->{'quoter_' . $quoter . '_register_fact_percentage'} }} %</td> --}}
 
                         {{-- Monthes 1 - 12 --}}
                         @for ($quoterMonths = 1; $quoterMonths <= 3; $quoterMonths++, $monthIndex++)
@@ -134,13 +134,13 @@
                                 {{ $country->{$months[$monthIndex]['name'] . '_contract_fact'} }}
                             </td>
 
-                            <td>{{ $country->{$months[$monthIndex]['name'] . '_contract_fact_percentage'} }} %</td>
+                            {{-- <td>{{ $country->{$months[$monthIndex]['name'] . '_contract_fact_percentage'} }} %</td> --}}
 
                             <td>
                                 {{ $country->{$months[$monthIndex]['name'] . '_register_fact'} }}
                             </td>
 
-                            <td>{{ $country->{$months[$monthIndex]['name'] . '_register_fact_percentage'} }} %</td>
+                            {{-- <td>{{ $country->{$months[$monthIndex]['name'] . '_register_fact_percentage'} }} %</td> --}}
 
                             <td></td> {{-- Comment --}}
                         @endfor
@@ -164,9 +164,9 @@
                         @for ($quoter = 1, $monthIndex = 0; $quoter <= 4; $quoter++)
                             <td>{{ $mah->pivot->{'quoter_' . $quoter . '_contract_plan'} }}</td>
                             <td>{{ $mah->pivot->{'quoter_' . $quoter . '_contract_fact'} }}</td>
-                            <td>{{ $mah->pivot->{'quoter_' . $quoter . '_contract_fact_percentage'} }} %</td>
+                            {{-- <td>{{ $mah->pivot->{'quoter_' . $quoter . '_contract_fact_percentage'} }} %</td> --}}
                             <td>{{ $mah->pivot->{'quoter_' . $quoter . '_register_fact'} }}</td>
-                            <td>{{ $mah->pivot->{'quoter_' . $quoter . '_register_fact_percentage'} }} %</td>
+                            {{-- <td>{{ $mah->pivot->{'quoter_' . $quoter . '_register_fact_percentage'} }} %</td> --}}
 
                             {{-- Monthes 1 - 12 --}}
                             @for ($quoterMonths = 1; $quoterMonths <= 3; $quoterMonths++, $monthIndex++)
@@ -178,7 +178,7 @@
                                     </a>
                                 </td>
 
-                                <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_contract_fact_percentage'} }} %</td>
+                                {{-- <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_contract_fact_percentage'} }} %</td> --}}
 
                                 <td>
                                     <a href="{{ $mah->pivot->{$months[$monthIndex]['name'] . '_register_fact_link'} }}">
@@ -186,7 +186,7 @@
                                     </a>
                                 </td>
 
-                                <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_register_fact_percentage'} }} %</td>
+                                {{-- <td>{{ $mah->pivot->{$months[$monthIndex]['name'] . '_register_fact_percentage'} }} %</td> --}}
                                 <td>@include('tables.components.td.limited-text', ['text' => $mah->pivot->{$months[$monthIndex]['name'] . '_comment'}])</td>
                             @endfor
                         @endfor

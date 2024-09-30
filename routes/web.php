@@ -129,22 +129,22 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::prefix('/{plan}/country-codes')->name('country.codes.')->group(function () {
             Route::get('/index', 'countryCodesIndex')->name('index');
             Route::get('/create', 'countryCodesCreate')->name('create');
-            Route::get('/edit/{countryCode}', 'countryCodesEdit')->name('edit');
+            // Route::get('/edit/{countryCode}', 'countryCodesEdit')->name('edit'); // removed
 
             Route::post('/store', 'countryCodesStore')->name('store');
-            Route::patch('/update/{countryCode}', 'countryCodesUpdate')->name('update');
+            // Route::patch('/update/{countryCode}', 'countryCodesUpdate')->name('update'); // removed
             Route::delete('/destroy', 'countryCodesDestroy')->name('destroy');
         });
 
         // Maarketing authorization holders
         Route::prefix('/{plan}/country-codes/{countryCode}/marketing-authorization-holders')->name('marketing.authorization.holders.')->group(function () {
-            Route::get('/index', 'marketingAuthorizationHoldersIndex')->name('index');
-            Route::get('/create', 'marketingAuthorizationHoldersCreate')->name('create');
-            Route::get('/edit/{marketingAuthorizationHolder}', 'marketingAuthorizationHoldersEdit')->name('edit');
+            Route::get('/index', 'MAHsIndex')->name('index');
+            Route::get('/create', 'MAHsCreate')->name('create');
+            Route::get('/edit/{marketingAuthorizationHolder}', 'MAHsEdit')->name('edit');
 
-            Route::post('/store', 'marketingAuthorizationHoldersStore')->name('store');
-            Route::patch('/update/{marketingAuthorizationHolder}', 'marketingAuthorizationHoldersUpdate')->name('update');
-            Route::delete('/destroy', 'marketingAuthorizationHoldersDestroy')->name('destroy');
+            Route::post('/store', 'MAHsStore')->name('store');
+            Route::patch('/update/{marketingAuthorizationHolder}', 'MAHsUpdate')->name('update');
+            Route::delete('/destroy', 'MAHsDestroy')->name('destroy');
         });
     });
 });

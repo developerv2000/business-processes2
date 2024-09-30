@@ -33,20 +33,32 @@
         @foreach ($calendarMonths as $month)
             <div class="form__section">
                 @php
-                    $contractInputName = $month['name'] . '_contract_plan';
+                    $europeContractInputName = $month['name'] . '_europe_contract_plan';
+                    $indiaContractInputName = $month['name'] . '_india_contract_plan';
                     $commentInputName = $month['name'] . '_comment';
                 @endphp
 
-                <x-forms.groups.default-group label="{{ __($month['name']) . ' Кк' }}" error-name="{{ $contractInputName }}" required="true">
+                <h2 class="main-title">{{ __($month['name']) }}</h2>
+
+                <x-forms.groups.default-group label="EU Кк" error-name="{{ $europeContractInputName }}" required="true">
                     <input
                         class="input"
                         type="number"
-                        name="{{ $contractInputName }}"
-                        value="{{ old($contractInputName, $instance->pivot->{$contractInputName}) }}"
+                        name="{{ $europeContractInputName }}"
+                        value="{{ old($europeContractInputName, $instance->pivot->{$europeContractInputName}) }}"
                         required>
                 </x-forms.groups.default-group>
 
-                <x-forms.groups.default-group label="{{ __($month['name']) . ' ' . __('Comment') }}" error-name="{{ $commentInputName }}" required="0">
+                <x-forms.groups.default-group label="EU Кк" error-name="{{ $indiaContractInputName }}" required="true">
+                    <input
+                        class="input"
+                        type="number"
+                        name="{{ $indiaContractInputName }}"
+                        value="{{ old($indiaContractInputName, $instance->pivot->{$indiaContractInputName}) }}"
+                        required>
+                </x-forms.groups.default-group>
+
+                <x-forms.groups.default-group label="{{ __('Comment') }}" error-name="{{ $commentInputName }}" required="0">
                     <textarea
                         class="textarea"
                         name="{{ $commentInputName }}"

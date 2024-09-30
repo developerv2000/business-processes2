@@ -26,7 +26,7 @@ class PlanUpdateRequest extends FormRequest
         $instanceID = $this->route('instance')->id;
 
         return [
-            'name' => [Rule::unique(Plan::class)->ignore($instanceID)]
+            'year' => [Rule::unique(Plan::class)->ignore($instanceID)]
         ];
     }
 }

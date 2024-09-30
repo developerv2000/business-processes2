@@ -30,13 +30,24 @@
 
         @foreach ($calendarMonths as $month)
             <div class="form__section">
+                <h2 class="main-title">{{ __($month['name']) }}</h2>
+
                 <x-forms.input.default-input
-                    :label="__($month['name']) . ' Кк'"
-                    :name="$month['name'] . '_contract_plan'"
-                    type="number" />
+                    label="EU Кк"
+                    :name="$month['name'] . '_europe_contract_plan'"
+                    value="0"
+                    type="number"
+                    required />
+
+                <x-forms.input.default-input
+                    label="IN Кк"
+                    :name="$month['name'] . '_india_contract_plan'"
+                    value="0"
+                    type="number"
+                    required />
 
                 <x-forms.textarea.default-textarea
-                    :label="__($month['name']) . ' ' . __('Comment')"
+                    label="Comment"
                     :name="$month['name'] . '_comment'"
                     rows="5" />
             </div>

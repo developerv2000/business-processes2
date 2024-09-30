@@ -24,13 +24,11 @@ trait MergesParamsToRequest
      */
     public static function mergeQueryingParamsToRequest(Request $request)
     {
-        $className = static::class;
-
         // Merge default querying parameters into the request
         $request->mergeIfMissing([
-            'orderBy' => $className::DEFAULT_ORDER_BY,
-            'orderType' => $className::DEFAULT_ORDER_TYPE,
-            'paginationLimit' => $className::DEFAULT_PAGINATION_LIMIT,
+            'orderBy' => static::DEFAULT_ORDER_BY,
+            'orderType' => static::DEFAULT_ORDER_TYPE,
+            'paginationLimit' => static::DEFAULT_PAGINATION_LIMIT,
         ]);
 
         // Merge reversed sorting URL to the request

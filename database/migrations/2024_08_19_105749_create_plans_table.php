@@ -36,19 +36,35 @@ return new class extends Migration
 
             $table->primary(['id', 'country_code_id', 'plan_id', 'marketing_authorization_holder_id']);
 
-            $table->unsignedSmallInteger('January_contract_plan')->default(0);
-            $table->unsignedSmallInteger('February_contract_plan')->default(0);
-            $table->unsignedSmallInteger('March_contract_plan')->default(0);
-            $table->unsignedSmallInteger('April_contract_plan')->default(0);
-            $table->unsignedSmallInteger('May_contract_plan')->default(0);
-            $table->unsignedSmallInteger('June_contract_plan')->default(0);
-            $table->unsignedSmallInteger('July_contract_plan')->default(0);
-            $table->unsignedSmallInteger('August_contract_plan')->default(0);
-            $table->unsignedSmallInteger('September_contract_plan')->default(0);
-            $table->unsignedSmallInteger('October_contract_plan')->default(0);
-            $table->unsignedSmallInteger('November_contract_plan')->default(0);
-            $table->unsignedSmallInteger('December_contract_plan')->default(0);
+            // Europe contract plans
+            $table->unsignedSmallInteger('January_europe_contract_plan')->default(0);
+            $table->unsignedSmallInteger('February_europe_contract_plan')->default(0);
+            $table->unsignedSmallInteger('March_europe_contract_plan')->default(0);
+            $table->unsignedSmallInteger('April_europe_contract_plan')->default(0);
+            $table->unsignedSmallInteger('May_europe_contract_plan')->default(0);
+            $table->unsignedSmallInteger('June_europe_contract_plan')->default(0);
+            $table->unsignedSmallInteger('July_europe_contract_plan')->default(0);
+            $table->unsignedSmallInteger('August_europe_contract_plan')->default(0);
+            $table->unsignedSmallInteger('September_europe_contract_plan')->default(0);
+            $table->unsignedSmallInteger('October_europe_contract_plan')->default(0);
+            $table->unsignedSmallInteger('November_europe_contract_plan')->default(0);
+            $table->unsignedSmallInteger('December_europe_contract_plan')->default(0);
 
+            // India contract plans
+            $table->unsignedSmallInteger('January_india_contract_plan')->default(0);
+            $table->unsignedSmallInteger('February_india_contract_plan')->default(0);
+            $table->unsignedSmallInteger('March_india_contract_plan')->default(0);
+            $table->unsignedSmallInteger('April_india_contract_plan')->default(0);
+            $table->unsignedSmallInteger('May_india_contract_plan')->default(0);
+            $table->unsignedSmallInteger('June_india_contract_plan')->default(0);
+            $table->unsignedSmallInteger('July_india_contract_plan')->default(0);
+            $table->unsignedSmallInteger('August_india_contract_plan')->default(0);
+            $table->unsignedSmallInteger('September_india_contract_plan')->default(0);
+            $table->unsignedSmallInteger('October_india_contract_plan')->default(0);
+            $table->unsignedSmallInteger('November_india_contract_plan')->default(0);
+            $table->unsignedSmallInteger('December_india_contract_plan')->default(0);
+
+            // Comments
             $table->text('January_comment')->nullable();
             $table->text('February_comment')->nullable();
             $table->text('March_comment')->nullable();

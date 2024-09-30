@@ -4,9 +4,9 @@
         <tr>
             @include('tables.components.th.select-all')
 
-            <th width="54">
+            {{-- <th width="54">
                 @include('tables.components.th.edit')
-            </th>
+            </th> --}}
 
             <th>{{ __('Name') }}</th>
             <th>{{ __('MAH') }}</th>
@@ -20,16 +20,16 @@
             <tr>
                 @include('tables.components.td.checkbox')
 
-                <td>
+                {{-- <td>
                     @include('tables.components.td.edit-button', [
                         'href' => route('plan.country.codes.edit', ['plan' => $plan->id, 'countryCode' => $instance->id]),
                     ])
-                </td>
+                </td> --}}
 
                 <td>{{ $instance->name }}</td>
 
                 <td>
-                    @foreach ($instance->plan_marketing_authorization_holders as $mah)
+                    @foreach ($instance->marketing_authorization_holders as $mah)
                         <a class="td__link"
                             href="{{ route('plan.marketing.authorization.holders.edit', [
                                 'plan' => $plan->id,

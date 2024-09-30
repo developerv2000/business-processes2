@@ -11,7 +11,7 @@ use App\Support\Helper;
 use App\Support\Traits\DestroysModelRecords;
 use Illuminate\Http\Request;
 
-class PlanController extends Controller
+class PlanController222 extends Controller
 {
     use DestroysModelRecords;
 
@@ -77,7 +77,7 @@ class PlanController extends Controller
     {
         Plan::mergeDefaultParamsToRequest($request);
         $plan = Plan::getByYearFromRequest($request);
-        $plan->makeAllCalculations($request);
+        $plan->makeAllCalculationsAndAddLinksFromRequest($request);
 
         $months = Helper::collectCalendarMonths();
 
@@ -92,7 +92,7 @@ class PlanController extends Controller
 
     public function countryCodesIndex(Plan $plan)
     {
-        $plan->loadMAHsOfCountryCodes();
+        $plan->loadMarketingAuthorizationHoldersOfCountries();
         $records = $plan->countryCodes;
 
         return view('plan.country-codes.index', compact('plan', 'records'));
@@ -106,33 +106,33 @@ class PlanController extends Controller
     public function countryCodesStore(Request $request, Plan $plan)
     {
         $countryCode = CountryCode::attachToPlanFromRequest($request, $plan);
-        MarketingAuthorizationHolder::attachManyToPlanOnCountryCodeStore($request, $plan, $countryCode);
+        MarketingAuthorizationHolder::attachToPlanOnCountryCodeStore($request, $plan, $countryCode);
 
         return to_route('plan.country.codes.index', ['plan' => $plan->id]);
     }
 
-    // public function countryCodesEdit(Plan $plan, CountryCode $countryCode)
-    // {
-    //     $instance = $plan->countryCodes()->where('country_codes.id', $countryCode->id)->first();
+    public function countryCodesEdit(Plan $plan, CountryCode $countryCode)
+    {
+        $instance = $plan->countryCodes()->where('country_codes.id', $countryCode->id)->first();
 
-    //     return view('plan.country-codes.edit', compact('plan', 'instance'));
-    // }
+        return view('plan.country-codes.edit', compact('plan', 'instance'));
+    }
 
-    // public function countryCodesUpdate(Request $request, Plan $plan, CountryCode $countryCode)
-    // {
-    //     $plan->countryCodes()->updateExistingPivot($countryCode->id, [
-    //         'comment' => $request->comment,
-    //     ]);
+    public function countryCodesUpdate(Request $request, Plan $plan, CountryCode $countryCode)
+    {
+        $plan->countryCodes()->updateExistingPivot($countryCode->id, [
+            'comment' => $request->comment,
+        ]);
 
-    //     return redirect($request->input('previous_url'));
-    // }
+        return redirect($request->input('previous_url'));
+    }
 
     public function countryCodesDestroy(Request $request, Plan $plan)
     {
         $countryCodeIDs = $request->ids;
 
         foreach ($countryCodeIDs as $countryCodeID) {
-            $plan->detachCountryCode(CountryCode::find($countryCodeID));
+            $plan->detachCountryCodeByID($countryCodeID);
         }
 
         return to_route('plan.country.codes.index', ['plan' => $plan->id]);
@@ -144,43 +144,45 @@ class PlanController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function MAHsIndex(Plan $plan, CountryCode $countryCode)
+    public function marketingAuthorizationHoldersIndex(Plan $plan, CountryCode $countryCode)
     {
-        $records = $countryCode->MAHsOfPlan($plan)->get();
+        $records = $countryCode->marketingAuthorizationHoldersForPlan($plan->id)->get();
 
         return view('plan.marketing-authorization-holders.index', compact('plan', 'countryCode', 'records'));
     }
 
-    public function MAHsCreate(Plan $plan, CountryCode $countryCode)
+    public function marketingAuthorizationHoldersCreate(Plan $plan, CountryCode $countryCode)
     {
         return view('plan.marketing-authorization-holders.create', compact('plan', 'countryCode'));
     }
 
-    public function MAHsStore(Request $request, Plan $plan, CountryCode $countryCode)
+    public function marketingAuthorizationHoldersStore(Request $request, Plan $plan, CountryCode $countryCode)
     {
         MarketingAuthorizationHolder::attachToPlanFromRequest($plan, $countryCode, $request);
 
         return to_route('plan.marketing.authorization.holders.index', ['plan' => $plan->id, 'countryCode' => $countryCode->id]);
     }
 
-    public function MAHsEdit(Plan $plan, CountryCode $countryCode, MarketingAuthorizationHolder $marketingAuthorizationHolder)
+    public function marketingAuthorizationHoldersEdit(Plan $plan, CountryCode $countryCode, MarketingAuthorizationHolder $marketingAuthorizationHolder)
     {
-        $instance = $plan->MAHsOfCountryCode($countryCode)
-            ->where('marketing_authorization_holders.id', $marketingAuthorizationHolder->id)->first();
+        $marketingAuthorizationHolders = $plan->marketingAuthorizationHoldersForCountryCode($countryCode->id);
+        $instance = $marketingAuthorizationHolders->where('marketing_authorization_holders.id', $marketingAuthorizationHolder->id)->first();
 
         return view('plan.marketing-authorization-holders.edit', compact('plan', 'countryCode', 'instance'));
     }
 
-    public function MAHsUpdate(Request $request, Plan $plan, CountryCode $countryCode, MarketingAuthorizationHolder $marketingAuthorizationHolder)
+    public function marketingAuthorizationHoldersUpdate(Request $request, Plan $plan, CountryCode $countryCode, MarketingAuthorizationHolder $marketingAuthorizationHolder)
     {
         $marketingAuthorizationHolder->updateForPlanFromRequest($plan, $countryCode, $request);
 
         return redirect($request->input('previous_url'));
     }
 
-    public function MAHsDestroy(Request $request, Plan $plan, CountryCode $countryCode)
+    public function marketingAuthorizationHoldersDestroy(Request $request, Plan $plan, CountryCode $countryCode)
     {
-        $plan->detachMarketingAuthorizationHolders($countryCode, $request->input('ids', []));
+        $marketingAuthorizationHolderIDs = $request->ids;
+
+        $plan->detachMarketingAuthorizationHolders($countryCode, $marketingAuthorizationHolderIDs);
 
         return to_route('plan.marketing.authorization.holders.index', ['plan' => $plan->id, 'countryCode' => $countryCode->id]);
     }

@@ -4,14 +4,12 @@ namespace App\Models;
 
 use App\Support\Abstracts\CommentableModel;
 use App\Support\Helper;
-use App\Support\Traits\MergesParamsToRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
 
 class Plan extends CommentableModel
 {
     use HasFactory;
-    use MergesParamsToRequest;
 
     const DEFAULT_ORDER_BY = 'year';
     const DEFAULT_ORDER_TYPE = 'desc';
@@ -36,11 +34,19 @@ class Plan extends CommentableModel
         return $this->belongsToMany(CountryCode::class);
     }
 
-    public function marketingAuthorizationHoldersForCountryCode($countryCodeID)
+    public function marketingAuthorizationHolders()
     {
         return $this->belongsToMany(MarketingAuthorizationHolder::class, 'plan_country_code_marketing_authorization_holder')
-            ->wherePivot('country_code_id', $countryCodeID)
-            ->withPivot(self::getPivotColumnNames());
+            ->withPivot(self::getPivotColumnNamesForMAH());
+    }
+
+    /**
+     * Return marketing authorization holders for specific country code
+     */
+    public function MAHsOfCountryCode($countryCode)
+    {
+        return $this->marketingAuthorizationHolders()
+            ->wherePivot('country_code_id', $countryCode->id);
     }
 
     /*
@@ -56,7 +62,7 @@ class Plan extends CommentableModel
             }
 
             foreach ($instance->countryCodes as $countryCode) {
-                $instance->detachCountryCodeByID($countryCode->id);
+                $instance->detachCountryCode($countryCode);
             }
         });
     }
@@ -108,6 +114,10 @@ class Plan extends CommentableModel
         return $this->year;
     }
 
+    /**
+     * Merge default params into request, to escape
+     * queying, relation calculations, filtering etc errors.
+     */
     public static function mergeDefaultParamsToRequest($request)
     {
         $request->mergeIfMissing([
@@ -117,104 +127,79 @@ class Plan extends CommentableModel
 
     public static function getByYearFromRequest($request)
     {
-        $year = $request->input('year');
-
-        return self::where('year', $year)->first();
+        return self::where('year', $request->input('year'))->firstOrFail();
     }
 
     /**
-     * Used in route plan.country.codes.destroy
+     * Load MAHs for each of plans country codes, to avoid redundant queries
      */
-    public function detachCountryCodeByID($countryCodeID)
+    public function loadMAHsOfCountryCodes()
     {
-        $countryCode = CountryCode::find($countryCodeID);
-        $marketingAuthorizationHolders = $countryCode->marketingAuthorizationHoldersForPlan($this->id)->get();
-        $marketingAuthorizationHolderIDs = $marketingAuthorizationHolders->pluck('id');
-
-        // Detach marketing authorization holders first
-        $this->detachMarketingAuthorizationHolders($countryCode, $marketingAuthorizationHolderIDs);
-
-        // Then detach country code
-        $this->countryCodes()->detach([$countryCodeID]);
+        foreach ($this->countryCodes as $countryCode) {
+            $countryCode->marketing_authorization_holders = $countryCode->MAHsOfPlan($this)->get();
+        }
     }
 
     /**
-     * Used in route plan.marketing.authorization.holders.destroy
-     * and plan.country.codes.destroy
+     * Calculate and load all plan calculations based on plans year.
+     * Calculations must be done in below proper order to avoid errors:
+     *
+     * 1. Marketing authorization holders calculations of each country code.
+     * 2. Country codes calculations.
+     * 3. Plans year calculations.
      */
-    public function detachMarketingAuthorizationHolders($countryCode, $marketingAuthorizationHolderIDs)
+    public function makeAllCalculations($request)
     {
-        foreach ($marketingAuthorizationHolderIDs as $mahID) {
-            DB::table('plan_country_code_marketing_authorization_holder')->where([
-                'plan_id' => $this->id,
-                'country_code_id' => $countryCode->id,
-                'marketing_authorization_holder_id' => $mahID,
-            ])->delete();
-        }
-    }
-
-    public function loadMarketingAuthorizationHoldersOfCountries()
-    {
-        foreach ($this->countryCodes as $countryCode) {
-            $countryCode->plan_marketing_authorization_holders = $countryCode->marketingAuthorizationHoldersForPlan($this->id)->get();
-        }
-    }
-
-    public function makeAllCalculationsAndAddLinksFromRequest($request)
-    {
-        $this->loadMarketingAuthorizationHoldersOfCountries();
+        $this->loadMAHsOfCountryCodes();
 
         foreach ($this->countryCodes as $countryCode) {
-            // Calculate MAH all processes count
-            foreach ($countryCode->plan_marketing_authorization_holders as $mah) {
-                $mah->calculatePlanMonthProcessesCountFromRequest($request);
-                $mah->addPlanProcesseslinkFromRequest($request);
-                $mah->calculatePlanAllPercentages($request);
-
-                $mah->calculatePlanQuoterProcessesCounts();
-                $mah->calculatePlanQuoterPercentages();
-
-                $mah->calculatePlanYearProcessCounts();
-                $mah->calculatePlanYearPercentages();
+            // Step 1: Marketing authorization holders calculations of each country code.
+            foreach ($countryCode->marketing_authorization_holders as $mah) {
+                $mah->makeAllPlanCalculations($request);
             }
 
-            // Calculate country code processes count
-            $countryCode->calculateMonthProcessesCountForPlan();
-            $countryCode->calculateMonthPercentagesForPlan();
-
-            $countryCode->calculatePlanQuoterProcessesCounts();
-            $countryCode->calculatePlanQuoterPercentages();
-
-            $countryCode->calculatePlanYearProcessCounts();
-            $countryCode->calculatePlanYearPercentages();
+            // Step 2: Country codes calculations.
+            $countryCode->makeAllPlanCalculations($request);
         }
 
-        // Calculate plan processes count
-        $this->calculateMonthProcessesCountForPlan();
-        $this->calculateMonthPercentagesForPlan();
-
-        $this->calculatePlanQuoterProcessesCounts();
-        $this->calculatePlanQuoterPercentages();
-
-        $this->calculatePlanYearProcessCounts();
-        $this->calculatePlanYearPercentages();
+        // Step 3: Plans year calculations.
+        $this->makeAllYearCalculations($request);
     }
 
-    public static function getPivotColumnNames(): array
+    public function makeAllYearCalculations($request) {}
+
+    /**
+     * Return array of the pivot column names for 'MAHsOfCountryCode' relationship
+     * 'plan_country_code_marketing_authorization_holder' table
+     */
+    public static function getPivotColumnNamesForMAH(): array
     {
         return [
-            'January_contract_plan',
-            'February_contract_plan',
-            'March_contract_plan',
-            'April_contract_plan',
-            'May_contract_plan',
-            'June_contract_plan',
-            'July_contract_plan',
-            'August_contract_plan',
-            'September_contract_plan',
-            'October_contract_plan',
-            'November_contract_plan',
-            'December_contract_plan',
+            'January_europe_contract_plan',
+            'February_europe_contract_plan',
+            'March_europe_contract_plan',
+            'April_europe_contract_plan',
+            'May_europe_contract_plan',
+            'June_europe_contract_plan',
+            'July_europe_contract_plan',
+            'August_europe_contract_plan',
+            'September_europe_contract_plan',
+            'October_europe_contract_plan',
+            'November_europe_contract_plan',
+            'December_europe_contract_plan',
+
+            'January_india_contract_plan',
+            'February_india_contract_plan',
+            'March_india_contract_plan',
+            'April_india_contract_plan',
+            'May_india_contract_plan',
+            'June_india_contract_plan',
+            'July_india_contract_plan',
+            'August_india_contract_plan',
+            'September_india_contract_plan',
+            'October_india_contract_plan',
+            'November_india_contract_plan',
+            'December_india_contract_plan',
 
             'January_comment',
             'February_comment',
@@ -231,178 +216,31 @@ class Plan extends CommentableModel
         ];
     }
 
-    public function calculateMonthProcessesCountForPlan()
+    /**
+     * Used in route plan.country.codes.destroy
+     * and on plans deleting event function.
+     */
+    public function detachCountryCode($countryCode)
     {
-        $months = Helper::collectCalendarMonths();
+        $MAHs = $countryCode->MAHsOfPlan($this)->get();
+        $MAHIds = $MAHs->pluck('id');
 
-        foreach ($months as $month) {
-            $monthName = $month['name'];
-            $contractPlanCount = 0;
-            $contractFactCount = 0;
-            $registerFactCount = 0;
+        // Detach marketing authorization holders first
+        $this->detachMarketingAuthorizationHolders($countryCode, $MAHIds);
 
-            foreach ($this->countryCodes as $country) {
-                $contractPlanCount += $country->{$monthName . '_contract_plan'};
-                $contractFactCount += $country->{$monthName . '_contract_fact'};
-                $registerFactCount += $country->{$monthName . '_register_fact'};
-            }
-
-            $this->{$monthName . '_contract_plan'} = $contractPlanCount;
-            $this->{$monthName . '_contract_fact'} = $contractFactCount;
-            $this->{$monthName . '_register_fact'} = $registerFactCount;
-        }
+        // Then detach country code
+        $this->countryCodes()->detach([$countryCode->id]);
     }
 
-    public function calculateMonthPercentagesForPlan()
+    /**
+     * Used in plan.marketing.authorization.holders.destroy
+     * and plan.country.codes.destroy routes
+     */
+    public function detachMarketingAuthorizationHolders($countryCode, $MAHIds)
     {
-        // Get all calendar months
-        $months = Helper::collectCalendarMonths();
-
-        // Loop through each month and calculate percentages
-        foreach ($months as $month) {
-            $monthName = $month['name'];
-
-            // 1. Calculate contracted processes percentage
-            $monthContractPlan = $this->{$monthName . '_contract_plan'};
-            $monthContractFact = $this->{$monthName . '_contract_fact'};
-
-            // Avoid division by zero error
-            if ($monthContractPlan > 0) {
-                $monthContractPercentage = round(($monthContractFact * 100) / $monthContractPlan, 2);
-            } else {
-                $monthContractPercentage = 0;
-            }
-
-            // Store the calculated percentage in the pivot
-            $this->{$monthName . '_contract_fact_percentage'} = $monthContractPercentage;
-
-            // 2. Calculate registered processes percentage
-            $monthContractPlan = $this->{$monthName . '_contract_plan'};
-            $monthRegisterFact = $this->{$monthName . '_register_fact'};
-
-            // Avoid division by zero error
-            if ($monthContractPlan > 0) {
-                $monthRegisterPercentage = round(($monthRegisterFact * 100) / $monthContractPlan, 2);
-            } else {
-                $monthRegisterPercentage = 0;
-            }
-
-            // Store the calculated percentage in the pivot
-            $this->{$monthName . '_register_fact_percentage'} = $monthRegisterPercentage;
+        foreach ($MAHIds as $mahID) {
+            $this->MAHsOfCountryCode($countryCode)
+                ->wherePivot('marketing_authorization_holder_id', $mahID)->detach();
         }
-    }
-
-    public function calculatePlanQuoterProcessesCounts()
-    {
-        // Get all calendar months
-        $months = Helper::collectCalendarMonths();
-
-        // Iterate through the 4 quoters (quarters of the year)
-        for ($quoter = 1, $monthIndex = 0; $quoter <= 4; $quoter++) {
-            $contractPlanCount = 0;
-            $contractFactCount = 0;
-            $registerFactCount = 0;
-
-            // Loop through 3 months for each quoter (quarter)
-            for ($quoterMonths = 1; $quoterMonths <= 3; $quoterMonths++, $monthIndex++) {
-                $monthName = $months[$monthIndex]['name'];
-
-                // Ensure the properties exist before accessing
-                $contractPlan = $this->{$monthName . '_contract_plan'} ?? 0;
-                $contractFact = $this->{$monthName . '_contract_fact'} ?? 0;
-                $registerFact = $this->{$monthName . '_register_fact'} ?? 0;
-
-                // Accumulate the counts
-                $contractPlanCount += is_numeric($contractPlan) ? $contractPlan : 0;
-                $contractFactCount += is_numeric($contractFact) ? $contractFact : 0;
-                $registerFactCount += is_numeric($registerFact) ? $registerFact : 0;
-            }
-
-            // Store the accumulated counts in the pivot table
-            $this->{'quoter_' . $quoter . '_contract_plan'} = $contractPlanCount;
-            $this->{'quoter_' . $quoter . '_contract_fact'} = $contractFactCount;
-            $this->{'quoter_' . $quoter . '_register_fact'} = $registerFactCount;
-        }
-    }
-
-    public function calculatePlanQuoterPercentages()
-    {
-        for ($quoter = 1; $quoter <= 4; $quoter++) {
-            // 1. Calculate contracted processes percentage
-            $quoterContractPlan = $this->{'quoter_' . $quoter . '_contract_plan'};
-            $quoterContractFact = $this->{'quoter_' . $quoter . '_contract_fact'};
-
-            // Avoid division by zero error
-            if ($quoterContractPlan > 0) {
-                $quoterContractPercentage = round(($quoterContractFact * 100) / $quoterContractPlan, 2);
-            } else {
-                $quoterContractPercentage = 0;
-            }
-
-            // Store the calculated percentage in the pivot
-            $this->{'quoter_' . $quoter . '_contract_fact_percentage'} = $quoterContractPercentage;
-
-            // 2. Calculate registered processes percentage
-            $quoterContractPlan = $this->{'quoter_' . $quoter . '_contract_plan'};
-            $quoterRegisterFact = $this->{'quoter_' . $quoter . '_register_fact'};
-
-            // Avoid division by zero error
-            if ($quoterContractPlan > 0) {
-                $quoterRegisterPercentage = round(($quoterRegisterFact * 100) / $quoterContractPlan, 2);
-            } else {
-                $quoterRegisterPercentage = 0;
-            }
-
-            // Store the calculated percentage in the pivot
-            $this->{'quoter_' . $quoter . '_register_fact_percentage'} = $quoterRegisterPercentage;
-        }
-    }
-
-    public function calculatePlanYearProcessCounts()
-    {
-        $yearContractPlan = 0;
-        $yearContractFact = 0;
-        $yearRegisterFact = 0;
-
-        for ($quoter = 1; $quoter <= 4; $quoter++) {
-            $yearContractPlan += $this->{'quoter_' . $quoter . '_contract_plan'};
-            $yearContractFact += $this->{'quoter_' . $quoter . '_contract_fact'};
-            $yearRegisterFact += $this->{'quoter_' . $quoter . '_register_fact'};
-        }
-
-        $this->year_contract_plan = $yearContractPlan;
-        $this->year_contract_fact = $yearContractFact;
-        $this->year_register_fact = $yearRegisterFact;
-    }
-
-    public function calculatePlanYearPercentages()
-    {
-        // 1. Calculate contracted processes percentage
-        $yearContractPlan = $this->year_contract_plan;
-        $yearContractFact = $this->year_contract_fact;
-
-        // Avoid division by zero error
-        if ($yearContractPlan > 0) {
-            $yearContractPercentage = round(($yearContractFact * 100) / $yearContractPlan, 2);
-        } else {
-            $yearContractPercentage = 0;
-        }
-
-        // Store the calculated percentage in the pivot
-        $this->year_contract_fact_percentage = $yearContractPercentage;
-
-        // 2. Calculate registered processes percentage
-        $yearContractPlan = $this->year_contract_plan;
-        $yearRegisterFact = $this->year_register_fact;
-
-        // Avoid division by zero error
-        if ($yearContractPlan > 0) {
-            $yearRegisterPercentage = round(($yearRegisterFact * 100) / $yearContractPlan, 2);
-        } else {
-            $yearRegisterPercentage = 0;
-        }
-
-        // Store the calculated percentage in the pivot
-        $this->year_register_fact_percentage = $yearRegisterPercentage;
     }
 }

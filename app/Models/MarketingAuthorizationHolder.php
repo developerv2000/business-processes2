@@ -269,7 +269,7 @@ class MarketingAuthorizationHolder extends Model implements TemplatedModelInterf
                 'registered_year' => $plan->year,
             ]);
             $registeredProcessesLink = route('processes.index', $registeredParams);
-            $this->pivot->{$month['name'] . '_register_fact_link'} = $registeredProcessesLink;
+            $this->{$month['name'] . '_register_fact_link'} = $registeredProcessesLink;
         }
     }
 }

@@ -12,7 +12,7 @@
             <tr>
                 <th class="plan-table__th--country-name">{{ __('Cтр') }}</th>
                 <th class="plan-table__th--mah-name">{{ __('PC') }}</th>
-                <th width="420" colspan="5">{{ __('Plan') }} {{ $request->year }}</th>
+                <th width="420" colspan="5">{{ __('Plan') }} {{ $plan->year }}</th>
 
                 {{-- Quarters 1-4 --}}
                 @for ($quarter = 1, $monthIndex = 0; $quarter <= 4; $quarter++)

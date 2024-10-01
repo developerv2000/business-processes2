@@ -1316,16 +1316,19 @@ button {
     height: 32px;
 }
 
-.plan-table__td--year {
-    color: var(--theme-main-color);
-}
-
 .plan-table__th--country-name {
     width: var(--th-country-name-width);
 }
 
 .plan-table__th--mah-name {
     width: var(--th-mah-name-width);
+}
+
+.plan-table__td--year {
+    color: var(--theme-main-color);
+    position: sticky;
+    left: 0;
+    background-color: var(--theme-background-color);
 }
 
 .plan-table__td--country-name {

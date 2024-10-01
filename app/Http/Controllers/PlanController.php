@@ -76,8 +76,6 @@ class PlanController extends Controller
     public function show(Request $request, Plan $plan)
     {
         $plan->makeAllCalculations($request);
-        dd($plan);
-
         $months = Helper::collectCalendarMonths();
 
         return view('plan.show', compact('request', 'plan', 'months'));

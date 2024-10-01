@@ -4,7 +4,7 @@
     <div class="main__conent-box styled-box">
         <div class="pre-content pre-content--transparent">
             @include('layouts.breadcrumbs', [
-                'crumbs' => [__('SPG') . ' - ' . $request->year],
+                'crumbs' => [__('SPG') . ' - ' . $plan->year],
                 'fullScreen' => true,
                 'fullScreenSelector' => '.main-wrapper',
             ])

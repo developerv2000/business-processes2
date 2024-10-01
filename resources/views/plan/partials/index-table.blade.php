@@ -16,7 +16,6 @@
             </th>
 
             <th>{{ __('Year') }}</th>
-
             <th>{{ __('Кк план') }}</th>
             <th>{{ __('Кк факт') }}</th>
             <th>{{ __('Кк %') }}</th>
@@ -50,7 +49,6 @@
                 </td>
 
                 <td>{{ $instance->year }}</td>
-
                 <td>{{ $instance->year_contract_plan }}</td>
                 <td>{{ $instance->year_contract_fact }}</td>
                 <td>{{ $instance->year_contract_fact_percentage }} %</td>

@@ -73,11 +73,10 @@ class PlanController extends Controller
         return redirect($request->input('previous_url'));
     }
 
-    public function show(Request $request)
+    public function show(Request $request, Plan $plan)
     {
-        Plan::mergeDefaultParamsToRequest($request);
-        $plan = Plan::getByYearFromRequest($request);
         $plan->makeAllCalculations($request);
+        dd($plan);
 
         $months = Helper::collectCalendarMonths();
 

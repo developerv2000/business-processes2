@@ -49,7 +49,7 @@
                         required>
                 </x-forms.groups.default-group>
 
-                <x-forms.groups.default-group label="EU Кк" error-name="{{ $indiaContractInputName }}" required="true">
+                <x-forms.groups.default-group label="IN Кк" error-name="{{ $indiaContractInputName }}" required="true">
                     <input
                         class="input"
                         type="number"

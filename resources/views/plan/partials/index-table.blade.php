@@ -44,7 +44,7 @@
                     <x-different.linked-button
                         style="transparent"
                         class="td__view"
-                        href="{{ route('plan.show') }}?year={{ $instance->year }}"
+                        href="{{ route('plan.show', $instance->year) }}"
                         icon="visibility"
                         title="{{ __('View') }}" />
                 </td>

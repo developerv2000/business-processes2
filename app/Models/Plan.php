@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Support\Abstracts\CommentableModel;
 use App\Support\Helper;
+use App\Support\Traits\CalculatesPlanQuarterAndYearCounts;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
 
 class Plan extends CommentableModel
 {
     use HasFactory;
+    use CalculatesPlanQuarterAndYearCounts;
 
     const DEFAULT_ORDER_BY = 'year';
     const DEFAULT_ORDER_TYPE = 'desc';
@@ -114,17 +116,6 @@ class Plan extends CommentableModel
         return $this->year;
     }
 
-    /**
-     * Merge default params into request, to escape
-     * queying, relation calculations, filtering etc errors.
-     */
-    public static function mergeDefaultParamsToRequest($request)
-    {
-        $request->mergeIfMissing([
-            'year' => date('Y'),
-        ]);
-    }
-
     public static function getByYearFromRequest($request)
     {
         return self::where('year', $request->input('year'))->firstOrFail();
@@ -155,18 +146,16 @@ class Plan extends CommentableModel
         foreach ($this->countryCodes as $countryCode) {
             // Step 1: Marketing authorization holders calculations of each country code.
             foreach ($countryCode->marketing_authorization_holders as $mah) {
-                $mah->makeAllPlanCalculations($request);
+                $mah->makeAllPlanCalculations($request, $this);
             }
 
             // Step 2: Country codes calculations.
-            $countryCode->makeAllPlanCalculations($request);
+            $countryCode->makeAllPlanCalculations($request, $this);
         }
 
-        // Step 3: Plans year calculations.
-        $this->makeAllYearCalculations($request);
+        // Step 3: Plans summary calculations.
+        $this->makeAllSummaryCalculations($request);
     }
-
-    public function makeAllYearCalculations($request) {}
 
     /**
      * Return array of the pivot column names for 'MAHsOfCountryCode' relationship
@@ -175,6 +164,10 @@ class Plan extends CommentableModel
     public static function getPivotColumnNamesForMAH(): array
     {
         return [
+            'plan_id',
+            'country_code_id',
+            'marketing_authorization_holder_id',
+
             'January_europe_contract_plan',
             'February_europe_contract_plan',
             'March_europe_contract_plan',
@@ -242,5 +235,71 @@ class Plan extends CommentableModel
             $this->MAHsOfCountryCode($countryCode)
                 ->wherePivot('marketing_authorization_holder_id', $mahID)->detach();
         }
+    }
+
+    /**
+     * Perform all plan calculations: Monthly, Quarterly, Yearly.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    public function makeAllSummaryCalculations($request)
+    {
+        // Perform monthly, quarterly, and yearly calculations
+        $this->calculatePlanMonthlyProcessCounts();
+        $this->calculatePlanQuartersProcessCounts();
+        $this->calculatePlanYearProcessCounts();
+        $this->calculatePlanYearPercentages();
+    }
+
+    /**
+     * Calculate the total 'contract_plan', 'contract_fact', and 'register_fact'
+     * counts for each month based on related Country codes.
+     *
+     * This method sets the following properties for each month:
+     * - 'month_contract_plan'
+     * - 'month_contract_fact'
+     * - 'month_register_fact'
+     *
+     * @return void
+     */
+    public function calculatePlanMonthlyProcessCounts()
+    {
+        $months = Helper::collectCalendarMonths();
+
+        foreach ($months as $month) {
+            $monthName = $month['name'];
+
+            // Calculate totals for the current month based on Country codes
+            [$contractPlanCount, $contractFactCount, $registerFactCount] = $this->sumMonthlyCountsForCountryCodes($monthName);
+
+            // Assign totals to the current model instance
+            $this->{$monthName . '_contract_plan'} = $contractPlanCount;
+            $this->{$monthName . '_contract_fact'} = $contractFactCount;
+            $this->{$monthName . '_register_fact'} = $registerFactCount;
+        }
+    }
+
+    /**
+     * Sum the 'contract_plan', 'contract_fact', and 'register_fact' counts for a specific month
+     * across all related Country codes.
+     *
+     * @param  string  $monthName
+     * @return array  [contractPlanCount, contractFactCount, registerFactCount]
+     */
+    private function sumMonthlyCountsForCountryCodes($monthName)
+    {
+        $contractPlanCount = 0;
+        $contractFactCount = 0;
+        $registerFactCount = 0;
+
+        // Iterate through related Country codes to accumulate monthly counts
+        foreach ($this->countryCodes as $country) {
+            $contractPlanCount += $country->{$monthName . '_contract_plan'} ?? 0;
+            $contractFactCount += $country->{$monthName . '_contract_fact'} ?? 0;
+            $registerFactCount += $country->{$monthName . '_register_fact'} ?? 0;
+        }
+
+        return [$contractPlanCount, $contractFactCount, $registerFactCount];
     }
 }

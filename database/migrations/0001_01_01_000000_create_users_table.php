@@ -37,6 +37,20 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::create('user_responsible_country', function (Blueprint $table) {
+            $table->unsignedSmallInteger('user_id')
+                ->foreign()
+                ->references('id')
+                ->on('users');
+
+            $table->unsignedSmallInteger('country_id')
+                ->foreign()
+                ->references('id')
+                ->on('countries');
+
+            $table->primary(['user_id', 'country_id']);
+        });
     }
 
     /**

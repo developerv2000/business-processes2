@@ -38,6 +38,12 @@
                 :instance="$instance"
                 required />
 
+            <x-forms.id-based-multiple-select.instance-edit-select
+                label="Responsible countries"
+                name="responsibleCountries[]"
+                :options="$countries"
+                :instance="$instance" />
+
             <x-forms.input.default-input
                 label="{{ __('Photo') }}"
                 name="photo"

@@ -189,6 +189,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer(['users.create', 'users.edit'], function ($view) {
             $view->with([
                 'roles' => Role::getAll(),
+                'countries' => Country::getAll(),
             ]);
         });
 

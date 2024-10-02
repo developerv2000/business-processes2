@@ -40,6 +40,11 @@
                 :options="$roles"
                 required />
 
+            <x-forms.id-based-multiple-select.default-select
+                label="Responsible countries"
+                name="responsibleCountries[]"
+                :options="$countries" />
+
             <x-forms.input.default-input
                 label="Password"
                 name="password"

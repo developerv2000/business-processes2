@@ -14,6 +14,8 @@
 
             <th>{{ __('Roles') }}</th>
 
+            <th>{{ __('Responsible countries') }}</th>
+
             <th>
                 @include('tables.components.th.static-sort-link', ['text' => 'Email address', 'orderBy' => 'email'])
             </th>
@@ -41,6 +43,8 @@
                         @endforeach
                     </div>
                 </td>
+
+                <td>{{ $instance->responsibleCountries->pluck('name')->implode(' ') }}</td>
 
                 <td>{{ $instance->email }}</td>
             </tr>

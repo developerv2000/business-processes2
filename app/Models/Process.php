@@ -416,10 +416,11 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
     }
 
     /**
-     * Filter records based on user roles.
+     * Filter records based on user roles and responsible countries.
      *
-     * This method filters records based on the user's roles. If the user is not an admin or moderator,
-     * it filters records to only include processes where the user is the analyst.
+     * This method applies filters to the query based on the user's role. If the user is not an admin or moderator,
+     * it limits the results to processes where the user is the assigned analyst or where the user's responsible
+     * countries are associated with the manufacturer.
      *
      * @param Illuminate\Http\Request $request The request object containing the user information.
      * @param Illuminate\Database\Eloquent\Builder $query The query builder instance to apply filters.
@@ -427,16 +428,28 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
      */
     private static function filterRecordsByRoles($request, $query)
     {
+        // Get the current user
         $user = $request->user();
 
+        // Get a list of country IDs the user is responsible for
+        $responsibleCountryIDs = $user->responsibleCountries->pluck('id');
+
+        // If the user is not an admin or moderator, apply additional filters
         if (!$user->isAdminOrModerator()) {
-            $query = $query->whereHas('manufacturer', function ($subquery) use ($user) {
-                $subquery->where('analyst_user_id', $user->id);
+            $query->whereHas('manufacturer', function ($subquery) use ($user, $responsibleCountryIDs) {
+                // Filter for records where the user is the assigned analyst
+                $subquery->where('analyst_user_id', $user->id)
+                    // Or, where the manufacturer is associated with one of the user's responsible countries
+                    ->orWhere(function ($subquery2) use ($responsibleCountryIDs) {
+                        $subquery2->whereIn('country_id', $responsibleCountryIDs);
+                    });
             });
         }
 
+        // Return the modified query
         return $query;
     }
+
 
     /**
      * Apply filters to the query based on the manufacturer's country.

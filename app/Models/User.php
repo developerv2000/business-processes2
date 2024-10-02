@@ -83,6 +83,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    public function responsibleCountries()
+    {
+        return $this->belongsToMany(Country::class, 'user_responsible_country');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes
@@ -108,6 +113,7 @@ class User extends Authenticatable
     {
         static::deleting(function ($instance) {
             $instance->roles()->detach();
+            $instance->responsibleCountries()->detach();
         });
     }
 
@@ -271,8 +277,9 @@ class User extends Authenticatable
         // Create a new user instance
         $instance = self::create($request->all());
 
-        // Attach roles to the user
+        // Attach belongsToMany associations
         $instance->roles()->attach($request->input('roles'));
+        $instance->responsibleCountries()->attach($request->input('responsibleCountries'));
 
         // Load default settings for the user
         $instance->loadDefaultSettings();
@@ -324,6 +331,8 @@ class User extends Authenticatable
     {
         // Update the user's profile
         $this->update($request->validated());
+        // Update responsible countries
+        $this->responsibleCountries()->sync($request->input('responsibleCountries'));
         // Update user's roles
         $this->updateRoles($request);
         // Upload user's photo if provided

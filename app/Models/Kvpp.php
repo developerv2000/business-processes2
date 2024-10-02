@@ -167,6 +167,7 @@ class Kvpp extends CommentableModel
             'source_eu',
             'source_in',
             'priority_id',
+            'status_id',
             'analyst_user_id',
         ];
 

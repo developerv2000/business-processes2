@@ -14,11 +14,10 @@
         label="Source IN"
         name="source_in" />
 
-    <x-forms.boolean-select.request-based-select
+    <x-forms.id-based-single-select.request-based-select
         label="Status"
-        name="is_active"
-        true-option-label="Active"
-        false-option-label="Stoped" />
+        name="status_id"
+        :options="$statuses" />
 
     <x-forms.id-based-single-select.request-based-select
         label="Priority"

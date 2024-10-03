@@ -16,7 +16,7 @@ trait DestroysModelRecords
     /**
      * Destroy model records based on the request parameters.
      *
-     * If the 'force_delete' parameter is provided and the user is an admin or moderator,
+     * If the 'force_delete' parameter is provided and the user is an admin,
      * the records will be force deleted. Otherwise, they will be soft deleted.
      *
      * @param Request $request The request object.
@@ -27,8 +27,8 @@ trait DestroysModelRecords
         // Extract id or ids from request as array to delete through loop
         $ids = (array) ($request->input('id') ?: $request->input('ids'));
 
-        // Only admins and moderators can force delete
-        if ($request->input('force_delete') && request()->user()->isAdminOrModerator()) {
+        // Only admins can force delete
+        if ($request->input('force_delete') && request()->user()->isAdministrator()) {
             foreach ($ids as $id) {
                 // Check if model exists before force deleting
                 $model = $this->model::withTrashed()->find($id);

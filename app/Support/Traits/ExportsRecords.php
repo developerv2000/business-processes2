@@ -29,7 +29,7 @@ trait ExportsRecords
     public static function exportRecordsAsExcel($query)
     {
         $className = static::class;
-        $isAdmin = request()->user()->isAdminOrModerator();
+        $isAdmin = request()->user()->isAdministrator();
 
         // Load the Excel template
         $template = storage_path($className::EXCEL_TEMPLATE_STORAGE_PATH);

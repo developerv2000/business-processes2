@@ -57,6 +57,7 @@ class User extends Authenticatable
 
     protected $with = [
         'roles',
+        'permissions',
         'responsibleCountries',
     ];
 
@@ -82,6 +83,11 @@ class User extends Authenticatable
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class);
     }
 
     public function responsibleCountries()
@@ -114,6 +120,7 @@ class User extends Authenticatable
     {
         static::deleting(function ($instance) {
             $instance->roles()->detach();
+            $instance->permissions()->detach();
             $instance->responsibleCountries()->detach();
         });
     }
@@ -124,47 +131,29 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    /**
-     * Robots can`t login
-     */
-    public function isRobot()
+    public function isAdministrator()
     {
-        return $this->roles->contains('name', Role::ROBOT_NAME);
+        return $this->hasRole(Role::ADMINISTRATOR_NAME);
     }
 
-    /**
-     * Trainees can`t export any tables in excel format
-     */
-    public function isTrainee()
+    public function isNotAdministrator()
     {
-        return $this->roles->contains('name', Role::TRAINEE_NAME);
+        return $this->hasRole(Role::ADMINISTRATOR_NAME);
     }
 
-    /**
-     * All privileges
-     */
-    public function isAdmin()
-    {
-        return $this->roles->contains('name', Role::ADMIN_NAME);
-    }
-
-    /**
-     * Not realized yet
-     */
     public function isModerator()
     {
-        return $this->roles->contains('name', Role::MODERATOR_NAME);
+        return $this->hasRole(Role::MODERATOR_NAME);
     }
 
-    /**
-     * Not realized yet
-     */
-    public function isAdminOrModerator()
+    public function isInactive()
     {
-        return $this->roles->contains(function ($role) {
-            return $role->name == Role::ADMIN_NAME
-                || $role->name == Role::MODERATOR_NAME;
-        });
+        return $this->hasRole(Role::INACTIVE_NAME);
+    }
+
+    public function isGuest()
+    {
+        return $this->hasRole(Role::GUEST_NAME);
     }
 
     /*
@@ -173,9 +162,9 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    public function scopeOnlyAdmins()
+    public function scopeOnlyAdministrators()
     {
-        return $this->whereRelation('roles', 'name', Role::ADMIN_NAME);
+        return $this->whereRelation('roles', 'name', Role::ADMINISTRATOR_NAME);
     }
 
     public function scopeOnlyBdms()
@@ -266,6 +255,17 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
+    public function hasRole($role)
+    {
+        return $this->roles->contains('name', $role);
+    }
+
+    public function hasPermission($permission)
+    {
+        return $this->permissions->contains('name', $permission);
+    }
+
+
     /**
      * Create a new user instance from the request data.
      * This method is used only from the dashboard.
@@ -280,6 +280,7 @@ class User extends Authenticatable
 
         // Attach belongsToMany associations
         $instance->roles()->attach($request->input('roles'));
+        $instance->permissions()->attach($request->input('permissions'));
         $instance->responsibleCountries()->attach($request->input('responsibleCountries'));
 
         // Load default settings for the user
@@ -334,7 +335,9 @@ class User extends Authenticatable
         $this->update($request->validated());
         // Update responsible countries
         $this->responsibleCountries()->sync($request->input('responsibleCountries'));
-        // Update user's roles
+        // Update user's permissions
+        $this->permissions()->sync($request->input('permissions'));
+        // Update user's roles & permissions
         $this->updateRoles($request);
         // Upload user's photo if provided
         $this->uploadPhoto($request);
@@ -455,7 +458,7 @@ class User extends Authenticatable
         // Refresh user because roles may have been updated
         $this->refresh();
 
-        if ($this->isRobot()) {
+        if ($this->isInactive()) {
             $this->update(['settings' => null]);
             return;
         }

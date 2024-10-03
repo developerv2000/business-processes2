@@ -13,6 +13,7 @@ use App\Models\Manufacturer;
 use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
 use App\Models\MarketingAuthorizationHolder;
+use App\Models\Permission;
 use App\Models\PortfolioManager;
 use App\Models\Process;
 use App\Models\ProcessGeneralStatus;
@@ -189,6 +190,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer(['users.create', 'users.edit'], function ($view) {
             $view->with([
                 'roles' => Role::getAll(),
+                'permissions' => Permission::getAll(),
                 'countries' => Country::getAll(),
             ]);
         });

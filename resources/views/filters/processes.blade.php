@@ -94,7 +94,7 @@
         label="Pack"
         name="pack" />
 
-    @if ($request->user()->isAdminOrModerator())
+    @if ($request->user()->isAdministrator())
         <x-forms.id-based-single-select.request-based-select
             label="Analyst"
             name="analyst_user_id"
@@ -152,7 +152,7 @@
         :options="$manufacturerCategories" />
 
     {{-- Plan filters --}}
-    @if ($request->user()->isAdminOrModerator())
+    @if ($request->user()->isAdministrator())
         <x-forms.boolean-select.request-based-select
             label="Contracted on SPG"
             name="contracted_in_plan" />

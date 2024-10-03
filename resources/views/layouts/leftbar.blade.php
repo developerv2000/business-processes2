@@ -33,7 +33,7 @@
             ])>{{ __('SPG') }}</x-navbar.link>
 
             {{-- Dashboard --}}
-            @if (request()->user()->isAdmin())
+            @if (request()->user()->isAdministrator())
                 <x-navbar.title class="navbar-title--top-margined">{{ __('Dashboard') }}</x-navbar.title>
 
                 <x-navbar.link icon="dataset" href="{{ route('templated-models.index') }}" @class([

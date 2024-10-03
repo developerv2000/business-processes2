@@ -41,6 +41,12 @@
                 required />
 
             <x-forms.id-based-multiple-select.default-select
+                label="Permissions"
+                name="permissions[]"
+                :options="$permissions"
+                required />
+
+            <x-forms.id-based-multiple-select.default-select
                 label="Responsible countries"
                 name="responsibleCountries[]"
                 :options="$countries" />

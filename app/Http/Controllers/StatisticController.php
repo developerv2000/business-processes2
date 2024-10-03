@@ -90,7 +90,7 @@ class StatisticController extends Controller
         $user = $request->user();
 
         // Restrict non-admin users to only see their own process statistics
-        if (!$user->isAdmin()) {
+        if (!$user->isAdministrator()) {
             $request->merge([
                 'analyst_user_id' => $user->id,
             ]);

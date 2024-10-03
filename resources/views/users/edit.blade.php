@@ -39,6 +39,13 @@
                 required />
 
             <x-forms.id-based-multiple-select.instance-edit-select
+                label="Permissions"
+                name="permissions[]"
+                :options="$permissions"
+                :instance="$instance"
+                required />
+
+            <x-forms.id-based-multiple-select.instance-edit-select
                 label="Responsible countries"
                 name="responsibleCountries[]"
                 :options="$countries"

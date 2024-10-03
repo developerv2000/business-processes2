@@ -329,7 +329,7 @@ class Kvpp extends CommentableModel
             ['name' => 'Priority', 'order' => $order++, 'width' => 106, 'visible' => 1],
         ];
 
-        if ($user->isAdmin()) {
+        if ($user->isAdministrator()) {
             array_push(
                 $columns,
                 ['name' => 'VPS coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],

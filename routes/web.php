@@ -78,7 +78,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     Route::prefix('process/{process}/status-history')
         ->controller(ProcessStatusHistoryController::class)
         ->name('process-status-history.')
-        ->middleware('role:admin,moderator')
+        ->middleware('role:admin')
         ->group(function () {
             RouteGenerator::defineDefaultCrudRoutesOnly(['index', 'edit', 'update', 'destroy']);
         });

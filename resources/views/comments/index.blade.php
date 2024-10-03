@@ -15,7 +15,7 @@
         @include('comments.partials.list')
     </div>
 
-    @if (request()->user()->isAdminOrModerator())
+    @if (request()->user()->isAdministrator())
         <x-modals.target-delete action="{{ route('comments.destroy') }}" :force-delete="false" />
     @endif
 @endsection

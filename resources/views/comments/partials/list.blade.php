@@ -10,7 +10,7 @@
                         description="{{ $comment->created_at->diffForHumans() }}">
                     </x-different.ava>
 
-                    @if (request()->user()->isAdminOrModerator())
+                    @if (request()->user()->isAdministrator())
                         <div class="comments-list__actions">
                             <x-different.linked-button
                                 style="main"

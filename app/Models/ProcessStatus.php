@@ -37,11 +37,11 @@ class ProcessStatus extends Model
      */
     public static function getAllFilteredByRoles()
     {
-        // Check if the user is an admin or moderator
-        $isAdminOrModerator = request()->user()->isAdminOrModerator();
+        // Check if the user is an admin
+        $isAdministrator = request()->user()->isAdministrator();
 
-        // Query records, applying additional filters if the user is not an admin or moderator
-        $records = self::when(!$isAdminOrModerator, function ($query) {
+        // Query records, applying additional filters if the user is not an admin
+        $records = self::when(!$isAdministrator, function ($query) {
             $query->whereHas('generalStatus', function ($subquery) {
                 $subquery->where('visible_only_for_admins', false);
             });

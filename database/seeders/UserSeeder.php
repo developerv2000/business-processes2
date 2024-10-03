@@ -14,32 +14,28 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // $name = ['Firdavs Kilichbekov', 'Nuruloev Olimjon', 'Shahriyor Pirov', 'Alim Munavarov', 'Jahongir Nemonov', 'Muzaffar Behruz', 'Darya Rassulova', 'Irini Kouimtzidou', 'Fariz Mirzoev', 'Firdavs Sirojov', 'Khudoydod Sharipov', 'Farrukh Kayumov', 'Nuridinov Bobur'];
+        $name = ['Nuruloev Olimjon', 'Shahriyor Pirov', 'Alim Munavarov', 'Muzaffar Behruz', 'Darya Rassulova', 'Irini Kouimtzidou', 'Nuridinov Bobur', 'Guest 01'];
 
-        // $email = ['firdavs.kilichbekov@evolet.co.uk', 'olimjon.nuruloev@evolet.co.uk', 'shahriyor_p@evolet.co.uk', 'alim.munavarov@evolet.co.uk', ' bdm3@evolet.co.uk', 'behruz.muzaffar@outlook.com', 'bdm1@evolet.co.uk', 'irini@evolet.co.uk', 'farizmirzo@evolet.co.uk', 'firdavs.sirojov@evolet.co.uk', 'khudoydod.sharipov@evolet.co.uk', 'farrukh.kayumov@evolet.co.uk', 'developer@mail.com'];
+        $email = ['olimjon.nuruloev@evolet.co.uk', 'shahriyor_p@evolet.co.uk', 'alim.munavarov@evolet.co.uk', 'behruz.muzaffar@outlook.com', 'bdm1@evolet.co.uk', 'irini@evolet.co.uk', 'developer@mail.com', 'guest@mail.com'];
 
-        // $photo = ['firdavs-kilichbekov.png', 'nuruloev-olimjon.png', 'shahriyor-pirov.png', 'alim-munavarov.png', 'jahongir-nemonov.png', 'muzaffar-behruz.png', 'darya-rassulova.png', 'irini-kouimtzidou.png', 'fariz-mirzoev.png', 'firdavs-sirojov.png', 'khudoydod-sharipov.png', 'farrukh-kayumov.png', 'developer.jpg'];
+        $photo = ['nuruloev-olimjon.png', 'shahriyor-pirov.png', 'alim-munavarov.png', 'muzaffar-behruz.png', 'darya-rassulova.png', 'irini-kouimtzidou.png', 'developer.jpg', 'developer.jpg'];
 
-        $name = ['Nuruloev Olimjon', 'Shahriyor Pirov', 'Alim Munavarov', 'Muzaffar Behruz', 'Darya Rassulova', 'Irini Kouimtzidou', 'Nuridinov Bobur'];
-
-        $email = ['olimjon.nuruloev@evolet.co.uk', 'shahriyor_p@evolet.co.uk', 'alim.munavarov@evolet.co.uk', 'behruz.muzaffar@outlook.com', 'bdm1@evolet.co.uk', 'irini@evolet.co.uk', 'developer@mail.com'];
-
-        $photo = ['nuruloev-olimjon.png', 'shahriyor-pirov.png', 'alim-munavarov.png', 'muzaffar-behruz.png', 'darya-rassulova.png', 'irini-kouimtzidou.png', 'developer.jpg'];
-        $adminID = Role::where('name', Role::ADMIN_NAME)->first()->id;
+        $adminID = Role::where('name', Role::ADMINISTRATOR_NAME)->first()->id;
         $moderatorID = Role::where('name', Role::MODERATOR_NAME)->first()->id;
         $analystID = Role::where('name', Role::ANALYST_NAME)->first()->id;
         $bdmID = Role::where('name', Role::BDM_NAME)->first()->id;
-        $robotID = Role::where('name', Role::ROBOT_NAME)->first()->id;
-        $traineeID = Role::where('name', Role::TRAINEE_NAME)->first()->id;
+        $inactiveID = Role::where('name', Role::INACTIVE_NAME)->first()->id;
+        $guestID = Role::where('name', Role::GUEST_NAME)->first()->id;
 
         $roleID = [
-            [$analystID, $traineeID],
             [$analystID],
-            [$analystID, $moderatorID],
-            [$bdmID, $robotID],
-            [$bdmID, $robotID],
-            [$bdmID, $robotID],
+            [$analystID],
+            [$moderatorID],
+            [$bdmID, $inactiveID],
+            [$bdmID, $inactiveID],
+            [$bdmID, $inactiveID],
             [$adminID],
+            [$guestID],
         ];
 
         $password = '12345';

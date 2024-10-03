@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,7 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
+        $this->ensureUserIsActive();
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
@@ -76,10 +78,27 @@ class LoginRequest extends FormRequest
     }
 
     /**
+     * Prevent inactive users from authenticating
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function ensureUserIsActive(): void
+    {
+        // Prevent inActive users from authenticating
+        $user = User::where('email', $this->email)->first();
+
+        if ($user && $user->isInactive()) {
+            throw ValidationException::withMessages([
+                'email' => trans('auth.failed'),
+            ]);
+        }
+    }
+
+    /**
      * Get the rate limiting throttle key for the request.
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
     }
 }

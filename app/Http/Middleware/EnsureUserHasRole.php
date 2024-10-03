@@ -16,7 +16,7 @@ class EnsureUserHasRole
     public function handle(Request $request, Closure $next, ...$allowedRoles): Response
     {
         // No restrictions for admins
-        if ($request->user()->isAdmin()) return $next($request);
+        if ($request->user()->isAdministrator()) return $next($request);
 
         $userRoles = $request->user()->roles;
 

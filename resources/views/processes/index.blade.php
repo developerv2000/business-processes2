@@ -15,7 +15,7 @@
                 <x-different.button style="action" icon="view_column" data-click-action="show-modal" data-modal-selector=".edit-table-columns-modal">{{ __('Columns') }}</x-different.button>
                 <x-different.button style="action" icon="remove" data-click-action="show-modal" data-modal-selector=".multiple-delete-modal">{{ __('Delete') }}</x-different.button>
 
-                @unless ($request->user()->isTrainee())
+                @unless ($request->user()->isGuest())
                     <x-different.export-form action="{{ route('processes.export') }}" />
                     <x-different.products-selection-form model="Process" />
                 @endunless

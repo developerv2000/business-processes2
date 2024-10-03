@@ -14,12 +14,12 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $name = [
-            Role::ADMIN_NAME,
+            Role::ADMINISTRATOR_NAME,
             Role::MODERATOR_NAME,
             Role::ANALYST_NAME,
             Role::BDM_NAME,
-            Role::ROBOT_NAME,
-            Role::TRAINEE_NAME,
+            Role::INACTIVE_NAME,
+            Role::GUEST_NAME,
         ];
 
         for ($i = 0; $i < count($name); $i++) {

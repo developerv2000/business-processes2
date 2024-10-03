@@ -418,7 +418,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
     /**
      * Filter records based on user roles and responsible countries.
      *
-     * This method applies filters to the query based on the user's role. If the user is not an admin or moderator,
+     * This method applies filters to the query based on the user's role. If the user is not an admin,
      * it limits the results to processes where the user is the assigned analyst or where the user's responsible
      * countries are associated with the manufacturer.
      *
@@ -434,8 +434,8 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         // Get a list of country IDs the user is responsible for
         $responsibleCountryIDs = $user->responsibleCountries->pluck('id');
 
-        // If the user is not an admin or moderator, apply additional filters
-        if (!$user->isAdminOrModerator()) {
+        // If the user is not an admin, apply additional filters
+        if (!$user->isAdministrator()) {
             $query->whereHas('manufacturer', function ($subquery) use ($user, $responsibleCountryIDs) {
                 // Filter for records where the user is the assigned analyst
                 $subquery->where('analyst_user_id', $user->id)
@@ -771,7 +771,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             if ($status->generalStatus->stage == 5) {
                 $notification = new ProcessOnContractStage($this, $status->name);
 
-                User::onlyAdmins()->get()->each->notify($notification);
+                User::onlyAdministrators()->get()->each->notify($notification);
             }
         }
     }
@@ -927,7 +927,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ['name' => 'Status date', 'order' => $order++, 'width' => 116, 'visible' => 1],
         ];
 
-        if ($user->isAdminOrModerator()) {
+        if ($user->isAdministrator()) {
             array_push(
                 $columns,
                 ['name' => '5Кк', 'order' => $order++, 'width' => 40, 'visible' => 1],
@@ -999,7 +999,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
         );
 
-        if ($user->isAdminOrModerator()) {
+        if ($user->isAdministrator()) {
             array_push(
                 $columns,
                 ['name' => 'History', 'order' => $order++, 'width' => 72, 'visible' => 1]

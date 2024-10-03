@@ -14,6 +14,8 @@
 
             <th>{{ __('Roles') }}</th>
 
+            <th>{{ __('Permissions') }}</th>
+
             <th>{{ __('Responsible countries') }}</th>
 
             <th>
@@ -40,6 +42,14 @@
                     <div class="td__categories">
                         @foreach ($instance->roles as $role)
                             <span class="badge badge--green">{{ $role->name }}</span>
+                        @endforeach
+                    </div>
+                </td>
+
+                <td>
+                    <div class="td__categories">
+                        @foreach ($instance->permissions as $permission)
+                            <span class="badge badge--pink">{{ $permission->name }}</span> <br>
                         @endforeach
                     </div>
                 </td>

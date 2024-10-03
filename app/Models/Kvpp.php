@@ -313,11 +313,11 @@ class Kvpp extends CommentableModel
      *
      * @return array
      */
-    public static function getDefaultTableColumns(): array
+    public static function getDefaultTableColumnsForUser($user): array
     {
         $order = 1;
 
-        return [
+        $columns = [
             ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
             ['name' => 'ID', 'order' => $order++, 'width' => 60, 'visible' => 1],
             ['name' => 'Source EU', 'order' => $order++, 'width' => 118, 'visible' => 1],
@@ -327,7 +327,17 @@ class Kvpp extends CommentableModel
             ['name' => 'Country', 'order' => $order++, 'width' => 86, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 92, 'visible' => 1],
             ['name' => 'Priority', 'order' => $order++, 'width' => 106, 'visible' => 1],
-            ['name' => 'VPS coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],
+        ];
+
+        if ($user->isAdmin()) {
+            array_push(
+                $columns,
+                ['name' => 'VPS coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
             ['name' => 'IVP coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Generic', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
@@ -345,7 +355,9 @@ class Kvpp extends CommentableModel
             ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 160, 'visible' => 1],
-        ];
+        );
+
+        return $columns;
     }
 
     /**

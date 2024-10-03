@@ -21,7 +21,7 @@ class User extends Authenticatable
     use Notifiable;
     use MergesParamsToRequest;
 
-    const DEFAULT_THEME = 'light';
+    const DEFAULT_THEME = 'dark';
     const DEFAULT_LOCALE_NAME = 'ru';
     const DEFAULT_SHRINK_BODY_WIDTH = false;
 
@@ -469,7 +469,7 @@ class User extends Authenticatable
         $settings['manufacturers_table_columns'] = Manufacturer::getDefaultTableColumns();
         $settings['products_table_columns'] = Product::getDefaultTableColumns();
         $settings['processes_table_columns'] = Process::getDefaultTableColumnsForUser($this);
-        $settings['kvpp_table_columns'] = Kvpp::getDefaultTableColumns();
+        $settings['kvpp_table_columns'] = Kvpp::getDefaultTableColumnsForUser($this);
         $settings['meetings_table_columns'] = Meeting::getDefaultTableColumns();
 
         $this->update(['settings' => $settings]);

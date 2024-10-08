@@ -80,7 +80,7 @@ class User extends Authenticatable
     | Relations
     |--------------------------------------------------------------------------
     */
-    
+
     public function roles()
     {
         return $this->belongsToMany(Role::class);
@@ -285,7 +285,7 @@ class User extends Authenticatable
         $instance->responsibleCountries()->attach($request->input('responsibleCountries'));
 
         // Load default settings for the user
-        $instance->loadDefaultSettings();
+        $instance->resetDefaultSettings();
 
         // Upload user's photo if provided
         $instance->uploadPhoto($request);
@@ -336,9 +336,7 @@ class User extends Authenticatable
         $this->update($request->validated());
         // Update responsible countries
         $this->responsibleCountries()->sync($request->input('responsibleCountries'));
-        // Update user's permissions
-        $this->permissions()->sync($request->input('permissions'));
-        // Update user's roles & permissions
+        // Update user's roles
         $this->updateRoles($request);
         // Upload user's photo if provided
         $this->uploadPhoto($request);
@@ -400,7 +398,7 @@ class User extends Authenticatable
         // Check if there is any difference between the old and new roles
         if (count(array_diff($oldRoles, $newRoles)) || count(array_diff($newRoles, $oldRoles))) {
             // Reload the default settings if roles have been changed
-            $this->loadDefaultSettings();
+            $this->resetDefaultSettings();
 
             // Laravel automatically logouts user, while updating its password
             // Manually logout user from all devices by cleaning session, if not current users password is being changed
@@ -408,6 +406,12 @@ class User extends Authenticatable
                 $this->logoutByClearingSession();
             }
         }
+    }
+
+    public function updatePermissions($request)
+    {
+        $this->permissions()->sync($request->input('permissions', []));
+        $this->resetDefaultSettings();
     }
 
     /**
@@ -454,7 +458,7 @@ class User extends Authenticatable
      *
      * Empty settings is used for Robots
      */
-    public function loadDefaultSettings(): void
+    public function resetDefaultSettings(): void
     {
         // Refresh user because roles may have been updated
         $this->refresh();
@@ -487,7 +491,7 @@ class User extends Authenticatable
     public static function resetDefaultSettingsForAll()
     {
         self::all()->each(function ($user) {
-            $user->loadDefaultSettings();
+            $user->resetDefaultSettings();
         });
     }
 

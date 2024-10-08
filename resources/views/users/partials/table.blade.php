@@ -49,7 +49,7 @@
                 <td>
                     <div class="td__categories">
                         @foreach ($instance->permissions as $permission)
-                            <span class="badge badge--pink">{{ $permission->name }}</span> <br>
+                            <span class="badge badge--blue">{{ $permission->name }}</span> <br>
                         @endforeach
                     </div>
                 </td>

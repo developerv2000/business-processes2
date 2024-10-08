@@ -43,6 +43,10 @@
                 <x-navbar.link icon="account_circle" href="{{ route('users.index') }}" @class([
                     'navbar-link--active' => request()->routeIs('users.*'),
                 ])>{{ __('Users') }}</x-navbar.link>
+
+                <x-navbar.link icon="manage_accounts" href="{{ route('roles.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('roles.index'),
+                ])>{{ __('Roles') }}</x-navbar.link>
             @endif
         </nav>
     </div>

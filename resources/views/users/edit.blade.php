@@ -39,13 +39,6 @@
                 required />
 
             <x-forms.id-based-multiple-select.instance-edit-select
-                label="Permissions"
-                name="permissions[]"
-                :options="$permissions"
-                :instance="$instance"
-                required />
-
-            <x-forms.id-based-multiple-select.instance-edit-select
                 label="Responsible countries"
                 name="responsibleCountries[]"
                 :options="$countries"
@@ -56,6 +49,19 @@
                 name="photo"
                 type="file"
                 accept=".png, .jpg, .jpeg" />
+        </div>
+    </x-forms.template.edit-template>
+
+    {{-- Permissions --}}
+    <x-forms.template.edit-template class="update-permissions-form" id="update-permissions-form" action="{{ route('users.update-permissions', $instance->id) }}">
+        <div class="form__section">
+            <h1 class="form__title main-title">{{ __('Permissions') }}</h1>
+
+            <x-forms.id-based-multiple-select.instance-edit-select
+                label="Permissions"
+                name="permissions[]"
+                :options="$permissions"
+                :instance="$instance" />
         </div>
     </x-forms.template.edit-template>
 

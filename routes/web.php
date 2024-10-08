@@ -13,6 +13,7 @@ use App\Http\Controllers\ProcessStatusHistoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductSelectionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\TemplatedModelController;
@@ -29,6 +30,7 @@ Route::controller(AuthenticatedSessionController::class)->group(function () {
 Route::middleware('auth', 'auth.session')->group(function () {
     Route::get('/', [ManufacturerController::class, 'index'])->name('manufacturers.index'); // home page
     Route::get('/statistics', [StatisticController::class, 'index'])->name('statistics.index');
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
 
     Route::controller(ProfileController::class)->name('profile.')->group(function () {
         Route::get('profile', 'edit')->name('edit');
@@ -95,6 +97,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     Route::prefix('users')->controller(UserController::class)->name('users.')->group(function () {
         RouteGenerator::defineDefaultCrudRoutesExcept(['trash', 'restore', 'export']);
         Route::patch('/update-password/{instance}', 'updatePassword')->name('update-password');
+        Route::patch('/update-permissions/{instance}', 'updatePermissions')->name('update-permissions');
     });
 
     Route::prefix('templated-models')->controller(TemplatedModelController::class)->name('templated-models.')->group(function () {

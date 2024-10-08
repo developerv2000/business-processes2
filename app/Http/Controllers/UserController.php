@@ -67,6 +67,13 @@ class UserController extends Controller
         return redirect($request->input('previous_url'));
     }
 
+    public function updatePermissions(Request $request, User $instance)
+    {
+        $instance->updatePermissions($request);
+
+        return redirect($request->input('previous_url'));
+    }
+
     public function destroy(Request $request)
     {
         $user = User::find($request->id);

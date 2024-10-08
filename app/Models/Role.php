@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Support\Traits\FindsRecordByName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
     use HasFactory;
+    use FindsRecordByName;
 
     // Update notes:
     // 1. Admin renamed with Administrator
@@ -20,12 +22,14 @@ class Role extends Model
     |--------------------------------------------------------------------------
     */
 
-    const ADMINISTRATOR_NAME = 'Administrator';     // Full access. Only admins can force delete records from trash!
-    const MODERATOR_NAME = 'Moderator';             // Full access except Admin part. Can view/create/edit/update/delete and export.
-    const ANALYST_NAME = 'Analyst';                 // User can be selected as analyst in all tables, filters etc.
-    const BDM_NAME = 'Bdm';                         // User can be selected as BDM in all tables, filters etc.
-    const INACTIVE_NAME = 'Inactive';               // No access, can not login
-    const GUEST_NAME = 'Guest';                     // Can only view all pages except Admin part. Can not create/edit/update/delete and export.
+    // Notes: Checkout RoleSeeder for full guide.
+
+    const ADMINISTRATOR_NAME = 'Administrator';   // Full access. Doesn`t attach any role related permissions.
+    const MODERATOR_NAME = 'Moderator';           // Can view/create/edit/update/delete and export 'Main part' and comments. Attachs role based permissions.
+    const ANALYST_NAME = 'Analyst';               // User is assosiated as 'Analyst'. Doesn`t attach any role based permissions.
+    const BDM_NAME = 'BDM';                       // User is assosiated as 'BDM'. Doesn`t attach any role related permissions.
+    const INACTIVE_NAME = 'Inactive';             // No access, can`t login. Doesn`t attach any role related permissions.
+    const GUEST_NAME = 'Guest';                   // Can only view 'Main part'. Can`t create/edit/update/delete and export. Attaches role based permissions.
 
     /*
     |--------------------------------------------------------------------------
@@ -64,5 +68,10 @@ class Role extends Model
     public static function getAll()
     {
         return self::orderBy('name')->get();
+    }
+
+    public static function getByName($name)
+    {
+        return self::where('name', $name)->firstOrFail();
     }
 }

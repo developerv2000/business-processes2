@@ -28,9 +28,9 @@ class UserSeeder extends Seeder
         $guestID = Role::where('name', Role::GUEST_NAME)->first()->id;
 
         $roleID = [
-            [$analystID],
-            [$analystID],
-            [$moderatorID],
+            [$moderatorID, $analystID],
+            [$moderatorID, $analystID],
+            [$moderatorID, $analystID],
             [$bdmID, $inactiveID],
             [$bdmID, $inactiveID],
             [$bdmID, $inactiveID],
@@ -52,7 +52,7 @@ class UserSeeder extends Seeder
                 $item->roles()->attach($id);
             }
 
-            $item->loadDefaultSettings();
+            $item->resetDefaultSettings();
         }
     }
 }

@@ -28,7 +28,7 @@ Route::controller(AuthenticatedSessionController::class)->group(function () {
 });
 
 Route::middleware('auth', 'auth.session')->group(function () {
-    Route::get('/', [ManufacturerController::class, 'index'])->name('manufacturers.index'); // home page
+    Route::get('/', [ManufacturerController::class, 'index'])->name('manufacturers.index');
     Route::get('/statistics', [StatisticController::class, 'index'])->name('statistics.index');
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
 

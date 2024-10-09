@@ -4,9 +4,11 @@
             {{-- Main --}}
             <x-navbar.title class="navbar-title--first">{{ __('Main') }}</x-navbar.title>
 
-            <x-navbar.link icon="view_list" href="{{ route('manufacturers.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('manufacturers.*'),
-            ])>{{ __('EPP') }}</x-navbar.link>
+            @can('view-epp')
+                <x-navbar.link icon="view_list" href="{{ route('manufacturers.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('manufacturers.*'),
+                ])>{{ __('EPP') }}</x-navbar.link>
+            @endcan
 
             <x-navbar.link icon="content_paste_search" href="{{ route('kvpp.index') }}" @class([
                 'navbar-link--active' => request()->routeIs('kvpp.*'),

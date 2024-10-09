@@ -39,7 +39,6 @@ class PermissionSeeder extends Seeder
             Permission::CAN_EDIT_VPS_NAME,
             Permission::CAN_EDIT_MEETINGS_NAME,
             Permission::CAN_EDIT_SPG_NAME,
-            Permission::CAN_NOT_EDIT_ANYTHING_NAME,
             Permission::CAN_NOT_EDIT_EPP_NAME,
             Permission::CAN_NOT_EDIT_KVPP_NAME,
             Permission::CAN_NOT_EDIT_IVP_NAME,

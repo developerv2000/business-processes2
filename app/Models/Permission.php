@@ -37,7 +37,7 @@ class Permission extends Model
     const CAN_NOT_VIEW_SPG_NAME = 'can`t view SPG';
 
     // Dashboard
-    const CAN_VIEW_USERS_NAME = 'can view-users';
+    const CAN_VIEW_USERS_NAME = 'can view users';
     const CAN_VIEW_DIFFERENTS_NAME = 'can view differents';
     const CAN_VIEW_ROLES_NAME = 'can view roles';
 
@@ -58,7 +58,6 @@ class Permission extends Model
     const CAN_EDIT_MEETINGS_NAME = 'can edit Meetings';
     const CAN_EDIT_SPG_NAME = 'can edit SPG';
 
-    const CAN_NOT_EDIT_ANYTHING_NAME = 'can`t edit anything';
     const CAN_NOT_EDIT_EPP_NAME = 'can`t edit EPP';
     const CAN_NOT_EDIT_KVPP_NAME = 'can`t edit KVPP';
     const CAN_NOT_EDIT_IVP_NAME = 'can`t edit IVP';
@@ -119,5 +118,22 @@ class Permission extends Model
     public static function getAll()
     {
         return self::orderBy('name')->get();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Miscellaneous
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Helper function to get the denying permission name.
+     *
+     * If the requested permission is 'CAN_EXPORT', this function returns 'CAN_NOT_EXPORT'.
+     */
+    public static function getDenyingPermission($permissionName)
+    {
+        // Swap 'can' with 'can`t' to get the denying permission name
+        return 'can`t ' . substr($permissionName, 4);
     }
 }

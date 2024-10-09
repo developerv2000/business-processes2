@@ -10,46 +10,64 @@
                 ])>{{ __('EPP') }}</x-navbar.link>
             @endcan
 
-            <x-navbar.link icon="content_paste_search" href="{{ route('kvpp.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('kvpp.*'),
-            ])>{{ __('KVPP') }}</x-navbar.link>
+            @can('view-kvpp')
+                <x-navbar.link icon="content_paste_search" href="{{ route('kvpp.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('kvpp.*'),
+                ])>{{ __('KVPP') }}</x-navbar.link>
+            @endcan
 
-            <x-navbar.link icon="pill" href="{{ route('products.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('products.*'),
-            ])>{{ __('IVP') }}</x-navbar.link>
+            @can('view-ivp')
+                <x-navbar.link icon="pill" href="{{ route('products.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('products.*'),
+                ])>{{ __('IVP') }}</x-navbar.link>
+            @endcan
 
-            <x-navbar.link icon="stacks" href="{{ route('processes.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('processes.*'),
-            ])>{{ __('VPS') }}</x-navbar.link>
+            @can('view-vps')
+                <x-navbar.link icon="stacks" href="{{ route('processes.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('processes.*'),
+                ])>{{ __('VPS') }}</x-navbar.link>
+            @endcan
 
-            <x-navbar.link icon="calendar_month" href="{{ route('meetings.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('meetings.*'),
-            ])>{{ __('Meetings') }}</x-navbar.link>
+            @can('view-meetings')
+                <x-navbar.link icon="calendar_month" href="{{ route('meetings.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('meetings.*'),
+                ])>{{ __('Meetings') }}</x-navbar.link>
+            @endcan
 
-            <x-navbar.link icon="bar_chart" href="{{ route('statistics.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('statistics.*'),
-            ])>{{ __('KPE') }}</x-navbar.link>
+            @can('view-kpe')
+                <x-navbar.link icon="bar_chart" href="{{ route('statistics.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('statistics.index'),
+                ])>{{ __('KPE') }}</x-navbar.link>
+            @endcan
 
-            <x-navbar.link icon="pie_chart" href="{{ route('plan.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('plan.*'),
-            ])>{{ __('SPG') }}</x-navbar.link>
+            @can('view-spg')
+                <x-navbar.link icon="pie_chart" href="{{ route('plan.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('plan.*'),
+                ])>{{ __('SPG') }}</x-navbar.link>
+            @endcan
 
             {{-- Dashboard --}}
-            @if (request()->user()->isAdministrator())
+            @canany(['view-users', 'view-differents', 'view-roles'])
                 <x-navbar.title class="navbar-title--top-margined">{{ __('Dashboard') }}</x-navbar.title>
+            @endcanany
 
+            @can('view-users')
                 <x-navbar.link icon="dataset" href="{{ route('templated-models.index') }}" @class([
                     'navbar-link--active' => request()->routeIs('templated-models.*'),
                 ])>{{ __('Different') }}</x-navbar.link>
+            @endcan
 
+            @can('view-differents')
                 <x-navbar.link icon="account_circle" href="{{ route('users.index') }}" @class([
                     'navbar-link--active' => request()->routeIs('users.*'),
                 ])>{{ __('Users') }}</x-navbar.link>
+            @endcan
 
+            @can('view-roles')
                 <x-navbar.link icon="manage_accounts" href="{{ route('roles.index') }}" @class([
                     'navbar-link--active' => request()->routeIs('roles.index'),
                 ])>{{ __('Roles') }}</x-navbar.link>
-            @endif
+            @endcan
         </nav>
     </div>
 </aside>

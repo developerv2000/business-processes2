@@ -8,6 +8,7 @@ use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\HasAttachments;
 use App\Support\Traits\MergesParamsToRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Gate;
 
 class Manufacturer extends CommentableModel
 {
@@ -460,12 +461,20 @@ class Manufacturer extends CommentableModel
      *
      * @return array
      */
-    public static function getDefaultTableColumns(): array
+    public static function getDefaultTableColumnsForUser($user): array
     {
         $order = 1;
+        $columns = array();
 
-        return [
-            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+        if (Gate::forUser($user)->allows('edit-epp')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 144, 'visible' => 1],
@@ -489,8 +498,16 @@ class Manufacturer extends CommentableModel
             ['name' => 'Meetings', 'order' => $order++, 'width' => 106, 'visible' => 1],
             ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
             ['name' => 'Attachments', 'order' => $order++, 'width' => 160, 'visible' => 1],
-            ['name' => 'Edit attachments', 'order' => $order++, 'width' => 192, 'visible' => 1],
-        ];
+        );
+
+        if (Gate::forUser($user)->allows('edit-epp')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit attachments', 'order' => $order++, 'width' => 192, 'visible' => 1],
+            );
+        }
+
+        return $columns;
     }
 
     /**

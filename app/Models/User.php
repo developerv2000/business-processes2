@@ -468,7 +468,7 @@ class User extends Authenticatable
             'shrink_body_width' => User::DEFAULT_SHRINK_BODY_WIDTH,
         ];
 
-        $settings['manufacturers_table_columns'] = Manufacturer::getDefaultTableColumns();
+        $settings['manufacturers_table_columns'] = Manufacturer::getDefaultTableColumnsForUser($this);
         $settings['products_table_columns'] = Product::getDefaultTableColumns();
         $settings['processes_table_columns'] = Process::getDefaultTableColumnsForUser($this);
         $settings['kvpp_table_columns'] = Kvpp::getDefaultTableColumnsForUser($this);

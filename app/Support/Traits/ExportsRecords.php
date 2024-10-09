@@ -3,6 +3,7 @@
 namespace App\Support\Traits;
 
 use App\Support\Helper;
+use Illuminate\Support\Facades\Gate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 /**
@@ -29,7 +30,7 @@ trait ExportsRecords
     public static function exportRecordsAsExcel($query)
     {
         $className = static::class;
-        $isAdmin = request()->user()->isAdministrator();
+        $unlimited = Gate::allows('export-unlimited-excel');
 
         // Load the Excel template
         $template = storage_path($className::EXCEL_TEMPLATE_STORAGE_PATH);
@@ -37,7 +38,7 @@ trait ExportsRecords
         $sheet = $spreadsheet->getActiveSheet();
 
         // Export records based on user role
-        if ($isAdmin) {
+        if ($unlimited) {
             // Admin users: process large record sets in chunks
             static::fillSheetByChunkingRecords($query, $sheet, $className);
         } else {

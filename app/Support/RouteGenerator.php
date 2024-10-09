@@ -11,12 +11,13 @@ use Illuminate\Support\Facades\Route;
 /**
  * Class RouteGenerator
  *
- * The RouteGenerator class provides helper methods for generating routes in Laravel.
+ * This class provides helper methods for defining CRUD-related routes with customizable middleware
+ * for viewing and editing functionalities.
  */
 class RouteGenerator
 {
     /**
-     * Get default CRUD route names.
+     * Get the default CRUD route names.
      *
      * @return array The array of default CRUD route names.
      */
@@ -29,90 +30,99 @@ class RouteGenerator
     }
 
     /**
-     * Define a template route by name.
+     * Define a specific CRUD route by its name.
      *
      * @param string $name The name of the route to define.
+     * @param string $viewMiddleware Middleware for viewing actions.
+     * @param string $editMiddleware Middleware for editing actions.
      * @return void
      */
-    public static function defineDefaultCrudRouteByName($name)
+    public static function defineDefaultCrudRouteByName($name, $viewMiddleware = null, $editMiddleware = null)
     {
         switch ($name) {
             case 'index':
-                Route::get('/', 'index')->name('index');
+                Route::get('/', 'index')->name('index')->middleware($viewMiddleware);
                 break;
             case 'edit':
-                Route::get('/edit/{instance}', 'edit')->name('edit');
+                Route::get('/edit/{instance}', 'edit')->name('edit')->middleware($editMiddleware);
                 break;
             case 'create':
-                Route::get('/create', 'create')->name('create');
+                Route::get('/create', 'create')->name('create')->middleware($editMiddleware);
                 break;
             case 'trash':
-                Route::get('/trash', 'trash')->name('trash');
+                Route::get('/trash', 'trash')->name('trash')->middleware($viewMiddleware);
                 break;
             case 'store':
-                Route::post('/store', 'store')->name('store');
+                Route::post('/store', 'store')->name('store')->middleware($editMiddleware);
                 break;
             case 'update':
-                Route::patch('/update/{instance}', 'update')->name('update');
+                Route::patch('/update/{instance}', 'update')->name('update')->middleware($editMiddleware);
                 break;
             case 'destroy':
-                Route::delete('/destroy', 'destroy')->name('destroy');
+                Route::delete('/destroy', 'destroy')->name('destroy')->middleware($editMiddleware);
                 break;
             case 'restore':
-                Route::patch('/restore', 'restore')->name('restore');
+                Route::patch('/restore', 'restore')->name('restore')->middleware($editMiddleware);
                 break;
             case 'export':
-                Route::post('/export', 'export')->name('export');
+                Route::post('/export', 'export')->name('export')->middleware('can:export-as-excel');
                 break;
         }
     }
 
     /**
-     * Define all default templated routes for CRUD operations
+     * Define all default CRUD routes.
      *
+     * @param string $viewMiddleware Middleware for viewing actions.
+     * @param string $editMiddleware Middleware for editing actions.
      * @return void
      */
-    public static function defineAllDefaultCrudRoutes()
+    public static function defineAllDefaultCrudRoutes($viewMiddleware = null, $editMiddleware = null)
     {
-        // Define default routes
+        // Get the list of default routes.
         $defaultRoutes = self::getDefaultCrudRouteNames();
 
-        // Define routes
+        // Define each route.
         foreach ($defaultRoutes as $route) {
-            self::defineDefaultCrudRouteByName($route);
+            self::defineDefaultCrudRouteByName($route, $viewMiddleware, $editMiddleware);
         }
     }
 
     /**
-     * Define default templated routes for CRUD operations, excluding specified routes.
+     * Define CRUD routes, excluding specific routes.
      *
      * @param array $excepts The routes to exclude from the definition.
+     * @param string $viewMiddleware Middleware for viewing actions.
+     * @param string $editMiddleware Middleware for editing actions.
      * @return void
      */
-    public static function defineDefaultCrudRoutesExcept($excepts)
+    public static function defineDefaultCrudRoutesExcept($excepts = [], $viewMiddleware = null, $editMiddleware = null)
     {
-        // Define default routes
+        // Get the list of default routes.
         $defaultRoutes = self::getDefaultCrudRouteNames();
 
-        // Remove excluded routes
+        // Filter out the excluded routes.
         $routes = array_diff($defaultRoutes, $excepts);
 
-        // Define routes
+        // Define the remaining routes.
         foreach ($routes as $route) {
-            self::defineDefaultCrudRouteByName($route);
+            self::defineDefaultCrudRouteByName($route, $viewMiddleware, $editMiddleware);
         }
     }
 
     /**
-     * Define default templated routes for CRUD operations, including only specified routes.
+     * Define only specific CRUD routes.
      *
      * @param array $only The routes to include in the definition.
+     * @param string $viewMiddleware Middleware for viewing actions.
+     * @param string $editMiddleware Middleware for editing actions.
      * @return void
      */
-    public static function defineDefaultCrudRoutesOnly($only = [])
+    public static function defineDefaultCrudRoutesOnly($only = [], $viewMiddleware = null, $editMiddleware = null)
     {
+        // Define only the specified routes.
         foreach ($only as $name) {
-            self::defineDefaultCrudRouteByName($name);
+            self::defineDefaultCrudRouteByName($name, $viewMiddleware, $editMiddleware);
         }
     }
 }

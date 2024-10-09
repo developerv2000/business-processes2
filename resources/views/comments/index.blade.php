@@ -11,11 +11,14 @@
     <div class="comments-index__box styled-box">
         <h1 class="comments-index__title main-title">{{ __('All comments') }} - {{ $instance->comments->count() }}</h1>
 
-        @include('comments.partials.create-form')
+        @can('edit-comments')
+            @include('comments.partials.create-form')
+        @endcan
+
         @include('comments.partials.list')
     </div>
 
-    @if (request()->user()->isAdministrator())
+    @can('edit-comments')
         <x-modals.target-delete action="{{ route('comments.destroy') }}" :force-delete="false" />
-    @endif
+    @endcan
 @endsection

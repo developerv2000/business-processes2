@@ -3,6 +3,7 @@
 namespace App\Support\Traits;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * Trait DestroysModelRecords
@@ -28,7 +29,9 @@ trait DestroysModelRecords
         $ids = (array) ($request->input('id') ?: $request->input('ids'));
 
         // Only admins can force delete
-        if ($request->input('force_delete') && request()->user()->isAdministrator()) {
+        if ($request->input('force_delete')) {
+            Gate::authorize('delete-from-trash');
+
             foreach ($ids as $id) {
                 // Check if model exists before force deleting
                 $model = $this->model::withTrashed()->find($id);

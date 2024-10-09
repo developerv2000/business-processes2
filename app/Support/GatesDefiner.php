@@ -111,7 +111,7 @@ class GatesDefiner
         |--------------------------------------------------------------------------
         */
 
-        Gate::define('export-excel', function ($user) {
+        Gate::define('export-as-excel', function ($user) {
             return $user->hasPermission('can export as excel');
         });
 

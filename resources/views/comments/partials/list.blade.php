@@ -10,7 +10,7 @@
                         description="{{ $comment->created_at->diffForHumans() }}">
                     </x-different.ava>
 
-                    @if (request()->user()->isAdministrator())
+                    @can('edit-comments')
                         <div class="comments-list__actions">
                             <x-different.linked-button
                                 style="main"
@@ -26,7 +26,7 @@
                                 data-modal-selector=".target-delete-modal"
                                 :data-target-id="$comment->id" />
                         </div>
-                    @endif
+                    @endcan
                 </div>
 
                 <div class="comments-list__item-body">

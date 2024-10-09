@@ -28,7 +28,7 @@ Route::controller(AuthenticatedSessionController::class)->group(function () {
 });
 
 Route::middleware('auth', 'auth.session')->group(function () {
-    Route::get('/', [ManufacturerController::class, 'index'])->name('manufacturers.index');
+    Route::get('/', [ManufacturerController::class, 'index'])->name('manufacturers.index'); // home
     Route::get('/statistics', [StatisticController::class, 'index'])->name('statistics.index');
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
 
@@ -47,11 +47,11 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     Route::prefix('comments')->controller(CommentController::class)->name('comments.')->group(function () {
         Route::get('/view/{commentable_type}/{commentable_id}', 'index')->name('index');
-        RouteGenerator::defineDefaultCrudRoutesOnly(['edit', 'store', 'update', 'destroy']);
+        RouteGenerator::defineDefaultCrudRoutesOnly(['edit', 'store', 'update', 'destroy'], null, 'can:edit-comments');
     });
 
     Route::prefix('manufacturers')->controller(ManufacturerController::class)->name('manufacturers.')->group(function () {
-        RouteGenerator::defineDefaultCrudRoutesExcept(['index']);
+        RouteGenerator::defineDefaultCrudRoutesExcept(['index'], 'can:view-epp', 'can:edit-epp');
     });
 
     Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {

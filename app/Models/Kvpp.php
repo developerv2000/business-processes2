@@ -8,6 +8,7 @@ use App\Support\Helper;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Gate;
 
 class Kvpp extends CommentableModel
 {
@@ -316,9 +317,17 @@ class Kvpp extends CommentableModel
     public static function getDefaultTableColumnsForUser($user): array
     {
         $order = 1;
+        $columns = array();
 
-        $columns = [
-            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+        if (Gate::forUser($user)->allows('edit-kvpp')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 60, 'visible' => 1],
             ['name' => 'Source EU', 'order' => $order++, 'width' => 118, 'visible' => 1],
             ['name' => 'Source IN', 'order' => $order++, 'width' => 118, 'visible' => 1],
@@ -327,9 +336,9 @@ class Kvpp extends CommentableModel
             ['name' => 'Country', 'order' => $order++, 'width' => 86, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 92, 'visible' => 1],
             ['name' => 'Priority', 'order' => $order++, 'width' => 106, 'visible' => 1],
-        ];
+        );
 
-        if ($user->isAdministrator()) {
+        if (Gate::forUser($user)->allows('view-kvpp-coincident-processes')) {
             array_push(
                 $columns,
                 ['name' => 'VPS coincidents', 'order' => $order++, 'width' => 138, 'visible' => 1],

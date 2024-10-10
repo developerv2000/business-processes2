@@ -10,22 +10,31 @@
             ])
 
             <div class="pre-content__actions">
-                <x-different.linked-button style="action" icon="add" href="{{ route('kvpp.create') }}">{{ __('New') }}</x-different.linked-button>
+                @can('edit-kvpp')
+                    <x-different.linked-button style="action" icon="add" href="{{ route('kvpp.create') }}">{{ __('New') }}</x-different.linked-button>
+                @endcan
+
                 <x-different.linked-button style="action" icon="delete" href="{{ route('kvpp.trash') }}">{{ __('Trash') }}</x-different.linked-button>
 
                 <x-different.button style="action" icon="view_column" data-click-action="show-modal" data-modal-selector=".edit-table-columns-modal">{{ __('Columns') }}</x-different.button>
-                <x-different.button style="action" icon="remove" data-click-action="show-modal" data-modal-selector=".multiple-delete-modal">{{ __('Delete') }}</x-different.button>
 
-                @unless ($request->user()->isGuest())
+                @can('edit-kvpp')
+                    <x-different.button style="action" icon="remove" data-click-action="show-modal" data-modal-selector=".multiple-delete-modal">{{ __('Delete') }}</x-different.button>
+                @endcan
+
+                @can('export-as-excel')
                     <x-different.export-form action="{{ route('kvpp.export') }}" />
-                @endunless
+                @endcan
             </div>
         </div>
 
         @include('tables.default-template', ['tableName' => 'kvpp'])
     </div>
 
-    <x-modals.multiple-delete action="{{ route('kvpp.destroy') }}" :force-delete="false" />
+    @can('edit-kvpp')
+        <x-modals.multiple-delete action="{{ route('kvpp.destroy') }}" :force-delete="false" />
+    @endcan
+
     <x-modals.edit-table-columns action="{{ route('settings.update-table-columns') }}" table="kvpp" :columns="$allTableColumns" />
 @endsection
 

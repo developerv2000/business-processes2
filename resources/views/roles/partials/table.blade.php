@@ -28,7 +28,7 @@
                         @break
 
                         @case('Inactive')
-                            <span class="badge badge--blue">Can`t login</span>
+                            <span class="badge badge--blue">can`t login</span>
                         @break
 
                         @default

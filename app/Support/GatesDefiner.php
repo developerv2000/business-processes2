@@ -135,8 +135,8 @@ class GatesDefiner
             return $user->hasPermission('can edit comments');
         });
 
-        Gate::define('add-processes-to-spg', function ($user) {
-            return $user->hasPermission('can add processes to SPG');
+        Gate::define('control-spg-processes', function ($user) {
+            return $user->hasPermission('can control SPG processes');
         });
 
         Gate::define('edit-processes-status-history', function ($user) {
@@ -149,6 +149,10 @@ class GatesDefiner
 
         Gate::define('view-kpe-extended-version', function ($user) {
             return $user->hasPermission('can view KPE extended version');
+        });
+
+        Gate::define('view-kpe-of-all-analysts', function ($user) {
+            return $user->hasPermission('can view KPE of all analysts');
         });
 
         Gate::define('upgrade-process-status-after-contract', function ($user) {

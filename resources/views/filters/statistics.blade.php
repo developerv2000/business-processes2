@@ -22,16 +22,18 @@
         name="bdm_user_id"
         :options="$bdmUsers" />
 
-    @if ($request->user()->isAdministrator())
+    @can('view-kpe-of-all-analysts')
         <x-forms.id-based-single-select.request-based-select
             label="Analyst"
             name="analyst_user_id"
             :options="$analystUsers" />
+    @endcan
 
+    @can('view-kpe-extended-version')
         <x-forms.boolean-select.request-based-select
             label="Extensive statistics"
             name="extensive_version" />
-    @endif
+    @endcan
 
     <x-forms.id-based-multiple-select.request-based-select
         label="Search country"

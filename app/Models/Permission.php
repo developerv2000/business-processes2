@@ -78,19 +78,28 @@ class Permission extends Model
     |--------------------------------------------------------------------------
     */
 
+    const CAN_DELETE_FROM_TRASH_NAME = 'can delete from trash';
+    const CAN_EDIT_COMMENTS_NAME = 'can edit comments';
+
+    // Export
     const CAN_EXPORT_AS_EXCEL_NAME = 'can export as excel';
     const CAN_NOT_EXPORT_AS_EXCEL_NAME = 'can`t export as excel';
     const CAN_EXPORT_UNLIMITED_RECORDS_AS_EXCEL_NAME = 'can export unlimited records as excel';
 
+    // KVPP
+    const CAN_VIEW_KVPP_COINCIDENT_PROCESSES_NAME = 'can view kvpp coincident processes';
+
+    // KPE
+    const CAN_VIEW_KPE_EXTENDED_VERSION_NAME = 'can view KPE extended version';
+    const CAN_VIEW_KPE_OF_ALL_ANALYSTS = 'can view KPE of all analysts';
+
+    // SPG
+    const CAN_CONTROL_SPG_PROCESSES = 'can control SPG processes';
+
+    // VPS
     const CAN_VIEW_ALL_ANALYSTS_PROCESSES_NAME = 'can view all analysts processes';
     const CAN_EDIT_ALL_ANALYSTS_PROCESSES_NAME = 'can edit all analysts processes';
-
-    const CAN_DELETE_FROM_TRASH_NAME = 'can delete from trash';
-    const CAN_EDIT_COMMENTS_NAME = 'can edit comments';
-    const CAN_ADD_PROCESSES_TO_SPG_NAME = 'can add processes to SPG';
     const CAN_EDIT_PROCESSES_STATUS_HISTORY_NAME = 'can edit processes status history';
-    const CAN_VIEW_KVPP_COINCIDENT_PROCESSES_NAME = 'can view kvpp coincident processes';
-    const CAN_VIEW_KPE_EXTENDED_VERSION_NAME = 'can view KPE extended version';
     const CAN_UPGRADE_PROCESS_STATUS_AFTER_CONTRACT_NAME = 'can upgrade process status after contract';
 
     /*

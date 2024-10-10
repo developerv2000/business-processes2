@@ -7,6 +7,7 @@ use App\Support\Helper;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Gate;
 
 class Meeting extends CommentableModel
 {
@@ -202,12 +203,20 @@ class Meeting extends CommentableModel
      *
      * @return array
      */
-    public static function getDefaultTableColumns(): array
+    public static function getDefaultTableColumnsForUser($user): array
     {
         $order = 1;
+        $columns = array();
 
-        return [
-            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+        if (Gate::forUser($user)->allows('edit-meetings')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
             ['name' => 'Year', 'order' => $order++, 'width' => 64, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
@@ -221,7 +230,9 @@ class Meeting extends CommentableModel
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
-        ];
+        );
+
+        return $columns;
     }
 
     /**

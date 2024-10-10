@@ -2,9 +2,11 @@
     {{-- Head start --}}
     <thead>
         <tr>
-            <th width="60">
-                @include('tables.components.th.edit')
-            </th>
+            @can('edit-users')
+                <th width="60">
+                    @include('tables.components.th.edit')
+                </th>
+            @endcan
 
             <th width="100">{{ __('Photo') }}</th>
 
@@ -28,9 +30,11 @@
     <tbody>
         @foreach ($records as $instance)
             <tr>
-                <td>
-                    @include('tables.components.td.edit-button', ['href' => route('users.edit', $instance->id)])
-                </td>
+                @can('edit-users')
+                    <td>
+                        @include('tables.components.td.edit-button', ['href' => route('users.edit', $instance->id)])
+                    </td>
+                @endcan
 
                 <td>
                     <img class="td__image" src="{{ $instance->photo_asset_path }}">

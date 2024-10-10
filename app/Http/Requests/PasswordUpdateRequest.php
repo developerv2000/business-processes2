@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class PasswordUpdateRequest extends FormRequest
 {
@@ -26,7 +27,7 @@ class PasswordUpdateRequest extends FormRequest
         ];
 
         // Only validate current password if not an admin or not updating via dashboard panel
-        if (!$this->user()->isAdministrator() || !$this->by_admin) {
+        if (Gate::denies('edit-users') || !$this->by_admin) {
             $rules['current_password'] = ['required', 'current_password'];
         }
 

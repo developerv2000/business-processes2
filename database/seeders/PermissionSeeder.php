@@ -56,10 +56,11 @@ class PermissionSeeder extends Seeder
             Permission::CAN_EDIT_ALL_ANALYSTS_PROCESSES_NAME,
             Permission::CAN_DELETE_FROM_TRASH_NAME,
             Permission::CAN_EDIT_COMMENTS_NAME,
-            Permission::CAN_ADD_PROCESSES_TO_SPG_NAME,
+            Permission::CAN_CONTROL_SPG_PROCESSES,
             Permission::CAN_EDIT_PROCESSES_STATUS_HISTORY_NAME,
             Permission::CAN_VIEW_KVPP_COINCIDENT_PROCESSES_NAME,
             Permission::CAN_VIEW_KPE_EXTENDED_VERSION_NAME,
+            Permission::CAN_VIEW_KPE_OF_ALL_ANALYSTS,
             Permission::CAN_UPGRADE_PROCESS_STATUS_AFTER_CONTRACT_NAME,
         ];
 

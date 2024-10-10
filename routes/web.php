@@ -28,9 +28,9 @@ Route::controller(AuthenticatedSessionController::class)->group(function () {
 });
 
 Route::middleware('auth', 'auth.session')->group(function () {
-    Route::get('/', [ManufacturerController::class, 'index'])->name('manufacturers.index'); // home
-    Route::get('/statistics', [StatisticController::class, 'index'])->name('statistics.index');
-    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('/', [ManufacturerController::class, 'index'])->name('manufacturers.index')->middleware('can:view-epp'); // home
+    Route::get('/statistics', [StatisticController::class, 'index'])->name('statistics.index')->middleware('can:view-kpe');
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index')->middleware('can:view-roles');
 
     Route::controller(ProfileController::class)->name('profile.')->group(function () {
         Route::get('profile', 'edit')->name('edit');
@@ -55,7 +55,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {
-        RouteGenerator::defineAllDefaultCrudRoutes();
+        RouteGenerator::defineAllDefaultCrudRoutes('can:view-ivp', 'can:edit-ivp');
         Route::post('/get-similar-records', 'getSimilarRecords');  // ajax request on create form for uniqness
     });
 
@@ -64,51 +64,53 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     Route::prefix('processes')->controller(ProcessController::class)->name('processes.')->group(function () {
-        RouteGenerator::defineAllDefaultCrudRoutes();
+        RouteGenerator::defineAllDefaultCrudRoutes('can:view-vps', 'can:edit-vps');
 
-        Route::get('/duplicate/{instance}', 'duplication')->name('duplication');
-        Route::post('/duplicate', 'duplicate')->name('duplicate');
+        Route::get('/duplicate/{instance}', 'duplication')->name('duplication')->middleware('can:edit-vps');
+        Route::post('/duplicate', 'duplicate')->name('duplicate')->middleware('can:edit-vps');
 
         Route::post('/get-create-form-stage-inputs', 'getCreateFormStageInputs');  // ajax request on create form status select change
         Route::post('/get-create-form-forecast-inputs', 'getCreateFormForecastInputs');  // ajax request on create form search countries change
         Route::post('/get-edit-form-stage-inputs', 'getEditFormStageInputs');  // ajax request on edit form status select change
 
-        Route::post('/update-contracted-in-plan-value', 'updateContractedInPlanValue');  // ajax request on checkbox toggle
-        Route::post('/update-registered-in-plan-value', 'updateRegisteredInPlanValue');  // ajax request on checkbox toggle
+        // ajax request on checkbox toggle
+        Route::post('/update-contracted-in-plan-value', 'updateContractedInPlanValue')->middleware('can:control-spg-processes');
+        // ajax request on checkbox toggle
+        Route::post('/update-registered-in-plan-value', 'updateRegisteredInPlanValue')->middleware('can:control-spg-processes');
     });
 
     Route::prefix('process/{process}/status-history')
         ->controller(ProcessStatusHistoryController::class)
         ->name('process-status-history.')
-        ->middleware('role:admin')
+        ->middleware('can:edit-processes-status-history')
         ->group(function () {
             RouteGenerator::defineDefaultCrudRoutesOnly(['index', 'edit', 'update', 'destroy']);
         });
 
     Route::prefix('kvpp')->controller(KvppController::class)->name('kvpp.')->group(function () {
-        RouteGenerator::defineAllDefaultCrudRoutes();
+        RouteGenerator::defineAllDefaultCrudRoutes('can:view-kvpp', 'can:edit-kvpp');
         Route::post('/get-similar-records', 'getSimilarRecords');  // ajax request on create form for uniqness
     });
 
     Route::prefix('meetings')->controller(MeetingController::class)->name('meetings.')->group(function () {
-        RouteGenerator::defineAllDefaultCrudRoutes();
+        RouteGenerator::defineAllDefaultCrudRoutes('can:view-meetings', 'can:edit-meetings');
     });
 
     Route::prefix('users')->controller(UserController::class)->name('users.')->group(function () {
-        RouteGenerator::defineDefaultCrudRoutesExcept(['trash', 'restore', 'export']);
-        Route::patch('/update-password/{instance}', 'updatePassword')->name('update-password');
-        Route::patch('/update-permissions/{instance}', 'updatePermissions')->name('update-permissions');
+        RouteGenerator::defineDefaultCrudRoutesExcept(['trash', 'restore', 'export'], 'can:view-users', 'can:edit-users');
+        Route::patch('/update-password/{instance}', 'updatePassword')->name('update-password')->middleware('can:edit-users');
+        Route::patch('/update-permissions/{instance}', 'updatePermissions')->name('update-permissions')->middleware('can:edit-users');
     });
 
     Route::prefix('templated-models')->controller(TemplatedModelController::class)->name('templated-models.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/{modelName}', 'show')->name('show');
-        Route::get('/{modelName}/create', 'create')->name('create');
-        Route::get('/{modelName}/edit/{id}', 'edit')->name('edit');
+        Route::get('/', 'index')->name('index')->middleware('can:view-differents');
+        Route::get('/{modelName}', 'show')->name('show')->middleware('can:view-differents');
+        Route::get('/{modelName}/create', 'create')->name('create')->middleware('can:edit-differents');
+        Route::get('/{modelName}/edit/{id}', 'edit')->name('edit')->middleware('can:edit-differents');
 
-        Route::post('{modelName}/store', 'store')->name('store');
-        Route::patch('{modelName}/update/{id}', 'update')->name('update');
-        Route::delete('{modelName}/destroy', 'destroy')->name('destroy');
+        Route::post('{modelName}/store', 'store')->name('store')->middleware('can:edit-differents');
+        Route::patch('{modelName}/update/{id}', 'update')->name('update')->middleware('can:edit-differents');
+        Route::delete('{modelName}/destroy', 'destroy')->name('destroy')->middleware('can:edit-differents');
     });
 
     Route::prefix('notifications')->controller(NotificationController::class)->name('notifications.')->group(function () {
@@ -124,12 +126,12 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     Route::prefix('plan')->controller(PlanController::class)->name('plan.')->group(function () {
-        RouteGenerator::defineDefaultCrudRoutesExcept(['trash', 'restore', 'export']);
+        RouteGenerator::defineDefaultCrudRoutesExcept(['trash', 'restore', 'export'], 'can:view-spg', 'can:edit-spg');
 
-        Route::get('/show/{plan:year}', 'show')->name('show');
+        Route::get('/show/{plan:year}', 'show')->name('show')->middleware('can:view-spg');
 
         // Country codes
-        Route::prefix('/{plan}/country-codes')->name('country.codes.')->group(function () {
+        Route::prefix('/{plan}/country-codes')->name('country.codes.')->middleware('can:edit-spg')->group(function () {
             Route::get('/index', 'countryCodesIndex')->name('index');
             Route::get('/create', 'countryCodesCreate')->name('create');
             // Route::get('/edit/{countryCode}', 'countryCodesEdit')->name('edit'); // removed
@@ -140,7 +142,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
         });
 
         // Maarketing authorization holders
-        Route::prefix('/{plan}/country-codes/{countryCode}/marketing-authorization-holders')->name('marketing.authorization.holders.')->group(function () {
+        Route::prefix('/{plan}/country-codes/{countryCode}/marketing-authorization-holders')->name('marketing.authorization.holders.')->middleware('can:edit-spg')->group(function () {
             Route::get('/index', 'MAHsIndex')->name('index');
             Route::get('/create', 'MAHsCreate')->name('create');
             Route::get('/edit/{marketingAuthorizationHolder}', 'MAHsEdit')->name('edit');

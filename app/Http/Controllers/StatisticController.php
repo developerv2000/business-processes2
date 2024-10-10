@@ -8,6 +8,7 @@ use App\Models\ProcessGeneralStatus;
 use App\Support\Helper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * There are extensive and minified versions of statistics,
@@ -90,7 +91,7 @@ class StatisticController extends Controller
         $user = $request->user();
 
         // Restrict non-admin users to only see their own process statistics
-        if (!$user->isAdministrator()) {
+        if (Gate::denies('view-kpe-of-all-analysts')) {
             $request->merge([
                 'analyst_user_id' => $user->id,
             ]);

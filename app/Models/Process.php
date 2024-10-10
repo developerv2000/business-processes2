@@ -772,7 +772,11 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             if ($status->generalStatus->stage == 5) {
                 $notification = new ProcessOnContractStage($this, $status->name);
 
-                User::onlyAdministrators()->get()->each->notify($notification);
+                User::all()->each(function ($user) use ($notification) {
+                    if (Gate::forUser($user)->allows('recieve-notification-on-process-contract')) {
+                        $user->notify($notification);
+                    }
+                });
             }
         }
     }

@@ -101,6 +101,7 @@ class Permission extends Model
     const CAN_EDIT_ALL_ANALYSTS_PROCESSES_NAME = 'can edit all analysts processes';
     const CAN_EDIT_PROCESSES_STATUS_HISTORY_NAME = 'can edit processes status history';
     const CAN_UPGRADE_PROCESS_STATUS_AFTER_CONTRACT_NAME = 'can upgrade process status after contract';
+    const CAN_RECIEVE_NOTIFICATION_ON_PROCESS_CONTRACT = 'can recieve notification on process contract';
 
     /*
     |--------------------------------------------------------------------------

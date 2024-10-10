@@ -158,5 +158,9 @@ class GatesDefiner
         Gate::define('upgrade-process-status-after-contract', function ($user) {
             return $user->hasPermission('can upgrade process status after contract');
         });
+
+        Gate::define('recieve-notification-on-process-contract', function ($user) {
+            return $user->hasPermission('can recieve notification on process contract');
+        });
     }
 }

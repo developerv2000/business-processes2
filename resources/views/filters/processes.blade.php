@@ -94,12 +94,12 @@
         label="Pack"
         name="pack" />
 
-    @if ($request->user()->isAdministrator())
+    @can('view-all-analysts-processes')
         <x-forms.id-based-single-select.request-based-select
             label="Analyst"
             name="analyst_user_id"
             :options="$analystUsers" />
-    @endif
+    @endcan
 
     <x-forms.id-based-single-select.request-based-select
         label="BDM"
@@ -152,7 +152,7 @@
         :options="$manufacturerCategories" />
 
     {{-- Plan filters --}}
-    @if ($request->user()->isAdministrator())
+    @can('control-spg-processes')
         <x-forms.boolean-select.request-based-select
             label="Contracted on SPG"
             name="contracted_in_plan" />
@@ -160,7 +160,7 @@
         <x-forms.boolean-select.request-based-select
             label="Registered on SPG"
             name="registered_in_plan" />
-    @endif
+    @endcan
 
     @include('filters.partials.default-elements', [
         'includeIdInput' => true,

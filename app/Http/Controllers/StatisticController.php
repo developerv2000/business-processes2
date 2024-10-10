@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Manufacturer;
 use App\Models\Process;
 use App\Models\ProcessGeneralStatus;
+use App\Models\Role;
 use App\Support\Helper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -91,7 +92,7 @@ class StatisticController extends Controller
         $user = $request->user();
 
         // Restrict non-admin users to only see their own process statistics
-        if (Gate::denies('view-kpe-of-all-analysts')) {
+        if (Gate::denies('view-kpe-of-all-analysts') && $user->isAnalyst()) {
             $request->merge([
                 'analyst_user_id' => $user->id,
             ]);

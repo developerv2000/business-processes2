@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Support\Traits\DestroysModelRecords;
 use App\Support\Traits\RestoresModelRecords;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ProcessController extends Controller
 {
@@ -104,6 +105,7 @@ class ProcessController extends Controller
      */
     public function edit(Process $instance)
     {
+        $this->ensureUserHasAccessToProcess($instance);
         $product = $instance->product;
 
         return view('processes.edit', compact('instance', 'product'));
@@ -114,6 +116,7 @@ class ProcessController extends Controller
      */
     public function duplication(Process $instance)
     {
+        $this->ensureUserHasAccessToProcess($instance);
         $product = $instance->product;
 
         return view('processes.duplicate', compact('instance', 'product'));
@@ -152,6 +155,7 @@ class ProcessController extends Controller
      */
     public function update(ProcessUpdateRequest $request, Process $instance)
     {
+        $this->ensureUserHasAccessToProcess($instance);
         $instance->updateFromRequest($request);
 
         return redirect($request->input('previous_url'));
@@ -192,5 +196,12 @@ class ProcessController extends Controller
         $process->saveQuietly();
 
         return $process;
+    }
+
+    private function ensureUserHasAccessToProcess($process)
+    {
+        if ($process->manufacturer->analyst_user_id != request()->user()->id) {
+            Gate::authorize('edit-all-analysts-processes');
+        }
     }
 }

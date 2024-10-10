@@ -23,7 +23,7 @@
 
         <div class="form__section">
             {{-- All stages of statuses are avialabe only for admins --}}
-            @if (request()->user()->isAdministrator() || !$instance->status->generalStatus->visible_only_for_admins)
+            @if (Illuminate\Support\Facades\Gate::allows('upgrade-process-status-after-contract') || !$instance->status->generalStatus->visible_only_for_admins)
                 <x-forms.id-based-single-select.instance-edit-select
                     class="statuses-selectize selectize--manually-initializable"
                     label="Product status"

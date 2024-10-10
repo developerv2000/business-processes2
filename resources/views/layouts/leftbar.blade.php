@@ -51,13 +51,13 @@
                 <x-navbar.title class="navbar-title--top-margined">{{ __('Dashboard') }}</x-navbar.title>
             @endcanany
 
-            @can('view-users')
+            @can('view-differents')
                 <x-navbar.link icon="dataset" href="{{ route('templated-models.index') }}" @class([
                     'navbar-link--active' => request()->routeIs('templated-models.*'),
                 ])>{{ __('Different') }}</x-navbar.link>
             @endcan
 
-            @can('view-differents')
+            @can('view-users')
                 <x-navbar.link icon="account_circle" href="{{ route('users.index') }}" @class([
                     'navbar-link--active' => request()->routeIs('users.*'),
                 ])>{{ __('Users') }}</x-navbar.link>

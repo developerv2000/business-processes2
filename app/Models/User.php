@@ -157,6 +157,11 @@ class User extends Authenticatable
         return $this->hasRole(Role::GUEST_NAME);
     }
 
+    public function isAnalyst()
+    {
+        return $this->hasRole(Role::ANALYST_NAME);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Scopes

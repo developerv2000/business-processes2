@@ -10,6 +10,7 @@ use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Gate;
 
 class Process extends CommentableModel implements PreparesRecordsForExportInterface
 {
@@ -435,7 +436,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         $responsibleCountryIDs = $user->responsibleCountries->pluck('id');
 
         // If the user is not an admin, apply additional filters
-        if (!$user->isAdministrator()) {
+        if (Gate::denies('view-all-analysts-processes')) {
             $query->whereHas('manufacturer', function ($subquery) use ($user, $responsibleCountryIDs) {
                 // Filter for records where the user is the assigned analyst
                 $subquery->where('analyst_user_id', $user->id)
@@ -918,16 +919,33 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
     public static function getDefaultTableColumnsForUser($user): array
     {
         $order = 1;
+        $columns = array();
 
-        $columns = [
-            ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+        if (Gate::forUser($user)->allows('edit-vps')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 60, 'visible' => 1],
-            ['name' => 'Duplicate', 'order' => $order++, 'width' => 40, 'visible' => 1],
+        );
 
+        if (Gate::forUser($user)->allows('edit-vps')) {
+            array_push(
+                $columns,
+                ['name' => 'Duplicate', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
             ['name' => 'Status date', 'order' => $order++, 'width' => 116, 'visible' => 1],
-        ];
+        );
 
-        if ($user->isAdministrator()) {
+        if (Gate::forUser($user)->allows('control-spg-processes')) {
             array_push(
                 $columns,
                 ['name' => '5Кк', 'order' => $order++, 'width' => 40, 'visible' => 1],
@@ -999,7 +1017,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
         );
 
-        if ($user->isAdministrator()) {
+        if (Gate::forUser($user)->allows('edit-processes-status-history')) {
             array_push(
                 $columns,
                 ['name' => 'History', 'order' => $order++, 'width' => 72, 'visible' => 1]

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 
 class ProcessStatus extends Model
 {
@@ -37,15 +38,16 @@ class ProcessStatus extends Model
      */
     public static function getAllFilteredByRoles()
     {
-        // Check if the user is an admin
-        $isAdministrator = request()->user()->isAdministrator();
+        $records = self::query();
 
         // Query records, applying additional filters if the user is not an admin
-        $records = self::when(!$isAdministrator, function ($query) {
-            $query->whereHas('generalStatus', function ($subquery) {
+        if (Gate::denies('upgrade-process-status-after-contract')) {
+            $records = $records->whereHas('generalStatus', function ($subquery) {
                 $subquery->where('visible_only_for_admins', false);
             });
-        })->orderBy('id', 'asc')->get();
+        }
+
+        $records = $records->orderBy('id', 'asc')->get();
 
         return $records;
     }

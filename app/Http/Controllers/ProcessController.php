@@ -200,7 +200,12 @@ class ProcessController extends Controller
 
     private function ensureUserHasAccessToProcess($process)
     {
-        if ($process->manufacturer->analyst_user_id != request()->user()->id) {
+        $user = request()->user();
+
+        if (
+            $process->manufacturer->analyst_user_id != $user->id
+            && $user->responsibleCountries->doesntContain('id', $process->manufacturer->country_id)
+        ) {
             Gate::authorize('edit-all-analysts-processes');
         }
     }

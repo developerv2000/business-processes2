@@ -101,12 +101,10 @@ class RoleSeeder extends Seeder
             Permission::findByName(Permission::CAN_VIEW_EPP_NAME)->id,
             Permission::findByName(Permission::CAN_VIEW_KVPP_NAME)->id,
             Permission::findByName(Permission::CAN_VIEW_IVP_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_VPS_NAME)->id,
+            // Permission::findByName(Permission::CAN_VIEW_VPS_NAME)->id,
             Permission::findByName(Permission::CAN_VIEW_MEETINGS_NAME)->id,
             Permission::findByName(Permission::CAN_VIEW_KPE_NAME)->id,
             Permission::findByName(Permission::CAN_VIEW_SPG_NAME)->id,
-
-            Permission::findByName(Permission::CAN_VIEW_ALL_ANALYSTS_PROCESSES_NAME)->id,
         ]);
     }
 }

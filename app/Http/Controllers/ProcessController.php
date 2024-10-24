@@ -202,10 +202,7 @@ class ProcessController extends Controller
     {
         $user = request()->user();
 
-        if (
-            $process->manufacturer->analyst_user_id != $user->id
-            && $user->responsibleCountries->doesntContain('id', $process->manufacturer->country_id)
-        ) {
+        if ($process->manufacturer->analyst_user_id != $user->id) {
             Gate::authorize('edit-all-analysts-processes');
         }
     }

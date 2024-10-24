@@ -48,7 +48,7 @@
             <x-forms.id-based-multiple-select.default-select
                 label="Responsible countries"
                 name="responsibleCountries[]"
-                :options="$countries" />
+                :options="$countryCodes" />
 
             <x-forms.input.default-input
                 label="Password"

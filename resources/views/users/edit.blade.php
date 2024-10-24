@@ -41,7 +41,7 @@
             <x-forms.id-based-multiple-select.instance-edit-select
                 label="Responsible countries"
                 name="responsibleCountries[]"
-                :options="$countries"
+                :options="$countryCodes"
                 :instance="$instance" />
 
             <x-forms.input.default-input

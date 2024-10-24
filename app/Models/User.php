@@ -93,7 +93,7 @@ class User extends Authenticatable
 
     public function responsibleCountries()
     {
-        return $this->belongsToMany(Country::class, 'user_responsible_country');
+        return $this->belongsToMany(CountryCode::class, 'user_responsible_country_code');
     }
 
     /*

@@ -175,7 +175,7 @@ class ViewComposersDefiner
             $view->with([
                 'roles' => Role::getAll(),
                 'permissions' => Permission::getAll(),
-                'countries' => Country::getAll(),
+                'countryCodes' => CountryCode::getAll(),
             ]);
         });
 

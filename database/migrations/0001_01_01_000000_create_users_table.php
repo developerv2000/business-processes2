@@ -38,18 +38,18 @@ return new class extends Migration
             $table->integer('last_activity')->index();
         });
 
-        Schema::create('user_responsible_country', function (Blueprint $table) {
+        Schema::create('user_responsible_country_code', function (Blueprint $table) {
             $table->unsignedSmallInteger('user_id')
                 ->foreign()
                 ->references('id')
                 ->on('users');
 
-            $table->unsignedSmallInteger('country_id')
+            $table->unsignedSmallInteger('country_code_id')
                 ->foreign()
                 ->references('id')
-                ->on('countries');
+                ->on('country_codes');
 
-            $table->primary(['user_id', 'country_id']);
+            $table->primary(['user_id', 'country_code_id']);
         });
     }
 
@@ -61,5 +61,6 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('user_responsible_country_code');
     }
 };

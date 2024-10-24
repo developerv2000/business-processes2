@@ -437,15 +437,17 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
         // If the user is not an admin, apply additional filters
         if (Gate::denies('view-all-analysts-processes')) {
-            $query->where(function ($subquery) use ($responsibleCountryIDs) {
-                $subquery->whereIn('country_code_id', $responsibleCountryIDs);
-            })
-                ->orWhere(function ($subquery) use ($user) {
-                    $subquery->whereHas('manufacturer', function ($manufacturersQuery) use ($user) {
-                        // Filter for records where the user is the assigned analyst
-                        $manufacturersQuery->where('analyst_user_id', $user->id);
+            $query->where(function ($subquery) use ($user, $responsibleCountryIDs) {
+                $subquery->where(function ($innerQuery) use ($responsibleCountryIDs) {
+                    $innerQuery->whereIn('country_code_id', $responsibleCountryIDs);
+                })
+                    ->orWhere(function ($innerQuery) use ($user) {
+                        $innerQuery->whereHas('manufacturer', function ($manufacturersQuery) use ($user) {
+                            // Filter for records where the user is the assigned analyst
+                            $manufacturersQuery->where('analyst_user_id', $user->id);
+                        });
                     });
-                });
+            });
         }
 
         // Return the modified query

@@ -19,7 +19,7 @@ class Permission extends Model
     |--------------------------------------------------------------------------
     */
 
-    // Main
+    // Analysts department
     const CAN_VIEW_EPP_NAME = 'can view EPP';
     const CAN_VIEW_KVPP_NAME = 'can view KVPP';
     const CAN_VIEW_IVP_NAME = 'can view IVP';
@@ -36,6 +36,13 @@ class Permission extends Model
     const CAN_NOT_VIEW_KPE_NAME = 'can`t view KPE';
     const CAN_NOT_VIEW_SPG_NAME = 'can`t view SPG';
 
+    // Logistics department
+    const CAN_VIEW_APPLICATIONS_NAME = 'can view Applications';
+    const CAN_VIEW_ORDERS_NAME = 'can view Orders';
+
+    const CAN_NOT_VIEW_APPLICATIONS_NAME = 'can`t view Applications';
+    const CAN_NOT_VIEW_ORDERS_NAME = 'can`t view Orders';
+
     // Dashboard
     const CAN_VIEW_USERS_NAME = 'can view users';
     const CAN_VIEW_DIFFERENTS_NAME = 'can view differents';
@@ -50,7 +57,7 @@ class Permission extends Model
     |--------------------------------------------------------------------------
     */
 
-    // Main
+    // Analysts department
     const CAN_EDIT_EPP_NAME = 'can edit EPP';
     const CAN_EDIT_KVPP_NAME = 'can edit KVPP';
     const CAN_EDIT_IVP_NAME = 'can edit IVP';
@@ -64,6 +71,13 @@ class Permission extends Model
     const CAN_NOT_EDIT_VPS_NAME = 'can`t edit VPS';
     const CAN_NOT_EDIT_MEETINGS_NAME = 'can`t edit Meetings';
     const CAN_NOT_EDIT_SPG_NAME = 'can`t edit SPG';
+
+    // Logistics department
+    const CAN_EDIT_APPLICATIONS_NAME = 'can edit Applications';
+    const CAN_EDIT_ORDERS_NAME = 'can edit Orders';
+
+    const CAN_NOT_EDIT_APPLICATIONS_NAME = 'can`t edit Applications';
+    const CAN_NOT_EDIT_ORDERS_NAME = 'can`t edit Orders';
 
     // Dashboard
     const CAN_EDIT_USERS_NAME = 'can edit users';
@@ -102,6 +116,7 @@ class Permission extends Model
     const CAN_EDIT_PROCESSES_STATUS_HISTORY_NAME = 'can edit processes status history';
     const CAN_UPGRADE_PROCESS_STATUS_AFTER_CONTRACT_NAME = 'can upgrade process status after contract';
     const CAN_RECIEVE_NOTIFICATION_ON_PROCESS_CONTRACT = 'can recieve notification on process contract';
+    const CAN_SEND_PROCESSES_FOR_APPLICATION = 'can send processes for application';
 
     /*
     |--------------------------------------------------------------------------

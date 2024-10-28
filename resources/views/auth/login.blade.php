@@ -3,7 +3,7 @@
 @section('main')
     <div class="auth-box styled-box">
         <x-different.logo class="auth-box__logo" theme="light" />
-        <h1 class="auth-box__title main-title">{{ __('Account Login') }}</h1>
+        <h1 class="auth-box__title main-title">{{ __('Account login') }}</h1>
 
         <form class="form login-form" action="/login" method="POST">
             @csrf

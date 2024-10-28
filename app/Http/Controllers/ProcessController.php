@@ -198,6 +198,27 @@ class ProcessController extends Controller
         return $process;
     }
 
+    /**
+     * AJAX request
+     */
+    public function sendForApplication(Request $request)
+    {
+        $process = Process::find($request->process_id);
+
+        if ($process->application()->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => trans('This process has already been sent for application.'),
+            ]);
+        }
+
+        $process->sendForApplication();
+
+        return [
+            'success' => true,
+        ];
+    }
+
     private function ensureUserHasAccessToProcess($process)
     {
         $user = request()->user();

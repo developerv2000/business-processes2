@@ -23,7 +23,7 @@ class GatesDefiner
         |--------------------------------------------------------------------------
         */
 
-        // Gates for main part
+        // Gates for analytics department
         Gate::define('view-epp', function ($user) {
             return $user->hasPermission('can view EPP');
         });
@@ -52,6 +52,15 @@ class GatesDefiner
             return $user->hasPermission('can view SPG');
         });
 
+        // Gates for logistician department
+        Gate::define('view-applications', function ($user) {
+            return $user->hasPermission('can view Applications');
+        });
+
+        Gate::define('view-orders', function ($user) {
+            return $user->hasPermission('can view Orders');
+        });
+
         // Gates for dashboard part
         Gate::define('view-users', function ($user) {
             return $user->hasPermission('can view users');
@@ -71,7 +80,7 @@ class GatesDefiner
         |--------------------------------------------------------------------------
         */
 
-        // Gates for main part
+        // Gates for analytics department
         Gate::define('edit-epp', function ($user) {
             return $user->hasPermission('can edit EPP');
         });
@@ -94,6 +103,15 @@ class GatesDefiner
 
         Gate::define('edit-spg', function ($user) {
             return $user->hasPermission('can edit SPG');
+        });
+
+        // Gates for logistician department
+        Gate::define('edit-applications', function ($user) {
+            return $user->hasPermission('can edit Applications');
+        });
+
+        Gate::define('edit-orders', function ($user) {
+            return $user->hasPermission('can edit Orders');
         });
 
         // Gates for dashboard part
@@ -161,6 +179,10 @@ class GatesDefiner
 
         Gate::define('recieve-notification-on-process-contract', function ($user) {
             return $user->hasPermission('can recieve notification on process contract');
+        });
+
+        Gate::define('send-processes-for-application', function ($user) {
+            return $user->hasPermission('can send processes for application');
         });
     }
 }

@@ -10,6 +10,7 @@ const GET_PROCESSES_CREATE_FORECAST_INPUTS_URL = '/processes/get-create-form-for
 const GET_PROCESSES_EDIT_STAGE_INPUTS_URL = '/processes/get-edit-form-stage-inputs';
 const UPDATE_PROCESSES_CONTRACTED_IN_PLAN_URL = '/processes/update-contracted-in-plan-value';
 const UPDATE_PROCESSES_REGISTERED_IN_PLAN_URL = '/processes/update-registered-in-plan-value';
+const SEND_PROCESS_FOR_APPLICATION_URL = '/processes/send-for-application';
 
 // Colors
 const rootStyles = getComputedStyle(document.documentElement);
@@ -29,6 +30,7 @@ window.addEventListener('load', () => {
     bootstrapForms();
     bootstrapECharts();
     boostrapProcessesPlanCheckboxes();
+    boostrapProcessesApplicationCheckboxes();
 });
 
 function bootstrapComponents() {
@@ -887,6 +889,42 @@ function boostrapProcessesPlanCheckboxes() {
                     // console.log(response)
                 })
                 .finally(function () {
+                    // Hide any loading spinner after the request is complete
+                    hideSpinner();
+                });
+        }));
+}
+
+
+// ========== Send process for application checkboxes ==========
+function boostrapProcessesApplicationCheckboxes() {
+    // Contacted toggling
+    document.querySelectorAll('[data-check-action="send-processes-for-application"]')
+        .forEach((chbs) => chbs.addEventListener('change', function (evt) {
+            showSpinner();
+
+            const chb = evt.target;
+
+            const processID = chb.dataset.processId;
+
+            const data = {
+                'process_id': processID,
+            };
+
+            axios.post(SEND_PROCESS_FOR_APPLICATION_URL, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.data.success) {
+                        alert(response.data.message);
+                    }
+                })
+                .finally(function () {
+                    chb.checked = true;
+                    chb.disabled = true;
+
                     // Hide any loading spinner after the request is complete
                     hideSpinner();
                 });

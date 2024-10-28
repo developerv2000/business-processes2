@@ -106,5 +106,22 @@ class RoleSeeder extends Seeder
             Permission::findByName(Permission::CAN_VIEW_KPE_NAME)->id,
             Permission::findByName(Permission::CAN_VIEW_SPG_NAME)->id,
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Logistician
+        |--------------------------------------------------------------------------
+        */
+
+        $role = new Role();
+        $role->name = Role::LOGISTICIAN_NAME;
+        $role->save();
+
+        $role->permissions()->attach([
+            Permission::findByName(Permission::CAN_VIEW_APPLICATIONS_NAME)->id,
+            Permission::findByName(Permission::CAN_VIEW_ORDERS_NAME)->id,
+            Permission::findByName(Permission::CAN_EDIT_APPLICATIONS_NAME)->id,
+            Permission::findByName(Permission::CAN_EDIT_ORDERS_NAME)->id,
+        ]);
     }
 }

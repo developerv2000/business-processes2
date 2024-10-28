@@ -1,4 +1,6 @@
 {
+    "Account login": "Вход в аккаунт",
+
     "Business processes": "Бизнес процессы",
     "Main": "Основной",
     "Dashboard": "Админка",
@@ -198,6 +200,7 @@
     "Registered on SPG": "Зарег. в СПГ",
     "Has status history": "Имеет историю статуса",
     "Brand": "Бренд",
+    "This process has already been sent for application." : "Данный процесс уже направлен на заявку.",
 
     "History": "История",
     "Status history": "История статусов",

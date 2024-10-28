@@ -127,6 +127,11 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ->orderBy('id', 'desc');
     }
 
+    public function application()
+    {
+        return $this->hasOne(Application::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes
@@ -250,6 +255,11 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
                                 ->withOnly([]);
                         },
                     ]);
+            },
+
+            'application' => function ($query) {
+                $query->select('id', 'process_id')
+                    ->withOnly([]);
             }
         ]);
     }
@@ -422,6 +432,8 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
      * This method applies filters to the query based on the user's role. If the user is not an admin,
      * it limits the results to processes where the user is the assigned analyst or where the user's responsible
      * countries are associated with the manufacturer.
+     *
+     * Notes: Must use subquery for valid filtering!
      *
      * @param Illuminate\Http\Request $request The request object containing the user information.
      * @param Illuminate\Database\Eloquent\Builder $query The query builder instance to apply filters.
@@ -960,6 +972,13 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             );
         }
 
+        if (Gate::forUser($user)->allows('send-processes-to-application')) {
+            array_push(
+                $columns,
+                ['name' => '9Зя', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
         array_push(
             $columns,
             ['name' => 'Product status', 'order' => $order++, 'width' => 126, 'visible' => 1],
@@ -1154,5 +1173,17 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
     public function shouldDisplaySPGCheckboxes()
     {
         return $this->status->generalStatus->stage >= 5;
+    }
+
+    public function shouldDisplayApplicationCheckbox()
+    {
+        return $this->status->generalStatus->stage >= 8;
+    }
+
+    public function sendForApplication()
+    {
+        $this->application()->create([
+            'process_id' => $this->id,
+        ]);
     }
 }

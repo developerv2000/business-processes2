@@ -14,11 +14,11 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $name = ['Nuruloev Olimjon', 'Shahriyor Pirov', 'Alim Munavarov', 'Muzaffar Behruz', 'Darya Rassulova', 'Irini Kouimtzidou', 'Nuridinov Bobur', 'Guest 01'];
+        $name = ['Nuruloev Olimjon', 'Shahriyor Pirov', 'Alim Munavarov', 'Muzaffar Behruz', 'Darya Rassulova', 'Irini Kouimtzidou', 'Nuridinov Bobur', 'Guest 01', 'Azimjon Vokhidi'];
 
-        $email = ['olimjon.nuruloev@evolet.co.uk', 'shahriyor_p@evolet.co.uk', 'alim.munavarov@evolet.co.uk', 'behruz.muzaffar@outlook.com', 'bdm1@evolet.co.uk', 'irini@evolet.co.uk', 'developer@mail.com', 'guest@mail.com'];
+        $email = ['olimjon.nuruloev@evolet.co.uk', 'shahriyor_p@evolet.co.uk', 'alim.munavarov@evolet.co.uk', 'behruz.muzaffar@outlook.com', 'bdm1@evolet.co.uk', 'irini@evolet.co.uk', 'developer@mail.com', 'guest@mail.com', 'vokhid.azimjon@evolet.co.uk'];
 
-        $photo = ['nuruloev-olimjon.png', 'shahriyor-pirov.png', 'alim-munavarov.png', 'muzaffar-behruz.png', 'darya-rassulova.png', 'irini-kouimtzidou.png', 'developer.jpg', 'developer.jpg'];
+        $photo = ['nuruloev-olimjon.png', 'shahriyor-pirov.png', 'alim-munavarov.png', 'muzaffar-behruz.png', 'darya-rassulova.png', 'irini-kouimtzidou.png', 'developer.jpg', 'developer.jpg', 'developer.jpg'];
 
         $adminID = Role::where('name', Role::ADMINISTRATOR_NAME)->first()->id;
         $moderatorID = Role::where('name', Role::MODERATOR_NAME)->first()->id;
@@ -26,6 +26,7 @@ class UserSeeder extends Seeder
         $bdmID = Role::where('name', Role::BDM_NAME)->first()->id;
         $inactiveID = Role::where('name', Role::INACTIVE_NAME)->first()->id;
         $guestID = Role::where('name', Role::GUEST_NAME)->first()->id;
+        $logisticianID = Role::where('name', Role::LOGISTICIAN_NAME)->first()->id;
 
         $roleID = [
             [$moderatorID, $analystID],
@@ -36,6 +37,7 @@ class UserSeeder extends Seeder
             [$bdmID, $inactiveID],
             [$adminID],
             [$guestID],
+            [$logisticianID],
         ];
 
         $password = '12345';

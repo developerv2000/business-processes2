@@ -13,13 +13,23 @@
 
     @case('5Кк')
         @if ($instance->shouldDisplaySPGCheckboxes())
-            <input class="checkbox td__checkbox" type="checkbox" name="contracted" data-toggle-action="toggle-process-contracted-boolean" data-process-id={{ $instance->id }} @checked($instance->contracted_in_plan)>
+            <input class="checkbox td__checkbox" type="checkbox" data-toggle-action="toggle-process-contracted-boolean" data-process-id={{ $instance->id }} @checked($instance->contracted_in_plan)>
         @endif
     @break
 
     @case('7НПР')
         @if ($instance->shouldDisplaySPGCheckboxes())
-            <input class="checkbox td__checkbox" type="checkbox" name="registered" data-toggle-action="toggle-process-registered-boolean" data-process-id={{ $instance->id }} @checked($instance->registered_in_plan)>
+            <input class="checkbox td__checkbox" type="checkbox" data-toggle-action="toggle-process-registered-boolean" data-process-id={{ $instance->id }} @checked($instance->registered_in_plan)>
+        @endif
+    @break
+
+    @case('9Зя')
+        @if ($instance->shouldDisplayApplicationCheckbox())
+            @if ($instance->application)
+                <input class="checkbox td__checkbox" type="checkbox" checked disabled>
+            @else
+                <input class="checkbox td__checkbox" type="checkbox" data-check-action="send-processes-for-application" data-process-id={{ $instance->id }}>
+            @endif
         @endif
     @break
 

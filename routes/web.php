@@ -4,6 +4,7 @@ use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\KvppController;
+use App\Http\Controllers\MainController;
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\NotificationController;
@@ -28,7 +29,8 @@ Route::controller(AuthenticatedSessionController::class)->group(function () {
 });
 
 Route::middleware('auth', 'auth.session')->group(function () {
-    Route::get('/', [ManufacturerController::class, 'index'])->name('manufacturers.index')->middleware('can:view-epp'); // home
+    Route::get('/', [MainController::class, 'redirectToHomePage'])->name('home');
+
     Route::get('/statistics', [StatisticController::class, 'index'])->name('statistics.index')->middleware('can:view-kpe');
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index')->middleware('can:view-roles');
 
@@ -51,7 +53,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     Route::prefix('manufacturers')->controller(ManufacturerController::class)->name('manufacturers.')->group(function () {
-        RouteGenerator::defineDefaultCrudRoutesExcept(['index'], 'can:view-epp', 'can:edit-epp');
+        RouteGenerator::defineAllDefaultCrudRoutes('can:view-epp', 'can:edit-epp');
     });
 
     Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {
@@ -77,6 +79,8 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::post('/update-contracted-in-plan-value', 'updateContractedInPlanValue')->middleware('can:control-spg-processes');
         // ajax request on checkbox toggle
         Route::post('/update-registered-in-plan-value', 'updateRegisteredInPlanValue')->middleware('can:control-spg-processes');
+        // ajax request on checkbox check
+        Route::post('/send-for-application', 'sendForApplication')->middleware('can:control-spg-processes');
     });
 
     Route::prefix('process/{process}/status-history')

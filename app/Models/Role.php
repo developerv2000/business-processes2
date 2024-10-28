@@ -30,6 +30,7 @@ class Role extends Model
     const BDM_NAME = 'BDM';                       // User is assosiated as 'BDM'. Doesn`t attach any role related permissions.
     const INACTIVE_NAME = 'Inactive';             // No access, can`t login. Doesn`t attach any role related permissions.
     const GUEST_NAME = 'Guest';                   // Can only view 'Main part'. Can`t create/edit/update/delete and export. Attaches role based permissions.
+    const LOGISTICIAN_NAME = 'Logistician';       // Can view/edit/export logistics part. Attaches role based permissions.
 
     /*
     |--------------------------------------------------------------------------

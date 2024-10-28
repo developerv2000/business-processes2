@@ -446,6 +446,10 @@ button {
     text-decoration: none;
 }
 
+.header__notifications-icon--unread {
+    color: var(--theme-secondary-color);
+}
+
 .header__navbar-button {
     font-variation-settings: var(--material-symbols-filled);
     color: var(--theme-navbar-text-color);

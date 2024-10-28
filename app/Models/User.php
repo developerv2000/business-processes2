@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 
@@ -603,5 +604,29 @@ class User extends Authenticatable
         }
 
         return false; // Default deny if no permission is found
+    }
+
+    public function detectHomeRouteName()
+    {
+        $homepageRoutes = [
+            // Analysts
+            'manufacturers.index' => 'view-epp',
+            'kvpp.index' => 'view-kvpp',
+            'products.index' => 'view-ivp',
+            'processes.index' => 'view-vps',
+
+            // Logictics
+            'applications.index' => 'view-applications',
+            'orders.index' => 'view-orders',
+        ];
+
+        foreach ($homepageRoutes as $routeName => $gate) {
+            if (Gate::allows($gate)) {
+                return route($routeName);
+            }
+        }
+
+        // Default home if no pages are accessible
+        return route('profile.edit');
     }
 }

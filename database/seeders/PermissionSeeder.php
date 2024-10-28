@@ -63,6 +63,17 @@ class PermissionSeeder extends Seeder
             Permission::CAN_EDIT_PROCESSES_STATUS_HISTORY_NAME,
             Permission::CAN_UPGRADE_PROCESS_STATUS_AFTER_CONTRACT_NAME,
             Permission::CAN_RECIEVE_NOTIFICATION_ON_PROCESS_CONTRACT,
+
+            // Logisticians
+            Permission::CAN_VIEW_APPLICATIONS_NAME,
+            Permission::CAN_VIEW_ORDERS_NAME,
+            Permission::CAN_NOT_VIEW_APPLICATIONS_NAME,
+            Permission::CAN_NOT_VIEW_ORDERS_NAME,
+            Permission::CAN_EDIT_APPLICATIONS_NAME,
+            Permission::CAN_EDIT_ORDERS_NAME,
+            Permission::CAN_NOT_EDIT_APPLICATIONS_NAME,
+            Permission::CAN_NOT_EDIT_ORDERS_NAME,
+            Permission::CAN_SEND_PROCESSES_FOR_APPLICATION,
         ];
 
         for ($i = 0; $i < count($name); $i++) {

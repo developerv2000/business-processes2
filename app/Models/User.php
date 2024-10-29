@@ -475,10 +475,11 @@ class User extends Authenticatable
         ];
 
         $settings['manufacturers_table_columns'] = Manufacturer::getDefaultTableColumnsForUser($this);
-        $settings['products_table_columns'] = Product::getDefaultTableColumns($this);
+        $settings['products_table_columns'] = Product::getDefaultTableColumnsForUser($this);
         $settings['processes_table_columns'] = Process::getDefaultTableColumnsForUser($this);
         $settings['kvpp_table_columns'] = Kvpp::getDefaultTableColumnsForUser($this);
         $settings['meetings_table_columns'] = Meeting::getDefaultTableColumnsForUser($this);
+        $settings['applications_table_columns'] = Application::getDefaultTableColumnsForUser($this);
 
         $this->update(['settings' => $settings]);
     }

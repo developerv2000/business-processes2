@@ -122,6 +122,8 @@ class RoleSeeder extends Seeder
             Permission::findByName(Permission::CAN_VIEW_ORDERS_NAME)->id,
             Permission::findByName(Permission::CAN_EDIT_APPLICATIONS_NAME)->id,
             Permission::findByName(Permission::CAN_EDIT_ORDERS_NAME)->id,
+            Permission::findByName(Permission::CAN_EXPORT_AS_EXCEL_NAME)->id,
+            Permission::findByName(Permission::CAN_EDIT_COMMENTS_NAME)->id,
         ]);
     }
 }

@@ -1,8 +1,10 @@
 <aside class="leftbar">
     <div class="leftbar__inner">
         <nav class="navbar navbar--vertical">
-            {{-- Main --}}
-            <x-navbar.title class="navbar-title--first">{{ __('Main') }}</x-navbar.title>
+            {{-- MAD --}}
+            @canany(['view-epp', 'view-kvpp', 'view-ivp', 'view-vps', 'view-meetings', 'view-kpe', 'view-spg'])
+                <x-navbar.title class="navbar-title--first">{{ __('MAD') }}</x-navbar.title>
+            @endcanany
 
             @can('view-epp')
                 <x-navbar.link icon="view_list" href="{{ route('manufacturers.index') }}" @class([
@@ -44,6 +46,21 @@
                 <x-navbar.link icon="pie_chart" href="{{ route('plan.index') }}" @class([
                     'navbar-link--active' => request()->routeIs('plan.*'),
                 ])>{{ __('SPG') }}</x-navbar.link>
+            @endcan
+
+            {{-- MAD --}}
+            <x-navbar.title class="navbar-title navbar-title--top-margined">{{ __('ОППЛ') }}</x-navbar.title>
+
+            @can('view-applications')
+                <x-navbar.link icon="grading" href="{{ route('applications.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('applications.*'),
+                ])>{{ __('Applications') }}</x-navbar.link>
+            @endcan
+
+            @can('view-orders')
+                <x-navbar.link icon="package_2" href="{{ route('orders.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('orders.*'),
+                ])>{{ __('Orders') }}</x-navbar.link>
             @endcan
 
             {{-- Dashboard --}}

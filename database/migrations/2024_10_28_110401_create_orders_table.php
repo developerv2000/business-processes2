@@ -20,7 +20,8 @@ return new class extends Migration
                 ->references('id')
                 ->on('applications');
 
-            $table->date('forecast_date');
+            $table->date('receive_date');
+            $table->date('po_date');
             $table->unsignedInteger('quantity');
             $table->decimal('price', 8, 2)->nullable();
 
@@ -35,6 +36,7 @@ return new class extends Migration
             $table->date('expected_dispatch_date');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

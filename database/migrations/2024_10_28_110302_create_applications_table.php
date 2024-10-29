@@ -23,6 +23,7 @@ return new class extends Migration
                 ->on('processes');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

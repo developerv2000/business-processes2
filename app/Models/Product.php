@@ -383,7 +383,7 @@ class Product extends CommentableModel
      *
      * @return array
      */
-    public static function getDefaultTableColumns($user): array
+    public static function getDefaultTableColumnsForUser($user): array
     {
         $order = 1;
         $columns = array();

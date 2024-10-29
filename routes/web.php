@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\MainController;
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProcessStatusHistoryController;
@@ -155,5 +157,13 @@ Route::middleware('auth', 'auth.session')->group(function () {
             Route::patch('/update/{marketingAuthorizationHolder}', 'MAHsUpdate')->name('update');
             Route::delete('/destroy', 'MAHsDestroy')->name('destroy');
         });
+    });
+
+    Route::prefix('applications')->controller(ApplicationController::class)->name('applications.')->group(function () {
+        RouteGenerator::defineDefaultCrudRoutesExcept(['create'], 'can:view-applications', 'can:edit-applications');
+    });
+
+    Route::prefix('orders')->controller(OrderController::class)->name('orders.')->group(function () {
+        RouteGenerator::defineDefaultCrudRoutesExcept(['create'], 'can:view-orders', 'can:edit-orders');
     });
 });

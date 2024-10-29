@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Models\Application;
 use App\Models\Country;
 use App\Models\CountryCode;
 use App\Models\Currency;
@@ -32,178 +33,144 @@ class ViewComposersDefiner
 {
     public static function defineAll()
     {
-        // Pagination limits
-        View::composer('filters.partials.pagination-limit', function ($view) {
-            $view->with([
-                'paginationLimits' => Helper::DEFAULT_MODEL_PAGINATION_LIMITS,
-            ]);
-        });
+        self::definePaginationLimitComposer();
+        self::defineManufacturerComposers();
+        self::defineProductComposers();
+        self::defineKvppComposers();
+        self::defineProcessComposers();
+        self::defineStatisticsComposer();
+        self::defineMeetingComposers();
+        self::defineUserComposers();
+        self::definePlanComposers();
+        self::defineApplicationComposers();
+    }
 
-        // ----------------------- Manufacturers -----------------------
+    private static function definePaginationLimitComposer()
+    {
+        self::defineViewComposer('filters.partials.pagination-limit', [
+            'paginationLimits' => Helper::DEFAULT_MODEL_PAGINATION_LIMITS,
+        ]);
+    }
 
-        View::composer(['manufacturers.create', 'manufacturers.edit'], function ($view) {
-            $view->with(self::getDefaultManufacturersShareData());
-        });
+    private static function defineManufacturerComposers()
+    {
+        $manufacturerData = self::getDefaultManufacturersShareData();
+        self::defineViewComposer(['manufacturers.create', 'manufacturers.edit'], $manufacturerData);
+        self::defineViewComposer('filters.manufacturers', array_merge($manufacturerData, [
+            'countryCodes' => CountryCode::getAll(),
+            'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
+        ]));
+    }
 
-        View::composer('filters.manufacturers', function ($view) {
-            $shareData = self::getDefaultManufacturersShareData();
+    private static function defineProductComposers()
+    {
+        $productData = self::getDefaultProductsShareData();
+        self::defineViewComposer(['products.create'], array_merge($productData, [
+            'productsDefaultClassID' => Product::getDefaultClassID(),
+            'productsDefaultZonesIDs' => Product::getDefaultZoneIDs(),
+        ]));
+        self::defineViewComposer(['products.edit'], $productData);
+        self::defineViewComposer('filters.products', array_merge($productData, [
+            'brands' => Product::getAllUniqueBrands(),
+        ]));
+    }
 
-            $mergedData = array_merge($shareData, [
-                'countryCodes' => CountryCode::getAll(),
-                'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
-            ]);
+    private static function defineKvppComposers()
+    {
+        $kvppData = self::getDefaultKvppShareData();
+        self::defineViewComposer(['kvpp.edit', 'kvpp.create'], array_merge($kvppData, [
+            'kvppDefaultStatusID' => Kvpp::getDefaultStatusID(),
+            'kvppDefaultPriorityID' => Kvpp::getDefaultPriorityID(),
+        ]));
+        self::defineViewComposer('filters.kvpp', array_merge($kvppData, [
+            'inns' => Inn::getOnlyKvppInns(),
+            'productForms' => ProductForm::getOnlyKvppForms(),
+        ]));
+    }
 
-            $view->with($mergedData);
-        });
-
-        // ----------------------- Products -----------------------
-
-        View::composer('products.edit', function ($view) {
-            $view->with(self::getDefaultProductsShareData());
-        });
-
-        View::composer('products.create', function ($view) {
-            $shareData = self::getDefaultProductsShareData();
-
-            $mergedData = array_merge($shareData, [
-                'productsDefaultClassID' => Product::getDefaultClassID(),
-                'productsDefaultZonesIDs' => Product::getDefaultZoneIDs(),
-            ]);
-
-            $view->with($mergedData);
-        });
-
-        View::composer('filters.products', function ($view) {
-            $shareData = self::getDefaultProductsShareData();
-
-            $mergedData = array_merge($shareData, [
-                'brands' => Product::getAllUniqueBrands(),
-            ]);
-
-            $view->with($mergedData);
-        });
-
-        // ----------------------- Kvpp -----------------------
-
-        View::composer('kvpp.edit', function ($view) {
-            $view->with(self::getDefaultKvppShareData());
-        });
-
-        View::composer('kvpp.create', function ($view) {
-            $shareData = self::getDefaultKvppShareData();
-
-            $mergedData = array_merge($shareData, [
-                'kvppDefaultStatusID' => Kvpp::getDefaultStatusID(),
-                'kvppDefaultPriorityID' => Kvpp::getDefaultPriorityID(),
-            ]);
-
-            $view->with($mergedData);
-        });
-
-        View::composer('filters.kvpp', function ($view) {
-            $shareData = self::getDefaultKvppShareData();
-
-            $mergedData = array_merge($shareData, [
-                'inns' => Inn::getOnlyKvppInns(),
-                'productForms' => ProductForm::getOnlyKvppForms(),
-            ]);
-
-            $view->with($mergedData);
-        });
-
-        // ----------------------- Processes -----------------------
-
-        View::composer([
+    private static function defineProcessComposers()
+    {
+        $processData = self::getDefaultProcessesShareData();
+        self::defineViewComposer([
             'processes.create',
             'processes.edit',
             'processes.duplicate',
             'processes.partials.create-form-stage-inputs',
             'processes.partials.edit-form-stage-inputs'
-        ], function ($view) {
-            $shareData = self::getDefaultProcessesShareData();
+        ], array_merge($processData, [
+            'statuses' => ProcessStatus::getAllFilteredByRoles(),
+            'shelfLifes' => ProductShelfLife::getAll(),
+            'currencies' => Currency::getAll(),
+        ]));
+        self::defineViewComposer('filters.processes', array_merge($processData, [
+            'statuses' => ProcessStatus::getAll(),
+            'generalStatuses' => ProcessGeneralStatus::getAll(),
+            'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueStatusNamesForAnalysts(),
+            'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
+            'brands' => Product::getAllUniqueBrands(),
+        ]));
+    }
 
-            $mergedData = array_merge($shareData, [
-                'statuses' => ProcessStatus::getAllFilteredByRoles(), // important
-                'shelfLifes' => ProductShelfLife::getAll(),
-                'currencies' => Currency::getAll(),
-                'currencies' => Currency::getAll(),
-            ]);
+    private static function defineStatisticsComposer()
+    {
+        self::defineViewComposer('filters.statistics', [
+            'analystUsers' => User::getAnalystsMinified(),
+            'bdmUsers' => User::getBdmsMinifed(),
+            'calendarMonths' => Helper::collectCalendarMonths(),
+            'countryCodes' => CountryCode::getAll(),
+            'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
+        ]);
+    }
 
-            $view->with($mergedData);
-        });
+    private static function defineMeetingComposers()
+    {
+        self::defineViewComposer(['filters.meetings', 'meetings.create', 'meetings.edit'], [
+            'manufacturers' => Manufacturer::getAllMinified(),
+            'analystUsers' => User::getAnalystsMinified(),
+            'bdmUsers' => User::getBdmsMinifed(),
+            'countries' => Country::getAll(),
+        ]);
+    }
 
-        View::composer('filters.processes', function ($view) {
-            $shareData = self::getDefaultProcessesShareData();
+    private static function defineUserComposers()
+    {
+        self::defineViewComposer(['users.create', 'users.edit'], [
+            'roles' => Role::getAll(),
+            'permissions' => Permission::getAll(),
+            'countryCodes' => CountryCode::getAll(),
+        ]);
+    }
 
-            $mergedData = array_merge($shareData, [
-                'statuses' => ProcessStatus::getAll(), // important
-                'generalStatuses' => ProcessGeneralStatus::getAll(),
-                'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueStatusNamesForAnalysts(),
-                'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
-                'brands' => Product::getAllUniqueBrands(),
-            ]);
-
-            $view->with($mergedData);
-        });
-
-        // ----------------------- Statistics -----------------------
-
-        View::composer(['filters.statistics'], function ($view) {
-            $view->with([
-                'analystUsers' => User::getAnalystsMinified(),
-                'bdmUsers' => User::getBdmsMinifed(),
-                'calendarMonths' => Helper::collectCalendarMonths(),
-                'countryCodes' => CountryCode::getAll(),
-                'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
-            ]);
-        });
-
-        // ----------------------- Meetings -----------------------
-
-        View::composer(['filters.meetings', 'meetings.create', 'meetings.edit'], function ($view) {
-            $view->with([
-                'manufacturers' => Manufacturer::getAllMinified(),
-                'analystUsers' => User::getAnalystsMinified(),
-                'bdmUsers' => User::getBdmsMinifed(),
-                'countries' => Country::getAll(),
-            ]);
-        });
-
-        // ----------------------- Users -----------------------
-
-        View::composer(['users.create', 'users.edit'], function ($view) {
-            $view->with([
-                'roles' => Role::getAll(),
-                'permissions' => Permission::getAll(),
-                'countryCodes' => CountryCode::getAll(),
-            ]);
-        });
-
-        // ----------------------- Plan -----------------------
-        View::composer(['plan.country-codes.create', 'plan.country-codes.edit'], function ($view) {
-            $view->with([
-                'countryCodes' => CountryCode::getAll(),
-                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
-            ]);
-        });
-
-        View::composer([
+    private static function definePlanComposers()
+    {
+        self::defineViewComposer(['plan.country-codes.create', 'plan.country-codes.edit'], [
+            'countryCodes' => CountryCode::getAll(),
+            'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+        ]);
+        self::defineViewComposer([
             'plan.marketing-authorization-holders.index',
             'plan.marketing-authorization-holders.create',
             'plan.marketing-authorization-holders.edit'
-        ], function ($view) {
-            $view->with([
-                'countryCodes' => CountryCode::getAll(),
-                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
-                'calendarMonths' => Helper::collectCalendarMonths(),
-            ]);
-        });
+        ], [
+            'countryCodes' => CountryCode::getAll(),
+            'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+            'calendarMonths' => Helper::collectCalendarMonths(),
+        ]);
+        self::defineViewComposer('plan.show', [
+            'calendarMonths' => Helper::collectCalendarMonths(),
+            'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
+        ]);
+    }
 
-        View::composer('plan.show', function ($view) {
-            $view->with([
-                'calendarMonths' => Helper::collectCalendarMonths(),
-                'specificManufacturerCountries' => Manufacturer::getSpecificCountryOptions(),
-            ]);
+    private static function defineApplicationComposers()
+    {
+        self::defineViewComposer(['filters.applications'], self::getDefaultApplicationsShareData());
+    }
+
+    private static function defineViewComposer($views, array $data)
+    {
+        View::composer($views, function ($view) use ($data) {
+            $view->with($data);
         });
     }
 
@@ -269,6 +236,18 @@ class ViewComposersDefiner
             'productClasses' => ProductClass::getAll(),
             'manufacturerCategories' => ManufacturerCategory::getAll(),
             'countries' => Country::getAll(),
+        ];
+    }
+
+    private static function getDefaultApplicationsShareData()
+    {
+        return [
+            'applications' => Application::getAllMinified(),
+            'countryCodes' => CountryCode::getAll(),
+            'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+            'manufacturers' => Manufacturer::getAllMinified(),
+            'enTrademarks' => Application::pluckAllEnTrademarks(),
+            'ruTrademarks' => Application::pluckAllRuTrademarks(),
         ];
     }
 }

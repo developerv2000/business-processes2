@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\ApplicationReceivedNotification;
 use App\Support\Helper;
 use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
@@ -52,6 +53,10 @@ class Application extends Model
 
     protected static function booted(): void
     {
+        static::created(function ($item) {
+            $item->notifyLogisticiansOnCreate();
+        });
+
         static::deleting(function ($item) { // trash
             // foreach ($item->untrashedProcesses as $process) {
             //     $process->delete();
@@ -250,9 +255,7 @@ class Application extends Model
     */
 
     /**
-     * Syncs the manufacturer attribute on each record for filtering compatibility.
-     *
-     * Note: Ensure $process->manufacturer is eager loaded.
+     * Syncs the manufacturer attribute on each record for shorthand and some compatibility features.
      *
      * @param \Illuminate\Support\Collection|array $records Collection or array of records.
      * @return void
@@ -335,5 +338,20 @@ class Application extends Model
             $query->select('process_id')
                 ->from('applications');
         })->pluck('trademark_ru');
+    }
+
+    private function notifyLogisticiansOnCreate()
+    {
+        // Get application with eager loaded relations
+        $application = self::where('id', $this->id)->withComplexRelations()->first();
+
+        // Create and send notification to logisticians
+        $notification = new ApplicationReceivedNotification($application);
+
+        User::all()->each(function ($user) use ($notification) {
+            if (Gate::forUser($user)->allows('view-applications')) {
+                $user->notify($notification);
+            }
+        });
     }
 }

@@ -118,9 +118,9 @@ class RoleSeeder extends Seeder
         $role->save();
 
         $role->permissions()->attach([
-            Permission::findByName(Permission::CAN_VIEW_APPLICATIONS_NAME)->id,
+            Permission::findByName(Permission::CAN_VIEW_PROCESSES_FOR_ORDER_NAME)->id,
             Permission::findByName(Permission::CAN_VIEW_ORDERS_NAME)->id,
-            Permission::findByName(Permission::CAN_EDIT_APPLICATIONS_NAME)->id,
+            Permission::findByName(Permission::CAN_EDIT_PROCESSES_FOR_ORDER_NAME)->id,
             Permission::findByName(Permission::CAN_EDIT_ORDERS_NAME)->id,
             Permission::findByName(Permission::CAN_EXPORT_AS_EXCEL_NAME)->id,
             Permission::findByName(Permission::CAN_EDIT_COMMENTS_NAME)->id,

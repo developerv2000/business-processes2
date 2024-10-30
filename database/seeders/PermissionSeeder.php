@@ -65,15 +65,15 @@ class PermissionSeeder extends Seeder
             Permission::CAN_RECIEVE_NOTIFICATION_ON_PROCESS_CONTRACT,
 
             // Logisticians
-            Permission::CAN_VIEW_APPLICATIONS_NAME,
+            Permission::CAN_VIEW_PROCESSES_FOR_ORDER_NAME,
             Permission::CAN_VIEW_ORDERS_NAME,
-            Permission::CAN_NOT_VIEW_APPLICATIONS_NAME,
+            Permission::CAN_NOT_VIEW_PROCESSES_FOR_ORDER_NAME,
             Permission::CAN_NOT_VIEW_ORDERS_NAME,
-            Permission::CAN_EDIT_APPLICATIONS_NAME,
+            Permission::CAN_EDIT_PROCESSES_FOR_ORDER_NAME,
             Permission::CAN_EDIT_ORDERS_NAME,
-            Permission::CAN_NOT_EDIT_APPLICATIONS_NAME,
+            Permission::CAN_NOT_EDIT_PROCESSES_FOR_ORDER_NAME,
             Permission::CAN_NOT_EDIT_ORDERS_NAME,
-            Permission::CAN_SEND_PROCESSES_FOR_APPLICATION,
+            Permission::CAN_MARK_PROCESS_AS_READY_FOR_ORDER,
         ];
 
         for ($i = 0; $i < count($name); $i++) {

@@ -37,10 +37,10 @@ class Permission extends Model
     const CAN_NOT_VIEW_SPG_NAME = 'can`t view SPG';
 
     // Logistics department
-    const CAN_VIEW_APPLICATIONS_NAME = 'can view Applications';
+    const CAN_VIEW_PROCESSES_FOR_ORDER_NAME = 'can view Processes for order';
     const CAN_VIEW_ORDERS_NAME = 'can view Orders';
 
-    const CAN_NOT_VIEW_APPLICATIONS_NAME = 'can`t view Applications';
+    const CAN_NOT_VIEW_PROCESSES_FOR_ORDER_NAME = 'can`t view Processes for order';
     const CAN_NOT_VIEW_ORDERS_NAME = 'can`t view Orders';
 
     // Dashboard
@@ -73,10 +73,10 @@ class Permission extends Model
     const CAN_NOT_EDIT_SPG_NAME = 'can`t edit SPG';
 
     // Logistics department
-    const CAN_EDIT_APPLICATIONS_NAME = 'can edit Applications';
+    const CAN_EDIT_PROCESSES_FOR_ORDER_NAME = 'can edit Processes for order';
     const CAN_EDIT_ORDERS_NAME = 'can edit Orders';
 
-    const CAN_NOT_EDIT_APPLICATIONS_NAME = 'can`t edit Applications';
+    const CAN_NOT_EDIT_PROCESSES_FOR_ORDER_NAME = 'can`t edit Processes for order';
     const CAN_NOT_EDIT_ORDERS_NAME = 'can`t edit Orders';
 
     // Dashboard
@@ -116,7 +116,7 @@ class Permission extends Model
     const CAN_EDIT_PROCESSES_STATUS_HISTORY_NAME = 'can edit processes status history';
     const CAN_UPGRADE_PROCESS_STATUS_AFTER_CONTRACT_NAME = 'can upgrade process status after contract';
     const CAN_RECIEVE_NOTIFICATION_ON_PROCESS_CONTRACT = 'can recieve notification on process contract';
-    const CAN_SEND_PROCESSES_FOR_APPLICATION = 'can send processes for application';
+    const CAN_MARK_PROCESS_AS_READY_FOR_ORDER = 'can mark process as ready for order';
 
     /*
     |--------------------------------------------------------------------------

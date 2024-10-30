@@ -2,23 +2,22 @@
 
 namespace App\Notifications;
 
-use App\Models\Application;
 use App\Models\Process;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ApplicationReceivedNotification extends Notification
+class ProcessMarkedAsReadyForOrder extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Application $application)
+    public function __construct(Process $process)
     {
-        $this->application = $application;
+        $this->process = $process;
     }
 
     /**
@@ -39,12 +38,13 @@ class ApplicationReceivedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'application_id' => $this->application->id,
-            'country' => $this->application->process->searchCountry->name,
-            'manufacturer' => $this->application->process->manufacturer->name,
-            'trademark_en' => $this->application->process->trademark_en,
-            'trademark_ru' => $this->application->process->trademark_ru,
-            'marketing_authorization_holder' => $this->application->process->marketingAuthorizationHolder?->name,
+            'country' => $this->process->searchCountry->name,
+            'manufacturer' => $this->process->manufacturer->name,
+            'trademark_en' => $this->process->trademark_en,
+            'trademark_ru' => $this->process->trademark_ru,
+            'marketing_authorization_holder' => $this->process->marketingAuthorizationHolder?->name,
+            'form' => $this->process->product->form->name,
+            'pack' => $this->process->product->pack,
         ];
     }
 }

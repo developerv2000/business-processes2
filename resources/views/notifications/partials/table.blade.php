@@ -4,9 +4,9 @@
         <tr>
             @include('tables.components.th.select-all')
 
-            <th>{{ __('Date') }}</th>
+            <th width="200">{{ __('Date') }}</th>
             <th>{{ __('Text') }}</th>
-            <th>{{ __('Status') }}</th>
+            <th width="200">{{ __('Status') }}</th>
         </tr>
     </thead> {{-- Head end --}}
 

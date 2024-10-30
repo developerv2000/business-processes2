@@ -10,7 +10,7 @@ const GET_PROCESSES_CREATE_FORECAST_INPUTS_URL = '/processes/get-create-form-for
 const GET_PROCESSES_EDIT_STAGE_INPUTS_URL = '/processes/get-edit-form-stage-inputs';
 const UPDATE_PROCESSES_CONTRACTED_IN_PLAN_URL = '/processes/update-contracted-in-plan-value';
 const UPDATE_PROCESSES_REGISTERED_IN_PLAN_URL = '/processes/update-registered-in-plan-value';
-const SEND_PROCESS_FOR_APPLICATION_URL = '/processes/send-for-application';
+const MARK_PROCESS_AS_READY_FOR_ORDER_URL = '/processes/mark-as-ready-for-order';
 
 // Colors
 const rootStyles = getComputedStyle(document.documentElement);
@@ -899,19 +899,18 @@ function boostrapProcessesPlanCheckboxes() {
 // ========== Send process for application checkboxes ==========
 function boostrapProcessesApplicationCheckboxes() {
     // Contacted toggling
-    document.querySelectorAll('[data-check-action="send-processes-for-application"]')
+    document.querySelectorAll('[data-check-action="mark-process-as-ready-for-order"]')
         .forEach((chbs) => chbs.addEventListener('change', function (evt) {
             showSpinner();
 
             const chb = evt.target;
-
             const processID = chb.dataset.processId;
 
             const data = {
                 'process_id': processID,
             };
 
-            axios.post(SEND_PROCESS_FOR_APPLICATION_URL, data, {
+            axios.post(MARK_PROCESS_AS_READY_FOR_ORDER_URL, data, {
                 headers: {
                     'Content-Type': 'application/json'
                 }

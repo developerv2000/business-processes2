@@ -7,15 +7,16 @@
         </div>
     @break
 
-    @case('App\Notifications\ApplicationReceivedNotification')
+    @case('App\Notifications\ProcessMarkedAsReadyForOrder')
         <div>
-            {{ __('Received new application') }}
-            <a class="td__link" href="{{ route('applications.index', ['id[]' => $instance->data['application_id']]) }}">#{{ $instance->data['application_id'] }}</a>.<br>
+            <strong>{{ __('New product for order has been received:') }}</strong><br>
             {{ __('Country') }}: {{ $instance->data['country'] }}<br>
             {{ __('Manufacturer') }}: {{ $instance->data['manufacturer'] }}<br>
             {{ __('Brand Eng') }}: {{ $instance->data['trademark_en'] }}<br>
             {{ __('Brand Rus') }}: {{ $instance->data['trademark_ru'] }}<br>
-            {{ __('MAH') }}: {{ $instance->data['marketing_authorization_holder'] }}
+            {{ __('MAH') }}: {{ $instance->data['marketing_authorization_holder'] }}<br>
+            {{ __('Form') }}: {{ $instance->data['form'] }}<br>
+            {{ __('Pack') }}: {{ $instance->data['pack'] }}
         </div>
     @break
 

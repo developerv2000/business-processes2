@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('applications', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
 
-            $table->string('name')->nullable();
-
             $table->unsignedInteger('process_id')
                 ->index()
                 ->foreign()

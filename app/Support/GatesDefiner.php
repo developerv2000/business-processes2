@@ -53,8 +53,8 @@ class GatesDefiner
         });
 
         // Gates for logistician department
-        Gate::define('view-applications', function ($user) {
-            return $user->hasPermission('can view Applications');
+        Gate::define('view-processes-for-order', function ($user) {
+            return $user->hasPermission('can view Processes for order');
         });
 
         Gate::define('view-orders', function ($user) {
@@ -106,8 +106,8 @@ class GatesDefiner
         });
 
         // Gates for logistician department
-        Gate::define('edit-applications', function ($user) {
-            return $user->hasPermission('can edit Applications');
+        Gate::define('edit-processes-for-order', function ($user) {
+            return $user->hasPermission('can edit Processes for order');
         });
 
         Gate::define('edit-orders', function ($user) {
@@ -181,8 +181,8 @@ class GatesDefiner
             return $user->hasPermission('can recieve notification on process contract');
         });
 
-        Gate::define('send-processes-for-application', function ($user) {
-            return $user->hasPermission('can send processes for application');
+        Gate::define('mark-process-as-ready-for-order', function ($user) {
+            return $user->hasPermission('can mark process as ready for order');
         });
     }
 }

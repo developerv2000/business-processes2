@@ -14,16 +14,18 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
 
-            $table->unsignedInteger('application_id')
+            $table->string('name')->unique();
+
+            $table->unsignedInteger('process_id')
                 ->index()
                 ->foreign()
                 ->references('id')
-                ->on('applications');
+                ->on('processes');
 
             $table->date('receive_date');
-            $table->date('po_date');
+            $table->date('purchase_order_date');
             $table->unsignedInteger('quantity');
-            $table->decimal('price', 8, 2)->nullable();
+            $table->decimal('price', 8, 2);
 
             $table->unsignedSmallInteger('currency_id')
                 ->nullable()

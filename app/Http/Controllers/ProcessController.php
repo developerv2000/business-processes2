@@ -201,18 +201,16 @@ class ProcessController extends Controller
     /**
      * AJAX request
      */
-    public function sendForApplication(Request $request)
+    public function markAsReadyForOrder(Request $request)
     {
         $process = Process::find($request->process_id);
 
-        if ($process->application()->exists()) {
+        if (!$process->markAsReadyForOrder()) {
             return response()->json([
                 'success' => false,
-                'message' => trans('This process has already been sent for application.'),
+                'message' => trans('This process is not yet ready for order.'),
             ]);
         }
-
-        $process->sendForApplication();
 
         return [
             'success' => true,

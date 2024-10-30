@@ -203,8 +203,12 @@ class Meeting extends CommentableModel
      *
      * @return array
      */
-    public static function getDefaultTableColumnsForUser($user): array
+    public static function getDefaultTableColumnsForUser($user)
     {
+        if (Gate::forUser($user)->denies('view-meetings')) {
+            return null;
+        }
+
         $order = 1;
         $columns = array();
 

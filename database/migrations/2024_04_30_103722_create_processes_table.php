@@ -89,6 +89,11 @@ return new class extends Migration
             $table->date('increased_price_date')->nullable(); // auto
 
             // Globals
+            $table->boolean('is_ready_for_order')->default(false); // for orders part
+            $table->date('readiness_for_order_date')->nullable(); // for orders part
+            $table->string('fixed_trademark_en_for_order')->nullable(); // for orders part
+            $table->string('fixed_trademark_ru_for_order')->nullable(); // for orders part
+
             $table->timestamps();
             $table->softDeletes();
         });

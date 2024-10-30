@@ -16,6 +16,7 @@ use App\Models\ManufacturerCategory;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\Permission;
 use App\Models\PortfolioManager;
+use App\Models\Process;
 use App\Models\ProcessGeneralStatus;
 use App\Models\ProcessResponsiblePerson;
 use App\Models\ProcessStatus;
@@ -42,7 +43,7 @@ class ViewComposersDefiner
         self::defineMeetingComposers();
         self::defineUserComposers();
         self::definePlanComposers();
-        self::defineApplicationComposers();
+        self::defineProcessesForOrderComposers();
     }
 
     private static function definePaginationLimitComposer()
@@ -162,9 +163,9 @@ class ViewComposersDefiner
         ]);
     }
 
-    private static function defineApplicationComposers()
+    private static function defineProcessesForOrderComposers()
     {
-        self::defineViewComposer(['filters.applications'], self::getDefaultApplicationsShareData());
+        self::defineViewComposer(['filters.processes-for-order'], self::getDefaultProcessesForOrderShareData());
     }
 
     private static function defineViewComposer($views, array $data)
@@ -239,15 +240,17 @@ class ViewComposersDefiner
         ];
     }
 
-    private static function getDefaultApplicationsShareData()
+    private static function getDefaultProcessesForOrderShareData()
     {
         return [
-            'applications' => Application::getAllMinified(),
             'countryCodes' => CountryCode::getAll(),
             'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
             'manufacturers' => Manufacturer::getAllMinified(),
-            'enTrademarks' => Application::pluckAllEnTrademarks(),
-            'ruTrademarks' => Application::pluckAllRuTrademarks(),
+            'productForms' => ProductForm::getAllMinified(),
+            'enTrademarks' => Process::pluckAllEnTrademarks(),
+            'ruTrademarks' => Process::pluckAllRuTrademarks(),
+            'fixedEnTrademarks' => Process::pluckAllFixedEnTrademarks(),
+            'fixedRuTrademarks' => Process::pluckAllFixedRuTrademarks(),
         ];
     }
 }

@@ -48,13 +48,15 @@
                 ])>{{ __('SPG') }}</x-navbar.link>
             @endcan
 
-            {{-- MAD --}}
-            <x-navbar.title class="navbar-title navbar-title--top-margined">{{ __('ОППЛ') }}</x-navbar.title>
+            {{-- Logistics --}}
+            @canany(['view-processes-for-order', 'view-orders'])
+                <x-navbar.title class="navbar-title navbar-title--top-margined">{{ __('ОППЛ') }}</x-navbar.title>
+            @endcanany
 
-            @can('view-applications')
-                <x-navbar.link icon="grading" href="{{ route('applications.index') }}" @class([
-                    'navbar-link--active' => request()->routeIs('applications.*'),
-                ])>{{ __('Applications') }}</x-navbar.link>
+            @can('view-processes-for-order')
+                <x-navbar.link icon="grading" href="{{ route('processes_for_order.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('processes_for_order.*'),
+                ])>{{ __('For order') }}</x-navbar.link>
             @endcan
 
             @can('view-orders')

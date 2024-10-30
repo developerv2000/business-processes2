@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\ProcessMarkedAsReadyForOrder;
 use App\Notifications\ProcessOnContractStage;
 use App\Support\Abstracts\CommentableModel;
 use App\Support\Contracts\PreparesRecordsForExportInterface;
@@ -49,6 +50,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             'forecast_year_1_update_date' => 'date',
             'increased_price_date' => 'date',
             'responsible_people_update_date' => 'date',
+            'readiness_for_order_date' => 'date',
         ];
     }
 
@@ -127,9 +129,9 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ->orderBy('id', 'desc');
     }
 
-    public function application()
+    public function orders()
     {
-        return $this->hasOne(Application::class);
+        return $this->hasMany(Order::class);
     }
 
     /*
@@ -256,12 +258,38 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
                         },
                     ]);
             },
-
-            'application' => function ($query) {
-                $query->select('id', 'process_id')
-                    ->withOnly([]);
-            }
         ]);
+    }
+
+    public function scopeOnlyReadyForOrder($query)
+    {
+        $query->where('is_ready_for_order', true)
+            ->select(
+                'id',
+                'product_id',
+                'country_code_id',
+                'marketing_authorization_holder_id',
+                'trademark_en',
+                'trademark_ru',
+                'readiness_for_order_date',
+                'fixed_trademark_en_for_order',
+                'fixed_trademark_ru_for_order',
+            )
+            ->withOnly([
+                'searchCountry',
+                'marketingAuthorizationHolder',
+
+                'product' => function ($productsQuery) {
+                    $productsQuery->select('products.id', 'manufacturer_id', 'form_id', 'pack')
+                        ->withOnly(['form']);
+                },
+
+                'manufacturer' => function ($manufacturersQuery) {
+                    $manufacturersQuery->select('manufacturers.id', 'manufacturers.name')
+                        ->withOnly([]);
+                },
+            ])
+            ->withCount('orders');
     }
 
     /**
@@ -935,8 +963,12 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
      *
      * @return array
      */
-    public static function getDefaultTableColumnsForUser($user): array
+    public static function getDefaultTableColumnsForUser($user)
     {
+        if (Gate::forUser($user)->denies('view-vps')) {
+            return null;
+        }
+
         $order = 1;
         $columns = array();
 
@@ -972,7 +1004,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             );
         }
 
-        if (Gate::forUser($user)->allows('send-processes-to-application')) {
+        if (Gate::forUser($user)->allows('mark-process-as-ready-for-order')) {
             array_push(
                 $columns,
                 ['name' => '9Зя', 'order' => $order++, 'width' => 40, 'visible' => 1],
@@ -1062,6 +1094,48 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ['name' => 'Р', 'order' => $order++, 'width' => 200, 'visible' => 1],
             ['name' => 'Зя', 'order' => $order++, 'width' => 200, 'visible' => 1],
             ['name' => 'Отмена', 'order' => $order++, 'width' => 200, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
+    /**
+     * Provides the default table columns along with their properties.
+     *
+     * These columns are typically used to display data in tables,
+     * such as on index and trash pages, and are iterated over in a loop.
+     *
+     * @return array
+     */
+    public static function getDefaultForOrderTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-processes-for-order')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        if (Gate::forUser($user)->allows('edit-processes-for-order')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
+            ['name' => 'Brand name ENG', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Brand name RUS', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Orders', 'order' => $order++, 'width' => 86, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'VPS Brand Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'VPS Brand Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 144, 'visible' => 1],
         );
 
         return $columns;
@@ -1170,20 +1244,57 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         return trans('Process') . ' #' . $this->id . ' / ' . $this->searchCountry->name;
     }
 
-    public function shouldDisplaySPGCheckboxes()
+    public function isReadyForPlan()
     {
         return $this->status->generalStatus->stage >= 5;
     }
 
-    public function shouldDisplayApplicationCheckbox()
+    public function canBeMarkedAsReadyForOrder()
     {
-        return $this->status->generalStatus->stage >= 8;
+        return $this->status->generalStatus->stage >= 9;
     }
 
-    public function sendForApplication()
+    public function markAsReadyForOrder()
     {
-        $this->application()->create([
-            'process_id' => $this->id,
-        ]);
+        if (!$this->canBeMarkedAsReadyForOrder()) {
+            return false;
+        }
+
+        if (!$this->is_ready_for_order) {
+            $this->is_ready_for_order = true;
+            $this->readiness_for_order_date = $this->readiness_for_order_date ?: now();
+            $this->fixed_trademark_en_for_order = 'Brand (ENG)';
+            $this->fixed_trademark_ru_for_order = 'Brand (RU)';
+            $this->timestamps = false;
+            $this->saveQuietly();
+
+            $notification = new ProcessMarkedAsReadyForOrder($this);
+
+            User::all()->each(function ($user) use ($notification) {
+                if (Gate::forUser($user)->allows('view-processes-for-order')) {
+                    $user->notify($notification);
+                }
+            });
+        }
+
+        return true;
+    }
+
+    public static function pluckAllEnTrademarks()
+    {
+        return self::distinct()->pluck('trademark_en');
+    }
+
+    public static function pluckAllRuTrademarks() {
+        return self::distinct()->pluck('trademark_ru');
+    }
+
+    public static function pluckAllFixedEnTrademarks()
+    {
+        return self::distinct()->pluck('fixed_trademark_en_for_order');
+    }
+
+    public static function pluckAllFixedRuTrademarks() {
+        return self::distinct()->pluck('fixed_trademark_ru_for_order');
     }
 }

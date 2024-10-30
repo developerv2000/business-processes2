@@ -5,10 +5,6 @@
     @break
 
     {{-- Links --}}
-    @case('PO №')
-        @include('tables.components.th.sort-link', ['orderBy' => 'name'])
-    @break
-
     @case('Orders')
         @include('tables.components.th.sort-link', ['orderBy' => 'orders_count'])
     @break

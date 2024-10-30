@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ForOrderController;
 use App\Http\Controllers\KvppController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ManufacturerController;
@@ -12,6 +12,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProcessController;
+use App\Http\Controllers\ProcessesForOrderController;
 use App\Http\Controllers\ProcessStatusHistoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductSelectionController;
@@ -82,7 +83,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
         // ajax request on checkbox toggle
         Route::post('/update-registered-in-plan-value', 'updateRegisteredInPlanValue')->middleware('can:control-spg-processes');
         // ajax request on checkbox check
-        Route::post('/send-for-application', 'sendForApplication')->middleware('can:control-spg-processes');
+        Route::post('/mark-as-ready-for-order', 'markAsReadyForOrder')->middleware('can:mark-process-as-ready-for-order');
     });
 
     Route::prefix('process/{process}/status-history')
@@ -159,8 +160,8 @@ Route::middleware('auth', 'auth.session')->group(function () {
         });
     });
 
-    Route::prefix('applications')->controller(ApplicationController::class)->name('applications.')->group(function () {
-        RouteGenerator::defineDefaultCrudRoutesExcept(['create'], 'can:view-applications', 'can:edit-applications');
+    Route::prefix('processes-for-order')->controller(ProcessesForOrderController::class)->name('processes_for_order.')->group(function () {
+        RouteGenerator::defineDefaultCrudRoutesOnly(['index', 'edit', 'update'], 'can:view-processes-for-order', 'can:edit-processes-for-order');
     });
 
     Route::prefix('orders')->controller(OrderController::class)->name('orders.')->group(function () {

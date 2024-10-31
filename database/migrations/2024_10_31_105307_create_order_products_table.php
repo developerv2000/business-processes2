@@ -11,31 +11,32 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('order_products', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
 
-            $table->unsignedInteger('manufacturer_id')
+            $table->unsignedInteger('order_id')
                 ->index()
                 ->foreign()
                 ->references('id')
-                ->on('manufacturers');
+                ->on('orders');
 
-            $table->date('receive_date');
-            $table->date('purchase_order_date');
-            $table->string('purchase_order_name')->unique();
+            $table->unsignedInteger('process_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('processes');
 
-            $table->unsignedSmallInteger('currency_id')
+            $table->unsignedSmallInteger('marketing_authorization_holder_id')
                 ->nullable()
                 ->index()
                 ->foreign()
                 ->references('id')
-                ->on('currencies');
+                ->on('marketing_authorization_holders');
 
-            $table->date('readiness_date');
-            $table->date('expected_dispatch_date');
+            $table->unsignedInteger('quantity');
+            $table->decimal('price', 8, 2);
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -44,6 +45,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('order_products');
     }
 };

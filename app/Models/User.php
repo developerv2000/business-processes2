@@ -617,7 +617,7 @@ class User extends Authenticatable
             'processes.index' => 'view-vps',
 
             // Logictics
-            'applications.index' => 'view-applications',
+            'processes_for_order.index' => 'view-processes-for-order',
             'orders.index' => 'view-orders',
         ];
 

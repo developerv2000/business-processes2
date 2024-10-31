@@ -9,7 +9,12 @@
 
     @case('App\Notifications\ProcessMarkedAsReadyForOrder')
         <div>
-            <strong>{{ __('New product for order has been received:') }}</strong><br>
+            <strong>
+                {{ __('New product for order') }}
+                <a class="td__link" href="{{ route('processes_for_order.index', ['id[]' => $instance->data['process_id']]) }}">#{{ $instance->data['process_id'] }}</a>
+                {{ __('has been received:') }}
+            </strong><br>
+
             {{ __('Country') }}: {{ $instance->data['country'] }}<br>
             {{ __('Manufacturer') }}: {{ $instance->data['manufacturer'] }}<br>
             {{ __('Brand Eng') }}: {{ $instance->data['trademark_en'] }}<br>

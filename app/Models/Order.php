@@ -15,12 +15,12 @@ class Order extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function application()
+    public function products()
     {
-        return $this->belongsTo(Application::class);
+        return $this->hasMany(OrderProduct::class);
     }
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Miscellaneous
     |--------------------------------------------------------------------------

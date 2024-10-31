@@ -129,9 +129,9 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ->orderBy('id', 'desc');
     }
 
-    public function orders()
+    public function orderedProducts()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(OrderProduct::class);
     }
 
     /*
@@ -289,7 +289,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
                         ->withOnly([]);
                 },
             ])
-            ->withCount('orders');
+            ->withCount('orderedProducts');
     }
 
     /**
@@ -1125,13 +1125,13 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
         array_push(
             $columns,
-            ['name' => 'Brand name ENG', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Brand name RUS', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Orders', 'order' => $order++, 'width' => 86, 'visible' => 1],
+            ['name' => 'Brand name ENG', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Brand name RUS', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 86, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            ['name' => 'VPS Brand Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'VPS Brand Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'VPS Brand Eng', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'VPS Brand Rus', 'order' => $order++, 'width' => 126, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
             ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
@@ -1263,8 +1263,8 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         if (!$this->is_ready_for_order) {
             $this->is_ready_for_order = true;
             $this->readiness_for_order_date = $this->readiness_for_order_date ?: now();
-            $this->fixed_trademark_en_for_order = 'Brand (ENG)';
-            $this->fixed_trademark_ru_for_order = 'Brand (RU)';
+            $this->fixed_trademark_en_for_order = 'Brand (ENG) #' . $this->id;
+            $this->fixed_trademark_ru_for_order = 'Brand (RU) #' . $this->id;
             $this->timestamps = false;
             $this->saveQuietly();
 

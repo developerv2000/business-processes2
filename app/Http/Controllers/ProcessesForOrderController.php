@@ -27,6 +27,29 @@ class ProcessesForOrderController extends Controller
         return view('processes-for-order.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
+    public function edit(Process $instance)
+    {
+        return view('processes-for-order.edit', compact('instance'));
+    }
+
+    public function update(Request $request, Process $instance)
+    {
+        $request->validate([
+            'fixed_trademark_en_for_order' => ['required', 'string'],
+            'fixed_trademark_ru_for_order' => ['required', 'string'],
+        ]);
+
+        $instance->fill($request->only([
+            'fixed_trademark_en_for_order',
+            'fixed_trademark_ru_for_order'
+        ]));
+
+        $instance->timestamps = false;
+        $instance->saveQuietly();
+
+        return redirect($request->input('previous_url'));
+    }
+
     public function getRecordsFinalized($request, $query = null, $finaly = 'paginate')
     {
         // If no query is provided, create a new query instance
@@ -44,6 +67,7 @@ class ProcessesForOrderController extends Controller
     private function filterRecords($request, $query)
     {
         $whereInAttributes = [
+            'id',
             'country_code_id',
             'marketing_authorization_holder_id',
             'trademark_en',
@@ -93,9 +117,6 @@ class ProcessesForOrderController extends Controller
         $records = $query
             ->orderBy($request->orderBy, $request->orderType)
             ->orderBy('id', $request->orderType);
-
-        // attach relationship counts to the query
-        $records = $records->withCount('orders');
 
         // Handle different finaly options
         switch ($finaly) {

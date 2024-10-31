@@ -47,6 +47,6 @@
         name="pack" />
 
     @include('filters.partials.default-elements', [
-        'includeIdInput' => false,
+        'includeIdInput' => true,
     ])
 @endsection

@@ -11,9 +11,9 @@
         {{ $instance->fixed_trademark_ru_for_order }}
     @break
 
-    @case('Orders')
+    @case('Products')
         <a class="td__link" href="{{ route('orders.index', ['process_id[]' => $instance->id]) }}">
-            {{ $instance->orders_count }} {{ __('orders') }}
+            {{ $instance->ordered_products_count }} {{ __('products') }}
         </a>
     @break
 

@@ -38,6 +38,7 @@ class ProcessMarkedAsReadyForOrder extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'process_id' => $this->process->id,
             'country' => $this->process->searchCountry->name,
             'manufacturer' => $this->process->manufacturer->name,
             'trademark_en' => $this->process->trademark_en,

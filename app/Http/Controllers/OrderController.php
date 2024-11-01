@@ -2,65 +2,103 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrderStoreRequest;
+use App\Models\Manufacturer;
 use App\Models\Order;
-use App\Http\Requests\StoreOrderRequest;
-use App\Http\Requests\UpdateOrderRequest;
+use App\Models\Process;
+use App\Models\User;
+use App\Support\Traits\DestroysModelRecords;
+use App\Support\Traits\RestoresModelRecords;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    use DestroysModelRecords;
+    use RestoresModelRecords;
+
+    public $model = Order::class; // used in multiple destroy/restore traits
+
     /**
-     * Display a listing of the resource.
+     * Display a listing of the records.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        Order::mergeQueryingParamsToRequest($request);
+        $records = Order::getRecordsFinalized($request, finaly: 'paginate');
+
+        $allTableColumns = $request->user()->collectAllTableColumns('orders_table_columns');
+        $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
+
+        return view('orders.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the trashed records.
+     */
+    public function trash(Request $request)
+    {
+        Order::mergeQueryingParamsToRequest($request);
+        $records = Order::getRecordsFinalized($request, Order::onlyTrashed(), finaly: 'paginate');
+
+        $allTableColumns = $request->user()->collectAllTableColumns('orders_table_columns');
+        $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
+
+        return view('orders.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+    }
+
+    /**
+     * Show the form for creating a new record.
      */
     public function create()
     {
-        //
+        return view('orders.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created record in storage.
      */
-    public function store(StoreOrderRequest $request)
+    public function store(OrderStoreRequest $request)
     {
-        //
+        $order = Order::createFromRequest($request);
+
+        return to_route('orders.edit', $order->id);
     }
 
     /**
-     * Display the specified resource.
+     * Show the form for editing the specified record.
      */
-    public function show(Order $order)
+    public function edit(Order $instance)
     {
-        //
+        $processes = $instance->manufacturer->getReadyForOrderProcesses();
+
+        return view('orders.edit', compact('instance', 'processes'));
+    }
+
+    public function getCreateProductInputs(Request $request)
+    {
+        $processes = Manufacturer::find($request->manufacturer_id)->getReadyForOrderProcesses();
+
+        return view('orders.partials.products-create-section', compact('processes'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified record in storage.
      */
-    public function edit(Order $order)
+    public function update(OrderUpdateRequest $request, Order $instance)
     {
-        //
+        $instance->updateFromRequest($request);
+
+        return redirect($request->input('previous_url'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Export records as excel file
      */
-    public function update(UpdateOrderRequest $request, Order $order)
+    public function export(Request $request)
     {
-        //
-    }
+        Order::mergeExportQueryingParamsToRequest($request);
+        $records = Order::getRecordsFinalized($request, finaly: 'query');
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
-    {
-        //
+        return Order::exportRecordsAsExcel($records);
     }
 }

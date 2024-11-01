@@ -20,9 +20,9 @@ return new class extends Migration
                 ->references('id')
                 ->on('manufacturers');
 
-            $table->date('receive_date');
-            $table->date('purchase_order_date');
-            $table->string('purchase_order_name')->unique();
+            $table->date('receive_date')->nullable();
+            $table->date('purchase_order_date')->nullable();
+            $table->string('purchase_order_name')->nullable();
 
             $table->unsignedSmallInteger('currency_id')
                 ->nullable()
@@ -31,8 +31,9 @@ return new class extends Migration
                 ->references('id')
                 ->on('currencies');
 
-            $table->date('readiness_date');
-            $table->date('expected_dispatch_date');
+            $table->date('readiness_date')->nullable();
+            $table->date('expected_dispatch_date')->nullable();
+            $table->boolean('is_confirmed');
 
             $table->timestamps();
             $table->softDeletes();

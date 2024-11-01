@@ -480,6 +480,7 @@ class User extends Authenticatable
         $settings['kvpp_table_columns'] = Kvpp::getDefaultTableColumnsForUser($this);
         $settings['meetings_table_columns'] = Meeting::getDefaultTableColumnsForUser($this);
         $settings['processes_for_order_table_columns'] = Process::getDefaultForOrderTableColumnsForUser($this);
+        $settings['orders_table_columns'] = Order::getDefaultTableColumnsForUser($this);
 
         $this->update(['settings' => $settings]);
     }

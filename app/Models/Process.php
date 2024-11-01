@@ -1127,7 +1127,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             $columns,
             ['name' => 'Brand name ENG', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Brand name RUS', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Products', 'order' => $order++, 'width' => 86, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 90, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'VPS Brand Eng', 'order' => $order++, 'width' => 126, 'visible' => 1],
@@ -1285,7 +1285,8 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         return self::distinct()->pluck('trademark_en');
     }
 
-    public static function pluckAllRuTrademarks() {
+    public static function pluckAllRuTrademarks()
+    {
         return self::distinct()->pluck('trademark_ru');
     }
 
@@ -1294,7 +1295,8 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         return self::distinct()->pluck('fixed_trademark_en_for_order');
     }
 
-    public static function pluckAllFixedRuTrademarks() {
+    public static function pluckAllFixedRuTrademarks()
+    {
         return self::distinct()->pluck('fixed_trademark_ru_for_order');
     }
 }

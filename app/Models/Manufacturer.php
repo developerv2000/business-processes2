@@ -383,6 +383,16 @@ class Manufacturer extends CommentableModel
             ->get();
     }
 
+    public static function getAvailableRecordsForOrder()
+    {
+        return self::whereHas('processes', function ($processesQuery) {
+            $processesQuery->where('is_ready_for_order', true);
+        })
+            ->select('id', 'name')
+            ->withOnly([])
+            ->get();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Create and Update
@@ -579,5 +589,15 @@ class Manufacturer extends CommentableModel
             'EUROPE',
             'INDIA',
         ];
+    }
+
+    public function getReadyForOrderProcesses()
+    {
+        return Process::whereHas('manufacturer', function ($manufacturersQuery) {
+            $manufacturersQuery->where('manufacturers.id', $this->id);
+        })
+            ->where('is_ready_for_order', true)
+            ->select('processes.id', 'fixed_trademark_en_for_order')
+            ->get();
     }
 }

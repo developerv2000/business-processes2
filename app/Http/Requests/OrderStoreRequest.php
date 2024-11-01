@@ -2,18 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Currency;
+use App\Models\Manufacturer;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateOrderProductRequest extends FormRequest
+class OrderStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,7 +17,8 @@ class UpdateOrderProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'manufacturer_id' => [Rule::exists(Manufacturer::class, 'id')],
+            'currency_id' => [Rule::exists(Currency::class, 'id')],
         ];
     }
 }

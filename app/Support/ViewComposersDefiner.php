@@ -44,6 +44,7 @@ class ViewComposersDefiner
         self::defineUserComposers();
         self::definePlanComposers();
         self::defineProcessesForOrderComposers();
+        self::defineOrdersComposers();
     }
 
     private static function definePaginationLimitComposer()
@@ -168,6 +169,27 @@ class ViewComposersDefiner
         self::defineViewComposer(['filters.processes-for-order'], self::getDefaultProcessesForOrderShareData());
     }
 
+    private static function defineOrdersComposers()
+    {
+        $ordersData = self::getDefaultOrdersShareData();
+        self::defineViewComposer('orders.create', $ordersData);
+        self::defineViewComposer(
+            ['filters.orders', 'orders.edit'],
+            array_merge($ordersData, [
+                'countryCodes' => CountryCode::getAll(),
+                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+            ])
+        );
+
+        self::defineViewComposer(
+            'orders.partials.products-create-section',
+            [
+                'countryCodes' => CountryCode::getAll(),
+                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+            ]
+        );
+    }
+    
     private static function defineViewComposer($views, array $data)
     {
         View::composer($views, function ($view) use ($data) {
@@ -251,6 +273,14 @@ class ViewComposersDefiner
             'ruTrademarks' => Process::pluckAllRuTrademarks(),
             'fixedEnTrademarks' => Process::pluckAllFixedEnTrademarks(),
             'fixedRuTrademarks' => Process::pluckAllFixedRuTrademarks(),
+        ];
+    }
+
+    private static function getDefaultOrdersShareData()
+    {
+        return [
+            'manufacturers' => Manufacturer::getAvailableRecordsForOrder(),
+            'currencies' => Currency::getAll(),
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderStoreRequest;
+use App\Http\Requests\OrderUpdateRequest;
 use App\Models\Manufacturer;
 use App\Models\Order;
 use App\Models\Process;
@@ -59,9 +60,9 @@ class OrderController extends Controller
      */
     public function store(OrderStoreRequest $request)
     {
-        $order = Order::createFromRequest($request);
+        Order::createFromRequest($request);
 
-        return to_route('orders.edit', $order->id);
+        return to_route('orders.index');
     }
 
     /**
@@ -69,16 +70,7 @@ class OrderController extends Controller
      */
     public function edit(Order $instance)
     {
-        $processes = $instance->manufacturer->getReadyForOrderProcesses();
-
-        return view('orders.edit', compact('instance', 'processes'));
-    }
-
-    public function getCreateProductInputs(Request $request)
-    {
-        $processes = Manufacturer::find($request->manufacturer_id)->getReadyForOrderProcesses();
-
-        return view('orders.partials.products-create-section', compact('processes'));
+        return view('orders.edit', compact('instance'));
     }
 
     /**

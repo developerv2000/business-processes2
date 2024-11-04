@@ -14,6 +14,7 @@ use App\Models\Manufacturer;
 use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
 use App\Models\MarketingAuthorizationHolder;
+use App\Models\Order;
 use App\Models\Permission;
 use App\Models\PortfolioManager;
 use App\Models\Process;
@@ -172,15 +173,20 @@ class ViewComposersDefiner
     private static function defineOrdersComposers()
     {
         $ordersData = self::getDefaultOrdersShareData();
-        self::defineViewComposer('orders.create', $ordersData);
         self::defineViewComposer(
-            ['filters.orders', 'orders.edit'],
+            'orders.create',
+            array_merge($ordersData, [
+                'defaultCurrency' => Currency::getDefaultCurrencyForOrder(),
+            ])
+        );
+
+        self::defineViewComposer(
+            'orders.edit',
             array_merge($ordersData, [
                 'countryCodes' => CountryCode::getAll(),
                 'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
             ])
         );
-
         self::defineViewComposer(
             'orders.partials.products-create-section',
             [
@@ -188,8 +194,16 @@ class ViewComposersDefiner
                 'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
             ]
         );
+        self::defineViewComposer(
+            'filters.orders',
+            array_merge($ordersData, [
+                'namedOrders' => Order::getAllNamedRecordsMinified(),
+                'countryCodes' => CountryCode::getAll(),
+                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+            ])
+        );
     }
-    
+
     private static function defineViewComposer($views, array $data)
     {
         View::composer($views, function ($view) use ($data) {

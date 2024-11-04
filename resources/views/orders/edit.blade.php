@@ -8,78 +8,60 @@
         ])
 
         <div class="pre-content__actions">
-            <x-different.button style="action" icon="add" type="submit" form="edit-form">{{ __('Save changes') }}</x-different.button>
+            <x-different.button style="action" icon="add" type="submit" form="edit-form">{{ __('Update') }}</x-different.button>
         </div>
     </div>
 
-    <form class="form edit-form orders-edit-form" action="{{ route('orders.update', $instance->id) }}" id="edit-form" method="POST" data-on-submit="show-spinner">
-        @csrf
-        @method('PATCH')
-        <input type="hidden" name="previous_url" value="{{ old('previous_url', url()->previous()) }}">
-        <input type="hidden" name="order_id" value="{{ $instance->id }}">
+    <x-forms.template.edit-template action="{{ route('orders.update', $instance->id) }}">
+        <div class="form__section">
+            <x-forms.id-based-single-select.instance-edit-select
+                label="Manufacturer"
+                name="manufacturer_id"
+                :options="$manufacturers"
+                :instance="$instance"
+                required />
 
-        {{-- Wrapper for attaching create product inputs section --}}
-        <div class="orders-edit-form__sections-wrapper">
-            <div class="form__section">
-                <h1 class="main-title">{{ __('Order') }}</h1>
+            <x-forms.input.instance-edit-input
+                label="PO №"
+                name="purchase_order_name"
+                :instance="$instance"
+                :required="$instance->is_confirmed" />
 
-                <x-forms.id-based-single-select.instance-edit-select
-                    label="Manufacturer"
-                    name="manufacturer_id"
-                    :options="$manufacturers"
-                    :instance="$instance"
-                    required />
+            <x-forms.input.instance-edit-input
+                type="date"
+                label="PO date"
+                name="purchase_order_date"
+                :instance="$instance"
+                :initial-value="$instance->purchase_order_date?->isoFormat('YYYY-MM-DD')"
+                :required="$instance->is_confirmed" />
 
-                <x-forms.input.instance-edit-input
-                    label="PO №"
-                    name="purchase_order_name"
-                    :instance="$instance"
-                    :required="$instance->is_confirmed" />
+            <x-forms.input.instance-edit-input
+                type="date"
+                label="Receive date"
+                name="receive_date"
+                :initial-value="$instance->receive_date?->isoFormat('YYYY-MM-DD')"
+                :instance="$instance" />
 
-                <x-forms.input.instance-edit-input
-                    type="date"
-                    label="PO date"
-                    name="purchase_order_date"
-                    :instance="$instance"
-                    :required="$instance->is_confirmed" />
+            <x-forms.id-based-single-select.instance-edit-select
+                label="Currency"
+                name="currency_id"
+                :options="$currencies"
+                :instance="$instance"
+                required />
 
-                <x-forms.input.instance-edit-input
-                    type="date"
-                    label="Receive date"
-                    name="receive_date"
-                    :instance="$instance" />
+            <x-forms.input.instance-edit-input
+                type="date"
+                label="Readiness date"
+                name="readiness_date"
+                :initial-value="$instance->readiness_date?->isoFormat('YYYY-MM-DD')"
+                :instance="$instance" />
 
-                <x-forms.id-based-single-select.instance-edit-select
-                    label="Currency"
-                    name="currency_id"
-                    :options="$currencies"
-                    :instance="$instance"
-                    required />
-
-                <x-forms.input.instance-edit-input
-                    type="date"
-                    label="Readiness date"
-                    name="readiness_date"
-                    :instance="$instance" />
-
-                <x-forms.input.instance-edit-input
-                    type="date"
-                    label="Expected dispatch date"
-                    name="expected_dispatch_date"
-                    :instance="$instance" />
-            </div>
-
-            @foreach ($instance->products as $product)
-                @include('orders.partials.products-edit-section', ['product' => $product])
-            @endforeach
+            <x-forms.input.instance-edit-input
+                type="date"
+                label="Expected dispatch date"
+                name="expected_dispatch_date"
+                :initial-value="$instance->expected_dispatch_date?->isoFormat('YYYY-MM-DD')"
+                :instance="$instance" />
         </div>
-
-        <div class="orders-edit__form-buttons-wrapper">
-            <x-different.button type="button" class="orders-edit-form__add-product-btn" style="success" icon="add">
-                {{ __('Add new product') }}
-            </x-different.button>
-
-            <x-different.button class="form__submit" type="submit" icon="done_all">{{ __('Save changes') }}</x-different.button>
-        </div>
-    </form>
+    </x-forms.template.edit-template>
 @endsection

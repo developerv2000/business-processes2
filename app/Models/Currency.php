@@ -61,4 +61,9 @@ class Currency extends Model
             return $price;
         }
     }
+
+    public static function getDefaultCurrencyForOrder()
+    {
+        return self::where('name', 'EUR')->first();
+    }
 }

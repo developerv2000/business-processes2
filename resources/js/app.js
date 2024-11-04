@@ -11,7 +11,6 @@ const GET_PROCESSES_EDIT_STAGE_INPUTS_URL = '/processes/get-edit-form-stage-inpu
 const UPDATE_PROCESSES_CONTRACTED_IN_PLAN_URL = '/processes/update-contracted-in-plan-value';
 const UPDATE_PROCESSES_REGISTERED_IN_PLAN_URL = '/processes/update-registered-in-plan-value';
 const MARK_PROCESS_AS_READY_FOR_ORDER_URL = '/processes/mark-as-ready-for-order';
-const GET_ORDERS_CREATE_PRODUCT_INPUTS_URL = '/orders/get-create-product-inputs';
 
 // Colors
 const rootStyles = getComputedStyle(document.documentElement);
@@ -31,7 +30,7 @@ window.addEventListener('load', () => {
     bootstrapForms();
     bootstrapECharts();
     boostrapProcessesPlanCheckboxes();
-    boostrapProcessesApplicationCheckboxes();
+    boostrapOrderingProcessesCheckboxes();
 });
 
 function bootstrapComponents() {
@@ -898,7 +897,7 @@ function boostrapProcessesPlanCheckboxes() {
 
 
 // ========== Send process for application checkboxes ==========
-function boostrapProcessesApplicationCheckboxes() {
+function boostrapOrderingProcessesCheckboxes() {
     // Contacted toggling
     document.querySelectorAll('[data-check-action="mark-process-as-ready-for-order"]')
         .forEach((chbs) => chbs.addEventListener('change', function (evt) {
@@ -931,45 +930,3 @@ function boostrapProcessesApplicationCheckboxes() {
         }));
 }
 
-
-document.querySelectorAll('.orders-edit-form__add-product-btn').forEach((btn) => {
-    btn.addEventListener('click', function (evt) {
-        evt.preventDefault();
-        showSpinner();
-
-        const manufacturerID = document.querySelector('select[name="manufacturer_id"]').value;
-        const formSectionWrapper = document.querySelector('.orders-edit-form__sections-wrapper');
-
-        const data = {
-            'manufacturer_id': manufacturerID,
-        };
-
-        axios.post(GET_ORDERS_CREATE_PRODUCT_INPUTS_URL, data, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                const template = document.createElement('template');
-                template.innerHTML = response.data;
-                const element = template.content.firstChild;
-                formSectionWrapper.appendChild(element);
-                initializeNewSelectizes();
-                initializeOrdersEditProductDeleteButtons();
-            })
-            .finally(function () {
-                // Hide any loading spinner after the request is complete
-                hideSpinner();
-            });
-    })
-});
-
-function initializeOrdersEditProductDeleteButtons() {
-    document.querySelectorAll('.orders-edit__delete-product').forEach((btn) => {
-        btn.addEventListener('click', function (evt) {
-            evt.currentTarget.closest('.form__section').remove();
-        })
-    });
-}
-
-initializeOrdersEditProductDeleteButtons();

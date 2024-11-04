@@ -24,6 +24,13 @@ class Order extends CommentableModel
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'receive_date' => 'date',
+        'purchase_order_date' => 'date',
+        'readiness_date' => 'date',
+        'expected_dispatch_date' => 'date',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Relations
@@ -40,13 +47,65 @@ class Order extends CommentableModel
         return $this->belongsTo(Manufacturer::class);
     }
 
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get the number of days past since the 'responsible_people_update_date'.
+     *
+     * @return int|null Number of days past since the update date, or null if the date is not set.
+     */
+    public function getLeadTimeAttribute()
+    {
+        if (!$this->purchase_order_date || !$this->readiness_date) {
+            return null;
+        }
+
+        return round($this->readiness_date->diffInDays($this->purchase_order_date, true));
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Events
     |--------------------------------------------------------------------------
     */
 
-    protected static function booted(): void {}
+    protected static function booted(): void
+    {
+        static::saving(function ($instance) {
+            $instance->is_confirmed = $instance->purchase_order_name && $instance->purchase_order_date;
+        });
+
+        static::deleting(function ($instance) { // trashing
+            foreach ($instance->products as $product) {
+                $product->delete();
+            }
+        });
+
+        static::restored(function ($instance) {
+            foreach ($instance->products()->onlyTrashed()->get() as $product) {
+                $product->restore();
+            }
+        });
+
+        static::forceDeleting(function ($instance) {
+            foreach ($instance->comments as $comment) {
+                $comment->delete();
+            }
+
+            foreach ($instance->products()->withTrashed()->get() as $product) {
+                $product->forceDelete();
+            }
+        });
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -120,7 +179,8 @@ class Order extends CommentableModel
             ->orderBy('id', $request->orderType);
 
         // with counts
-        $records = $records->withCount('products');
+        $records->withCount('products')
+            ->withCount('comments');
 
         // Handle different finaly options
         switch ($finaly) {
@@ -144,6 +204,14 @@ class Order extends CommentableModel
         return $records;
     }
 
+    public static function getAllNamedRecordsMinified()
+    {
+        return self::whereNotNull('purchase_order_name')
+            ->select('id', 'purchase_order_name')
+            ->withOnly([])
+            ->get();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Create and Update
@@ -152,7 +220,7 @@ class Order extends CommentableModel
 
     public static function createFromRequest($request)
     {
-        return self::create($request->all());
+        self::create($request->all());
     }
 
     public function updateFromRequest($request)
@@ -195,6 +263,7 @@ class Order extends CommentableModel
             ['name' => 'Receive date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'PO date', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'PO №', 'order' => $order++, 'width' => 122, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 136, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Currency', 'order' => $order++, 'width' => 92, 'visible' => 1],
             ['name' => 'Readiness date', 'order' => $order++, 'width' => 132, 'visible' => 1],

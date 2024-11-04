@@ -21,7 +21,7 @@ class OrderProductController extends Controller
      */
     public function create()
     {
-        //
+        $processes = $instance->manufacturer->getReadyForOrderProcesses();
     }
 
     /**
@@ -45,7 +45,7 @@ class OrderProductController extends Controller
      */
     public function edit(OrderProduct $orderProduct)
     {
-        //
+        $processes = $instance->manufacturer->getReadyForOrderProcesses();
     }
 
     /**

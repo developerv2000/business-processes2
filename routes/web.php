@@ -166,6 +166,5 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     Route::prefix('orders')->controller(OrderController::class)->name('orders.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes('can:view-orders', 'can:edit-orders');
-        Route::post('/get-create-product-inputs', 'getCreateProductInputs'); // ajax request on order edit
     });
 });

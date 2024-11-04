@@ -38,6 +38,7 @@
                 label="Currency"
                 name="currency_id"
                 :options="$currencies"
+                :default-value="$defaultCurrency->id"
                 required />
 
             <x-forms.input.default-input

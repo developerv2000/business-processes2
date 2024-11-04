@@ -15,40 +15,35 @@
     <x-forms.template.create-template action="{{ route('orders.store') }}">
         <div class="form__section">
             <x-forms.id-based-single-select.default-select
-                label="Manufacturer"
-                name="manufacturer_id"
-                :options="$manufacturers"
+                label="Brand name ENG"
+                name="process_id"
+                :options="$processes"
+                optionCaptionAttribute="fixed_trademark_en_for_order"
                 required />
-
-            <x-forms.input.default-input
-                label="PO №"
-                name="purchase_order_name" />
-
-            <x-forms.input.default-input
-                type="date"
-                label="PO date"
-                name="purchase_order_date" />
-
-            <x-forms.input.default-input
-                type="date"
-                label="Receive date"
-                name="receive_date" />
 
             <x-forms.id-based-single-select.default-select
-                label="Currency"
-                name="currency_id"
-                :options="$currencies"
+                label="Country"
+                name="country_code_id"
+                :options="$countryCodes"
+                required />
+
+            <x-forms.id-based-single-select.default-select
+                label="MAH"
+                name="marketing_authorization_holder_id"
+                :options="$marketingAuthorizationHolders"
                 required />
 
             <x-forms.input.default-input
-                type="date"
-                label="Readiness date"
-                name="readiness_date" />
+                label="Quantity"
+                name="quantity"
+                type="number" />
 
             <x-forms.input.default-input
-                type="date"
-                label="Expected dispatch date"
-                name="expected_dispatch_date" />
+                type="number"
+                step="0.01"
+                label="Price"
+                name="price"
+                required />
         </div>
     </x-forms.template.create-template>
 @endsection

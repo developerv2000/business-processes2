@@ -51,6 +51,6 @@
                 required />
         </div>
 
-        <x-different.button class="orders-edit-form__add-product-btn" style="success" icon="add">{{ __('Add new product') }}</x-different.button>
+        @include('comments.model-form-partials.edit-form-fields')
     </x-forms.template.edit-template>
 @endsection

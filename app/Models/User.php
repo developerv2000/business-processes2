@@ -481,6 +481,7 @@ class User extends Authenticatable
         $settings['meetings_table_columns'] = Meeting::getDefaultTableColumnsForUser($this);
         $settings['processes_for_order_table_columns'] = Process::getDefaultForOrderTableColumnsForUser($this);
         $settings['orders_table_columns'] = Order::getDefaultTableColumnsForUser($this);
+        $settings['order_products_table_columns'] = OrderProduct::getDefaultTableColumnsForUser($this);
 
         $this->update(['settings' => $settings]);
     }

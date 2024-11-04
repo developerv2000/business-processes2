@@ -1,6 +1,12 @@
 @extends('filters.template')
 
 @section('elements')
+    <x-forms.id-based-multiple-select.request-based-select
+        label="Order"
+        name="order_id[]"
+        :options="$namedOrders"
+        option-caption-attribute="purchase_order_name" />
+
     <x-forms.multiple-select.request-based-select
         label="Brand name ENG"
         name="fixed_trademark_en_for_order[]"
@@ -26,25 +32,20 @@
         name="marketing_authorization_holder_id[]"
         :options="$marketingAuthorizationHolders" />
 
-    <x-forms.multiple-select.request-based-select
-        label="VPS Brand Eng"
-        name="trademark_en[]"
-        :options="$enTrademarks" />
-
-    <x-forms.multiple-select.request-based-select
-        label="VPS Brand Rus"
-        name="trademark_ru[]"
-        :options="$ruTrademarks" />
-
-    <x-forms.id-based-multiple-select.request-based-select
-        label="Form"
-        name="form_id[]"
-        :options="$productForms" />
+    <x-forms.input.request-based-input
+        type="number"
+        label="Quantity"
+        name="quantity" />
 
     <x-forms.input.request-based-input
-        type="text"
-        label="Pack"
-        name="pack" />
+        type="number"
+        step="0.01"
+        label="Price"
+        name="price" />
+
+    <x-forms.boolean-select.request-based-select
+        label="Confirmed"
+        name="is_confirmed" />
 
     @include('filters.partials.default-elements', [
         'includeIdInput' => true,

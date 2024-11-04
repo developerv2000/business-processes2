@@ -51,5 +51,7 @@
                 label="Expected dispatch date"
                 name="expected_dispatch_date" />
         </div>
+
+        @include('comments.model-form-partials.create-form-fields')
     </x-forms.template.create-template>
 @endsection

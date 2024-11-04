@@ -10,6 +10,7 @@ use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderProductController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProcessesForOrderController;
@@ -165,6 +166,10 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     Route::prefix('orders')->controller(OrderController::class)->name('orders.')->group(function () {
+        RouteGenerator::defineAllDefaultCrudRoutes('can:view-orders', 'can:edit-orders');
+    });
+
+    Route::prefix('order-products')->controller(OrderProductController::class)->name('order.products.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes('can:view-orders', 'can:edit-orders');
     });
 });

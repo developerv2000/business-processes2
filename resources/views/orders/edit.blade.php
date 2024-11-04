@@ -63,5 +63,7 @@
                 :initial-value="$instance->expected_dispatch_date?->isoFormat('YYYY-MM-DD')"
                 :instance="$instance" />
         </div>
+
+        @include('comments.model-form-partials.edit-form-fields')
     </x-forms.template.edit-template>
 @endsection

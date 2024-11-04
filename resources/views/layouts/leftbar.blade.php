@@ -63,6 +63,10 @@
                 <x-navbar.link icon="package_2" href="{{ route('orders.index') }}" @class([
                     'navbar-link--active' => request()->routeIs('orders.*'),
                 ])>{{ __('Orders') }}</x-navbar.link>
+
+                <x-navbar.link icon="medication" href="{{ route('order.products.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('order.products.*'),
+                ])>{{ __('Products') }}</x-navbar.link>
             @endcan
 
             {{-- Dashboard --}}

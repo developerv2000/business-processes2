@@ -24,6 +24,11 @@ class Order extends CommentableModel
 
     protected $guarded = ['id'];
 
+    public $with = [
+        'currency',
+        'lastComment',
+    ];
+
     protected $casts = [
         'receive_date' => 'date',
         'purchase_order_date' => 'date',
@@ -44,7 +49,7 @@ class Order extends CommentableModel
 
     public function manufacturer()
     {
-        return $this->belongsTo(Manufacturer::class);
+        return $this->belongsTo(Manufacturer::class)->withTrashed();;
     }
 
     public function currency()
@@ -58,11 +63,6 @@ class Order extends CommentableModel
     |--------------------------------------------------------------------------
     */
 
-    /**
-     * Get the number of days past since the 'responsible_people_update_date'.
-     *
-     * @return int|null Number of days past since the update date, or null if the date is not set.
-     */
     public function getLeadTimeAttribute()
     {
         if (!$this->purchase_order_date || !$this->readiness_date) {
@@ -112,6 +112,19 @@ class Order extends CommentableModel
     | Querying
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Scoping queries with eager loaded complex relationships
+     */
+    public function scopeWithComplexRelations($query)
+    {
+        return $query->with([
+            'manufacturer' => function ($query) {
+                $query->select('manufacturers.id', 'manufacturers.name')
+                    ->withOnly([]);
+            },
+        ]);
+    }
 
     /**
      * Get finalized records based on the request parameters.
@@ -178,6 +191,9 @@ class Order extends CommentableModel
             ->orderBy($request->orderBy, $request->orderType)
             ->orderBy('id', $request->orderType);
 
+        // eager load complex relations
+        $records = $records->withComplexRelations();
+
         // with counts
         $records->withCount('products')
             ->withCount('comments');
@@ -220,12 +236,18 @@ class Order extends CommentableModel
 
     public static function createFromRequest($request)
     {
-        self::create($request->all());
+        $instance = self::create($request->all());
+
+        // HasMany relations
+        $instance->storeComment($request->comment);
     }
 
     public function updateFromRequest($request)
     {
         $this->update($request->all());
+
+        // HasMany relations
+        $this->storeComment($request->comment);
     }
 
     /*

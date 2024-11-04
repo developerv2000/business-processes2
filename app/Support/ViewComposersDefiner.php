@@ -46,6 +46,7 @@ class ViewComposersDefiner
         self::definePlanComposers();
         self::defineProcessesForOrderComposers();
         self::defineOrdersComposers();
+        self::defineOrderProductsComposers();
     }
 
     private static function definePaginationLimitComposer()
@@ -179,7 +180,6 @@ class ViewComposersDefiner
                 'defaultCurrency' => Currency::getDefaultCurrencyForOrder(),
             ])
         );
-
         self::defineViewComposer(
             'orders.edit',
             array_merge($ordersData, [
@@ -188,18 +188,36 @@ class ViewComposersDefiner
             ])
         );
         self::defineViewComposer(
-            'orders.partials.products-create-section',
-            [
-                'countryCodes' => CountryCode::getAll(),
-                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
-            ]
-        );
-        self::defineViewComposer(
             'filters.orders',
             array_merge($ordersData, [
                 'namedOrders' => Order::getAllNamedRecordsMinified(),
                 'countryCodes' => CountryCode::getAll(),
                 'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+            ])
+        );
+    }
+
+    private static function defineOrderProductsComposers()
+    {
+        $ordersData = self::getDefaultOrderProductssShareData();
+        self::defineViewComposer(
+            'order-products.create',
+            array_merge($ordersData, [
+
+            ])
+        );
+        self::defineViewComposer(
+            'order-products.edit',
+            array_merge($ordersData, [
+
+            ])
+        );
+        self::defineViewComposer(
+            'filters.order-products',
+            array_merge($ordersData, [
+                'namedOrders' => Order::getAllNamedRecordsMinified(),
+                'fixedEnTrademarks' => Process::pluckAllFixedEnTrademarks(),
+                'fixedRuTrademarks' => Process::pluckAllFixedRuTrademarks(),
             ])
         );
     }
@@ -295,6 +313,16 @@ class ViewComposersDefiner
         return [
             'manufacturers' => Manufacturer::getAvailableRecordsForOrder(),
             'currencies' => Currency::getAll(),
+        ];
+    }
+
+    private static function getDefaultOrderProductssShareData()
+    {
+        return [
+            'manufacturers' => Manufacturer::getAvailableRecordsForOrder(),
+            'currencies' => Currency::getAll(),
+            'countryCodes' => CountryCode::getAll(),
+            'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
         ];
     }
 }

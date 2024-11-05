@@ -20,6 +20,12 @@
                 :options="$manufacturers"
                 required />
 
+            <x-forms.id-based-single-select.default-select
+                label="Country"
+                name="country_code_id"
+                :options="$countryCodes"
+                required />
+
             <x-forms.input.default-input
                 label="PO №"
                 name="purchase_order_name" />

@@ -24,12 +24,6 @@
                 required />
 
             <x-forms.id-based-single-select.default-select
-                label="Country"
-                name="country_code_id"
-                :options="$countryCodes"
-                required />
-
-            <x-forms.id-based-single-select.default-select
                 label="MAH"
                 name="marketing_authorization_holder_id"
                 :options="$marketingAuthorizationHolders"

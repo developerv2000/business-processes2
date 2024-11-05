@@ -21,6 +21,10 @@
         @include('tables.components.th.sort-link', ['orderBy' => 'manufacturer_id'])
     @break
 
+    @case('Country')
+        @include('tables.components.th.sort-link', ['orderBy' => 'country_code_id'])
+    @break
+
     @case('Currency')
         @include('tables.components.th.sort-link', ['orderBy' => 'currency_id'])
     @break

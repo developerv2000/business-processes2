@@ -25,7 +25,6 @@ class OrderProduct extends CommentableModel
     protected $guarded = ['id'];
 
     public $with = [
-        'country',
         'marketingAuthorizationHolder',
         'lastComment',
     ];
@@ -44,11 +43,6 @@ class OrderProduct extends CommentableModel
     public function process()
     {
         return $this->belongsTo(Process::class)->withTrashed();
-    }
-
-    public function country()
-    {
-        return $this->belongsTo(CountryCode::class, 'country_code_id');
     }
 
     public function marketingAuthorizationHolder()
@@ -103,6 +97,8 @@ class OrderProduct extends CommentableModel
             'order' => function ($ordersQuery) {
                 $ordersQuery->select('*')
                     ->withOnly([
+                        'country',
+                        'currency',
                         'manufacturer' => function ($manufacturersQuery) {
                             $manufacturersQuery->select('manufacturers.id', 'manufacturers.name')
                                 ->withOnly([]);
@@ -142,7 +138,6 @@ class OrderProduct extends CommentableModel
         $whereInAttributes = [
             'id',
             'order_id',
-            'country_code_id',
             'marketing_authorization_holder_id',
         ];
 
@@ -160,6 +155,11 @@ class OrderProduct extends CommentableModel
             [
                 'name' => 'order',
                 'attribute' => 'manufacturer_id',
+            ],
+
+            [
+                'name' => 'order',
+                'attribute' => 'country_code_id',
             ],
 
             [
@@ -339,7 +339,7 @@ class OrderProduct extends CommentableModel
             $this->order->purchase_order_date?->isoFormat('YYYY-MM-DD'),
             $this->order->purchase_order_name,
             $this->order->manufacturer->name,
-            $this->country->name,
+            $this->order->country->name,
             $this->process->fixed_trademark_en_for_order,
             $this->process->fixed_trademark_ru_for_order,
             $this->marketingAuthorizationHolder->name,

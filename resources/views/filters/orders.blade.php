@@ -12,6 +12,11 @@
         name="manufacturer_id[]"
         :options="$manufacturers" />
 
+    <x-forms.id-based-multiple-select.request-based-select
+        label="Country"
+        name="country_code_id[]"
+        :options="$countryCodes" />
+
     <x-forms.boolean-select.request-based-select
         label="Confirmed"
         name="is_confirmed" />

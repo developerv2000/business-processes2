@@ -29,6 +29,10 @@
         {{ $instance->manufacturer->name }}
     @break
 
+    @case('Country')
+        {{ $instance->country->name }}
+    @break
+
     @case('Currency')
         {{ $instance->currency->name }}
     @break

@@ -182,37 +182,35 @@ class ViewComposersDefiner
         );
         self::defineViewComposer(
             'orders.edit',
-            array_merge($ordersData, [
-                'countryCodes' => CountryCode::getAll(),
-                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
-            ])
+            array_merge($ordersData, [])
         );
         self::defineViewComposer(
             'filters.orders',
             array_merge($ordersData, [
                 'namedOrders' => Order::getAllNamedRecordsMinified(),
-                'countryCodes' => CountryCode::getAll(),
-                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
             ])
         );
     }
 
     private static function defineOrderProductsComposers()
     {
-        $orderProductsData = self::getDefaultOrderProductsShareData();
         self::defineViewComposer(
             ['order-products.create', 'order-products.edit'],
-            $orderProductsData
+            [
+                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+            ]
         );
         self::defineViewComposer(
             'filters.order-products',
-            array_merge($orderProductsData, [
+            [
+                'countryCodes' => CountryCode::getAll(),
+                'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
                 'orderNames' => Order::getAllNamedRecordsMinified()->pluck('purchase_order_name'),
                 'manufacturers' => Manufacturer::getAvailableRecordsForOrder(),
                 'fixedEnTrademarks' => Process::pluckAllFixedEnTrademarks(),
                 'fixedRuTrademarks' => Process::pluckAllFixedRuTrademarks(),
                 'currencies' => Currency::getAll(),
-            ])
+            ]
         );
     }
 
@@ -306,15 +304,8 @@ class ViewComposersDefiner
     {
         return [
             'manufacturers' => Manufacturer::getAvailableRecordsForOrder(),
-            'currencies' => Currency::getAll(),
-        ];
-    }
-
-    private static function getDefaultOrderProductsShareData()
-    {
-        return [
             'countryCodes' => CountryCode::getAll(),
-            'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
+            'currencies' => Currency::getAll(),
         ];
     }
 }

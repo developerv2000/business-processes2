@@ -23,13 +23,6 @@
                 required />
 
             <x-forms.id-based-single-select.instance-edit-select
-                label="Country"
-                name="country_code_id"
-                :options="$countryCodes"
-                :instance="$instance"
-                required />
-
-            <x-forms.id-based-single-select.instance-edit-select
                 label="MAH"
                 name="marketing_authorization_holder_id"
                 :options="$marketingAuthorizationHolders"

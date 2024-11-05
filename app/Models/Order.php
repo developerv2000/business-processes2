@@ -25,6 +25,7 @@ class Order extends CommentableModel
     protected $guarded = ['id'];
 
     public $with = [
+        'country',
         'currency',
         'lastComment',
     ];
@@ -50,6 +51,11 @@ class Order extends CommentableModel
     public function manufacturer()
     {
         return $this->belongsTo(Manufacturer::class)->withTrashed();;
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(CountryCode::class, 'country_code_id');
     }
 
     public function currency()
@@ -151,11 +157,12 @@ class Order extends CommentableModel
     {
         $whereInAttributes = [
             'id',
+            'manufacturer_id',
+            'country_code_id',
             'purchase_order_name',
         ];
 
         $whereEqualAttributes = [
-            'manufacturer_id',
             'currency_id',
             'is_confirmed',
         ];
@@ -287,6 +294,7 @@ class Order extends CommentableModel
             ['name' => 'PO №', 'order' => $order++, 'width' => 122, 'visible' => 1],
             ['name' => 'Products', 'order' => $order++, 'width' => 136, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'Currency', 'order' => $order++, 'width' => 92, 'visible' => 1],
             ['name' => 'Readiness date', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Mfg lead time', 'order' => $order++, 'width' => 118, 'visible' => 1],
@@ -320,6 +328,7 @@ class Order extends CommentableModel
             $this->purchase_order_name,
             $this->products_count,
             $this->manufacturer->name,
+            $this->country->name,
             $this->currency->name,
             $this->readiness_date?->isoFormat('YYYY-MM-DD'),
             $this->lead_time,

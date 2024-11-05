@@ -20,7 +20,7 @@
     @break
 
     @case('Country')
-        {{ $instance->country->name }}
+        {{ $instance->order->country->name }}
     @break
 
     @case('Brand name ENG')

@@ -20,6 +20,12 @@ return new class extends Migration
                 ->references('id')
                 ->on('manufacturers');
 
+            $table->unsignedSmallInteger('country_code_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('country_codes');
+
             $table->date('receive_date')->nullable();
             $table->date('purchase_order_date')->nullable();
             $table->string('purchase_order_name')->nullable();

@@ -26,12 +26,6 @@ return new class extends Migration
                 ->references('id')
                 ->on('processes');
 
-            $table->unsignedSmallInteger('country_code_id')
-                ->index()
-                ->foreign()
-                ->references('id')
-                ->on('country_codes');
-
             $table->unsignedSmallInteger('marketing_authorization_holder_id')
                 ->nullable()
                 ->index()

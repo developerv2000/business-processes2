@@ -9,10 +9,6 @@
         @include('tables.components.th.sort-link', ['orderBy' => 'order_id'])
     @break
 
-    @case('Country')
-        @include('tables.components.th.sort-link', ['orderBy' => 'country_code_id'])
-    @break
-
     @case('MAH')
         @include('tables.components.th.sort-link', ['orderBy' => 'marketing_authorization_holder_id'])
     @break

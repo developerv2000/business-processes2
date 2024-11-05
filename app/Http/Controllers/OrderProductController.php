@@ -52,7 +52,7 @@ class OrderProductController extends Controller
     public function create(Request $request)
     {
         $order = Order::findOrFail($request->input('order_id'));
-        $processes = $order->manufacturer->getReadyForOrderProcesses();
+        $processes = $order->manufacturer()->withOnly([])->first()->getReadyForOrderProcesses();
 
         return view('order-products.create', compact('order', 'processes'));
     }
@@ -72,7 +72,7 @@ class OrderProductController extends Controller
      */
     public function edit(OrderProduct $instance)
     {
-        $processes = $instance->order->manufacturer->getReadyForOrderProcesses();
+        $processes = $instance->order->manufacturer()->withOnly([])->first()->getReadyForOrderProcesses();
 
         return view('order-products.edit', compact('instance', 'processes'));
     }

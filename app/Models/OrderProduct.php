@@ -38,12 +38,12 @@ class OrderProduct extends CommentableModel
 
     public function order()
     {
-        return $this->belongsTo(Order::class)->withTrashed();;
+        return $this->belongsTo(Order::class)->withTrashed();
     }
 
     public function process()
     {
-        return $this->belongsTo(Process::class)->withTrashed();;
+        return $this->belongsTo(Process::class)->withTrashed();
     }
 
     public function country()
@@ -160,6 +160,11 @@ class OrderProduct extends CommentableModel
             [
                 'name' => 'order',
                 'attribute' => 'manufacturer_id',
+            ],
+
+            [
+                'name' => 'order',
+                'attribute' => 'purchase_order_name',
             ],
 
             [
@@ -294,10 +299,10 @@ class OrderProduct extends CommentableModel
             ['name' => 'Receive date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'PO date', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'PO №', 'order' => $order++, 'width' => 122, 'visible' => 1],
-            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            ['name' => 'Brand name ENG', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Brand name RUS', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Brand name ENG', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Brand name RUS', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
             ['name' => 'Quantity', 'order' => $order++, 'width' => 90, 'visible' => 1],
             ['name' => 'Price', 'order' => $order++, 'width' => 80, 'visible' => 1],

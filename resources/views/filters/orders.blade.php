@@ -2,7 +2,7 @@
 
 @section('elements')
     <x-forms.id-based-multiple-select.request-based-select
-        label="Order"
+        label="PO №"
         name="id[]"
         :options="$namedOrders"
         option-caption-attribute="purchase_order_name" />

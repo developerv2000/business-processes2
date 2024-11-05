@@ -2,18 +2,15 @@
 
 namespace App\Http\Requests;
 
+use App\Models\CountryCode;
+use App\Models\MarketingAuthorizationHolder;
+use App\Models\Order;
+use App\Models\Process;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class OrderProductStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,7 +19,10 @@ class OrderProductStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'order_id' => [Rule::exists(Order::class, 'id')],
+            'process_id' => [Rule::exists(Process::class, 'id')],
+            'country_code_id' => [Rule::exists(CountryCode::class, 'id')],
+            'marketing_authorization_holder_id' => [Rule::exists(MarketingAuthorizationHolder::class, 'id')],
         ];
     }
 }

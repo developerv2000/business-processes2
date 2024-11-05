@@ -1,9 +1,9 @@
-@extends('layouts.app', ['page' => 'orders-create'])
+@extends('layouts.app', ['page' => 'order-products-create'])
 
 @section('main')
     <div class="pre-content styled-box">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Orders'), __('Create new')],
+            'crumbs' => [__('Orders'), $order->purchase_order_name ?: '# ' . $order->id, __('Create new product')],
             'fullScreen' => false,
         ])
 
@@ -12,7 +12,9 @@
         </div>
     </div>
 
-    <x-forms.template.create-template action="{{ route('orders.store') }}">
+    <x-forms.template.create-template action="{{ route('order.products.store') }}">
+        <input type="hidden" name="order_id" value="{{ $order->id }}">
+
         <div class="form__section">
             <x-forms.id-based-single-select.default-select
                 label="Brand name ENG"

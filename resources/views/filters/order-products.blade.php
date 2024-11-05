@@ -1,11 +1,10 @@
 @extends('filters.template')
 
 @section('elements')
-    <x-forms.id-based-multiple-select.request-based-select
-        label="Order"
-        name="order_id[]"
-        :options="$namedOrders"
-        option-caption-attribute="purchase_order_name" />
+    <x-forms.multiple-select.request-based-select
+        label="PO №"
+        name="purchase_order_name[]"
+        :options="$orderNames" />
 
     <x-forms.multiple-select.request-based-select
         label="Brand name ENG"
@@ -46,6 +45,12 @@
     <x-forms.boolean-select.request-based-select
         label="Confirmed"
         name="is_confirmed" />
+
+    <x-forms.multiple-select.request-based-select
+        label="Order id"
+        name="order_id[]"
+        :taggable="true"
+        :options="request()->input('order_id', [])" />
 
     @include('filters.partials.default-elements', [
         'includeIdInput' => true,

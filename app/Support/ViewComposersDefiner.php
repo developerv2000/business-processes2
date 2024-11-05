@@ -199,25 +199,19 @@ class ViewComposersDefiner
 
     private static function defineOrderProductsComposers()
     {
-        $ordersData = self::getDefaultOrderProductssShareData();
+        $orderProductsData = self::getDefaultOrderProductsShareData();
         self::defineViewComposer(
-            'order-products.create',
-            array_merge($ordersData, [
-
-            ])
-        );
-        self::defineViewComposer(
-            'order-products.edit',
-            array_merge($ordersData, [
-
-            ])
+            ['order-products.create', 'order-products.edit'],
+            $orderProductsData
         );
         self::defineViewComposer(
             'filters.order-products',
-            array_merge($ordersData, [
-                'namedOrders' => Order::getAllNamedRecordsMinified(),
+            array_merge($orderProductsData, [
+                'orderNames' => Order::getAllNamedRecordsMinified()->pluck('purchase_order_name'),
+                'manufacturers' => Manufacturer::getAvailableRecordsForOrder(),
                 'fixedEnTrademarks' => Process::pluckAllFixedEnTrademarks(),
                 'fixedRuTrademarks' => Process::pluckAllFixedRuTrademarks(),
+                'currencies' => Currency::getAll(),
             ])
         );
     }
@@ -316,11 +310,9 @@ class ViewComposersDefiner
         ];
     }
 
-    private static function getDefaultOrderProductssShareData()
+    private static function getDefaultOrderProductsShareData()
     {
         return [
-            'manufacturers' => Manufacturer::getAvailableRecordsForOrder(),
-            'currencies' => Currency::getAll(),
             'countryCodes' => CountryCode::getAll(),
             'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
         ];

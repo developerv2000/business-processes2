@@ -286,7 +286,7 @@ class Order extends CommentableModel
             ['name' => 'PO date', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'PO №', 'order' => $order++, 'width' => 122, 'visible' => 1],
             ['name' => 'Products', 'order' => $order++, 'width' => 136, 'visible' => 1],
-            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Currency', 'order' => $order++, 'width' => 92, 'visible' => 1],
             ['name' => 'Readiness date', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Mfg lead time', 'order' => $order++, 'width' => 118, 'visible' => 1],

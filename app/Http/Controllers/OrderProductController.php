@@ -54,7 +54,7 @@ class OrderProductController extends Controller
         $order = Order::findOrFail($request->input('order_id'));
         $processes = $order->manufacturer->getReadyForOrderProcesses();
 
-        return view('order-products.create', compact('processes'));
+        return view('order-products.create', compact('order', 'processes'));
     }
 
     /**
@@ -64,7 +64,7 @@ class OrderProductController extends Controller
     {
         OrderProduct::createFromRequest($request);
 
-        return to_route('order.products.index');
+        return redirect($request->input('previous_url'));
     }
 
     /**

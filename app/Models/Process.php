@@ -1125,10 +1125,10 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
         array_push(
             $columns,
-            ['name' => 'Brand name ENG', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Brand name RUS', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Brand name ENG', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Brand name RUS', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Products', 'order' => $order++, 'width' => 90, 'visible' => 1],
-            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'VPS Brand Eng', 'order' => $order++, 'width' => 126, 'visible' => 1],
             ['name' => 'VPS Brand Rus', 'order' => $order++, 'width' => 126, 'visible' => 1],

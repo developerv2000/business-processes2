@@ -1,6 +1,6 @@
 @switch($column['name'])
     @case('Edit')
-        @include('tables.components.td.edit-button', ['href' => route('orders.edit', $instance->id)])
+        @include('tables.components.td.edit-button', ['href' => route('order.products.edit', $instance->id)])
     @break
 
     @case('Receive date')

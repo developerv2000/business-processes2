@@ -598,6 +598,7 @@ class Manufacturer extends CommentableModel
         })
             ->where('is_ready_for_order', true)
             ->select('processes.id', 'fixed_trademark_en_for_order')
+            ->withOnly([])
             ->get();
     }
 }

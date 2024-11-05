@@ -20,7 +20,7 @@ class CommentController extends Controller
 
         $instanceId = $request->route('commentable_id');
 
-        $instance = $model::find($instanceId);
+        $instance = $model::withTrashed()->find($instanceId);
         $instance->load('comments');
 
         $title = $instance->getTitle();

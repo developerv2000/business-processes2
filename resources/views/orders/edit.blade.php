@@ -3,7 +3,7 @@
 @section('main')
     <div class="pre-content styled-box">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Orders'), __('Edit'), '# ' . $instance->id],
+            'crumbs' => [__('Orders'), __('Edit'), $instance->purchase_order_name ?: '# ' . $instance->id],
             'fullScreen' => false,
         ])
 

@@ -16,11 +16,11 @@
     @break
 
     @case('Products')
-        <a class="td__link td__link--margined" href="{{ route('orders.index', ['order_id' => $instance->id]) }}">
+        <a class="td__link td__link--margined" href="{{ route('order.products.index', ['order_id[]' => $instance->id]) }}">
             {{ $instance->products_count }} {{ __('products') }}
         </a>
 
-        <x-different.arrowed-link href="{{ route('orders.create', ['order_id' => $instance->id]) }}">
+        <x-different.arrowed-link href="{{ route('order.products.create', ['order_id' => $instance->id]) }}">
             {{ __('Add product') }}
         </x-different.arrowed-link>
     @break

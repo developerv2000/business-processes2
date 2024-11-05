@@ -3,7 +3,7 @@
 @section('main')
     <div class="pre-content styled-box">
         @include('layouts.breadcrumbs', [
-            'crumbs' => [__('Orders'), __('Edit'), '# ' . $instance->id],
+            'crumbs' => [__('Products'), __('Edit'), $instance->process->fixed_trademark_en_for_order],
             'fullScreen' => false,
         ])
 
@@ -12,34 +12,34 @@
         </div>
     </div>
 
-    <x-forms.template.edit-template class="orders-edit-form" action="{{ route('orders.update', $instance->id) }}">
+    <x-forms.template.edit-template action="{{ route('order.products.update', $instance->id) }}">
         <div class="form__section">
             <x-forms.id-based-single-select.instance-edit-select
                 label="Brand name ENG"
                 name="process_id"
                 :options="$processes"
                 optionCaptionAttribute="fixed_trademark_en_for_order"
-                :instance="$product"
+                :instance="$instance"
                 required />
 
             <x-forms.id-based-single-select.instance-edit-select
                 label="Country"
                 name="country_code_id"
                 :options="$countryCodes"
-                :instance="$product"
+                :instance="$instance"
                 required />
 
             <x-forms.id-based-single-select.instance-edit-select
                 label="MAH"
                 name="marketing_authorization_holder_id"
                 :options="$marketingAuthorizationHolders"
-                :instance="$product"
+                :instance="$instance"
                 required />
 
             <x-forms.input.instance-edit-input
                 label="Quantity"
                 name="quantity"
-                :instance="$product"
+                :instance="$instance"
                 type="number" />
 
             <x-forms.input.instance-edit-input
@@ -47,7 +47,7 @@
                 step="0.01"
                 label="Price"
                 name="price"
-                :instance="$product"
+                :instance="$instance"
                 required />
         </div>
 

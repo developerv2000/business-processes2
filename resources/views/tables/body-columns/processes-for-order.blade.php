@@ -12,7 +12,7 @@
     @break
 
     @case('Products')
-        <a class="td__link" href="{{ route('orders.index', ['process_id[]' => $instance->id]) }}">
+        <a class="td__link" href="{{ route('order.products.index', ['fixed_trademark_en_for_order[]' => $instance->fixed_trademark_en_for_order]) }}">
             {{ $instance->ordered_products_count }} {{ __('products') }}
         </a>
     @break

@@ -315,16 +315,18 @@ class Order extends CommentableModel
     {
         return [
             $this->id,
-            $this->year,
+            $this->receive_date?->isoFormat('YYYY-MM-DD'),
+            $this->purchase_order_date?->isoFormat('YYYY-MM-DD'),
+            $this->purchase_order_name,
+            $this->products_count,
             $this->manufacturer->name,
-            $this->manufacturer->bdm->name,
-            $this->manufacturer->analyst->name,
-            $this->manufacturer->country->name,
-            $this->who_met,
-            $this->plan,
-            $this->topic,
-            $this->result,
-            $this->outside_the_exhibition,
+            $this->currency->name,
+            $this->readiness_date?->isoFormat('YYYY-MM-DD'),
+            $this->lead_time,
+            $this->expected_dispatch_date?->isoFormat('YYYY-MM-DD'),
+            $this->is_confirmed ? 'Confirmed' : '',
+            $this->comments->pluck('body')->implode(' / '),
+            $this->lastComment?->created_at,
             $this->created_at,
             $this->updated_at,
         ];
@@ -333,6 +335,6 @@ class Order extends CommentableModel
     // Implement the abstract method declared in the CommentableModel class
     public function getTitle(): string
     {
-        return '#' . $this->id . ' / ' . $this->purchase_order_name;
+        return $this->purchase_order_name ?: trans('Order') . ' #' . $this->id;
     }
 }

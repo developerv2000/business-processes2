@@ -335,16 +335,24 @@ class OrderProduct extends CommentableModel
     {
         return [
             $this->id,
-            $this->year,
-            $this->manufacturer->name,
-            $this->manufacturer->bdm->name,
-            $this->manufacturer->analyst->name,
-            $this->manufacturer->country->name,
-            $this->who_met,
-            $this->plan,
-            $this->topic,
-            $this->result,
-            $this->outside_the_exhibition,
+            $this->order->receive_date?->isoFormat('YYYY-MM-DD'),
+            $this->order->purchase_order_date?->isoFormat('YYYY-MM-DD'),
+            $this->order->purchase_order_name,
+            $this->order->manufacturer->name,
+            $this->country->name,
+            $this->process->fixed_trademark_en_for_order,
+            $this->process->fixed_trademark_ru_for_order,
+            $this->marketingAuthorizationHolder->name,
+            $this->quantity,
+            $this->price,
+            $this->order->currency->name,
+            $this->total_price,
+            $this->order->readiness_date?->isoFormat('YYYY-MM-DD'),
+            $this->order->lead_time,
+            $this->order->expected_dispatch_date?->isoFormat('YYYY-MM-DD'),
+            $this->order->is_confirmed ? 'Confirmed' : '',
+            $this->comments->pluck('body')->implode(' / '),
+            $this->lastComment?->created_at,
             $this->created_at,
             $this->updated_at,
         ];
@@ -353,6 +361,6 @@ class OrderProduct extends CommentableModel
     // Implement the abstract method declared in the CommentableModel class
     public function getTitle(): string
     {
-        return '#' . $this->id . ' / ' . $this->fixed_trademark_en_for_order;
+        return $this->process->fixed_trademark_en_for_order;
     }
 }

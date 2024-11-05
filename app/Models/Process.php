@@ -1125,6 +1125,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
 
         array_push(
             $columns,
+            ['name' => 'Receive date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Brand name ENG', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Brand name RUS', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Products', 'order' => $order++, 'width' => 90, 'visible' => 1],

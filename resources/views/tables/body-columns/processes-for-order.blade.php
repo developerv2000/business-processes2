@@ -3,6 +3,10 @@
         @include('tables.components.td.edit-button', ['href' => route('processes_for_order.edit', $instance->id)])
     @break
 
+    @case('Receive date')
+        {{ $instance->readiness_for_order_date->isoformat('DD MMM Y') }}
+    @break
+
     @case('Brand name ENG')
         {{ $instance->fixed_trademark_en_for_order }}
     @break

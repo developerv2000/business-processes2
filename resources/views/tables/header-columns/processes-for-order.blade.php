@@ -5,6 +5,10 @@
     @break
 
     {{-- Links --}}
+    @case('Receive date')
+        @include('tables.components.th.sort-link', ['orderBy' => 'readiness_for_order_date'])
+    @break
+
     @case('Brand name ENG')
         @include('tables.components.th.sort-link', ['orderBy' => 'fixed_trademark_en_for_order'])
     @break

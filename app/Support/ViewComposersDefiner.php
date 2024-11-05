@@ -293,7 +293,7 @@ class ViewComposersDefiner
         return [
             'countryCodes' => CountryCode::getAll(),
             'marketingAuthorizationHolders' => MarketingAuthorizationHolder::getAll(),
-            'manufacturers' => Manufacturer::getAllMinified(),
+            'manufacturers' => Manufacturer::getAvailableRecordsForOrder(),
             'productForms' => ProductForm::getAllMinified(),
             'enTrademarks' => Process::pluckAllEnTrademarks(),
             'ruTrademarks' => Process::pluckAllRuTrademarks(),

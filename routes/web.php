@@ -167,6 +167,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     Route::prefix('orders')->controller(OrderController::class)->name('orders.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes('can:view-orders', 'can:edit-orders');
+        Route::post('/get-create-product-inputs', 'getCreateProductInputs');
     });
 
     Route::prefix('order-products')->controller(OrderProductController::class)->name('order.products.')->group(function () {

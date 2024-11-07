@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\OrderStoreRequest;
 use App\Http\Requests\OrderUpdateRequest;
 use App\Models\Manufacturer;
+use App\Models\MarketingAuthorizationHolder;
 use App\Models\Order;
 use App\Models\Process;
 use App\Models\User;
@@ -53,6 +54,15 @@ class OrderController extends Controller
     public function create()
     {
         return view('orders.create');
+    }
+
+    public function getCreateProductInputs(Request $request)
+    {
+        $processes = Process::getReadyForOrderRecordsOfManufacturer($request->manufacturer_id, $request->country_code_id);
+        $marketingAuthorizationHolders = MarketingAuthorizationHolder::getAll();
+        $productIndex = $request->product_index;
+
+        return view('orders.partials.create-products-template', compact('processes', 'marketingAuthorizationHolders', 'productIndex'));
     }
 
     /**

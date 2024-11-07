@@ -11,6 +11,7 @@ const GET_PROCESSES_EDIT_STAGE_INPUTS_URL = '/processes/get-edit-form-stage-inpu
 const UPDATE_PROCESSES_CONTRACTED_IN_PLAN_URL = '/processes/update-contracted-in-plan-value';
 const UPDATE_PROCESSES_REGISTERED_IN_PLAN_URL = '/processes/update-registered-in-plan-value';
 const MARK_PROCESS_AS_READY_FOR_ORDER_URL = '/processes/mark-as-ready-for-order';
+const GET_ORDERS_CREATE_PRODUCT_INPUTS_URL = '/orders/get-create-product-inputs';
 
 // Colors
 const rootStyles = getComputedStyle(document.documentElement);
@@ -24,6 +25,7 @@ const chartSplitlinesColor = rootStyles.getPropertyValue('--theme-chart-splitlin
 // Globals
 let countryCodesSelectize; // used only on processes create form
 let processesCountChart, activeManufacturersChart;
+let orderCreateProductIndex = 0;
 
 window.addEventListener('load', () => {
     bootstrapComponents();
@@ -930,3 +932,48 @@ function boostrapOrderingProcessesCheckboxes() {
         }));
 }
 
+
+document.querySelectorAll('.orders-create__add-product-btn').forEach((btn) => {
+    btn.addEventListener('click', function (evt) {
+        evt.preventDefault();
+        showSpinner();
+
+        const manufacturerID = document.querySelector('select[name="manufacturer_id"]').value;
+        const countryID = document.querySelector('select[name="country_code_id"]').value;
+        const productsList = document.querySelector('.orders-create__products-list');
+
+        const data = {
+            'manufacturer_id': manufacturerID,
+            'country_code_id': countryID,
+            'product_index': orderCreateProductIndex,
+        };
+
+        axios.post(GET_ORDERS_CREATE_PRODUCT_INPUTS_URL, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                const template = document.createElement('template');
+                template.innerHTML = response.data;
+                const element = template.content.firstChild;
+
+                productsList.appendChild(element);
+                initializeNewSelectizes();
+                initializeOrdersCreateProductDeleteButtons();
+                orderCreateProductIndex++;
+            })
+            .finally(function () {
+                // Hide any loading spinner after the request is complete
+                hideSpinner();
+            });
+    })
+});
+
+function initializeOrdersCreateProductDeleteButtons() {
+    document.querySelectorAll('.orders-create__delete-product-btn').forEach((btn) => {
+        btn.addEventListener('click', function (evt) {
+            evt.currentTarget.closest('.form__section').remove();
+        })
+    });
+}

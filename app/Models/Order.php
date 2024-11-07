@@ -245,8 +245,15 @@ class Order extends CommentableModel
     {
         $instance = self::create($request->all());
 
-        // HasMany relations
-        $instance->storeComment($request->comment);
+        foreach ($request->new_products as $product) {
+            OrderProduct::create([
+                'order_id' => $instance->id,
+                'process_id' => $product['process_id'],
+                'marketing_authorization_holder_id' => $product['marketing_authorization_holder_id'],
+                'quantity' => $product['quantity'],
+                'price' => $product['price'],
+            ]);
+        }
     }
 
     public function updateFromRequest($request)

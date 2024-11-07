@@ -292,6 +292,18 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
             ->withCount('orderedProducts');
     }
 
+    public static function getReadyForOrderRecordsOfManufacturer($manufacturerID, $countryCodeID)
+    {
+        return self::whereHas('manufacturer', function ($manufacturersQuery) use ($manufacturerID) {
+            $manufacturersQuery->where('manufacturers.id', $manufacturerID);
+        })
+            ->where('is_ready_for_order', true)
+            ->where('country_code_id', $countryCodeID)
+            ->select('processes.id', 'fixed_trademark_en_for_order')
+            ->withOnly([])
+            ->get();
+    }
+
     /**
      * Get finalized records based on the request parameters.
      *

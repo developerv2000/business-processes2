@@ -13,7 +13,7 @@
     </div>
 
     <x-forms.template.create-template action="{{ route('orders.store') }}">
-        <div class="form__section">
+        <div class="form__section form__section--horizontal orders-create__form-order-section">
             <x-forms.id-based-single-select.default-select
                 label="Manufacturer"
                 name="manufacturer_id"
@@ -35,17 +35,17 @@
                 label="PO date"
                 name="purchase_order_date" />
 
-            <x-forms.input.default-input
-                type="date"
-                label="Receive date"
-                name="receive_date" />
-
             <x-forms.id-based-single-select.default-select
                 label="Currency"
                 name="currency_id"
                 :options="$currencies"
                 :default-value="$defaultCurrency->id"
                 required />
+
+            <x-forms.input.default-input
+                type="date"
+                label="Receive date"
+                name="receive_date" />
 
             <x-forms.input.default-input
                 type="date"
@@ -58,6 +58,14 @@
                 name="expected_dispatch_date" />
         </div>
 
-        @include('comments.model-form-partials.create-form-fields')
+        <div class="orders-create__products-section styled-box">
+            <h2 class="orders-create__products-title main-title">Products list</h2>
+
+            <div class="orders-create__products-list"></div>
+
+            <x-different.button type="button" class="orders-create__add-product-btn" style="action" icon="add" type="button">
+                {{ __('Add product') }}
+            </x-different.button>
+        </div>
     </x-forms.template.create-template>
 @endsection

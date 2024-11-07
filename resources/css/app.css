@@ -1348,3 +1348,63 @@ button {
 }
 /* ------------ /end Plan pages ------------ */
 
+
+/* ------------ Order pages ------------ */
+/* Create page */
+.orders-create .main {
+    overflow: unset;
+}
+
+.orders-create__form-order-section {
+    flex-wrap: wrap;
+}
+
+.orders-create__form-order-section > .form-group {
+    width: calc(25% - 25px);
+}
+
+.orders-create__products-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+.orders-create__products-title {
+    margin: 0;
+}
+
+.orders-create__add-product-btn {
+    padding: 8px 16px;
+    align-self: flex-start;
+
+    &:hover {
+        box-shadow: none;
+        background-color: var(--theme-secondary-color);
+        border-color: var(--theme-secondary-color);
+        color: white;
+    }
+}
+
+.orders-create__products-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.orders-create__products-list:empty {
+    display: none !important;
+}
+
+.orders-create__products-list .form__section {
+    box-shadow: none;
+    padding: 0;
+}
+
+.orders-create__delete-product-btn {
+    align-self: flex-end;
+    margin-bottom: 8px;
+    color: var(--theme-danger-color);
+    cursor: pointer;
+}
+/* ------------ /end Order pages ------------ */

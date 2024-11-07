@@ -20,6 +20,14 @@
     box-shadow: var(--theme-box-shadow);
 }
 
+.form__section--horizontal {
+    flex-direction: row;
+}
+
+.form__section--horizontal .form-group {
+    width: 100%;
+}
+
 .form__submit {
     align-self: flex-start;
 }

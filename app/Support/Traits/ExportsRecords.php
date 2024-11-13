@@ -94,7 +94,7 @@ trait ExportsRecords
     /**
      * Fill the Excel sheet with a limited number of records (non-admin users).
      *
-     * For non-admin users, limit the query to a specific number of records (50) and
+     * For non-admin users, limit the query to a specific number of records (15) and
      * write those records to the Excel sheet.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query The query to fetch records.
@@ -107,8 +107,8 @@ trait ExportsRecords
         $columnIndex = 1;
         $row = 2;
 
-        // Limit the records query to 50 for non-admin users
-        $limitedRecords = $query->limit(50)->get();
+        // Limit the records query to 15 for non-admin users
+        $limitedRecords = $query->limit(15)->get();
         $limitedRecords->load('comments'); // Eager load comments for performance
 
         // Prepare records for export if necessary

@@ -31,7 +31,6 @@ return new class extends Migration
             $table->string('purchase_order_name')->nullable();
 
             $table->unsignedSmallInteger('currency_id')
-                ->nullable()
                 ->index()
                 ->foreign()
                 ->references('id')
@@ -39,7 +38,7 @@ return new class extends Migration
 
             $table->date('readiness_date')->nullable();
             $table->date('expected_dispatch_date')->nullable();
-            $table->boolean('is_confirmed');
+            $table->boolean('is_confirmed'); // Auto
 
             $table->timestamps();
             $table->softDeletes();

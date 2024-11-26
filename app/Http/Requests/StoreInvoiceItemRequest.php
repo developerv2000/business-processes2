@@ -2,12 +2,18 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Application;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class ApplicationUpdateRequest extends FormRequest
+class StoreInvoiceItemRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return false;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -15,10 +21,8 @@ class ApplicationUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $instanceID = $this->route('instance')?->id;
-
         return [
-            "name" => ['nullable', Rule::unique(Application::class)->ignore($instanceID)],
+            //
         ];
     }
 }

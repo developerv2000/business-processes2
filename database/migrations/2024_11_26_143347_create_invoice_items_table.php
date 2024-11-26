@@ -11,32 +11,28 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_products', function (Blueprint $table) {
+        Schema::create('invoice_items', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
 
-            $table->unsignedInteger('order_id')
+            $table->unsignedTinyInteger('invoice_item_type_id') // 'Product', 'Additional payment' or 'Service'
                 ->index()
                 ->foreign()
                 ->references('id')
-                ->on('orders');
+                ->on('invoice_types');
 
-            $table->unsignedInteger('process_id')
+            $table->unsignedInteger('order_product_id') // Required only for items of 'Product' type
+                ->nullable()
                 ->index()
                 ->foreign()
                 ->references('id')
-                ->on('processes');
+                ->on('order_products');
 
-            $table->unsignedSmallInteger('marketing_authorization_holder_id')
-                ->index()
-                ->foreign()
-                ->references('id')
-                ->on('marketing_authorization_holders');
+            $table->string('name')->nullable(); // Required only for items of 'Additional payment' and 'Service' types
 
             $table->unsignedInteger('quantity');
             $table->decimal('price', 8, 2);
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -45,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_products');
+        Schema::dropIfExists('invoice_items');
     }
 };

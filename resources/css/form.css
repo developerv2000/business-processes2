@@ -32,6 +32,11 @@
     align-self: flex-start;
 }
 
+.form__row {
+    display: flex;
+    gap: 20px;
+}
+
 /* Used to hold appended checkbox inputs before submiting form by JS */
 .form__hidden-inputs-container {
     display: none;
@@ -56,6 +61,10 @@
 }
 
 /* Form Group */
+.form__row .form-group {
+    flex-basis: 100%;
+}
+
 .form-group__input-container {
     position: relative;
 }

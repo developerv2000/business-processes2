@@ -173,4 +173,17 @@ Route::middleware('auth', 'auth.session')->group(function () {
     Route::prefix('order-products')->controller(OrderProductController::class)->name('order.products.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes('can:view-orders', 'can:edit-orders');
     });
+
+    // Finance
+    Route::prefix('confirmed-orders')->controller(OrderController::class)->name('confirmed-orders.')->group(function () {
+        Route::get('/', 'confirmedOrders')->name('index');
+    });
+
+    Route::prefix('invoices')->controller(OrderController::class)->name('invoices.')->group(function () {
+        RouteGenerator::defineAllDefaultCrudRoutes();
+    });
+
+    Route::prefix('invoice-items')->controller(OrderController::class)->name('invoice-items.')->group(function () {
+        RouteGenerator::defineAllDefaultCrudRoutes();
+    });
 });

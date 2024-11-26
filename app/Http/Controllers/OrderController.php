@@ -103,4 +103,17 @@ class OrderController extends Controller
 
         return Order::exportRecordsAsExcel($records);
     }
+
+    public function confirmedOrders(Request $request)
+    {
+        Order::mergeExportQueryingParamsToRequest($request);
+        $records = Order::where('is_confirmed', true)
+            ->withCount('products')
+            ->paginate(50);
+
+        $allTableColumns = $request->user()->collectAllTableColumns('confirmed_orders_table_columns');
+        $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
+
+        return view('confirmed-orders.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+    }
 }

@@ -355,7 +355,7 @@ class User extends Authenticatable
             'password' => bcrypt($request->new_password),
         ]);
 
-        // Laravel automatically logouts user, while updating its password
+        // Laravel automatically logouts user, while updating its own password
         // Manually logout user from all devices by cleaning session, if not current users password is being changed
         if (Auth::user()->id != $this->id) {
             $this->logoutByClearingSession();
@@ -400,7 +400,7 @@ class User extends Authenticatable
             // Reload the default settings if roles have been changed
             $this->resetDefaultSettings();
 
-            // Laravel automatically logouts user, while updating its password
+            // Laravel automatically logouts user, while updating its own password
             // Manually logout user from all devices by cleaning session, if not current users password is being changed
             if (Auth::user()->id != $this->id) {
                 $this->logoutByClearingSession();
@@ -482,6 +482,7 @@ class User extends Authenticatable
         $settings['processes_for_order_table_columns'] = Process::getDefaultForOrderTableColumnsForUser($this);
         $settings['orders_table_columns'] = Order::getDefaultTableColumnsForUser($this);
         $settings['order_products_table_columns'] = OrderProduct::getDefaultTableColumnsForUser($this);
+        $settings['confirmed_orders_table_columns'] = Order::getConfirmedTableColumnsForUser($this);
 
         $this->update(['settings' => $settings]);
     }

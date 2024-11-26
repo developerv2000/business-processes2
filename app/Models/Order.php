@@ -318,6 +318,27 @@ class Order extends CommentableModel
         return $columns;
     }
 
+    public static function getConfirmedTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-orders')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        array_push(
+            $columns,
+            ['name' => 'PO №', 'order' => $order++, 'width' => 122, 'visible' => 1],
+            ['name' => 'PO date', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 136, 'visible' => 1],
+            ['name' => 'Invoices', 'order' => $order++, 'width' => 136, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
     /**
      * Get the Excel column values for exporting.
      *

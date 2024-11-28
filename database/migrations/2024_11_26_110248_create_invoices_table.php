@@ -16,13 +16,13 @@ return new class extends Migration
             $table->string('name');
             $table->timestamp('date');
 
-            $table->unsignedTinyInteger('invoice_category_id') // 'Goods' or 'Service'
+            $table->unsignedTinyInteger('category_id') // 'Goods' or 'Service'
                 ->index()
                 ->foreign()
                 ->references('id')
                 ->on('invoice_categories');
 
-            $table->unsignedTinyInteger('invoice_payment_type_id') // 'Prepayment', 'Interim payment', 'Final payment', or 'Full payment'
+            $table->unsignedTinyInteger('payment_type_id') // 'Prepayment', 'Interim payment', 'Final payment', or 'Full payment'
                 ->index()
                 ->foreign()
                 ->references('id')

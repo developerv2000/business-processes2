@@ -18,8 +18,8 @@ class InvoiceCategory extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function invoiceItems()
+    public function invoices()
     {
-        return $this->hasMany(InvoiceItem::class);
+        return $this->hasMany(Invoice::class);
     }
 }

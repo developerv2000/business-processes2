@@ -14,7 +14,13 @@ return new class extends Migration
         Schema::create('invoice_items', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
 
-            $table->unsignedTinyInteger('invoice_item_category_id') // 'Product', 'Other payments' or 'Service'
+            $table->unsignedInteger('invoice_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('invoices');
+
+            $table->unsignedTinyInteger('category_id') // 'Product', 'Other payments' or 'Service'
                 ->index()
                 ->foreign()
                 ->references('id')

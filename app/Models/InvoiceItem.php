@@ -23,9 +23,14 @@ class InvoiceItem extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function type()
+    public function invoice()
     {
-        return $this->belongsTo(InvoiceItemType::class);
+        return $this->belongsTo(Invoice::class)->withTrashed();
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(InvoiceItemCategory::class);
     }
 
     public function orderProduct()

@@ -23,10 +23,20 @@ class Invoice extends Model
     | Relations
     |--------------------------------------------------------------------------
     */
-
-    public function type()
+    
+    public function items()
     {
-        return $this->belongsTo(InvoiceType::class);
+        return $this->hasMany(InvoiceItem::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(InvoiceCategory::class);
+    }
+
+    public function paymentType()
+    {
+        return $this->belongsTo(InvoicePaymentType::class);
     }
 
     public function order()

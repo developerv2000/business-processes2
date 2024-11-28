@@ -16,14 +16,20 @@ return new class extends Migration
             $table->string('name');
             $table->timestamp('date');
 
-            $table->unsignedTinyInteger('invoice_type_id') // 'Goods' or 'Service'
+            $table->unsignedTinyInteger('invoice_category_id') // 'Goods' or 'Service'
                 ->index()
                 ->foreign()
                 ->references('id')
-                ->on('invoice_types');
+                ->on('invoice_categories');
+
+            $table->unsignedTinyInteger('invoice_payment_type_id') // 'Prepayment', 'Interim payment', 'Final payment', or 'Full payment'
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('invoice_payment_types');
 
             $table->unsignedInteger('order_id')
-                ->nullable() // nullable for invoices of 'Service' type
+                ->nullable() // nullable for invoices of 'Service' category
                 ->index()
                 ->foreign()
                 ->references('id')
@@ -35,9 +41,8 @@ return new class extends Migration
                 ->references('id')
                 ->on('currencies');
 
-            $table->unsignedTinyInteger('prepayment_percentage')->nullable();
-            $table->timestamp('sending_for_payment_date')->nullable(); // Auto
-            $table->decimal('amount_paid', 8, 2)->nullable();
+            $table->unsignedTinyInteger('payment_percentage'); // 100% for items of 'Full payment' category
+            $table->timestamp('sent_for_payment_date')->nullable(); // Auto
             $table->timestamp('payment_date')->nullable();
 
             $table->unsignedSmallInteger('payer_id')
@@ -46,7 +51,8 @@ return new class extends Migration
                 ->references('id')
                 ->on('payers');
 
-            $table->timestamp('payment_refer')->nullable();
+            $table->string('group_name')->nullable();
+            $table->boolean('cancelled')->default(false);
             $table->timestamps();
         });
     }

@@ -63,6 +63,11 @@ class Order extends CommentableModel
         return $this->belongsTo(Currency::class);
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes

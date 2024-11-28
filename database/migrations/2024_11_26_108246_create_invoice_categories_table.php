@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invoice_item_types', function (Blueprint $table) {
+        Schema::create('invoice_categories', function (Blueprint $table) {
             $table->unsignedTinyInteger('id')->autoIncrement();
-            // 'Product' and 'Additional payment' for invoices of 'Goods' type
-            // 'Service' for invoices of 'Service' type
-            $table->string('name')->unique();
+            $table->string('name')->unique(); // 'Goods' or 'Service'
         });
     }
 
@@ -24,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invoice_item_types');
+        Schema::dropIfExists('invoice_categories');
     }
 };

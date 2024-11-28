@@ -2,21 +2,23 @@
 
 namespace Database\Seeders;
 
-use App\Models\Payer;
+use App\Models\InvoiceItemCategory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class PayerSeeder extends Seeder
+class InvoiceItemCategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $name = ['Astra Logistics', 'Orthos', 'Dameliz', 'Dusti Farma', 'Asia Farm', 'Moraine Business'];
+        // 'Product' and 'Other payments' for invoices of 'Goods' category
+        // 'Service' for invoices of 'Service' category
+        $name = ['Product', 'Other payments', 'Service'];
 
         for ($i = 0; $i < count($name); $i++) {
-            $instance = new Payer();
+            $instance = new InvoiceItemCategory();
             $instance->name = $name[$i];
             $instance->save();
         }

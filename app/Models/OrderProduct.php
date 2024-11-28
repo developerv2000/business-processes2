@@ -50,6 +50,11 @@ class OrderProduct extends CommentableModel
         return $this->belongsTo(MarketingAuthorizationHolder::class);
     }
 
+    public function invoiceItems()
+    {
+        return $this->hasMany(InvoiceItem::class);
+    }
+ 
     /*
     |--------------------------------------------------------------------------
     | Additional attributes

@@ -14,10 +14,27 @@ class Currency extends Model
 
     const EXCHANGE_RATE_API_URL = 'https://v6.exchangerate-api.com/v6/2b3965359716e1bb35e7a237/latest/';
 
+    /*
+    |--------------------------------------------------------------------------
+    | Relations
+    |--------------------------------------------------------------------------
+    */
+
     public function processes()
     {
         return $this->hasMany(Process::class);
     }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Miscellaneous
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * Update all currencies except USD using an external API.

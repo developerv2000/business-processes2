@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Payer extends Model
+class InvoiceCategory extends Model
 {
     use HasFactory;
 
@@ -18,8 +18,8 @@ class Payer extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function invoices()
+    public function invoiceItems()
     {
-        return $this->hasMany(Invoice::class);
+        return $this->hasMany(InvoiceItem::class);
     }
 }

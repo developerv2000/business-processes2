@@ -39,6 +39,10 @@ class DatabaseSeeder extends Seeder
             PortfolioManagerSeeder::class,
             KvppSeeder::class,
             MeetingSeeder::class,
+            PayerSeeder::class,
+            InvoiceCategorySeeder::class,
+            InvoicePaymentTypeSeeder::class,
+            InvoiceItemCategorySeeder::class,
         ]);
     }
 }

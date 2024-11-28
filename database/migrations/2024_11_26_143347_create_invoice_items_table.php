@@ -14,23 +14,23 @@ return new class extends Migration
         Schema::create('invoice_items', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
 
-            $table->unsignedTinyInteger('invoice_item_type_id') // 'Product', 'Additional payment' or 'Service'
+            $table->unsignedTinyInteger('invoice_item_category_id') // 'Product', 'Other payments' or 'Service'
                 ->index()
                 ->foreign()
                 ->references('id')
-                ->on('invoice_types');
+                ->on('invoice_item_categories');
 
-            $table->unsignedInteger('order_product_id') // Required only for items of 'Product' type
+            $table->unsignedInteger('order_product_id') // Required only for items of 'Product' category
                 ->nullable()
                 ->index()
                 ->foreign()
                 ->references('id')
                 ->on('order_products');
 
-            $table->string('name')->nullable(); // Required only for items of 'Additional payment' and 'Service' types
+            $table->string('name')->nullable(); // Required only for items of 'Other payments' and 'Service' category
 
             $table->unsignedInteger('quantity');
-            $table->decimal('price', 8, 2);
+            $table->decimal('amount_paid', 8, 2)->nullable();
 
             $table->timestamps();
         });

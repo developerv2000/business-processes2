@@ -3,64 +3,76 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
-use App\Http\Requests\StoreInvoiceRequest;
-use App\Http\Requests\UpdateInvoiceRequest;
+use App\Models\User;
+use App\Support\Traits\DestroysModelRecords;
+use App\Support\Traits\RestoresModelRecords;
+use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
+    use DestroysModelRecords;
+    use RestoresModelRecords;
+
+    public $model = Invoice::class; // used in multiple destroy/restore traits
+
     /**
-     * Display a listing of the resource.
+     * Display a listing of the records.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        Invoice::mergeQueryingParamsToRequest($request);
+        $records = Invoice::getRecordsFinalized($request, finaly: 'paginate');
+
+        return view('invoices.index', compact('request', 'records'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the trashed records.
+     */
+    public function trash(Request $request)
+    {
+        Invoice::mergeQueryingParamsToRequest($request);
+        $records = Invoice::getRecordsFinalized($request, Invoice::onlyTrashed(), finaly: 'paginate');
+
+        $allTableColumns = $request->user()->collectAllTableColumns('invoices_table_columns');
+        $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
+
+        return view('invoices.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+    }
+
+    /**
+     * Show the form for creating a new record.
      */
     public function create()
     {
-        //
+        return view('invoices.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created record in storage.
      */
-    public function store(StoreInvoiceRequest $request)
+    public function store(invoicestoreRequest $request)
     {
-        //
+        Invoice::createFromRequest($request);
+
+        return to_route('invoices.index');
     }
 
     /**
-     * Display the specified resource.
+     * Show the form for editing the specified record.
      */
-    public function show(Invoice $invoice)
+    public function edit(Invoice $instance)
     {
-        //
+        return view('invoices.edit', compact('instance'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified record in storage.
      */
-    public function edit(Invoice $invoice)
+    public function update(InvoiceUpdateRequest $request, Invoice $instance)
     {
-        //
-    }
+        $instance->updateFromRequest($request);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateInvoiceRequest $request, Invoice $invoice)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Invoice $invoice)
-    {
-        //
+        return redirect($request->input('previous_url'));
     }
 }

@@ -483,7 +483,7 @@ class User extends Authenticatable
         $settings['orders_table_columns'] = Order::getDefaultTableColumnsForUser($this);
         $settings['order_products_table_columns'] = OrderProduct::getDefaultTableColumnsForUser($this);
         $settings['confirmed_orders_table_columns'] = Order::getConfirmedTableColumnsForUser($this);
-
+        
         $this->update(['settings' => $settings]);
     }
 

@@ -4,6 +4,8 @@ use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ForOrderController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\InvoiceItemController;
 use App\Http\Controllers\KvppController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ManufacturerController;
@@ -179,11 +181,11 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::get('/', 'confirmedOrders')->name('index');
     });
 
-    Route::prefix('invoices')->controller(OrderController::class)->name('invoices.')->group(function () {
+    Route::prefix('invoices')->controller(InvoiceController::class)->name('invoices.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
     });
 
-    Route::prefix('invoice-items')->controller(OrderController::class)->name('invoice-items.')->group(function () {
+    Route::prefix('invoice-items')->controller(InvoiceItemController::class)->name('invoice-items.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
     });
 });

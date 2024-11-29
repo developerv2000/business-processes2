@@ -18,12 +18,18 @@ class Invoice extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'date' => 'datetime',
+        'sent_for_payment_date' => 'datetime',
+        'payment_date' => 'datetime',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Relations
     |--------------------------------------------------------------------------
     */
-    
+
     public function items()
     {
         return $this->hasMany(InvoiceItem::class);

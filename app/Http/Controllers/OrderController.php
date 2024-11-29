@@ -109,6 +109,7 @@ class OrderController extends Controller
         Order::mergeExportQueryingParamsToRequest($request);
         $records = Order::where('is_confirmed', true)
             ->withCount('products')
+            ->withCount('invoices')
             ->paginate(50);
 
         $allTableColumns = $request->user()->collectAllTableColumns('confirmed_orders_table_columns');

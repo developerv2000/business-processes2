@@ -19,7 +19,7 @@
         </a>
     @break
 
-    @case('Country')
+    @case('Market')
         {{ $instance->country->name }}
     @break
 @endswitch

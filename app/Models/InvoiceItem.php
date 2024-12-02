@@ -18,6 +18,10 @@ class InvoiceItem extends Model
 
     protected $guarded = ['id'];
 
+    protected $with = [
+        'category',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Relations
@@ -38,6 +42,73 @@ class InvoiceItem extends Model
     {
         return $this->belongsTo(OrderProduct::class)->withTrashed();
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+    public function getPrepaymentInvoiceItemAttribute()
+    {
+        if (!$this->invoice->isFinalPayment()) {
+            return null;
+        }
+
+        // Use eager-loaded relationships when possible
+        return self::where('order_product_id', $this->order_product_id)
+            ->whereHas('invoice', function ($invoiceQuery) {
+                $invoiceQuery->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID);
+            })
+            ->first();
+    }
+
+    public function getTotalPriceAttribute()
+    {
+        $totalPrice = $this->quantity * $this->orderProduct->invoice_price;
+
+        // Use bcround for better precision handling if financial values are involved
+        return round($totalPrice, 2);
+    }
+
+    public function getPrepaymentAmountAttribute()
+    {
+        if (!$this->invoice->isFinalPayment()) {
+            return 0;
+        }
+
+        return $this->prepayment_invoice_item->amount_paid;
+    }
+
+    public function getPaymentDueAttribute()
+    {
+        switch ($this->invoice->paymentType->name) {
+            case InvoicePaymentType::PREPAYMENT_NAME:
+                return Helper::calculatePercentage($this->total_price, $this->invoice->prepayment_percentage);
+            case InvoicePaymentType::FINAL_PAYMENT_NAME:
+                return $this->total_price - $this->prepayment_amount;
+            case InvoicePaymentType::FULL_PAYMENT_NAME:
+                return $this->total_price;
+        }
+    }
+
+    public function getTermsAttribute()
+    {
+        switch ($this->invoice->paymentType->name) {
+            case InvoicePaymentType::PREPAYMENT_NAME:
+                return $this->invoice->prepayment_percentage;
+            case InvoicePaymentType::FINAL_PAYMENT_NAME:
+                return Helper::calculatePercentageOfTotal($this->total_price, $this->payment_due);
+            case InvoicePaymentType::FULL_PAYMENT_NAME:
+                return 100;
+        }
+    }
+
+    public function getPaymentDifferenceAttribute()
+    {
+        return $this->amount_paid - $this->payment_due;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Events

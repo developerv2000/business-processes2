@@ -110,11 +110,11 @@ class Invoice extends Model
 
     private static function filterRecords($request, $query)
     {
-        $whereEqualAttributes = [
+        $whereInAttributes = [
             'id',
         ];
 
-        $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
+        $query = Helper::filterQueryWhereInStatements($request, $query, $whereInAttributes);
 
         return $query;
     }
@@ -132,7 +132,8 @@ class Invoice extends Model
         // Apply sorting based on request parameters
         $records = $query
             ->orderBy($request->orderBy, $request->orderType)
-            ->orderBy('id', $request->orderType);
+            ->orderBy('id', $request->orderType)
+            ->withCount('items');
 
         // eager load complex relations
         // $records = $records->withComplexRelations();
@@ -181,4 +182,18 @@ class Invoice extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function isPrepayment()
+    {
+        return $this->paymentType->name == InvoicePaymentType::PREPAYMENT_NAME;
+    }
+
+    public function isFinalPayment()
+    {
+        return $this->paymentType->name == InvoicePaymentType::FINAL_PAYMENT_NAME;
+    }
+
+    public function isFullPayment()
+    {
+        return $this->paymentType->name == InvoicePaymentType::FULL_PAYMENT_NAME;
+    }
 }

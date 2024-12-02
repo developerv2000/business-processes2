@@ -9,6 +9,7 @@ namespace App\Support;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
+use InvalidArgumentException;
 
 /**
  * class Helper
@@ -209,11 +210,33 @@ class Helper
     {
         // manual transilation of tajik letters
         $search = [
-            'ӣ', 'ӯ', 'ҳ', 'қ', 'ҷ', 'ғ', 'Ғ', 'Ӣ', 'Ӯ', 'Ҳ', 'Қ', 'Ҷ',
+            'ӣ',
+            'ӯ',
+            'ҳ',
+            'қ',
+            'ҷ',
+            'ғ',
+            'Ғ',
+            'Ӣ',
+            'Ӯ',
+            'Ҳ',
+            'Қ',
+            'Ҷ',
         ];
 
         $replace = [
-            'i', 'u', 'h', 'q', 'j', 'g', 'g', 'i', 'u', 'h', 'q', 'j',
+            'i',
+            'u',
+            'h',
+            'q',
+            'j',
+            'g',
+            'g',
+            'i',
+            'u',
+            'h',
+            'q',
+            'j',
         ];
 
         $transilation = str_replace($search, $replace, $string);
@@ -350,6 +373,39 @@ class Helper
 
         // Merge the parsed query parameters into the request object
         $request->merge($queryParams);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Percentage calculations
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Calculate the percentage of an amount.
+     *
+     * @param float $amount The total amount.
+     * @param float $percentage The percentage to calculate.
+     * @return float The calculated value.
+     */
+    public static function calculatePercentage(float $amount, float $percentage): float
+    {
+        return ($amount * $percentage) / 100;
+    }
+
+    /**
+     * Calculate the percentage a value represents of a total.
+     *
+     * @param float $total The total amount (representing 100%).
+     * @param float $value The value to calculate the percentage for.
+     * @return float The percentage the value represents of the total.
+     */
+    public static function calculatePercentageOfTotal(float $total, float $value): float
+    {
+        if ($total == 0) {
+            throw new InvalidArgumentException("Total cannot be zero.");
+        }
+        return ($value / $total) * 100;
     }
 
     /*

@@ -12,6 +12,14 @@ class InvoicePaymentType extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
 
+    const PREPAYMENT_NAME = 'Prepayment';
+    const FINAL_PAYMENT_NAME = 'Final payment';
+    const FULL_PAYMENT_NAME = 'Full payment';
+
+    const PREPAYMENT_ID = 1;
+    const FINAL_PAYMENT_ID = 2;
+    const FULL_PAYMENT_ID = 3;
+
     /*
     |--------------------------------------------------------------------------
     | Relations

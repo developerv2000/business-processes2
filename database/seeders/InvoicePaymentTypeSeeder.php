@@ -13,7 +13,11 @@ class InvoicePaymentTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        $name = ['Prepayment', 'Interim payment', 'Final payment', 'Full payment'];
+        $name = [
+            InvoicePaymentType::PREPAYMENT_NAME,
+            InvoicePaymentType::FINAL_PAYMENT_NAME,
+            InvoicePaymentType::FULL_PAYMENT_NAME,
+        ];
 
         for ($i = 0; $i < count($name); $i++) {
             $instance = new InvoicePaymentType();

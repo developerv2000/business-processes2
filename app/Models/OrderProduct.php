@@ -54,7 +54,7 @@ class OrderProduct extends CommentableModel
     {
         return $this->hasMany(InvoiceItem::class);
     }
- 
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes

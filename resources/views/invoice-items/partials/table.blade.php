@@ -67,12 +67,12 @@
                     <td>{{ $instance->terms }} %</td>
                     <td>{{ $instance->payment_due }}</td>
                     <td>{{ $instance->prepayment_amount }}</td>
-                    <td>{{ $instance->invoice->order->sent_for_payment_date?->isoformat('DD MMM Y') }}</td>
+                    <td>{{ $instance->invoice->sent_for_payment_date?->isoformat('DD MMM Y') }}</td>
                     <td>{{ $instance->amount_paid }}</td>
-                    <td>{{ $instance->invoice->order->payment_date?->isoformat('DD MMM Y') }}</td>
+                    <td>{{ $instance->invoice->payment_date?->isoformat('DD MMM Y') }}</td>
                     <td>{{ $instance->payment_difference }}</td>
-                    <td>{{ $instance->invoice->order->status }}</td>
-                    <td>{{ $instance->invoice->order->group_name }}</td>
+                    <td>{{ $instance->invoice->status }}</td>
+                    <td>{{ $instance->invoice->group_name }}</td>
                 </tr>
             @endforeach
         </tbody> {{-- Body end --}}

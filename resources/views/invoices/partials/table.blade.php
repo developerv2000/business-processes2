@@ -56,13 +56,13 @@
                     <td>{{ $instance->payer->name }}</td>
                     <td>{{ $instance->currency->name }}</td>
                     <td>{{ $instance->total_price }}</td>
-                    <td>{{ $instance->payment_percentage }} %</td>
+                    <td>{{ $instance->terms }} %</td>
                     <td>{{ $instance->payment_due }}</td>
-                    <td>{{ $instance->prepayment }}</td>
+                    <td>{{ $instance->prepayment_amount }}</td>
                     <td>{{ $instance->sent_for_payment_date?->isoformat('DD MMM Y') }}</td>
                     <td>{{ $instance->amount_paid }}</td>
                     <td>{{ $instance->payment_date?->isoformat('DD MMM Y') }}</td>
-                    <td>{{ $instance->differ_price }}</td>
+                    <td>{{ $instance->payment_difference }}</td>
                     <td>{{ $instance->status }}</td>
                     <td>{{ $instance->group_name }}</td>
                 </tr>

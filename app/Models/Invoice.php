@@ -62,6 +62,71 @@ class Invoice extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+    public function getTotalPriceAttribute()
+    {
+        $totalPrice = $this->items->sum('total_price');
+
+        // Use bcround for better precision handling if financial values are involved
+        return round($totalPrice, 2);
+    }
+
+    public function getPrepaymentAmountAttribute()
+    {
+        if (!$this->isFinalPayment()) {
+            return 0;
+        }
+
+        $prepaymentAmount = $this->items->sum('prepayment_amount');
+
+        return round($prepaymentAmount, 2);
+    }
+
+    public function getPaymentDueAttribute()
+    {
+        $paymentDue = $this->items->sum('payment_due');
+
+        return round($paymentDue, 2);
+    }
+
+    public function getTermsAttribute()
+    {
+        switch ($this->paymentType->name) {
+            case InvoicePaymentType::PREPAYMENT_NAME:
+                return $this->prepayment_percentage;
+            case InvoicePaymentType::FINAL_PAYMENT_NAME:
+                return Helper::calculatePercentageOfTotal($this->total_price, $this->payment_due);
+            case InvoicePaymentType::FULL_PAYMENT_NAME:
+                return 100;
+        }
+    }
+
+    public function getPaymentDifferenceAttribute()
+    {
+        return $this->amount_paid - $this->payment_due;
+    }
+
+    public function getAmountPaidAttribute()
+    {
+        $paymentDue = $this->items->sum('amount_paid');
+
+        return round($paymentDue, 2);
+    }
+
+    public function getStatusAttribute()
+    {
+        if ($this->cancelled) {
+            return 'Cancelled';
+        }
+
+        return $this->payment_date ? 'Paid' : 'Unpaid';
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Events
     |--------------------------------------------------------------------------
     */

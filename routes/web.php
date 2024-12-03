@@ -183,6 +183,12 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     Route::prefix('invoices')->controller(InvoiceController::class)->name('invoices.')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
+
+        Route::get('/create-goods', 'createGoods')->name('create.goods');
+        Route::get('/create-service', 'createService')->name('create.service');
+
+        Route::get('/store-goods', 'storeGoods')->name('store.goods');
+        Route::get('/store-service', 'storeService')->name('store.service');
     });
 
     Route::prefix('invoice-items')->controller(InvoiceItemController::class)->name('invoice-items.')->group(function () {

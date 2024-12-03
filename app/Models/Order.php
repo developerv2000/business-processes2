@@ -65,7 +65,7 @@ class Order extends CommentableModel
 
     public function invoices()
     {
-        return $this->hasMany(Invoice::class);
+        return $this->belongsToMany(Invoice::class);
     }
 
     /*
@@ -81,6 +81,11 @@ class Order extends CommentableModel
         }
 
         return round($this->readiness_date->diffInDays($this->purchase_order_date, true));
+    }
+
+    public function getLabelAttribute()
+    {
+        return $this->purchase_order_name . $this->purchase_order_date?->isoformat(' DD.MM.Y');
     }
 
     /*
@@ -236,6 +241,14 @@ class Order extends CommentableModel
     {
         return self::whereNotNull('purchase_order_name')
             ->select('id', 'purchase_order_name')
+            ->withOnly([])
+            ->get();
+    }
+
+    public static function getAllConfirmedRecordsMinified()
+    {
+        return self::where('is_confirmed', true)
+            ->select('id', 'purchase_order_name', 'purchase_order_date')
             ->withOnly([])
             ->get();
     }

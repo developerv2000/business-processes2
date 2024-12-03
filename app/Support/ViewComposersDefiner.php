@@ -47,6 +47,7 @@ class ViewComposersDefiner
         self::defineProcessesForOrderComposers();
         self::defineOrdersComposers();
         self::defineOrderProductsComposers();
+        self::defineInvoicesComposers();
     }
 
     private static function definePaginationLimitComposer()
@@ -210,6 +211,16 @@ class ViewComposersDefiner
                 'fixedEnTrademarks' => Process::pluckAllFixedEnTrademarks(),
                 'fixedRuTrademarks' => Process::pluckAllFixedRuTrademarks(),
                 'currencies' => Currency::getAll(),
+            ]
+        );
+    }
+
+    private static function defineInvoicesComposers()
+    {
+        self::defineViewComposer(
+            'invoices.create.goods',
+            [
+                'orders' => Order::getAllConfirmedRecordsMinified(),
             ]
         );
     }

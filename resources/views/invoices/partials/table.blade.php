@@ -24,7 +24,7 @@
                 <th width="100">Send to pay</th>
                 <th width="100">Paid</th>
                 <th width="100">Pay date</th>
-                <th width="100">Differ</th>
+                <th width="80">Differ</th>
                 <th width="100">Status</th>
                 <th width="120">Payment refer</th>
             </tr>
@@ -50,9 +50,20 @@
                         </a>
                     </td>
 
-                    <td>{{ $instance->order->purchase_order_name }}</td>
-                    <td>{{ $instance->order->purchase_order_date->isoformat('DD MMM Y') }}</td>
-                    <td>{{ $instance->order->manufacturer->name }}</td>
+                    <td>{!! $instance->orders->pluck('purchase_order_name')->implode('<br>') !!}</td>
+
+                    <td>
+                        @foreach ($instance->orders as $order)
+                            {{ $order->purchase_order_date->isoformat('DD MMM Y') }}<br>
+                        @endforeach
+                    </td>
+
+                    <td>
+                        @foreach ($instance->orders as $order)
+                            {{ $order->manufacturer->name }}<br>
+                        @endforeach
+                    </td>
+
                     <td>{{ $instance->payer->name }}</td>
                     <td>{{ $instance->currency->name }}</td>
                     <td>{{ $instance->total_price }}</td>

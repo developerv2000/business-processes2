@@ -28,13 +28,6 @@ return new class extends Migration
                 ->references('id')
                 ->on('invoice_payment_types');
 
-            $table->unsignedInteger('order_id')
-                ->nullable() // nullable for invoices of 'Service' category
-                ->index()
-                ->foreign()
-                ->references('id')
-                ->on('orders');
-
             $table->unsignedSmallInteger('currency_id')
                 ->index()
                 ->foreign()

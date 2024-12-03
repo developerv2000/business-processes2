@@ -43,9 +43,9 @@ class InvoiceController extends Controller
     /**
      * Show the form for creating a new record.
      */
-    public function create()
+    public function createGoods()
     {
-        return view('invoices.create');
+        return view('invoices.create.goods');
     }
 
     /**

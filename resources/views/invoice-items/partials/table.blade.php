@@ -28,7 +28,7 @@
                 <th width="100">Send to pay</th>
                 <th width="100">Paid</th>
                 <th width="100">Pay date</th>
-                <th width="100">Differ</th>
+                <th width="80">Differ</th>
                 <th width="100">Status</th>
                 <th width="120">Payment refer</th>
             </tr>
@@ -44,9 +44,9 @@
 
                     <td>{{ $instance->id }}</td>
                     <td>{{ $instance->category->name }}</td>
-                    <td>{{ $instance->invoice->order->purchase_order_name }}</td>
-                    <td>{{ $instance->invoice->order->purchase_order_date->isoformat('DD MMM Y') }}</td>
-                    <td>{{ $instance->invoice->order->country->name }}</td>
+                    <td>{{ $instance->orderProduct->order->purchase_order_name }}</td>
+                    <td>{{ $instance->orderProduct->order->purchase_order_date->isoformat('DD MMM Y') }}</td>
+                    <td>{{ $instance->orderProduct->order->country->name }}</td>
 
                     <td>
                         <a href="{{ route('invoices.index', ['id[]' => $instance->invoice->id]) }}" class="td__link">
@@ -56,13 +56,13 @@
 
                     <td>{{ $instance->orderProduct->process->fixed_trademark_ru_for_order }}</td>
                     <td>{{ $instance->invoice->paymentType->name }}</td>
-                    <td>{{ $instance->invoice->order->manufacturer->name }}</td>
+                    <td>{{ $instance->orderProduct->order->manufacturer->name }}</td>
                     <td>{{ $instance->invoice->payer->name }}</td>
                     <td>{{ $instance->invoice->name }}</td>
                     <td>{{ $instance->invoice->date->isoformat('DD MMM Y') }}</td>
                     <td>{{ $instance->quantity }}</td>
                     <td>{{ $instance->orderProduct->invoice_price }}</td>
-                    <td>{{ $instance->invoice->order->currency->name }}</td>
+                    <td>{{ $instance->invoice->currency->name }}</td>
                     <td>{{ $instance->total_price }}</td>
                     <td>{{ $instance->terms }} %</td>
                     <td>{{ $instance->payment_due }}</td>

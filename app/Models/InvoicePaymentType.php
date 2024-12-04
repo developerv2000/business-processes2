@@ -30,4 +30,16 @@ class InvoicePaymentType extends Model
     {
         return $this->hasMany(Invoice::class);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Queries
+    |--------------------------------------------------------------------------
+    */
+
+    public static function getAll()
+    {
+        return self::orderBy('id')
+            ->get();
+    }
 }

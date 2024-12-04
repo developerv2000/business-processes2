@@ -1408,3 +1408,27 @@ button {
     cursor: pointer;
 }
 /* ------------ /end Order pages ------------ */
+
+
+/* ------------ Invoice pages ------------ */
+/* Create page */
+.invoices-create-goods__products-list-wrapper:empty {
+    display: none;
+}
+
+.invoices-create-goods__products-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+.invoices-create-goods__products-list-title {
+    margin: 0;
+}
+
+.invoices-create-goods__products-list-order-title {
+    margin: 0;
+    font-size: 15px;
+}
+/* ------------ /end Invoice pages ------------ */

@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Models\CountryCode;
 use App\Models\Currency;
 use App\Models\Inn;
+use App\Models\InvoicePaymentType;
 use App\Models\Kvpp;
 use App\Models\KvppPriority;
 use App\Models\KvppStatus;
@@ -15,6 +16,7 @@ use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\Order;
+use App\Models\Payer;
 use App\Models\Permission;
 use App\Models\PortfolioManager;
 use App\Models\Process;
@@ -221,6 +223,10 @@ class ViewComposersDefiner
             'invoices.create.goods',
             [
                 'orders' => Order::getAllConfirmedRecordsMinified(),
+                'payers' => Payer::getAll(),
+                'paymentTypes' => InvoicePaymentType::getAll(),
+                'currencies' => Currency::getAll(),
+                'defaultCurrency' => Currency::getDefaultCurrencyForOrder(),
             ]
         );
     }

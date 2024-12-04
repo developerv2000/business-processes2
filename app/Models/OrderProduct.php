@@ -66,6 +66,15 @@ class OrderProduct extends CommentableModel
         return round($this->quantity * $this->price, 2);
     }
 
+    public function getPrepaymentInvoiceItemAttribute()
+    {
+        return $this->invoiceItems()
+            ->whereHas('invoice', function ($query) {
+                $query->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID);
+            })
+            ->first();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Events

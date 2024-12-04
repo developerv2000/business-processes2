@@ -12,6 +12,7 @@ const UPDATE_PROCESSES_CONTRACTED_IN_PLAN_URL = '/processes/update-contracted-in
 const UPDATE_PROCESSES_REGISTERED_IN_PLAN_URL = '/processes/update-registered-in-plan-value';
 const MARK_PROCESS_AS_READY_FOR_ORDER_URL = '/processes/mark-as-ready-for-order';
 const GET_ORDERS_CREATE_PRODUCT_INPUTS_URL = '/orders/get-create-product-inputs';
+const GET_ORDER_PRODUCTS_LIST_ON_INVOICE_CREATE = '/invoices/get/order-product-lists-on-create';
 
 // Colors
 const rootStyles = getComputedStyle(document.documentElement);
@@ -976,4 +977,42 @@ function initializeOrdersCreateProductDeleteButtons() {
             evt.currentTarget.closest('.form__section').remove();
         })
     });
+}
+
+document.querySelector('.invoices-create-goods .create-form')?.addEventListener('submit', function (evt) {
+    // Check submit action
+    const submitButtonText = evt.currentTarget.querySelector('.form__submit .button__text');
+
+    // Load order products lists if not loeaded yet
+    if (submitButtonText.textContent === 'Load products') {
+        loadInvoiceOrderProductListsOnCreate(evt, submitButtonText);
+    }
+});
+
+function loadInvoiceOrderProductListsOnCreate(evt, submitButtonText) {
+    evt.preventDefault();
+
+    const ordersSelect = document.querySelector('select[name="order_ids[]"]');
+    const orderIDs = Array.from(ordersSelect.selectedOptions).map(option => option.value);
+    const paymentTypeID = document.querySelector('select[name="payment_type_id"]').value;
+
+    const data = {
+        'order_ids': orderIDs,
+        'payment_type_id': paymentTypeID,
+    }
+
+    axios.post(GET_ORDER_PRODUCTS_LIST_ON_INVOICE_CREATE, data, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+        .then(response => {
+            const productsListWrapper = document.querySelector('.invoices-create-goods__products-list-wrapper');
+            productsListWrapper.innerHTML = response.data;
+            submitButtonText.textContent = 'Store';
+        })
+        .finally(function () {
+            // Hide any loading spinner after the request is complete
+            hideSpinner();
+        });
 }

@@ -8,6 +8,7 @@ use App\Support\Traits\ExportsRecords;
 use App\Support\Traits\MergesParamsToRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Gate;
+use InvalidArgumentException;
 
 class Order extends CommentableModel
 {
@@ -391,5 +392,29 @@ class Order extends CommentableModel
     public function getTitle(): string
     {
         return $this->purchase_order_name ?: trans('Order') . ' #' . $this->id;
+    }
+
+    public function loadInvoiceProductsForPaymentType($paymentTypeID)
+    {
+        $query = $this->products();
+
+        $this->invoice_products = match ($paymentTypeID) {
+            InvoicePaymentType::PREPAYMENT_ID, InvoicePaymentType::FULL_PAYMENT_ID =>
+            $query->doesntHave('invoiceItems')->get(),
+
+            InvoicePaymentType::FINAL_PAYMENT_ID =>
+            $query->whereHas('invoiceItems', function ($invoiceItemQuery) {
+                $invoiceItemQuery->whereHas('invoice', function ($invoiceQuery) {
+                    $invoiceQuery->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID);
+                });
+            })
+                ->whereDoesntHave('invoiceItems', function ($invoiceItemQuery) {
+                    $invoiceItemQuery->whereHas('invoice', function ($invoiceQuery) {
+                        $invoiceQuery->where('payment_type_id', InvoicePaymentType::FINAL_PAYMENT_ID);
+                    });
+                })->get(),
+
+            default => throw new InvalidArgumentException("Invalid payment type ID: $paymentTypeID"),
+        };
     }
 }

@@ -99,4 +99,14 @@ class InvoiceController extends Controller
 
         return view('invoices.create.product-lists.' . $view, compact('orders'));
     }
+
+    /**
+     * AJax request
+     */
+    public function getOtherPaymentsList(Request $request)
+    {
+        $paymentIndex = $request->payment_index;
+
+        return view('invoices.create.other-payments', compact('paymentIndex'));
+    }
 }

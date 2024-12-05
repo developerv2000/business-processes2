@@ -34,8 +34,8 @@ return new class extends Migration
                 ->on('order_products');
 
             $table->string('name')->nullable(); // Required only for items of 'Other payments' and 'Service' category
-
             $table->unsignedInteger('quantity');
+            $table->decimal('price', 8, 2)->nullable(); // Required only for items of 'Other payments' and 'Service' category
             $table->decimal('amount_paid', 8, 2)->default(0);
 
             $table->timestamps();

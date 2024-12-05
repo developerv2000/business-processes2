@@ -10,6 +10,10 @@
 
         <table class="main-table">
             <thead>
+                <th width="40">
+                    <span class="th__select-all unselectable material-symbols-outlined">priority</span>
+                </th>
+
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Price</th>
@@ -23,7 +27,10 @@
 
                     <tr>
                         <td>
-                            <input type="hidden" name="products[{{ $totalLoopIndex }}][id]" value="{{ $product->id }}">
+                            <input class="checkbox td__checkbox" type="checkbox" name="products[{{ $totalLoopIndex }}][id]" value="{{ $product->id }}" checked>
+                        </td>
+
+                        <td>
                             {{ $product->process->fixed_trademark_en_for_order }}
                         </td>
 
@@ -39,4 +46,15 @@
             </tbody>
         </table>
     @endforeach
+</div>
+
+{{-- Other payments --}}
+<div class="invoices-create__other-payments styled-box">
+    <h2 class="invoices-create__other-payments-title main-title">Other payments list</h2>
+
+    <div class="invoices-create__other-payments-list"></div>
+
+    <x-different.button type="button" class="invoices-create__add-other-payments-btn" style="action" icon="add" type="button">
+        {{ __('Add other payments') }}
+    </x-different.button>
 </div>

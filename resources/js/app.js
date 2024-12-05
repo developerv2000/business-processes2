@@ -27,6 +27,7 @@ const chartSplitlinesColor = rootStyles.getPropertyValue('--theme-chart-splitlin
 let countryCodesSelectize; // used only on processes create form
 let processesCountChart, activeManufacturersChart;
 let orderCreateProductIndex = 0;
+let invoiceCreateOtherPaymentsIndex = 0;
 
 window.addEventListener('load', () => {
     bootstrapComponents();
@@ -1010,9 +1011,69 @@ function loadInvoiceOrderProductListsOnCreate(evt, submitButtonText) {
             const productsListWrapper = document.querySelector('.invoices-create-goods__products-list-wrapper');
             productsListWrapper.innerHTML = response.data;
             submitButtonText.textContent = 'Store';
+            initializeInvoicesCreateOtherPaymentsAddButton();
         })
         .finally(function () {
             // Hide any loading spinner after the request is complete
             hideSpinner();
         });
+}
+
+
+function initializeInvoicesCreateOtherPaymentsAddButton() {
+    document.querySelector('.invoices-create__add-other-payments-btn')?.addEventListener('click', function (evt) {
+        showSpinner();
+
+        const data = {
+            'payment_index': invoiceCreateOtherPaymentsIndex,
+        };
+
+        axios.post('/invoices/get/other-payments-list-on-create', data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                const template = document.createElement('template');
+                template.innerHTML = response.data;
+                const element = template.content.firstChild;
+
+                const paymentsList = document.querySelector('.invoices-create__other-payments-list');
+                paymentsList.appendChild(element);
+                initializeInvoicesCreateOtherPaymentsDeleteButtons();
+                invoiceCreateOtherPaymentsIndex++;
+            })
+            .finally(function () {
+                // Hide any loading spinner after the request is complete
+                hideSpinner();
+            });
+    });
+}
+
+function initializeInvoicesCreateOtherPaymentsDeleteButtons() {
+    document.querySelectorAll('.invoices-create__delete-other-payments-btn').forEach((btn) => {
+        btn.addEventListener('click', function (evt) {
+            evt.currentTarget.closest('.form__section').remove();
+        })
+    });
+}
+
+$('.invoices-create__payment-type-select').selectize({
+    plugins: ["auto_position"],
+    onChange(value) {
+        handleInvoiceCreatePaymentType(value);
+    }
+});
+
+function handleInvoiceCreatePaymentType(value) {
+    const formGroup = document.querySelector('.invoices-create__terms-wrapper');
+    const termsInput = formGroup.querySelector('.input');
+
+    if (value == 1) {
+        formGroup.style.display = '';
+        termsInput.setAttribute('required', true);
+    } else {
+        formGroup.style.display = 'none';
+        termsInput.removeAttribute('required');
+    }
 }

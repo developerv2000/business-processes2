@@ -454,6 +454,7 @@ button {
     font-variation-settings: var(--material-symbols-filled);
     color: var(--theme-navbar-text-color);
 }
+
 /* ------------ /END Header ------------ */
 
 
@@ -1346,6 +1347,7 @@ button {
     left: var(--th-country-name-width);
     background-color: var(--theme-background-color);
 }
+
 /* ------------ /end Plan pages ------------ */
 
 
@@ -1359,7 +1361,7 @@ button {
     flex-wrap: wrap;
 }
 
-.orders-create__form-order-section > .form-group {
+.orders-create__form-order-section>.form-group {
     width: calc(25% - 25px);
 }
 
@@ -1407,11 +1409,13 @@ button {
     color: var(--theme-danger-color);
     cursor: pointer;
 }
+
 /* ------------ /end Order pages ------------ */
 
 
 /* ------------ Invoice pages ------------ */
 /* Create page */
+/* Products list */
 .invoices-create-goods__products-list-wrapper:empty {
     display: none;
 }
@@ -1431,4 +1435,52 @@ button {
     margin: 0;
     font-size: 15px;
 }
+
+/* Other payments */
+.invoices-create__other-payments {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.invoices-create__other-payments-title {
+    margin: 0;
+}
+
+.invoices-create__add-other-payments-btn {
+    padding: 8px 16px;
+    align-self: flex-start;
+
+    &:hover {
+        box-shadow: none;
+        background-color: var(--theme-secondary-color);
+        border-color: var(--theme-secondary-color);
+        color: white;
+    }
+}
+
+.invoices-create__other-payments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.invoices-create__other-payments-list:empty {
+    display: none !important;
+}
+
+.invoices-create__other-payments-list .form__section {
+    box-shadow: none;
+    padding: 0;
+}
+
+.invoices-create__delete-other-payments-btn {
+    align-self: flex-end;
+    margin-bottom: 8px;
+    color: var(--theme-danger-color);
+    cursor: pointer;
+}
+
 /* ------------ /end Invoice pages ------------ */

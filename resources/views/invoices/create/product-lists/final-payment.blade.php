@@ -10,6 +10,10 @@
 
         <table class="main-table">
             <thead>
+                <th width="40">
+                    <span class="th__select-all unselectable material-symbols-outlined">priority</span>
+                </th>
+
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Price</th>
@@ -25,7 +29,10 @@
 
                     <tr>
                         <td>
-                            <input type="hidden" name="products[{{ $totalLoopIndex }}][id]" value="{{ $product->id }}">
+                            <input class="checkbox td__checkbox" type="checkbox" name="products[{{ $totalLoopIndex }}][id]" value="{{ $product->id }}" checked>
+                        </td>
+
+                        <td>
                             {{ $product->process->fixed_trademark_en_for_order }}
                         </td>
 

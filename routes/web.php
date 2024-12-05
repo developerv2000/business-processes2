@@ -191,6 +191,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::post('/store/service', 'storeService')->name('store.service');
 
         Route::post('/get/order-product-lists-on-create', 'getOrderProductLists'); // ajax request
+        Route::post('/get/other-payments-list-on-create', 'getOtherPaymentsList'); // ajax request
     });
 
     Route::prefix('invoice-items')->controller(InvoiceItemController::class)->name('invoice-items.')->group(function () {

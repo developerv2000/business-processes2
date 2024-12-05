@@ -18,13 +18,13 @@
                 <x-forms.input.default-input
                     label="Invoice"
                     name="name"
-                     />
+                    required />
 
                 <x-forms.input.default-input
                     label="Date"
                     type="date"
                     name="date"
-                     />
+                    required />
 
                 <x-forms.id-based-single-select.default-select
                     label="Payer"
@@ -35,6 +35,7 @@
 
             <div class="form__row">
                 <x-forms.id-based-single-select.default-select
+                    class="invoices-create__payment-type-select selectize--manually-initializable"
                     label="Payment type"
                     name="payment_type_id"
                     :options="$paymentTypes"
@@ -60,7 +61,19 @@
                     optionCaptionAttribute="label"
                     required />
 
-                <div class="form-group"></div>
+                <div class="form-group">
+                    <x-forms.groups.default-group class="invoices-create__terms-wrapper" label="Terms" error-name="prepayment_percentage" :required="true">
+                        <input
+                            name="prepayment_percentage"
+                            class="input"
+                            type="number"
+                            required
+                            value="50"
+                            min="1"
+                            max="99">
+                    </x-forms.groups.default-group>
+                </div>
+
                 <div class="form-group"></div>
             </div>
         </div>

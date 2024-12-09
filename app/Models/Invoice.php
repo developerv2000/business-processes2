@@ -131,7 +131,16 @@ class Invoice extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected static function booted(): void {}
+    protected static function booted(): void
+    {
+        static::deleting(function ($instance) {
+            $instance->orders()->detach();
+
+            foreach ($instance->items as $item) {
+                $item->delete();
+            }
+        });
+    }
 
     /*
     |--------------------------------------------------------------------------

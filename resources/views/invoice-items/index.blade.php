@@ -8,8 +8,14 @@
                 'fullScreen' => true,
                 'fullScreenSelector' => '.main-wrapper',
             ])
+
+            <div class="pre-content__actions">
+                <x-different.button style="action" icon="remove" data-click-action="show-modal" data-modal-selector=".multiple-delete-modal">{{ __('Delete') }}</x-different.button>
+            </div>
         </div>
 
         @include('invoice-items.partials.table')
     </div>
+
+    <x-modals.multiple-delete action="{{ route('invoice-items.destroy') }}" :force-delete="false" />
 @endsection

@@ -220,13 +220,17 @@ class ViewComposersDefiner
     private static function defineInvoicesComposers()
     {
         self::defineViewComposer(
-            'invoices.create.goods',
+            [
+                'invoices.create.goods',
+                'invoices.edit',
+            ],
             [
                 'orders' => Order::getAllConfirmedRecordsMinified(),
                 'payers' => Payer::getAll(),
                 'paymentTypes' => InvoicePaymentType::getAll(),
                 'currencies' => Currency::getAll(),
                 'defaultCurrency' => Currency::getDefaultCurrencyForOrder(),
+                'booleanOptions' => Helper::getBooleanOptionsArray(),
             ]
         );
     }

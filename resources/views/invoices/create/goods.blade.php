@@ -17,12 +17,14 @@
             <div class="form__row">
                 <x-forms.input.default-input
                     label="Invoice"
-                    name="name" />
+                    name="name"
+                    required />
 
                 <x-forms.input.default-input
                     label="Date"
-                    type="date"
-                    name="date" />
+                    type="datetime-local"
+                    name="date"
+                    required />
 
                 <x-forms.id-based-single-select.default-select
                     label="Payer"

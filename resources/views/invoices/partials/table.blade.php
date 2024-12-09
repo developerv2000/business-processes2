@@ -5,6 +5,7 @@
         {{-- Head start --}}
         <thead>
             <tr>
+                @include('tables.components.th.select-all')
                 <th width="48">@include('tables.components.th.edit')</th>
                 <th width="44">ID</th>
                 <th width="80">Descr</th>
@@ -34,6 +35,8 @@
         <tbody>
             @foreach ($records as $instance)
                 <tr>
+                    @include('tables.components.td.checkbox')
+
                     <td>
                         @include('tables.components.td.edit-button', ['href' => route('invoices.edit', $instance->id)])
                     </td>

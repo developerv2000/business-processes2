@@ -92,7 +92,7 @@ class InvoiceItem extends Model
     {
         switch ($this->invoice->paymentType->name) {
             case InvoicePaymentType::PREPAYMENT_NAME:
-                return Helper::calculatePercentage($this->total_price, $this->invoice->prepayment_percentage);
+                return round(Helper::calculatePercentage($this->total_price, $this->invoice->prepayment_percentage), 2);
             case InvoicePaymentType::FINAL_PAYMENT_NAME:
                 return $this->total_price - $this->prepayment_amount;
             case InvoicePaymentType::FULL_PAYMENT_NAME:

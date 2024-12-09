@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Support\Traits\DestroysModelRecords;
 use App\Support\Traits\RestoresModelRecords;
 use Illuminate\Http\Request;
-use InvalidArgumentException;
 
 class InvoiceController extends Controller
 {
@@ -72,7 +71,7 @@ class InvoiceController extends Controller
     /**
      * Update the specified record in storage.
      */
-    public function update(InvoiceUpdateRequest $request, Invoice $instance)
+    public function update(Request $request, Invoice $instance)
     {
         $instance->updateFromRequest($request);
 

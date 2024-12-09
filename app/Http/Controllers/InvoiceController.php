@@ -54,9 +54,9 @@ class InvoiceController extends Controller
     /**
      * Store a newly created record in storage.
      */
-    public function store(invoicestoreRequest $request)
+    public function storeGoods(Request $request)
     {
-        Invoice::createFromRequest($request);
+        Invoice::createGoodsFromRequest($request);
 
         return to_route('invoices.index');
     }
@@ -85,19 +85,21 @@ class InvoiceController extends Controller
     public function getOrderProductLists(Request $request)
     {
         $orders = Order::whereIn('id', $request->input('order_ids'))->get();
-        $paymentTypeID = (int) $request->input('payment_type_id'); // cast int for match function
+        $paymentType = InvoicePaymentType::find($request->input('payment_type_id'));
 
         foreach ($orders as $order) {
-            $order->loadInvoiceProductsForPaymentType($paymentTypeID);
+            $order->loadInvoiceProductsForPaymentType($paymentType);
         }
 
-        $view = match ($paymentTypeID) {
-            InvoicePaymentType::PREPAYMENT_ID, InvoicePaymentType::FULL_PAYMENT_ID => 'prepayment-or-full-payment',
-            InvoicePaymentType::FINAL_PAYMENT_ID => 'final-payment',
-            default => throw new InvalidArgumentException("Invalid payment type ID: $paymentTypeID"),
-        };
+        if ($paymentType->isPrepayment()) {
+            $viewName = 'prepayment';
+        } else if ($paymentType->isFinalPayment()) {
+            $viewName = 'final-payment';
+        } else if ($paymentType->isFullPayment()) {
+            $viewName = 'full-payment';
+        }
 
-        return view('invoices.create.product-lists.' . $view, compact('orders'));
+        return view('invoices.create.product-lists.' . $viewName, compact('orders'));
     }
 
     /**

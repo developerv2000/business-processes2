@@ -98,7 +98,7 @@ class Invoice extends Model
             case InvoicePaymentType::PREPAYMENT_NAME:
                 return $this->prepayment_percentage;
             case InvoicePaymentType::FINAL_PAYMENT_NAME:
-                return Helper::calculatePercentageOfTotal($this->total_price, $this->payment_due);
+                return round(Helper::calculatePercentageOfTotal($this->total_price, $this->payment_due), 2);
             case InvoicePaymentType::FULL_PAYMENT_NAME:
                 return 100;
         }
@@ -231,9 +231,69 @@ class Invoice extends Model
     |--------------------------------------------------------------------------
     */
 
-    public static function createFromRequest($request)
+    public static function createGoodsFromRequest($request)
     {
-        self::create($request->all());
+        // Merge Goods category into request object
+        $request->merge([
+            'category_id' => InvoiceCategory::GOODS_ID,
+        ]);
+
+        // Remove prepayment_percentage from request object
+        if ($request->input('payment_type_id') != InvoicePaymentType::PREPAYMENT_ID) {
+            $request->merge([
+                'prepayment_percentage' => null,
+            ]);
+        }
+
+        // Create invoice
+        $invoice = Invoice::create($request->only([
+            'name',
+            'date',
+            'category_id',
+            'payment_type_id',
+            'currency_id',
+            'prepayment_percentage',
+            'payer_id',
+            'group_name',
+        ]));
+
+        // Attach invoice orders
+        $invoice->orders()->attach($request->order_ids);
+
+        // Create invoice products
+        foreach ($request->input('products', []) as $product) {
+            // Skip unselected products
+            if (!key_exists('id', $product)) {
+                continue;
+            }
+
+            // Create product
+            InvoiceItem::create([
+                'invoice_id' => $invoice->id,
+                'category_id' => InvoiceItemCategory::PRODUCT_ID,
+                'order_product_id' => $product['id'],
+                'quantity' => $product['quantity'],
+            ]);
+
+            // Set order product invoice_price on first invoice item of order product
+            if (key_exists('price', $product)) {
+                $orderProduct = OrderProduct::find($product['id']);
+                $orderProduct->invoice_price = $product['price'];
+                $orderProduct->timestamps = false;
+                $orderProduct->updateQuietly();
+            }
+        }
+
+        // Create invoice other payments
+        foreach ($request->input('other_payments', []) as $payment) {
+            InvoiceItem::create([
+                'invoice_id' => $invoice->id,
+                'category_id' => InvoiceItemCategory::OTHER_PAYMENTS_ID,
+                'non_product_category_name' => $payment['name'],
+                'quantity' => $payment['quantity'],
+                'non_product_category_price' => $payment['price'],
+            ]);
+        }
     }
 
     public function updateFromRequest($request)

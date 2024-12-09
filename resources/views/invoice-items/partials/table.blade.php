@@ -7,12 +7,11 @@
             <tr>
                 <th width="48">@include('tables.components.th.edit')</th>
                 <th width="44">ID</th>
-                <th width="80">Descr</th>
+                <th width="120">Descr</th>
                 <th width="120">PO №</th>
                 <th width="100">PO date</th>
                 <th width="70">Market</th>
-                <th width="100">Invoice</th>
-                <th width="100">Product</th>
+                <th width="120">Product</th>
                 <th width="110">Payment type</th>
                 <th width="140">Manufacturer</th>
                 <th width="110">Payer</th>
@@ -43,10 +42,45 @@
                     </td>
 
                     <td>{{ $instance->id }}</td>
+
                     <td>{{ $instance->category->name }}</td>
-                    <td>{{ $instance->orderProduct->order->purchase_order_name }}</td>
-                    <td>{{ $instance->orderProduct->order->purchase_order_date->isoformat('DD MMM Y') }}</td>
-                    <td>{{ $instance->orderProduct->order->country->name }}</td>
+
+                    <td>
+                        @if ($instance->isProductCategory())
+                            {{ $instance->orderProduct->order->purchase_order_name }}
+                        @endif
+                    </td>
+
+                    <td>
+                        @if ($instance->isProductCategory())
+                            {{ $instance->orderProduct->order->purchase_order_date->isoformat('DD MMM Y') }}
+                        @endif
+                    </td>
+
+                    <td>
+                        @if ($instance->isProductCategory())
+                            {{ $instance->orderProduct->order->country->name }}
+                        @endif
+                    </td>
+
+                    <td>
+                        @if ($instance->isProductCategory())
+                            {{ $instance->orderProduct->process->fixed_trademark_ru_for_order }}
+                        @else
+                            {{-- Other payments or Service  --}}
+                            {{ $instance->non_product_category_name }}
+                        @endif
+                    </td>
+
+                    <td>{{ $instance->invoice->paymentType->name }}</td>
+
+                    <td>
+                        @if ($instance->isProductCategory())
+                            {{ $instance->orderProduct->order->manufacturer->name }}
+                        @endif
+                    </td>
+
+                    <td>{{ $instance->invoice->payer->name }}</td>
 
                     <td>
                         <a href="{{ route('invoices.index', ['id[]' => $instance->invoice->id]) }}" class="td__link">
@@ -54,14 +88,17 @@
                         </a>
                     </td>
 
-                    <td>{{ $instance->orderProduct->process->fixed_trademark_ru_for_order }}</td>
-                    <td>{{ $instance->invoice->paymentType->name }}</td>
-                    <td>{{ $instance->orderProduct->order->manufacturer->name }}</td>
-                    <td>{{ $instance->invoice->payer->name }}</td>
-                    <td>{{ $instance->invoice->name }}</td>
                     <td>{{ $instance->invoice->date->isoformat('DD MMM Y') }}</td>
                     <td>{{ $instance->quantity }}</td>
-                    <td>{{ $instance->orderProduct->invoice_price }}</td>
+
+                    <td>
+                        @if ($instance->isProductCategory())
+                            {{ $instance->orderProduct->invoice_price }}
+                        @else
+                            {{ $instance->non_product_category_price }}
+                        @endif
+                    </td>
+
                     <td>{{ $instance->invoice->currency->name }}</td>
                     <td>{{ $instance->total_price }}</td>
                     <td>{{ $instance->terms }} %</td>

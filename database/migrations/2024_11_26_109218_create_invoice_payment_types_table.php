@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('invoice_payment_types', function (Blueprint $table) {
             $table->unsignedTinyInteger('id')->autoIncrement();
-            $table->string('name')->unique(); // 'Prepayment', 'Final payment', or 'Full payment'
+            $table->string('name')->unique(); // 'Prepayment', 'Final payment' or 'Full payment'
         });
     }
 

@@ -51,21 +51,29 @@ class InvoiceItem extends Model
 
     public function getPrepaymentInvoiceItemAttribute()
     {
-        if (!$this->invoice->isFinalPayment()) {
+        if (!$this->invoice->isFinalPayment() || $this->isOtherPaymentsCategory()) {
             return null;
         }
 
+        if ($this->isProductCategory()) {
         // Use eager-loaded relationships when possible
         return self::where('order_product_id', $this->order_product_id)
             ->whereHas('invoice', function ($invoiceQuery) {
                 $invoiceQuery->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID);
             })
             ->first();
+        } else if ($this->isServiceCategory()) {
+            // $invoice =
+        }
     }
 
     public function getTotalPriceAttribute()
     {
-        $totalPrice = $this->quantity * $this->orderProduct->invoice_price;
+        if ($this->isProductCategory()) {
+            $totalPrice = $this->quantity * $this->orderProduct->invoice_price;
+        } else if ($this->isOtherPaymentsCategory()) {
+            $totalPrice = $this->quantity * $this->non_product_category_price;
+        }
 
         // Use bcround for better precision handling if financial values are involved
         return round($totalPrice, 2);
@@ -73,7 +81,7 @@ class InvoiceItem extends Model
 
     public function getPrepaymentAmountAttribute()
     {
-        if (!$this->invoice->isFinalPayment()) {
+        if (!$this->invoice->isFinalPayment() || $this->isOtherPaymentsCategory()) {
             return 0;
         }
 
@@ -98,7 +106,7 @@ class InvoiceItem extends Model
             case InvoicePaymentType::PREPAYMENT_NAME:
                 return $this->invoice->prepayment_percentage;
             case InvoicePaymentType::FINAL_PAYMENT_NAME:
-                return Helper::calculatePercentageOfTotal($this->total_price, $this->payment_due);
+                return round(Helper::calculatePercentageOfTotal($this->total_price, $this->payment_due), 2);
             case InvoicePaymentType::FULL_PAYMENT_NAME:
                 return 100;
         }
@@ -160,7 +168,7 @@ class InvoiceItem extends Model
     private static function filterRecords($request, $query)
     {
         $whereEqualAttributes = [
-            'id',
+            'invoice_id',
         ];
 
         $query = Helper::filterQueryWhereEqualStatements($request, $query, $whereEqualAttributes);
@@ -229,4 +237,19 @@ class InvoiceItem extends Model
     | Miscellaneous
     |--------------------------------------------------------------------------
     */
+
+    public function isProductCategory()
+    {
+        return $this->category_id == InvoiceItemCategory::PRODUCT_ID;
+    }
+
+    public function isOtherPaymentsCategory()
+    {
+        return $this->category_id == InvoiceItemCategory::OTHER_PAYMENTS_ID;
+    }
+
+    public function isServiceCategory()
+    {
+        return $this->category_id == InvoiceItemCategory::SERVICE_ID;
+    }
 }

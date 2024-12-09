@@ -22,7 +22,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('invoice_categories');
 
-            $table->unsignedTinyInteger('payment_type_id') // 'Prepayment', 'Final payment', or 'Full payment'
+            $table->unsignedTinyInteger('payment_type_id') // 'Prepayment', 'Final payment' or 'Full payment'
                 ->index()
                 ->foreign()
                 ->references('id')
@@ -34,7 +34,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('currencies');
 
-            $table->unsignedTinyInteger('prepayment_percentage'); // Required only for invoices of 'Prepayment' category
+            $table->unsignedTinyInteger('prepayment_percentage')->nullable(); // Required only for invoices of 'Prepayment' category
             $table->timestamp('sent_for_payment_date')->nullable(); // Auto
             $table->timestamp('payment_date')->nullable();
 

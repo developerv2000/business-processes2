@@ -9,6 +9,9 @@ class InvoiceCategory extends Model
 {
     use HasFactory;
 
+    const GOODS_ID = 1;
+    const SERVICE_ID = 2;
+
     public $timestamps = false;
     protected $guarded = ['id'];
 

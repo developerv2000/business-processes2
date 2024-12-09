@@ -394,16 +394,14 @@ class Order extends CommentableModel
         return $this->purchase_order_name ?: trans('Order') . ' #' . $this->id;
     }
 
-    public function loadInvoiceProductsForPaymentType($paymentTypeID)
+    public function loadInvoiceProductsForPaymentType($paymentType)
     {
         $query = $this->products();
 
-        $this->invoice_products = match ($paymentTypeID) {
-            InvoicePaymentType::PREPAYMENT_ID, InvoicePaymentType::FULL_PAYMENT_ID =>
-            $query->doesntHave('invoiceItems')->get(),
-
-            InvoicePaymentType::FINAL_PAYMENT_ID =>
-            $query->whereHas('invoiceItems', function ($invoiceItemQuery) {
+        if ($paymentType->isPrepayment()) { // Prepayment
+            $this->invoice_products = $query->doesntHave('invoiceItems')->get();
+        } else if ($paymentType->isFinalPayment()) { // Final payment
+            $this->invoice_products = $query->whereHas('invoiceItems', function ($invoiceItemQuery) {
                 $invoiceItemQuery->whereHas('invoice', function ($invoiceQuery) {
                     $invoiceQuery->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID);
                 });
@@ -412,9 +410,9 @@ class Order extends CommentableModel
                     $invoiceItemQuery->whereHas('invoice', function ($invoiceQuery) {
                         $invoiceQuery->where('payment_type_id', InvoicePaymentType::FINAL_PAYMENT_ID);
                     });
-                })->get(),
-
-            default => throw new InvalidArgumentException("Invalid payment type ID: $paymentTypeID"),
-        };
+                })->get();
+        } else if ($paymentType->isFullPayment()) { // Full payment
+            $this->invoice_products = $query->get();
+        }
     }
 }

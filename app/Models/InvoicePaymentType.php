@@ -42,4 +42,25 @@ class InvoicePaymentType extends Model
         return self::orderBy('id')
             ->get();
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Miscellaneous
+    |--------------------------------------------------------------------------
+    */
+
+    public function isPrepayment()
+    {
+        return $this->name == self::PREPAYMENT_NAME;
+    }
+
+    public function isFinalPayment()
+    {
+        return $this->name == self::FINAL_PAYMENT_NAME;
+    }
+
+    public function isFullPayment()
+    {
+        return $this->name == self::FULL_PAYMENT_NAME;
+    }
 }

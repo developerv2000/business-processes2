@@ -17,8 +17,6 @@
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Price</th>
-                <th>Prepayment</th>
-                <th>Prepayment terms</th>
             </thead>
 
             <tbody>
@@ -37,20 +35,18 @@
                         </td>
 
                         <td>
-                            <input class="input" type="text" name="products[{{ $totalLoopIndex }}][quantity]" value="{{ $product->prepayment_invoice_item->quantity }}" required>
+                            <input class="input" type="number" name="products[{{ $totalLoopIndex }}][quantity]" value="{{ $product->quantity }}" required>
                         </td>
 
-                        <td>
-                            <input class="input" type="text" value="{{ $product->invoice_price }}" readonly>
-                        </td>
-
-                        <td>
-                            <input class="input" type="text" value="{{ $product->prepayment_invoice_item->amount_paid }}" readonly>
-                        </td>
-
-                        <td>
-                            <input class="input" type="text" value="{{ $product->prepayment_invoice_item->invoice->prepayment_percentage }} %" readonly>
-                        </td>
+                        @if ($product->invoiceItems()->count())
+                            <td>
+                                <input class="input" type="number" name="products[{{ $totalLoopIndex }}][price]" value="{{ $product->invoice_price }}" readonly>
+                            </td>
+                        @else
+                            <td>
+                                <input class="input" type="number" name="products[{{ $totalLoopIndex }}][price]" step="0.01" value="{{ $product->price }}" required>
+                            </td>
+                        @endif
                     </tr>
                 @endforeach
             </tbody>

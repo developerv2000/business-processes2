@@ -350,9 +350,11 @@ class Order extends CommentableModel
             $columns,
             ['name' => 'PO №', 'order' => $order++, 'width' => 122, 'visible' => 1],
             ['name' => 'PO date', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Market', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            ['name' => 'Products', 'order' => $order++, 'width' => 136, 'visible' => 1],
-            ['name' => 'Invoices', 'order' => $order++, 'width' => 136, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Invoices', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Invoice types', 'order' => $order++, 'width' => 110, 'visible' => 1],
         );
 
         return $columns;

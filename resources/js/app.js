@@ -1013,6 +1013,7 @@ function loadInvoiceOrderProductListsOnCreate(evt, submitButtonText) {
             productsListWrapper.innerHTML = response.data;
             submitButtonText.textContent = 'Store';
             initializeInvoicesCreateOtherPaymentsAddButton();
+            initializeInvoiceCreateTotalPriceHandling();
         })
         .finally(function () {
             // Hide any loading spinner after the request is complete
@@ -1042,6 +1043,7 @@ function initializeInvoicesCreateOtherPaymentsAddButton() {
                 const paymentsList = document.querySelector('.invoices-create__other-payments-list');
                 paymentsList.appendChild(element);
                 initializeInvoicesCreateOtherPaymentsDeleteButtons();
+                initializeInvoiceCreateTotalPriceHandling();
                 invoiceCreateOtherPaymentsIndex++;
             })
             .finally(function () {
@@ -1111,6 +1113,7 @@ document.querySelector('.invoices-create__add-service-btn')?.addEventListener('c
             const servicesList = document.querySelector('.invoices-create__services-list');
             servicesList.appendChild(element);
             initializeInvoicesCreateServicesDeleteButtons();
+            initializeInvoiceCreateTotalPriceHandling();
             invoiceCreateServicesIndex++;
         })
         .finally(function () {
@@ -1118,3 +1121,34 @@ document.querySelector('.invoices-create__add-service-btn')?.addEventListener('c
             hideSpinner();
         });
 });
+
+
+function initializeInvoiceCreateTotalPriceHandling() {
+    const inputs = document.querySelectorAll('.invoices-create__quantity-input, .invoices-create__price-input');
+    inputs.forEach((input) => {
+        input.addEventListener('input', function (evt) {
+            const target = evt.target;
+            const parent = target.parentNode;
+            let inputsContainer = null;
+
+            if (parent.tagName == 'TD') { // if table (products)
+                inputsContainer = target.closest('tr');
+            }
+            else if (parent.tagName == 'DIV') { // if form group (other payments & services)
+                inputsContainer = target.closest('.form__row');
+            }
+
+            const quantity = inputsContainer.querySelector('.invoices-create__quantity-input').value;
+            const price = inputsContainer.querySelector('.invoices-create__price-input').value;
+            const totalPrice = inputsContainer.querySelector('.invoices-create__total-price-input');
+            totalPrice.value = (quantity * price).toFixed(2);
+
+            // Also update payment_due
+            const paymentDue = inputsContainer.querySelector('.invoices-create__payment-due-input');
+            if (paymentDue) {
+                const amountPaid = inputsContainer.querySelector('.invoices-create__amount-paid-input').value;
+                paymentDue.value = (quantity * price - amountPaid).toFixed(2);
+            }
+        });
+    });
+}

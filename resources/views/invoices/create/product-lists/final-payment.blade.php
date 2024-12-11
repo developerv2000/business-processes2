@@ -17,7 +17,9 @@
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Price</th>
+                <th>Sum price</th>
                 <th>Prepayment</th>
+                <th>Due amount</th>
                 <th>Prepayment terms</th>
             </thead>
 
@@ -37,15 +39,23 @@
                         </td>
 
                         <td>
-                            <input class="input" type="text" name="products[{{ $totalLoopIndex }}][quantity]" value="{{ $product->prepayment_invoice_item->quantity }}" required>
+                            <input class="input invoices-create__quantity-input" type="text" name="products[{{ $totalLoopIndex }}][quantity]" value="{{ $product->prepayment_invoice_item->quantity }}" required>
                         </td>
 
                         <td>
-                            <input class="input" type="text" name="products[{{ $totalLoopIndex }}][price]"  value="{{ $product->prepayment_invoice_item->price }}" required>
+                            <input class="input invoices-create__price-input" type="text" name="products[{{ $totalLoopIndex }}][price]" value="{{ $product->prepayment_invoice_item->price }}" required>
                         </td>
 
                         <td>
-                            <input class="input" type="text" value="{{ $product->prepayment_invoice_item->amount_paid }}" readonly>
+                            <input class="input invoices-create__total-price-input" value="{{ round($product->prepayment_invoice_item->quantity * $product->prepayment_invoice_item->price, 2) }}" readonly>
+                        </td>
+
+                        <td>
+                            <input class="input invoices-create__amount-paid-input" type="text" value="{{ $product->prepayment_invoice_item->amount_paid }}" readonly>
+                        </td>
+
+                        <td>
+                            <input class="input invoices-create__payment-due-input" value="{{ round(($product->prepayment_invoice_item->quantity * $product->prepayment_invoice_item->price) - $product->prepayment_invoice_item->amount_paid, 2) }}" readonly>
                         </td>
 
                         <td>

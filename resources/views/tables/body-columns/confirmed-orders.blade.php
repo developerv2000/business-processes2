@@ -19,7 +19,17 @@
         </a>
     @break
 
+    @case('Invoice types')
+        @foreach ($instance->invoices as $invoice)
+            {{ $invoice->paymentType->name }} <br>
+        @endforeach
+    @break
+
     @case('Market')
         {{ $instance->country->name }}
+    @break
+
+    @case('Manufacturer')
+        {{ $instance->manufacturer->name }}
     @break
 @endswitch

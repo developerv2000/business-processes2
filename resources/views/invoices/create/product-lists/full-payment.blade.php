@@ -17,6 +17,7 @@
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Price</th>
+                <th>Sum price</th>
             </thead>
 
             <tbody>
@@ -35,11 +36,15 @@
                         </td>
 
                         <td>
-                            <input class="input" type="number" name="products[{{ $totalLoopIndex }}][quantity]" value="{{ $product->quantity }}" required>
+                            <input class="input invoices-create__quantity-input" type="number" name="products[{{ $totalLoopIndex }}][quantity]" value="{{ $product->quantity }}" required>
                         </td>
 
                         <td>
-                            <input class="input" type="number" name="products[{{ $totalLoopIndex }}][price]" step="0.01" value="{{ $product->price }}" required>
+                            <input class="input invoices-create__price-input" type="number" name="products[{{ $totalLoopIndex }}][price]" step="0.01" value="{{ $product->price }}" required>
+                        </td>
+
+                        <td>
+                            <input class="input invoices-create__total-price-input" value="{{ round($product->quantity * $product->price, 2) }}" readonly>
                         </td>
                     </tr>
                 @endforeach

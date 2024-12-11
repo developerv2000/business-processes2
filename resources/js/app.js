@@ -28,6 +28,7 @@ let countryCodesSelectize; // used only on processes create form
 let processesCountChart, activeManufacturersChart;
 let orderCreateProductIndex = 0;
 let invoiceCreateOtherPaymentsIndex = 0;
+let invoiceCreateServicesIndex = 0;
 
 window.addEventListener('load', () => {
     bootstrapComponents();
@@ -1077,3 +1078,43 @@ function handleInvoiceCreatePaymentType(value) {
         termsInput.removeAttribute('required');
     }
 }
+
+
+// ********************Service
+function initializeInvoicesCreateServicesDeleteButtons() {
+    document.querySelectorAll('.invoices-create__delete-service-btn').forEach((btn) => {
+        btn.addEventListener('click', function (evt) {
+            evt.currentTarget.closest('.form__section').remove();
+        })
+    });
+}
+
+
+document.querySelector('.invoices-create__add-service-btn')?.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    showSpinner();
+
+    const data = {
+        'service_index': invoiceCreateServicesIndex,
+    };
+
+    axios.post('/invoices/get/services-create-inputs', data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            const template = document.createElement('template');
+            template.innerHTML = response.data;
+            const element = template.content.firstChild;
+
+            const servicesList = document.querySelector('.invoices-create__services-list');
+            servicesList.appendChild(element);
+            initializeInvoicesCreateServicesDeleteButtons();
+            invoiceCreateServicesIndex++;
+        })
+        .finally(function () {
+            // Hide any loading spinner after the request is complete
+            hideSpinner();
+        });
+});

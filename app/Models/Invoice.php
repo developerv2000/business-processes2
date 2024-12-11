@@ -133,6 +133,19 @@ class Invoice extends Model
 
     protected static function booted(): void
     {
+        static::updating(function ($instance) {
+            // Check if 'payment_date' original value was null but the current value is not null
+            $wasNull = is_null($instance->getOriginal('payment_date'));
+            $isNotNull = !is_null($instance->payment_date);
+
+            if ($wasNull && $isNotNull) {
+                foreach ($instance->items as $item) {
+                    $item->amount_paid = $item->payment_due;
+                    $item->saveQuietly();
+                }
+            }
+        });
+
         static::deleting(function ($instance) {
             $instance->orders()->detach();
 
@@ -188,7 +201,12 @@ class Invoice extends Model
             'id',
         ];
 
+        $belongsToManyRelations = [
+            'orders',
+        ];
+
         $query = Helper::filterQueryWhereInStatements($request, $query, $whereInAttributes);
+        $query = Helper::filterBelongsToManyRelations($request, $query, $belongsToManyRelations);
 
         return $query;
     }
@@ -282,15 +300,8 @@ class Invoice extends Model
                 'category_id' => InvoiceItemCategory::PRODUCT_ID,
                 'order_product_id' => $product['id'],
                 'quantity' => $product['quantity'],
+                'price' => $product['price'],
             ]);
-
-            // Set order product invoice_price on first invoice item of order product
-            if (key_exists('price', $product)) {
-                $orderProduct = OrderProduct::find($product['id']);
-                $orderProduct->invoice_price = $product['price'];
-                $orderProduct->timestamps = false;
-                $orderProduct->updateQuietly();
-            }
         }
 
         // Create invoice other payments
@@ -298,9 +309,34 @@ class Invoice extends Model
             InvoiceItem::create([
                 'invoice_id' => $invoice->id,
                 'category_id' => InvoiceItemCategory::OTHER_PAYMENTS_ID,
-                'non_product_category_name' => $payment['name'],
+                'description' => $payment['description'],
                 'quantity' => $payment['quantity'],
-                'non_product_category_price' => $payment['price'],
+                'price' => $payment['price'],
+            ]);
+        }
+    }
+
+    public static function createServicesFromRequest($request)
+    {
+        // Create invoice
+        $invoice = Invoice::create($request->only([
+            'name',
+            'date',
+            'category_id',
+            'payment_type_id',
+            'currency_id',
+            'payer_id',
+            'group_name',
+        ]));
+
+        // Create invoice services
+        foreach ($request->input('services', []) as $service) {
+            InvoiceItem::create([
+                'invoice_id' => $invoice->id,
+                'category_id' => InvoiceItemCategory::SERVICE_ID,
+                'description' => $service['description'],
+                'quantity' => $service['quantity'],
+                'price' => $service['price'],
             ]);
         }
     }
@@ -315,6 +351,16 @@ class Invoice extends Model
     | Miscellaneous
     |--------------------------------------------------------------------------
     */
+
+    public function isGoodsCategory()
+    {
+        return $this->category_id == InvoiceCategory::GOODS_ID;
+    }
+
+    public function isServicesCategory()
+    {
+        return $this->category_id == InvoiceCategory::SERVICE_ID;
+    }
 
     public function isPrepayment()
     {

@@ -60,6 +60,31 @@ class InvoiceController extends Controller
         return to_route('invoices.index');
     }
 
+    public function createServices()
+    {
+        return view('invoices.create.services');
+    }
+
+    /**
+     * Ajax request
+     */
+    public function getServiceCreateInputs(Request $request)
+    {
+        $servicetIndex = $request->service_index;
+
+        return view('invoices.create.services-create-inputs', compact('servicetIndex'));
+    }
+
+    /**
+     * Store a newly created record in storage.
+     */
+    public function storeServices(Request $request)
+    {
+        Invoice::createServicesFromRequest($request);
+
+        return to_route('invoices.index');
+    }
+
     /**
      * Show the form for editing the specified record.
      */

@@ -41,7 +41,7 @@
                         </td>
 
                         <td>
-                            <input class="input" type="text" value="{{ $product->invoice_price }}" readonly>
+                            <input class="input" type="text" name="products[{{ $totalLoopIndex }}][price]"  value="{{ $product->prepayment_invoice_item->price }}" required>
                         </td>
 
                         <td>

@@ -58,22 +58,24 @@
                     :instance="$instance" />
             </div>
 
-            <div class="form__row">
-                <x-forms.input.instance-edit-input
-                    label="Orders"
-                    name="readonly_orders"
-                    initialValue="{{ $instance->orders->pluck('purchase_order_name')->join(' ') }}"
-                    :instance="$instance"
-                    readonly />
+            @if ($instance->isGoodsCategory())
+                <div class="form__row">
+                    <x-forms.input.instance-edit-input
+                        label="Orders"
+                        name="readonly_orders"
+                        initialValue="{{ $instance->orders->pluck('purchase_order_name')->join(' ') }}"
+                        :instance="$instance"
+                        readonly />
 
-                <x-forms.input.instance-edit-input
-                    label="Terms"
-                    name="terms"
-                    :instance="$instance"
-                    readonly />
+                    <x-forms.input.instance-edit-input
+                        label="Terms"
+                        name="terms"
+                        :instance="$instance"
+                        readonly />
 
-                <div class="form-group"></div>
-            </div>
+                    <div class="form-group"></div>
+                </div>
+            @endif
         </div>
 
         <div class="form__section">

@@ -14,7 +14,7 @@
     @break
 
     @case('Invoices')
-        <a class="td__link td__link--margined" href="{{ route('invoices.index', ['order_id[]' => $instance->id]) }}">
+        <a class="td__link td__link--margined" href="{{ route('invoices.index', ['orders[]' => $instance->id]) }}">
             {{ $instance->invoices_count }} {{ __('invoices') }}
         </a>
     @break

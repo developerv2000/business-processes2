@@ -71,7 +71,7 @@
                             {{ $instance->orderProduct->process->fixed_trademark_ru_for_order }}
                         @else
                             {{-- Other payments or Service  --}}
-                            {{ $instance->non_product_category_name }}
+                            {{ $instance->description }}
                         @endif
                     </td>
 
@@ -80,6 +80,10 @@
                     <td>
                         @if ($instance->isProductCategory())
                             {{ $instance->orderProduct->order->manufacturer->name }}
+                        @elseif ($instance->isOtherPaymentsCategory())
+                            @if ($instance->invoice->orders()->count())
+                                {{ $instance->invoice->orders[0]->manufacturer->name }}
+                            @endif
                         @endif
                     </td>
 
@@ -95,11 +99,7 @@
                     <td>{{ $instance->quantity }}</td>
 
                     <td>
-                        @if ($instance->isProductCategory())
-                            {{ $instance->orderProduct->invoice_price }}
-                        @else
-                            {{ $instance->non_product_category_price }}
-                        @endif
+                        {{ $instance->price }}
                     </td>
 
                     <td>{{ $instance->invoice->currency->name }}</td>
@@ -111,7 +111,15 @@
                     <td>{{ $instance->amount_paid }}</td>
                     <td>{{ $instance->invoice->payment_date?->isoformat('DD MMM Y') }}</td>
                     <td>{{ $instance->payment_difference }}</td>
-                    <td>{{ $instance->invoice->status }}</td>
+
+                    <td>
+                        @if ($instance->invoice->status == 'Paid' && $instance->amount_paid > 0)
+                            Paid
+                        @else
+                            Unpaid
+                        @endif
+                    </td>
+
                     <td>{{ $instance->invoice->group_name }}</td>
                 </tr>
             @endforeach

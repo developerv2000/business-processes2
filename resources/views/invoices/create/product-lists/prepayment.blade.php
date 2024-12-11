@@ -39,7 +39,7 @@
                         </td>
 
                         <td>
-                            <input class="input" type="number" name="products[{{ $totalLoopIndex }}][price]" step="0.01" value="{{ $product->invoice_price ?: $product->price }}" required @readonly(!$product->invoiceItems()->count())>
+                            <input class="input" type="number" name="products[{{ $totalLoopIndex }}][price]" step="0.01" value="{{ $product->price }}" required>
                         </td>
                     </tr>
                 @endforeach

@@ -38,15 +38,9 @@
                             <input class="input" type="number" name="products[{{ $totalLoopIndex }}][quantity]" value="{{ $product->quantity }}" required>
                         </td>
 
-                        @if ($product->invoiceItems()->count())
-                            <td>
-                                <input class="input" type="number" name="products[{{ $totalLoopIndex }}][price]" value="{{ $product->invoice_price }}" readonly>
-                            </td>
-                        @else
-                            <td>
-                                <input class="input" type="number" name="products[{{ $totalLoopIndex }}][price]" step="0.01" value="{{ $product->price }}" required>
-                            </td>
-                        @endif
+                        <td>
+                            <input class="input" type="number" name="products[{{ $totalLoopIndex }}][price]" step="0.01" value="{{ $product->price }}" required>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

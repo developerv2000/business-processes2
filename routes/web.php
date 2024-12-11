@@ -185,13 +185,14 @@ Route::middleware('auth', 'auth.session')->group(function () {
         RouteGenerator::defineAllDefaultCrudRoutes();
 
         Route::get('/create/goods', 'createGoods')->name('create.goods');
-        Route::get('/create/service', 'createService')->name('create.service');
+        Route::get('/create/service', 'createServices')->name('create.services');
 
         Route::post('/store/goods', 'storeGoods')->name('store.goods');
-        Route::post('/store/service', 'storeService')->name('store.service');
+        Route::post('/store/service', 'storeServices')->name('store.services');
 
         Route::post('/get/order-product-lists-on-create', 'getOrderProductLists'); // ajax request
         Route::post('/get/other-payments-list-on-create', 'getOtherPaymentsList'); // ajax request
+        Route::post('/get/services-create-inputs', 'getServiceCreateInputs'); // ajax request
     });
 
     Route::prefix('invoice-items')->controller(InvoiceItemController::class)->name('invoice-items.')->group(function () {

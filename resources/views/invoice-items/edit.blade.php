@@ -33,8 +33,8 @@
                         required />
                 @else
                     <x-forms.input.instance-edit-input
-                        label="Name"
-                        name="non_product_category_name"
+                        label="Description"
+                        name="description"
                         :instance="$instance"
                         required />
                 @endif
@@ -47,22 +47,13 @@
                     :instance="$instance"
                     required />
 
-                @if ($instance->isProductCategory())
-                    <x-forms.input.instance-edit-input
-                        label="Price"
-                        name="readonly_product_price"
-                        :instance="$instance"
-                        initialValue="{{ $instance->orderProduct->invoice_price }}"
-                        readonly />
-                @else
-                    <x-forms.input.instance-edit-input
-                        label="Price"
-                        type="number"
-                        step="0.01"
-                        name="non_product_category_price"
-                        :instance="$instance"
-                        required />
-                @endif
+                <x-forms.input.instance-edit-input
+                    label="Price"
+                    type="number"
+                    step="0.01"
+                    name="price"
+                    :instance="$instance"
+                    required />
             </div>
 
             @if ($instance->invoice->payment_date)

@@ -222,6 +222,7 @@ class ViewComposersDefiner
         self::defineViewComposer(
             [
                 'invoices.create.goods',
+                'invoices.create.services',
                 'invoices.edit',
             ],
             [

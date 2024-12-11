@@ -2,12 +2,12 @@
     <div class="form__row">
         <x-forms.input.default-input
             label="Description"
-            name="{{ 'other_payments[' . $paymentIndex . '][description]' }}"
+            name="{{ 'services[' . $servicetIndex . '][description]' }}"
             required />
 
         <x-forms.input.default-input
             label="Quantity"
-            name="{{ 'other_payments[' . $paymentIndex . '][quantity]' }}"
+            name="{{ 'services[' . $servicetIndex . '][quantity]' }}"
             type="number"
             required />
 
@@ -15,9 +15,9 @@
             type="number"
             step="0.01"
             label="Price"
-            name="{{ 'other_payments[' . $paymentIndex . '][price]' }}"
+            name="{{ 'services[' . $servicetIndex . '][price]' }}"
             required />
 
-        <span class="material-symbols-outlined invoices-create__delete-other-payments-btn">close</span>
+        <span class="material-symbols-outlined invoices-create__delete-service-btn">close</span>
     </div>
 </div>

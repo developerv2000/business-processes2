@@ -51,37 +51,28 @@ class InvoiceItem extends Model
 
     public function getPrepaymentInvoiceItemAttribute()
     {
-        if (!$this->invoice->isFinalPayment() || $this->isOtherPaymentsCategory()) {
+        if (!$this->invoice->isFinalPayment() || !$this->isProductCategory()) {
             return null;
         }
 
-        if ($this->isProductCategory()) {
         // Use eager-loaded relationships when possible
         return self::where('order_product_id', $this->order_product_id)
             ->whereHas('invoice', function ($invoiceQuery) {
                 $invoiceQuery->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID);
             })
             ->first();
-        } else if ($this->isServiceCategory()) {
-            // $invoice =
-        }
     }
 
     public function getTotalPriceAttribute()
     {
-        if ($this->isProductCategory()) {
-            $totalPrice = $this->quantity * $this->orderProduct->invoice_price;
-        } else if ($this->isOtherPaymentsCategory()) {
-            $totalPrice = $this->quantity * $this->non_product_category_price;
-        }
+        $totalPrice = $this->quantity * $this->price;
 
-        // Use bcround for better precision handling if financial values are involved
         return round($totalPrice, 2);
     }
 
     public function getPrepaymentAmountAttribute()
     {
-        if (!$this->invoice->isFinalPayment() || $this->isOtherPaymentsCategory()) {
+        if (!$this->invoice->isFinalPayment() || !$this->isProductCategory()) {
             return 0;
         }
 

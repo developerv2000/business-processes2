@@ -35,9 +35,6 @@ return new class extends Migration
             $table->unsignedInteger('quantity');
             $table->decimal('price', 8, 2);
 
-            // Filled ONCE while creating invoices of 'Prepayment' or 'Full payment' types
-            $table->decimal('invoice_price', 8, 2)->nullable();
-
             $table->timestamps();
             $table->softDeletes();
         });

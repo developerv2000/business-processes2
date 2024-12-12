@@ -57,6 +57,12 @@
         @endif
     @break
 
+    @case('File')
+        @if ($instance->file)
+            <a class="td__link" href="{{ $instance->file_asset_url }}">{{ $instance->file }}</a>
+        @endif
+    @break
+
     @case('Comments')
         @include('tables.components.td.all-comments-link')
     @break

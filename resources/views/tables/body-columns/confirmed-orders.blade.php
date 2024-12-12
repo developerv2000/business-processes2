@@ -32,4 +32,10 @@
     @case('Manufacturer')
         {{ $instance->manufacturer->name }}
     @break
+
+    @case('File')
+        @if ($instance->file)
+            <a class="td__link" href="{{ $instance->file_asset_url }}">{{ $instance->file }}</a>
+        @endif
+    @break
 @endswitch

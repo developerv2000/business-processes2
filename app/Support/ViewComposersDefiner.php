@@ -227,6 +227,8 @@ class ViewComposersDefiner
             ],
             [
                 'orders' => Order::getAllConfirmedRecordsMinified(),
+                'manufacturers' => Manufacturer::getAllMinified(),
+                'countryCodes' => CountryCode::getAll(),
                 'payers' => Payer::getAll(),
                 'paymentTypes' => InvoicePaymentType::getAll(),
                 'currencies' => Currency::getAll(),

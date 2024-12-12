@@ -69,6 +69,11 @@
                 name="expected_dispatch_date"
                 :initial-value="$instance->expected_dispatch_date?->isoFormat('YYYY-MM-DD')"
                 :instance="$instance" />
+
+            <x-forms.input.default-input
+                label="File"
+                type="file"
+                name="file" />
         </div>
 
         @include('comments.model-form-partials.edit-form-fields')

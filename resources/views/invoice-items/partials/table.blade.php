@@ -16,7 +16,7 @@
                 <th width="110">Payment type</th>
                 <th width="140">Manufacturer</th>
                 <th width="110">Payer</th>
-                <th width="80">Invoice</th>
+                <th width="90">Invoice</th>
                 <th width="100">Inv date</th>
                 <th width="100">Quantity</th>
                 <th width="100">Price</th>
@@ -63,6 +63,8 @@
                     <td>
                         @if ($instance->isProductCategory())
                             {{ $instance->orderProduct->order->country->name }}
+                        @elseif($instance->isServiceCategory())
+                            {{ $instance->invoice->country->name }}
                         @endif
                     </td>
 
@@ -84,6 +86,8 @@
                             @if ($instance->invoice->orders()->count())
                                 {{ $instance->invoice->orders[0]->manufacturer->name }}
                             @endif
+                        @elseif($instance->isServiceCategory())
+                            {{ $instance->invoice->manufacturer->name }}
                         @endif
                     </td>
 

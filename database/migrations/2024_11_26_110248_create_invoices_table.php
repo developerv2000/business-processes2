@@ -34,7 +34,21 @@ return new class extends Migration
                 ->references('id')
                 ->on('currencies');
 
-            $table->unsignedTinyInteger('prepayment_percentage')->nullable(); // Required only for invoices of 'Prepayment' category
+            $table->unsignedInteger('service_category_manufacturer_id') // Required only for invoices of 'Service' category
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('manufacturers')
+                ->nullable();
+
+            $table->unsignedSmallInteger('service_category_country_code_id') // Required only for invoices of 'Service' category
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('country_codes')
+                ->nullable();
+
+            $table->unsignedTinyInteger('prepayment_percentage')->nullable(); // Required only for invoices of 'Prepayment' type
             $table->timestamp('sent_for_payment_date')->nullable(); // Auto
             $table->timestamp('payment_date')->nullable();
 
@@ -45,7 +59,9 @@ return new class extends Migration
                 ->on('payers');
 
             $table->string('group_name')->nullable();
+            $table->string('file')->nullable();
             $table->boolean('cancelled')->default(false);
+
             $table->timestamps();
         });
     }

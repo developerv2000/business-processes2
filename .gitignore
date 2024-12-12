@@ -21,6 +21,8 @@ yarn-error.log
 /.osp/project.ini
 /.htaccess
 /public/img/users/*
+/public/files/invoices/*
+/public/files/orders/*
 
 /storage/app/excel/exports/ivp/*
 /storage/app/excel/exports/products-selection/*

@@ -111,7 +111,7 @@ class OrderController extends Controller
             ->withCount('products')
             ->withCount('invoices')
             ->paginate(50);
-
+        
         $allTableColumns = $request->user()->collectAllTableColumns('confirmed_orders_table_columns');
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 

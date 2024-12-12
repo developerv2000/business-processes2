@@ -61,6 +61,11 @@
                     optionCaptionAttribute="label"
                     required />
 
+                <x-forms.input.default-input
+                    label="File"
+                    type="file"
+                    name="file" />
+
                 <div class="form-group">
                     <x-forms.groups.default-group class="invoices-create__terms-wrapper" label="Terms" error-name="prepayment_percentage" :required="true">
                         <input
@@ -73,8 +78,6 @@
                             max="99">
                     </x-forms.groups.default-group>
                 </div>
-
-                <div class="form-group"></div>
             </div>
         </div>
 

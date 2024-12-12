@@ -56,6 +56,11 @@
                 type="date"
                 label="Expected dispatch date"
                 name="expected_dispatch_date" />
+
+            <x-forms.input.default-input
+                label="File"
+                type="file"
+                name="file" />
         </div>
 
         <div class="orders-create__products-section styled-box">

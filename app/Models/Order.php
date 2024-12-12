@@ -23,6 +23,8 @@ class Order extends CommentableModel
     const EXCEL_TEMPLATE_STORAGE_PATH = 'app/excel/templates/orders.xlsx';
     const EXCEL_EXPORT_STORAGE_PATH = 'app/excel/exports/orders';
 
+    const FILE_PATH = 'files/orders';
+
     protected $guarded = ['id'];
 
     public $with = [
@@ -74,6 +76,11 @@ class Order extends CommentableModel
     | Additional attributes
     |--------------------------------------------------------------------------
     */
+
+    public function getFileAssetUrlAttribute()
+    {
+        return asset(self::FILE_PATH . '/' . $this->file);
+    }
 
     public function getLeadTimeAttribute()
     {
@@ -273,6 +280,9 @@ class Order extends CommentableModel
                 'price' => $product['price'],
             ]);
         }
+
+        // Upload file
+        Helper::uploadModelFile($instance, 'file', $instance->purchase_order_name, public_path(self::FILE_PATH));
     }
 
     public function updateFromRequest($request)
@@ -281,6 +291,9 @@ class Order extends CommentableModel
 
         // HasMany relations
         $this->storeComment($request->comment);
+
+        // Upload file
+        Helper::uploadModelFile($this, 'file', $this->purchase_order_name, public_path(self::FILE_PATH));
     }
 
     /*
@@ -326,6 +339,7 @@ class Order extends CommentableModel
             ['name' => 'Mfg lead time', 'order' => $order++, 'width' => 118, 'visible' => 1],
             ['name' => 'Expected dispatch date', 'order' => $order++, 'width' => 184, 'visible' => 1],
             ['name' => 'Confirmed', 'order' => $order++, 'width' => 118, 'visible' => 1],
+            ['name' => 'File', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
@@ -355,6 +369,7 @@ class Order extends CommentableModel
             ['name' => 'Products', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Invoices', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Invoice types', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'File', 'order' => $order++, 'width' => 130, 'visible' => 1],
         );
 
         return $columns;

@@ -37,14 +37,6 @@
             </div>
 
             <div class="form__row">
-                <x-forms.input.instance-edit-input
-                    label="Payment type"
-                    name="readonly_payment_type"
-                    initialValue="{{ $instance->paymentType->name }}"
-                    :instance="$instance"
-                    readonly
-                    required />
-
                 <x-forms.id-based-single-select.instance-edit-select
                     label="Curency"
                     name="currency_id"
@@ -56,10 +48,23 @@
                     label="Payment refer"
                     name="group_name"
                     :instance="$instance" />
+
+                <x-forms.input.default-input
+                    label="File"
+                    type="file"
+                    name="file" />
             </div>
 
             @if ($instance->isGoodsCategory())
                 <div class="form__row">
+                    <x-forms.input.instance-edit-input
+                        label="Payment type"
+                        name="readonly_payment_type"
+                        initialValue="{{ $instance->paymentType->name }}"
+                        :instance="$instance"
+                        readonly
+                        required />
+
                     <x-forms.input.instance-edit-input
                         label="Orders"
                         name="readonly_orders"
@@ -72,8 +77,29 @@
                         name="terms"
                         :instance="$instance"
                         readonly />
+                </div>
+            @endif
 
-                    <div class="form-group"></div>
+            @if ($instance->isServicesCategory())
+                <div class="form__row">
+                    <x-forms.id-based-single-select.instance-edit-select
+                        label="Manufacturer"
+                        name="service_category_manufacturer_id"
+                        :options="$manufacturers"
+                        :instance="$instance"
+                        required />
+
+                    <x-forms.id-based-single-select.instance-edit-select
+                        label="Country"
+                        name="service_category_country_code_id"
+                        :options="$countryCodes"
+                        :instance="$instance"
+                        required />
+
+                    <x-forms.input.default-input
+                        label="File"
+                        type="file"
+                        name="file" />
                 </div>
             @endif
         </div>

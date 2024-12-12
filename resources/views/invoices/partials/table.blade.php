@@ -9,13 +9,14 @@
                 <th width="48">@include('tables.components.th.edit')</th>
                 <th width="44">ID</th>
                 <th width="80">Descr</th>
-                <th width="80">Invoice</th>
+                <th width="90">Invoice</th>
                 <th width="100">Date</th>
                 <th width="110">Payment type</th>
                 <th width="80">Items</th>
                 <th width="120">PO №</th>
                 <th width="100">PO date</th>
                 <th width="140">Manufacturer</th>
+                <th width="90">Market</th>
                 <th width="110">Payer</th>
                 <th width="80">Currency</th>
                 <th width="100">Sum price</th>
@@ -28,6 +29,7 @@
                 <th width="80">Differ</th>
                 <th width="100">Status</th>
                 <th width="120">Payment refer</th>
+                <th width="140">File</th>
             </tr>
         </thead> {{-- Head end --}}
 
@@ -62,9 +64,23 @@
                     </td>
 
                     <td>
-                        @foreach ($instance->orders as $order)
-                            {{ $order->manufacturer->name }}<br>
-                        @endforeach
+                        @if ($instance->isGoodsCategory())
+                            @foreach ($instance->orders as $order)
+                                {{ $order->manufacturer->name }}<br>
+                            @endforeach
+                        @else
+                            {{ $instance->manufacturer->name }}
+                        @endif
+                    </td>
+
+                    <td>
+                        @if ($instance->isGoodsCategory())
+                            @foreach ($instance->orders as $order)
+                                {{ $order->country->name }}
+                            @endforeach
+                        @else
+                            {{ $instance->country?->name }}
+                        @endif
                     </td>
 
                     <td>{{ $instance->payer->name }}</td>
@@ -79,6 +95,12 @@
                     <td>{{ $instance->payment_difference }}</td>
                     <td>{{ $instance->status }}</td>
                     <td>{{ $instance->group_name }}</td>
+
+                    <td>
+                        @if ($instance->file)
+                            <a class="td__link" href="{{ $instance->file_asset_url }}">{{ $instance->file }}</a>
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </tbody> {{-- Body end --}}

@@ -38,6 +38,12 @@
 
             <div class="form__row">
                 <x-forms.id-based-single-select.default-select
+                    label="Manufacturer"
+                    name="service_category_manufacturer_id"
+                    :options="$manufacturers"
+                    required />
+
+                <x-forms.id-based-single-select.default-select
                     label="Currency"
                     name="currency_id"
                     :options="$currencies"
@@ -47,6 +53,18 @@
                 <x-forms.input.default-input
                     label="Payment refer"
                     name="group_name" />
+            </div>
+
+            <div class="form__row">
+                <x-forms.id-based-single-select.default-select
+                    label="Market"
+                    name="service_category_country_code_id"
+                    :options="$countryCodes" />
+
+                <x-forms.input.default-input
+                    label="File"
+                    type="file"
+                    name="file" />
 
                 <div class="form-group"></div>
             </div>

@@ -86,7 +86,8 @@ class Helper
 
         // Ensure the file is valid and move it to the storage path
         if ($file->isValid()) {
-            $name = self::cutAndTrimString($fileName, 80); // Cut and trim filename
+            $name = self::sanitizeFilename($fileName);
+            $name = self::cutAndTrimString($name, 80); // Cut and trim filename
             $fullName = $name . '.' . $file->getClientOriginalExtension(); // Construct full filename
 
             // Ensure filename is unique
@@ -318,8 +319,8 @@ class Helper
      */
     public static function sanitizeFilename($filename)
     {
-        // Define a pattern for allowed characters
-        $pattern = '/[^a-zA-Z0-9\-\_\.\s]/';
+        // Define a pattern for allowed characters, including Unicode letters
+        $pattern = '/[^\p{L}0-9\-\_\.\s]/u';
 
         // Replace all characters that do not match the allowed pattern
         $sanitized = preg_replace($pattern, '', $filename);

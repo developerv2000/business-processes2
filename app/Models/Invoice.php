@@ -16,6 +16,8 @@ class Invoice extends Model
     const DEFAULT_ORDER_TYPE = 'desc';
     const DEFAULT_PAGINATION_LIMIT = 50;
 
+    const FILE_PATH = 'files/invoices';
+
     protected $guarded = ['id'];
 
     protected $casts = [
@@ -60,11 +62,28 @@ class Invoice extends Model
         return $this->belongsTo(Payer::class);
     }
 
+    // only for invoices of service category
+    public function manufacturer()
+    {
+        return $this->belongsTo(Manufacturer::class, 'service_category_manufacturer_id');
+    }
+
+    // only for invoices of service category
+    public function country()
+    {
+        return $this->belongsTo(CountryCode::class, 'service_category_country_code_id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes
     |--------------------------------------------------------------------------
     */
+
+    public function getFileAssetUrlAttribute()
+    {
+        return asset(self::FILE_PATH . '/' . $this->file);
+    }
 
     public function getTotalPriceAttribute()
     {
@@ -314,6 +333,9 @@ class Invoice extends Model
                 'price' => $payment['price'],
             ]);
         }
+
+        // Upload file
+        Helper::uploadModelFile($invoice, 'file', $invoice->name, public_path(self::FILE_PATH));
     }
 
     public static function createServicesFromRequest($request)
@@ -327,6 +349,8 @@ class Invoice extends Model
             'currency_id',
             'payer_id',
             'group_name',
+            'service_category_manufacturer_id',
+            'service_category_country_code_id',
         ]));
 
         // Create invoice services
@@ -339,11 +363,17 @@ class Invoice extends Model
                 'price' => $service['price'],
             ]);
         }
+
+        // Upload file
+        Helper::uploadModelFile($invoice, 'file', $invoice->name, public_path(self::FILE_PATH));
     }
 
     public function updateFromRequest($request)
     {
-        $this->update($request->all());
+        $this->update($request->except('file'));
+
+        // Upload file
+        Helper::uploadModelFile($this, 'file', $this->name, public_path(self::FILE_PATH));
     }
 
     /*

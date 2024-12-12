@@ -39,6 +39,7 @@ return new class extends Migration
             $table->date('readiness_date')->nullable();
             $table->date('expected_dispatch_date')->nullable();
             $table->boolean('is_confirmed'); // Auto
+            $table->string('file')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

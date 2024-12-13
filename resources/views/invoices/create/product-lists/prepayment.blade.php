@@ -52,3 +52,14 @@
         </table>
     @endforeach
 </div>
+
+{{-- Other payments --}}
+<div class="invoices-create__other-payments styled-box">
+    <h2 class="invoices-create__other-payments-title main-title">Other payments list</h2>
+
+    <div class="invoices-create__other-payments-list"></div>
+
+    <x-different.button type="button" class="invoices-create__add-other-payments-btn" style="action" icon="add" type="button">
+        {{ __('Add other payments') }}
+    </x-different.button>
+</div>

@@ -70,6 +70,10 @@ class InvoiceItem extends Model
         return round($totalPrice, 2);
     }
 
+    /**
+     * Only InvoiceItem of product category can have prepayment
+     * InvoiceItem of Other payments and Service category can`t have prepayment
+     */
     public function getPrepaymentAmountAttribute()
     {
         if (!$this->invoice->isFinalPayment() || !$this->isProductCategory()) {
@@ -81,6 +85,10 @@ class InvoiceItem extends Model
 
     public function getPaymentDueAttribute()
     {
+        if (!$this->isProductCategory()) {
+            return $this->total_price;
+        }
+
         switch ($this->invoice->paymentType->name) {
             case InvoicePaymentType::PREPAYMENT_NAME:
                 return round(Helper::calculatePercentage($this->total_price, $this->invoice->prepayment_percentage), 2);
@@ -91,8 +99,16 @@ class InvoiceItem extends Model
         }
     }
 
+    /**
+     * Only InvoiceItem of product category can have prepayment
+     * InvoiceItem of Other payments and Service category can`t have prepayment
+     */
     public function getTermsAttribute()
     {
+        if (!$this->isProductCategory()) {
+            return 100;
+        }
+
         switch ($this->invoice->paymentType->name) {
             case InvoicePaymentType::PREPAYMENT_NAME:
                 return $this->invoice->prepayment_percentage;

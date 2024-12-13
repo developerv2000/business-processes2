@@ -77,7 +77,13 @@
                         @endif
                     </td>
 
-                    <td>{{ $instance->invoice->paymentType->name }}</td>
+                    <td>
+                        @if (!$instance->isProductCategory())
+                            Full payment
+                        @else
+                            {{ $instance->invoice->paymentType->name }}
+                        @endif
+                    </td>
 
                     <td>
                         @if ($instance->isProductCategory())

@@ -3,7 +3,6 @@
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\ForOrderController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\InvoiceItemController;
 use App\Http\Controllers\KvppController;
@@ -139,6 +138,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
         RouteGenerator::defineDefaultCrudRoutesExcept(['trash', 'restore', 'export'], 'can:view-spg', 'can:edit-spg');
 
         Route::get('/show/{plan:year}', 'show')->name('show')->middleware('can:view-spg');
+        Route::post('/export', 'export')->name('export')->middleware('can:export-as-excel');
 
         // Country codes
         Route::prefix('/{plan}/country-codes')->name('country.codes.')->middleware('can:edit-spg')->group(function () {

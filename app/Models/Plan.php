@@ -6,7 +6,7 @@ use App\Support\Abstracts\CommentableModel;
 use App\Support\Helper;
 use App\Support\Traits\CalculatesPlanQuarterAndYearCounts;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Plan extends CommentableModel
 {
@@ -16,6 +16,9 @@ class Plan extends CommentableModel
     const DEFAULT_ORDER_BY = 'year';
     const DEFAULT_ORDER_TYPE = 'desc';
     const DEFAULT_PAGINATION_LIMIT = 50;
+
+    const EXPORT_EXCEL_FILE_STORAGE_PATH = 'app/excel/exports/plan';
+    const EXPORT_EXCEL_TEMPLATE_FILE_STORAGE_PATH = 'app/excel/templates/plan.xlsx';
 
     protected $guarded = ['id'];
     public $timestamps = false;
@@ -301,5 +304,123 @@ class Plan extends CommentableModel
         }
 
         return [$contractPlanCount, $contractFactCount, $registerFactCount];
+    }
+
+    public function exportAsExcel($request)
+    {
+        $months = Helper::collectCalendarMonths();
+        $this->makeAllCalculations($request);
+
+        $template = storage_path(self::EXPORT_EXCEL_TEMPLATE_FILE_STORAGE_PATH);
+        $spreadsheet = IOFactory::load($template);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $columnIndex = 1;
+        $row = 3;
+
+        // Summary row
+        $sheet->setCellValue([$columnIndex++, $row], $this->year);
+        $columnIndex++; // empty (MAH) td
+
+        // Summary year
+        $sheet->setCellValue([$columnIndex++, $row], $this->year_contract_plan);
+        $sheet->setCellValue([$columnIndex++, $row], $this->year_contract_fact);
+        $sheet->setCellValue([$columnIndex++, $row], $this->year_contract_fact_percentage . ' %');
+        $sheet->setCellValue([$columnIndex++, $row], $this->year_register_fact);
+        $sheet->setCellValue([$columnIndex++, $row], $this->year_register_fact_percentage . ' %');
+
+        // Summary Quarters 1 - 4
+        for ($quarter = 1, $monthIndex = 0; $quarter <= 4; $quarter++) {
+            $sheet->setCellValue([$columnIndex++, $row], $this->{'quarter_' . $quarter . '_contract_plan'});
+            $sheet->setCellValue([$columnIndex++, $row], $this->{'quarter_' . $quarter . '_contract_fact'});
+            $sheet->setCellValue([$columnIndex++, $row], $this->{'quarter_' . $quarter . '_register_fact'});
+
+            // Summary months 1 - 12
+            for ($quarterMonths = 1; $quarterMonths <= 3; $quarterMonths++, $monthIndex++) {
+                $sheet->setCellValue([$columnIndex++, $row], $this->{$months[$monthIndex]['name'] . '_contract_plan'});
+                $sheet->setCellValue([$columnIndex++, $row], $this->{$months[$monthIndex]['name'] . '_contract_fact'});
+                $sheet->setCellValue([$columnIndex++, $row], $this->{$months[$monthIndex]['name'] . '_register_fact'});
+                $columnIndex++; // Empty comment td
+            }
+        }
+        // Summary row end
+        $row++;
+
+        // Country code rows
+        foreach ($this->countryCodes as $country) {
+            $row++; // Separate rows for reach countries
+            $columnIndex = 1; // start from first column
+
+            $sheet->setCellValue([$columnIndex++, $row], $country->name);
+            $columnIndex++; // empty (MAH) td
+
+            // Country code year
+            $sheet->setCellValue([$columnIndex++, $row], $country->year_contract_plan);
+            $sheet->setCellValue([$columnIndex++, $row], $country->year_contract_fact);
+            $sheet->setCellValue([$columnIndex++, $row], $country->year_contract_fact_percentage . ' %');
+            $sheet->setCellValue([$columnIndex++, $row], $country->year_register_fact);
+            $sheet->setCellValue([$columnIndex++, $row], $country->year_register_fact_percentage . ' %');
+
+            // Country code quarters 1 - 4
+            for ($quarter = 1, $monthIndex = 0; $quarter <= 4; $quarter++) {
+                $sheet->setCellValue([$columnIndex++, $row], $country->{'quarter_' . $quarter . '_contract_plan'});
+                $sheet->setCellValue([$columnIndex++, $row], $country->{'quarter_' . $quarter . '_contract_fact'});
+                $sheet->setCellValue([$columnIndex++, $row], $country->{'quarter_' . $quarter . '_register_fact'});
+
+                // Summary months 1 - 12
+                for ($quarterMonths = 1; $quarterMonths <= 3; $quarterMonths++, $monthIndex++) {
+                    $sheet->setCellValue([$columnIndex++, $row], $country->{$months[$monthIndex]['name'] . '_contract_plan'});
+                    $sheet->setCellValue([$columnIndex++, $row], $country->{$months[$monthIndex]['name'] . '_contract_fact'});
+                    $sheet->setCellValue([$columnIndex++, $row], $country->{$months[$monthIndex]['name'] . '_register_fact'});
+                    $columnIndex++; // Empty comment td
+                }
+            }
+
+            // MAH rows
+            foreach ($country->marketing_authorization_holders as $mah) {
+                $row++; // Separate rows for each MAHs
+                $columnIndex = 1; // start from first column
+
+                $sheet->setCellValue([$columnIndex++, $row], $country->name);
+                $sheet->setCellValue([$columnIndex++, $row], $mah->name);
+
+                // MAH year
+                $sheet->setCellValue([$columnIndex++, $row], $mah->year_contract_plan);
+                $sheet->setCellValue([$columnIndex++, $row], $mah->year_contract_fact);
+                $sheet->setCellValue([$columnIndex++, $row], $mah->year_contract_fact_percentage . ' %');
+                $sheet->setCellValue([$columnIndex++, $row], $mah->year_register_fact);
+                $sheet->setCellValue([$columnIndex++, $row], $mah->year_register_fact_percentage . ' %');
+
+                // MAH Quarters 1 - 4
+                for ($quarter = 1, $monthIndex = 0; $quarter <= 4; $quarter++) {
+                    $sheet->setCellValue([$columnIndex++, $row], $mah->{'quarter_' . $quarter . '_contract_plan'});
+                    $sheet->setCellValue([$columnIndex++, $row], $mah->{'quarter_' . $quarter . '_contract_fact'});
+                    $sheet->setCellValue([$columnIndex++, $row], $mah->{'quarter_' . $quarter . '_register_fact'});
+
+                    // Summary months 1 - 12
+                    for ($quarterMonths = 1; $quarterMonths <= 3; $quarterMonths++, $monthIndex++) {
+                        $sheet->setCellValue([$columnIndex++, $row], $mah->{$months[$monthIndex]['name'] . '_contract_plan'});
+                        $sheet->setCellValue([$columnIndex++, $row], $mah->{$months[$monthIndex]['name'] . '_contract_fact'});
+                        $sheet->setCellValue([$columnIndex++, $row], $mah->{$months[$monthIndex]['name'] . '_register_fact'});
+                        $sheet->setCellValue([$columnIndex++, $row], $mah->{$months[$monthIndex]['name'] . '_comment'});
+                    }
+                }
+            }
+
+            $row++; // Separate country codes from each other by empty row
+        }
+
+        // Save file and return download response
+        // Create a writer and generate a unique filename for the export
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'SPG ' . date('Y-m-d H-i-s') . '.xlsx';
+        $filename = Helper::escapeDuplicateFilename($filename, storage_path(self::EXPORT_EXCEL_FILE_STORAGE_PATH));
+        $filePath = storage_path(self::EXPORT_EXCEL_FILE_STORAGE_PATH . '/' . $filename);
+
+        // Save the Excel file
+        $writer->save($filePath);
+
+        // Return a download response
+        return response()->download($filePath);
     }
 }

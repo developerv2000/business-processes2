@@ -81,6 +81,13 @@ class PlanController extends Controller
         return view('plan.show', compact('request', 'plan', 'months'));
     }
 
+    public function export(Request $request)
+    {
+        $plan = Plan::findOrFail($request->input('plan_id'));
+
+        return $plan->exportAsExcel($request);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Country code routes

@@ -25,7 +25,7 @@ const chartSplitlinesColor = rootStyles.getPropertyValue('--theme-chart-splitlin
 
 // Globals
 let countryCodesSelectize; // used only on processes create form
-let processesCountChart, activeManufacturersChart;
+let processesCountChart, maximumProcessesCountChart, activeManufacturersChart;
 let orderCreateProductIndex = 0;
 let invoiceCreateOtherPaymentsIndex = 0;
 let invoiceCreateServicesIndex = 0;
@@ -546,15 +546,18 @@ function bootstrapECharts() {
 function bootstrapStatisticCharts() {
     if (document.querySelector('.statistics-index')) {
         bootstrapProcessesCountChart();
+        bootstrapMaximumProcessesCountChart();
         bootstrapActiveManufacturersChart();
 
         // Custom saving of charts as image
         document.querySelector('.processes-count-chart__download-btn').addEventListener('click', downloadProcessesCountChart);
+        document.querySelector('.maximum-processes-count-chart__download-btn').addEventListener('click', downloadMaximumProcessesCountChart);
         document.querySelector('.active-manufacturers-chart__download-btn').addEventListener('click', downloadActiveManufacturersChart);
 
         // Resize chart when window is resized
         window.addEventListener('resize', function () {
             processesCountChart.resize();
+            maximumProcessesCountChart.resize();
             activeManufacturersChart.resize();
         });
     }
@@ -1151,4 +1154,170 @@ function initializeInvoiceCreateTotalPriceHandling() {
             }
         });
     });
+}
+
+
+
+// ********************* Maximum processes count chart *****************************
+
+function bootstrapMaximumProcessesCountChart() {
+    // Find the container element for the chart
+    const container = document.querySelector('.maximum-processes-count-chart');
+
+    // Prepare series data for bars based on general statuses
+    let series = [];
+    generalStatuses.forEach(status => {
+        series.push({
+            name: status.name,
+            type: 'bar',
+            data: Object.keys(status.months).map(key => ({
+                value: status.months[key].maximum_processes_count,
+                label: {
+                    show: true,
+                    position: 'top',
+                    color: textColor,
+                    formatter: function (params) {
+                        return params.value;
+                    }
+                }
+            })),
+        });
+    });
+
+    // Add a line series for 'Total' data
+    series.push({
+        name: 'Total',
+        data: months.map(obj => obj.all_maximum_process_count),
+        type: 'line',
+        symbol: 'circle',
+        symbolSize: 10,
+        color: mainColor,
+        label: {
+            show: true,
+            position: 'top', // Label position
+            color: textColor,
+            rich: {
+                labelBox: {
+                    backgroundColor: chartLabelBackgroundColor, // Background color of the label box
+                    borderRadius: 4, // Border radius
+                    padding: [6, 10], // Padding inside the box
+                    shadowBlur: 5, // Shadow blur radius
+                    shadowOffsetX: 3, // Shadow offset X
+                    shadowOffsetY: 3, // Shadow offset Y
+                    shadowColor: 'rgba(0, 0, 0, 0.3)' // Shadow color
+                },
+                value: {
+                    color: textColor
+                }
+            },
+            // Formatter function for customizing label content and style
+            formatter: function (params) {
+                return '{labelBox|' + params.value + '}';
+            },
+            align: 'center',
+            verticalAlign: 'bottom'
+        }
+    });
+
+    // Initialize ECharts instance with specified options
+    maximumProcessesCountChart = echarts.init(container, theme, {
+        renderer: 'canvas', // Use canvas renderer for better performance
+        useDirtyRect: false, // Disable dirty rectangle optimization
+        backgroundColor: boxBackgroundColor // Set chart background color
+    });
+
+    // Define the main configuration options for the chart
+    const option = {
+        backgroundColor: boxBackgroundColor, // Overall background color
+        title: {
+            text: 'Ключевые показатели по количеству выполненных работ на каждом этапе по месяцам', // Chart title
+            padding: [24, 60, 24, 30], // Padding around the title
+            textStyle: {
+                fontSize: 14, // Font size in pixels
+                fontFamily: ['Fira Sans', 'sans-serif'],
+                fontWeight: '500', // Optional: Font weight (e.g., 'normal', 'bold', '600')
+                color: textColor // Optional: Font color
+            }
+        },
+        grid: {
+            left: '60px',
+            right: '60px',
+            top: '112px',
+            bottom: '40px',
+        },
+        tooltip: {
+            trigger: 'axis', // Tooltip trigger type
+            axisPointer: {
+                type: 'cross', // Cross style for axis pointer
+                crossStyle: {
+                    color: '#999' // Color of the cross style
+                }
+            }
+        },
+        toolbox: {
+            feature: {
+                // dataView: { show: true, readOnly: false }, // Enable data view tool
+                magicType: { show: true, type: ['line', 'bar'] }, // Enable switch between line and bar
+                restore: { show: true }, // Enable restore button
+                saveAsImage: { show: true } // Enable save as image button
+            }
+        },
+        legend: {
+            padding: [52, 0, 20], // Padding around legend
+            itemGap: 12, // Gap between legend items
+            itemWidth: 20, // Width of legend item symbol
+            itemHeight: 14, // Height of legend item symbol
+            textStyle: {
+                fontSize: 14, // Font size in pixels
+                fontFamily: ['Fira Sans', 'sans-serif'],
+                fontWeight: '400', // Optional: Font weight (e.g., 'normal', 'bold', '600')
+                color: textColor // Optional: Font color
+            }
+        },
+        xAxis: [
+            {
+                type: 'category', // Category axis type
+                data: months.map(obj => obj.name), // Data for x-axis categories
+                axisPointer: {
+                    type: 'shadow' // Pointer type for axis
+                },
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value', // Value axis type
+                splitLine: {
+                    lineStyle: {
+                        color: chartSplitlinesColor, // Color of the horizontal grid lines
+                    }
+                }
+            },
+            {}, // Empty placeholder for secondary y-axis if needed
+        ],
+        series: series, // Assign prepared series data to chart
+    };
+
+    // Set chart configuration options
+    maximumProcessesCountChart.setOption(option);
+}
+
+function downloadMaximumProcessesCountChart() {
+    // Get the chart image data URL
+    const imageDataURL = maximumProcessesCountChart.getConnectedDataURL({
+        type: 'image/png',   // Can also be 'image/jpeg' or 'image/svg+xml'
+        pixelRatio: 2,       // Adjust pixel ratio for higher quality if needed
+        // backgroundColor: '#fff'  // Set background color if needed
+    });
+
+    // Create a temporary anchor element for download
+    let downloadLink = document.createElement('a');
+    downloadLink.href = imageDataURL;
+    downloadLink.download = 'maximum-processes-count-chart.png';  // Filename when downloaded
+
+    // Append anchor to body and trigger the download
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+
+    // Clean up
+    document.body.removeChild(downloadLink);
 }

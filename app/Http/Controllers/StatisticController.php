@@ -208,28 +208,16 @@ class StatisticController extends Controller
             foreach ($months as $month) {
                 $query = Process::query();
 
-                // Extensive version
-                if ($request->extensive_version) {
+                if ($status->stage == 5) { // Kk
+                    $query = Process::filterRecordsContractedOnRequestedMonthAndYear($query, $request->year, $month['number']);
+                } else if ($status->stage == 7) { // НПР
+                    $query = Process::filterRecordsRegisteredOnRequestedMonthAndYear($query, $request->year, $month['number']);
+                } else {
                     $query = $query->whereMonth('status_update_date', $month['number'])
                         ->whereYear('status_update_date', $request->year)
                         ->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
                             $statusesQuery->where('id', $status->id);
                         });
-                }
-
-                // Minified version
-                if (!$request->extensive_version) {
-                    // Specific query for Stage 5 (Kk) of minified version
-                    if ($status->stage == 5) {
-                        $query = Process::filterRecordsContractedOnRequestedMonthAndYear($query, $request->year, $month['number']);
-                    } else {
-                        // Query for stages < 5 (1ВП - 4СЦ) of minified version
-                        $query = $query->whereMonth('status_update_date', $month['number'])
-                            ->whereYear('status_update_date', $request->year)
-                            ->whereHas('status.generalStatus', function ($statusesQuery) use ($status) {
-                                $statusesQuery->where('id', $status->id);
-                            });
-                    }
                 }
 
                 // Additional filtering
@@ -268,20 +256,31 @@ class StatisticController extends Controller
                 // Extensive version
                 if ($request->extensive_version) {
                     $queryParamsCopy['general_status_id[]'] = $status->id;
+                } else { // Minified version
+                    $queryParamsCopy['name_for_analysts[]'] = $status->name_for_analysts;
                 }
 
-                // Minified version
-                if (!$request->extensive_version) {
-                    // Special links for stage 5 (Kk)
-                    if ($status->stage == 5) {
-                        $queryParamsCopy['status_update_date'] = null; // status_update_date is not required
-                        $queryParamsCopy['contracted_on_requested_month_and_year'] = true;
-                        $queryParamsCopy['contracted_month'] = $month['number'];
-                        $queryParamsCopy['contracted_year'] = $request->year;
-                    } else {
-                        // Stages 1 - 4 (1ВП - 4СЦ)
-                        $queryParamsCopy['name_for_analysts[]'] = $status->name_for_analysts;
-                    }
+                // Special links for stage 5 (Kk)
+                if ($status->stage == 5) {
+                    // remove unneeded params
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'status_update_date');
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'general_status_id[]');
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'name_for_analysts[]');
+
+                    $queryParamsCopy['contracted_on_requested_month_and_year'] = true;
+                    $queryParamsCopy['contracted_month'] = $month['number'];
+                    $queryParamsCopy['contracted_year'] = $request->year;
+                }
+                // Special links for stage 7 (НПР)
+                else if ($status->stage == 7) {
+                    // remove unneeded params
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'status_update_date');
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'general_status_id[]');
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'name_for_analysts[]');
+
+                    $queryParamsCopy['registered_on_requested_month_and_year'] = true;
+                    $queryParamsCopy['registered_month'] = $month['number'];
+                    $queryParamsCopy['registered_year'] = $request->year;
                 }
 
                 // Generate the current processes link based on the query
@@ -320,24 +319,36 @@ class StatisticController extends Controller
 
                 // Extensive version
                 if ($request->extensive_version) {
-                    $query = Process::filterRecordsByStatusHistory(
-                        $query,
-                        $request->year,
-                        $month['number'],
-                        'id',
-                        $status->id,
-                    );
+                    if ($status->stage == 5) { // Kk
+                        $query = Process::filterRecordsContractedOnRequestedMonthAndYear($query, $request->year, $month['number']);
+                    } else if ($status->stage == 7) { // НПР
+                        $query = Process::filterRecordsRegisteredOnRequestedMonthAndYear($query, $request->year, $month['number']);
+                    } else {
+                        $query = Process::filterRecordsByStatusHistory(
+                            $query,
+                            $request->year,
+                            $month['number'],
+                            'id',
+                            $status->id,
+                        );
+                    }
                 }
 
                 // Minified version
                 if (!$request->extensive_version) {
-                    $query = Process::filterRecordsByStatusHistory(
-                        $query,
-                        $request->year,
-                        $month['number'],
-                        'name_for_analysts',
-                        $status->name,
-                    );
+                    if ($status->stage == 5) { // Kk
+                        $query = Process::filterRecordsContractedOnRequestedMonthAndYear($query, $request->year, $month['number']);
+                    } else if ($status->stage == 7) { // НПР
+                        $query = Process::filterRecordsRegisteredOnRequestedMonthAndYear($query, $request->year, $month['number']);
+                    } else {
+                        $query = Process::filterRecordsByStatusHistory(
+                            $query,
+                            $request->year,
+                            $month['number'],
+                            'name_for_analysts',
+                            $status->name,
+                        );
+                    }
                 }
 
                 // Additional filtering
@@ -378,9 +389,36 @@ class StatisticController extends Controller
                 if ($request->extensive_version) {
                     $queryParamsCopy['has_status_history_based_on'] = 'id';
                     $queryParamsCopy['has_status_history_based_on_value'] = $status->id;
-                } else {
+                } else { // Minified version
                     $queryParamsCopy['has_status_history_based_on'] = 'name_for_analysts';
                     $queryParamsCopy['has_status_history_based_on_value'] = $status->name;
+                }
+
+                // Special links for stage 5 (Kk)
+                if ($status->stage == 5) {
+                    // remove unneeded params
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'has_status_history');
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'has_status_history_on_year');
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'has_status_history_on_month');
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'has_status_history_based_on');
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'has_status_history_based_on_value');
+
+                    $queryParamsCopy['contracted_on_requested_month_and_year'] = true;
+                    $queryParamsCopy['contracted_month'] = $month['number'];
+                    $queryParamsCopy['contracted_year'] = $request->year;
+                }
+                // Special links for stage 7 (НПР)
+                else if ($status->stage == 7) {
+                    // remove unneeded params
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'has_status_history');
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'has_status_history_on_year');
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'has_status_history_on_month');
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'has_status_history_based_on');
+                    Helper::deleteArrayKeyIfExists($queryParamsCopy, 'has_status_history_based_on_value');
+
+                    $queryParamsCopy['registered_on_requested_month_and_year'] = true;
+                    $queryParamsCopy['registered_month'] = $month['number'];
+                    $queryParamsCopy['registered_year'] = $request->year;
                 }
 
                 // Generate the current processes link based on the query

@@ -545,9 +545,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         return $query->whereHas('statusHistory', function ($historyQuery) use ($year, $month) {
             $historyQuery->whereMonth('start_date', $month)
                 ->whereYear('start_date', $year)
-                ->whereHas('status.generalStatus', function ($statusesQuery) {
-                    $statusesQuery->where('stage', 5);
-                });
+                ->where('status_id', 11); // only Kk ignore SKk and Nkk
         });
     }
 
@@ -566,9 +564,7 @@ class Process extends CommentableModel implements PreparesRecordsForExportInterf
         return $query->whereHas('statusHistory', function ($historyQuery) use ($year, $month) {
             $historyQuery->whereMonth('start_date', $month)
                 ->whereYear('start_date', $year)
-                ->whereHas('status.generalStatus', function ($statusesQuery) {
-                    $statusesQuery->where('stage', 7);
-                });
+                ->where('status_id', 15); // only Пцр ignore SПцр
         });
     }
 

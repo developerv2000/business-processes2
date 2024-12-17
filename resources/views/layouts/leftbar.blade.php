@@ -70,19 +70,21 @@
             @endcan
 
             {{-- Finance --}}
-            <x-navbar.title class="navbar-title navbar-title--top-margined">{{ __('ОПР') }}</x-navbar.title>
+            @canany(['view-processes-for-order', 'view-orders'])
+                <x-navbar.title class="navbar-title navbar-title--top-margined">{{ __('ОПР') }}</x-navbar.title>
 
-            <x-navbar.link icon="package_2" href="{{ route('confirmed-orders.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('confirmed-orders.index'),
-            ])>{{ __('Orders') }}</x-navbar.link>
+                <x-navbar.link icon="package_2" href="{{ route('confirmed-orders.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('confirmed-orders.index'),
+                ])>{{ __('Orders') }}</x-navbar.link>
 
-            <x-navbar.link icon="package_2" href="{{ route('invoices.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('invoices.*'),
-            ])>{{ __('Invoices') }}</x-navbar.link>
+                <x-navbar.link icon="package_2" href="{{ route('invoices.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('invoices.*'),
+                ])>{{ __('Invoices') }}</x-navbar.link>
 
-            <x-navbar.link icon="package_2" href="{{ route('invoice-items.index') }}" @class([
-                'navbar-link--active' => request()->routeIs('invoice-items.*'),
-            ])>{{ __('Invoice items') }}</x-navbar.link>
+                <x-navbar.link icon="package_2" href="{{ route('invoice-items.index') }}" @class([
+                    'navbar-link--active' => request()->routeIs('invoice-items.*'),
+                ])>{{ __('Invoice items') }}</x-navbar.link>
+            @endcanany
 
             {{-- Dashboard --}}
             @canany(['view-users', 'view-differents', 'view-roles'])

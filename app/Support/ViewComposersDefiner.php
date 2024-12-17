@@ -46,10 +46,10 @@ class ViewComposersDefiner
         self::defineMeetingComposers();
         self::defineUserComposers();
         self::definePlanComposers();
-        self::defineProcessesForOrderComposers();
-        self::defineOrdersComposers();
-        self::defineOrderProductsComposers();
-        self::defineInvoicesComposers();
+        // self::defineProcessesForOrderComposers();
+        // self::defineOrdersComposers();
+        // self::defineOrderProductsComposers();
+        // self::defineInvoicesComposers();
     }
 
     private static function definePaginationLimitComposer()
